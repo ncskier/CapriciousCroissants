@@ -1,4 +1,4 @@
-package edu.cornell.gdiac.helloworld;
+package com.capriciouscroissants.capriciouscroissants;
 
 import org.junit.Test;
 

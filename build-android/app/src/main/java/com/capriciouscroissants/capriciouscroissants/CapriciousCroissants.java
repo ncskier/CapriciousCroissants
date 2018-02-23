@@ -1,4 +1,4 @@
-package edu.cornell.gdiac.helloworld;
+package com.capriciouscroissants.capriciouscroissants;
 
 import org.libsdl.app.*;
 import android.os.*;
@@ -6,7 +6,7 @@ import android.os.*;
 /**
  * Default application entry point
  */
-public class HelloWorld extends SDLActivity { 
+public class CapriciousCroissants extends SDLActivity {
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

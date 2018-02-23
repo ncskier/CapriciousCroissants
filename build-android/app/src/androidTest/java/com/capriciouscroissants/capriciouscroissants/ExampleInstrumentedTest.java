@@ -1,4 +1,4 @@
-package edu.cornell.gdiac.helloworld;
+package com.capriciouscroissants.capriciouscroissants;
 
 import android.content.Context;
 import android.support.test.InstrumentationRegistry;

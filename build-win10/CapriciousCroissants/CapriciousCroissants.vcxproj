@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{EBA7F636-33E8-46A4-9024-D8DDFC250C64}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>HelloWorld</RootNamespace>
+    <RootNamespace>CapriciousCroissants</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -193,7 +193,7 @@
     <ClCompile Include="..\..\source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="HelloWorld.rc" />
+    <ResourceCompile Include="CapriciousCroissants.rc" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="icon1.ico" />

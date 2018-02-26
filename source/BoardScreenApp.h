@@ -5,7 +5,7 @@
 #ifndef __BSCREEN_APP_H__
 #define __BSCREEN_APP_H__
 #include <cugl/cugl.h>
-#include <TileBoard.h>
+#include "TileBoard.h"
 
 
 /**

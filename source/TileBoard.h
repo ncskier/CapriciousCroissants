@@ -35,7 +35,7 @@ public:
 	void placePawn(cugl::Vec2 *desiredLocation, int desiredPlayer);
 
 	//Return true if a match is found (and replace those matches, damaging pawns on matches), otherwise false
-	boolean checkForMatches();
+	bool checkForMatches();
 
 	static std::shared_ptr<TileBoard> alloc();
 

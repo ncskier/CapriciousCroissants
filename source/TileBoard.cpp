@@ -32,7 +32,7 @@ void TileBoard::placePawn(Vec2 *desiredLocation, int desiredPlayer) {
 }
 
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
-boolean TileBoard::checkForMatches() {
+bool TileBoard::checkForMatches() {
 	return false;
 }
 

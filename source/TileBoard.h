@@ -16,23 +16,35 @@
 
 class TileBoard {
 protected:
+    //Size of one side of the square board
+    int _sideSize;
+
 	//For now just treat tiles as an array of ints, where an int is the color of the tile
-	std::shared_ptr<int[]> _tiles;
+    int *_tiles;
+//    std::shared_ptr<int[]> _tiles;
 
 	//Treat pawns as an array of a vector 2 for locations of the pawns
-	std::shared_ptr<cugl::Vec2[]> _pawns;
+    cugl::Vec2 *_pawns;
+//    std::shared_ptr<cugl::Vec2[]> _pawns;
 
 	//Replaces a tile at a location in the array with a new value
 	void replaceTile(int tileLocation);
-
-	int _sideSize;
+    
+    //Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
+    int indexOfCoordinate(int x, int y) const;
 	
 public:
 	TileBoard();
 	~TileBoard();
+    
+    //Returns the value at the give (x, y) coordinate
+    int get(int x, int y) const;
+    
+    //Set the value at the given (x, y) coordinate
+    void set(int x, int y, int value);
 	
 	//Places a pawn for a player, keeping the same vector so it can be altered by tileboard or boardScreen
-	void placePawn(cugl::Vec2 *desiredLocation, int desiredPlayer);
+	void placePawn(int x, int y, int desiredPlayer);
 
 	//Return true if a match is found (and replace those matches, damaging pawns on matches), otherwise false
 	bool checkForMatches();
@@ -44,6 +56,16 @@ public:
 
 	//Draws tiles and pawns
 	void draw();
+    
+    /**
+     * Returns a string representation of the board for debugging purposes.
+     *
+     * @return a string representation of this vector for debuggging purposes.
+     */
+    std::string toString() const;
+    
+    /** Cast from TileBoard to a string. */
+    operator std::string() const { return toString(); }
 };
 
 #endif

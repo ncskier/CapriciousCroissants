@@ -64,6 +64,9 @@ public:
     // Place pawn at index i on location (x, y)
 	void placePawn(int x, int y, int i);
 
+    // Remove pawn at index i
+    void removePawn(int i);
+
 	//Return true if a match is found (and replace those matches, damaging pawns on matches), otherwise false
 	bool checkForMatches();
 

@@ -39,7 +39,7 @@ TileBoard::~TileBoard() {
 //Example for sideSize = 3
 //  0 1 2     (0,0) (1,0) (2,0)
 //  3 4 5     (0,1) (1,1) (2,1)
-//  6 7 8     (0,2) (1,2) (2,2)
+//  6 7 8     (0,2) (1,2) (2,2) (3) (4)
 int TileBoard::indexOfCoordinate(int x, int y) const {
     return x + (y*_sideSize);
 }
@@ -59,10 +59,129 @@ void TileBoard::placePawn(int x, int y, int i) {
     _pawns[i].set(x, y);
 }
 
+// Remove pawn at index i
+void TileBoard::removePawn(int i) {
+    _pawns[i].set(-1, -1);
+}
+
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
 bool TileBoard::checkForMatches() {
-    // TODO: checkForMatches
-	return false;
+    std::vector<int> toBeReplaced;
+
+    for (int y = 0; y < _sideSize; y++){
+        for (int x = 0; x < _sideSize; x++){
+            // Check if tile was already removed
+            if (get(x,y) != -1) {
+                //Search upwards
+                if (y > 1) {
+                    // At least 3 in a row?
+                    if (get(x, y-1) == get(x,y) && get(x, y-2) == get(x,y)){
+                        int pointer = y;
+                        bool pointIsMatch = true;
+                        while(pointIsMatch && pointer >= 0){
+                            //Add pointed tile to be replaced if not there already
+                            if(std::find(toBeReplaced.begin(), toBeReplaced.end(), indexOfCoordinate(x, pointer)) == toBeReplaced.end()) {
+                                toBeReplaced.push_back(indexOfCoordinate(x, pointer));
+                            }
+                            pointer--; //Move to next tile
+                            //Check if still match
+                            if (pointer >= 0 && get(x, pointer) == get(x,y)){
+                                pointIsMatch = true;
+                            }
+                            else{
+                                pointIsMatch = false;
+                            }
+                        }
+                    }
+                }
+                // Search rightwards
+                if (x < _sideSize - 2) {
+                    // At least 3 in a row?
+                    if (get(x+1, y) == get(x,y) && get(x+2, y) == get(x,y)){
+                        int pointer = x;
+                        bool pointIsMatch = true;
+                        while(pointIsMatch && pointer < _sideSize){
+                            //Add pointed tile to be replaced if not there already
+                            if(std::find(toBeReplaced.begin(), toBeReplaced.end(), indexOfCoordinate(pointer, y)) == toBeReplaced.end()) {
+                                toBeReplaced.push_back(indexOfCoordinate(pointer, y));
+                            }
+                            pointer++; //Move to next tile
+                            //Check if still match
+                            if (pointer < _sideSize && get(pointer, y) == get(x,y)){
+                                pointIsMatch = true;
+                            }
+                            else{
+                                pointIsMatch = false;
+                            }
+                        }
+                    }
+                }
+                // Search downwards
+                if (y < _sideSize - 2){
+                    // At least 3 in a row?
+                    if (get(x, y+1) == get(x,y) && get(x, y+2) == get(x,y)){
+                        int pointer = y;
+                        bool pointIsMatch = true;
+                        while(pointIsMatch && pointer < _sideSize){
+                            //Add pointed tile to be replaced if not there already
+                            if(std::find(toBeReplaced.begin(), toBeReplaced.end(), indexOfCoordinate(x, pointer)) == toBeReplaced.end()) {
+                                toBeReplaced.push_back(indexOfCoordinate(x, pointer));
+                            }
+                            pointer++; //Move to next tile
+                            //Check if still match
+                            if (pointer < _sideSize && get(x, pointer) == get(x,y)){
+                                pointIsMatch = true;
+                            }
+                            else{
+                                pointIsMatch = false;
+                            }
+                        }
+                    }
+                }
+                //search leftwards
+                if(x > 1){
+                    // At least 3 in a row?
+                    if (get(x-1, y) == get(x,y) && get(x-2, y) == get(x,y)){
+                        int pointer = x;
+                        bool pointIsMatch = true;
+                        while(pointIsMatch && pointer >= 0){
+                            //Add pointed tile to be replaced if not there already
+                            if(std::find(toBeReplaced.begin(), toBeReplaced.end(), indexOfCoordinate(pointer, y)) == toBeReplaced.end()) {
+                                toBeReplaced.push_back(indexOfCoordinate(pointer, y));
+                            }
+                            pointer++; //Move to next tile
+                            //Check if still match
+                            if (pointer >= 0 && get(pointer, y) == get(x,y)){
+                                pointIsMatch = true;
+                            }
+                            else{
+                                pointIsMatch = false;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    if(!toBeReplaced.empty()) {
+        //Remove pawns that are on tiles to be replaced
+        for (int i = 0; i < _numPawns; i++) {
+            if (std::find(toBeReplaced.begin(), toBeReplaced.end(),
+                          indexOfCoordinate(_pawns[i].x, _pawns[i].y)) != toBeReplaced.end()) {
+                removePawn(i);
+            }
+        }
+
+        //Replace tiles that need to be replaced
+        for (int j = 0; j < toBeReplaced.size(); j++){
+            replaceTile(toBeReplaced[j]);
+        }
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles

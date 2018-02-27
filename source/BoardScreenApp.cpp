@@ -44,6 +44,7 @@ void BoardScreenApp::onStartup() {
 
 	// Sets up a board of tiles
 	_board = TileBoard::alloc();
+    CULog("Initialize Board:\n%s", _board->toString().c_str());
 
 	// Activate mouse or touch screen input as appropriate
 	// We have to do this BEFORE the scene, because the scene has a button

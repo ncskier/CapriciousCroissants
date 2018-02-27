@@ -12,8 +12,10 @@ using namespace cugl;
 
 // Initialize _sideSize and call generateNewBoard to generate _tiles and empty _pawns
 TileBoard::TileBoard() :
-_sideSize(5) {
-
+_sideSize(5),
+_numColors(5),
+_numPawns(4) {
+    generateNewBoard();
 }
 
 // Allocates this board for a shared pointer
@@ -68,7 +70,16 @@ void TileBoard::replaceTile(int tileLocation) {
 
 // Generates a new set of tiles for _tiles that verifies that the board does not have any matches existing
 void TileBoard::generateNewBoard() {
-
+    // Setup Tiles
+    _tiles = new int[_sideSize*_sideSize];
+    int color;
+    for (int i = 0; i < _sideSize*_sideSize; i++) {
+        color = rand() % _numColors;        // random number in range [0, _numColors-1]
+        _tiles[i] = color;
+    }
+    
+    // Setup Pawns
+    _pawns = new Vec2[_numPawns];
 }
 
 // Draws all of the tiles and pawns(in that order) 
@@ -89,6 +100,11 @@ std::string TileBoard::toString() const {
             ss << _tiles[ indexOfCoordinate(i, j) ];
         }
         ss << "\n";
+    }
+    ss << "[";
+    for (int i = 0; i < _numPawns; i++) {
+        ss << _pawns[i].toString();
+        ss << "   ";
     }
     return ss.str();
 }

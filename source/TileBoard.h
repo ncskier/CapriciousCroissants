@@ -18,6 +18,12 @@ class TileBoard {
 protected:
     //Size of one side of the square board
     int _sideSize;
+    
+    //Number of colors of tiles available to the board
+    int _numColors;
+    
+    //Number of pawns
+    int _numPawns;
 
 	//For now just treat tiles as an array of ints, where an int is the color of the tile
     int *_tiles;

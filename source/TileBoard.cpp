@@ -86,6 +86,38 @@ void TileBoard::generateNewBoard() {
     _pawns = new Vec2[_numPawns];
 }
 
+//Slide row or column by [offset]
+void TileBoard::slide(bool row, int k, int offset) {
+    // Copy
+    int line[_sideSize];
+    for (int i = 0; i < _sideSize; i++) {
+        int x = row ? i : k;
+        int y = row ? k : i;
+        line[i] = get(x, y);
+    }
+
+    // Slide/write row
+    for (int i = 0; i < _sideSize; i++) {
+        int x = row ? i : k;
+        int y = row ? k : i;
+        int j = (i - offset) % _sideSize;
+        while (j < 0) {
+            j += _sideSize;
+        }
+        set(x, y, line[j]);
+    }
+}
+
+//Slide row [y] by [offset]
+void TileBoard::slideRow(int y, int offset) {
+    slide(true, y, offset);
+}
+
+//Slide column [x] by [offset]
+void TileBoard::slideCol(int x, int offset) {
+    slide(false, x, offset);
+}
+
 // Draws all of the tiles and pawns(in that order) 
 void TileBoard::draw() {
     // TODO: draw()
@@ -98,8 +130,8 @@ void TileBoard::draw() {
  */
 std::string TileBoard::toString() const {
     std::stringstream ss;
-    for (int i = 0; i < _sideSize; i++) {
-        for (int j = 0; j < _sideSize; j++) {
+    for (int j = 0; j < _sideSize; j++) {
+        for (int i = 0; i < _sideSize; i++) {
             ss << " ";
             ss << _tiles[ indexOfCoordinate(i, j) ];
         }

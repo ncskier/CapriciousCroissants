@@ -38,6 +38,9 @@ protected:
     
     //Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
     int indexOfCoordinate(int x, int y) const;
+    
+    //Slide row or column by [offset]
+    void slide(bool row, int k, int offset);
 	
 public:
 	TileBoard();
@@ -67,7 +70,13 @@ public:
 	static std::shared_ptr<TileBoard> alloc();
 
 	//Generates a new board into the _tiles variable
-	void generateNewBoard(); 
+	void generateNewBoard();
+    
+    //Slide row [y] by [offset]
+    void slideRow(int y, int offset);
+    
+    //Slide column [x] by [offset]
+    void slideCol(int x, int offset);
 
 	//Draws tiles and pawns
 	void draw();

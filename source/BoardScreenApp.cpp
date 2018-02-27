@@ -45,6 +45,23 @@ void BoardScreenApp::onStartup() {
 	// Sets up a board of tiles
 	_board = TileBoard::alloc();
     CULog("Initialize Board:\n%s", _board->toString().c_str());
+    
+    // Test get(x, y)
+//    CULog("get(0,0) = %d", _board->get(0, 0));
+//    CULog("get(1,0) = %d", _board->get(1, 0));
+//    CULog("get(0,1) = %d", _board->get(0, 1));
+    
+    // Test Slide
+//    _board->slideCol(0, 1);
+//    CULog("slideCol(0, 1):\n%s", _board->toString().c_str());
+//    _board->slideCol(1, 2);
+//    CULog("slideCol(1, 2):\n%s", _board->toString().c_str());
+//    _board->slideCol(2, 3);
+//    CULog("slideCol(2, 3):\n%s", _board->toString().c_str());
+//    _board->slideRow(3, 4);
+//    CULog("slideRow(3, 4):\n%s", _board->toString().c_str());
+//    _board->slideRow(4, 6);
+//    CULog("slideRow(4, 6):\n%s", _board->toString().c_str());
 
 	// Activate mouse or touch screen input as appropriate
 	// We have to do this BEFORE the scene, because the scene has a button

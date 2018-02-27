@@ -337,9 +337,9 @@
 			isa = PBXGroup;
 			children = (
 				EB2BE9B41D74952A002FE78B /* main.cpp */,
+				206543972043AED3007D541E /* Source.cpp */,
 				2065439B2043AED3007D541E /* BoardScreenApp.h */,
 				2065439A2043AED3007D541E /* BoardScreenApp.cpp */,
-				206543972043AED3007D541E /* Source.cpp */,
 				206543992043AED3007D541E /* TileBoard.h */,
 				206543982043AED3007D541E /* TileBoard.cpp */,
 			);

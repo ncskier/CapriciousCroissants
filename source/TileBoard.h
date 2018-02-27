@@ -48,9 +48,18 @@ public:
     
     //Set the value at the given (x, y) coordinate
     void set(int x, int y, int value);
+    
+    //Returns the number of pawns
+    int getNumPawns() const { return _numPawns; }
+    
+    //Returns the number of colors
+    int getNumColors() const { return _numColors; }
+    
+    //Returns the side size
+    int getSideSize() const { return _sideSize; }
 	
-	//Places a pawn for a player, keeping the same vector so it can be altered by tileboard or boardScreen
-	void placePawn(int x, int y, int desiredPlayer);
+    // Place pawn at index i on location (x, y)
+	void placePawn(int x, int y, int i);
 
 	//Return true if a match is found (and replace those matches, damaging pawns on matches), otherwise false
 	bool checkForMatches();

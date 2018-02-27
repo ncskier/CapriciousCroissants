@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <iostream>
+#include <ctime>
 
 #include "TileBoard.h"
 #include <cugl/base/CUBase.h>
@@ -53,19 +54,21 @@ void TileBoard::set(int x, int y, int value) {
     _tiles[ indexOfCoordinate(x, y) ] = value;
 }
 
-// Place a pawn for the desired player(array index) at the desired location
-void TileBoard::placePawn(int x, int y, int desiredPlayer) {
-
+// Place pawn at index i on location (x, y)
+void TileBoard::placePawn(int x, int y, int i) {
+    _pawns[i].set(x, y);
 }
 
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
 bool TileBoard::checkForMatches() {
+    // TODO: checkForMatches
 	return false;
 }
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void TileBoard::replaceTile(int tileLocation) {
-
+    srand((int)time(0));
+    _tiles[tileLocation] = rand() % _numColors;
 }
 
 // Generates a new set of tiles for _tiles that verifies that the board does not have any matches existing
@@ -73,6 +76,7 @@ void TileBoard::generateNewBoard() {
     // Setup Tiles
     _tiles = new int[_sideSize*_sideSize];
     int color;
+    srand((int)time(0));
     for (int i = 0; i < _sideSize*_sideSize; i++) {
         color = rand() % _numColors;        // random number in range [0, _numColors-1]
         _tiles[i] = color;
@@ -84,7 +88,7 @@ void TileBoard::generateNewBoard() {
 
 // Draws all of the tiles and pawns(in that order) 
 void TileBoard::draw() {
-
+    // TODO: draw()
 }
 
 /**

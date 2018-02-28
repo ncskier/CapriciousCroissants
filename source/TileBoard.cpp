@@ -152,7 +152,7 @@ bool TileBoard::checkForMatches() {
                             if(std::find(toBeReplaced.begin(), toBeReplaced.end(), indexOfCoordinate(pointer, y)) == toBeReplaced.end()) {
                                 toBeReplaced.push_back(indexOfCoordinate(pointer, y));
                             }
-                            pointer++; //Move to next tile
+                            pointer--; //Move to next tile
                             //Check if still match
                             if (pointer >= 0 && get(pointer, y) == get(x,y)){
                                 pointIsMatch = true;
@@ -169,17 +169,18 @@ bool TileBoard::checkForMatches() {
 
     if(!toBeReplaced.empty()) {
         //Remove pawns that are on tiles to be replaced
-        for (int i = 0; i < _numPawns; i++) {
+        /*for (int i = 0; i < _numPawns; i++) {
             if (std::find(toBeReplaced.begin(), toBeReplaced.end(),
                           indexOfCoordinate(_pawns[i].x, _pawns[i].y)) != toBeReplaced.end()) {
                 removePawn(i);
             }
-        }
+        }*/
 
         //Replace tiles that need to be replaced
         for (int j = 0; j < toBeReplaced.size(); j++){
             replaceTile(toBeReplaced[j]);
         }
+		toBeReplaced.clear();
         return true;
     }
     else{

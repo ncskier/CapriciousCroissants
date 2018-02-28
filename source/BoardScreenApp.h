@@ -30,7 +30,7 @@ protected:
 	std::shared_ptr<cugl::Texture> tileAsset;
 	float usedSize;
 
-
+	float inputLimiter;
 	float startX;
 	float startY;
 	float moveSince;

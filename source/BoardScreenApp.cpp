@@ -25,7 +25,10 @@ using namespace cugl;
 */
 void BoardScreenApp::onStartup() {
 	Size size = getDisplaySize();
-	size *= GAME_WIDTH / size.width;
+	inputLimiter = GAME_WIDTH / size.width;
+
+	size *= inputLimiter;
+	
 	float tileWidth = (size.width - 20) / 5;
 	float tileHeight = (size.height - 20) / 5;
 	usedSize = tileWidth < tileHeight ? tileWidth : tileHeight;
@@ -54,6 +57,7 @@ void BoardScreenApp::onStartup() {
 	tileAsset = _assets->get<Texture>("100squareWhite");
 
     CULog("Initialize Board:\n%s", _board->toString().c_str());
+	CULog("Display Width: %d, sizeWidth: %f", getDisplayWidth(), size.width);
     
     // Test get(x, y)
 //    CULog("get(0,0) = %d", _board->get(0, 0));
@@ -128,7 +132,79 @@ void BoardScreenApp::onShutdown() {
 */
 void BoardScreenApp::update(float timestep) {
 #if defined CU_TOUCH_SCREEN //phone
+		Touchscreen *touchscreen = Input::get<Touchscreen>();
+		if (touchscreen->touchCount() > 0) {
+			TouchID firstId = touchscreen->touchSet().at(0);
 
+			if (touchscreen->touchPressed(firstId)) {
+				isMoving = true;
+				Vec2 pos = touchscreen->touchPosition(firstId);
+				pos *= inputLimiter;
+				startX = pos.x;
+				startY = pos.y;
+
+				highlightX = floor(pos.x / (usedSize + 2.5));
+				highlightY = 4 - floor(pos.y / (usedSize + 2.5));
+				moveSince = 0;
+				finishedMove = false;
+			}
+		}
+
+		if (isMoving) {
+			if (touchscreen->touchCount() > 0) {
+				TouchID firstId = touchscreen->touchSet().at(0);
+				if (touchscreen->touchDown(firstId)) {
+					Vec2 pos = touchscreen->touchPosition(firstId);
+					pos *= inputLimiter;
+					int difX = floor(pos.x / (usedSize + 2.5)) - highlightX;
+					int difY = 4 - floor(pos.y / (usedSize + 2.5)) - highlightY;
+					if (moveSince == 0) {
+						if (difX != 0 || difY != 0) {
+							if (difX != 0) {
+								moveVert = false;
+								_board->slideRow(highlightY, difX > 0 ? 1 : -1);
+								moveSince = difX > 0 ? 1 : -1;
+							}
+							else {
+								moveVert = true;
+								_board->slideCol(highlightX, difY > 0 ? 1 : -1);
+								moveSince = difY > 0 ? 1 : -1;
+							}
+						}
+					}
+					else {
+						if (!moveVert) {
+							difX = difX - moveSince;
+							if (difX != 0) {
+								_board->slideRow(highlightY, difX > 0 ? 1 : -1);
+								moveSince += difX > 0 ? 1 : -1;
+							}
+						}
+						else {
+							difY = difY - moveSince;
+							if (difY != 0) {
+								_board->slideCol(highlightX, difY > 0 ? 1 : -1);
+								moveSince += difY > 0 ? 1 : -1;
+							}
+						}
+					}
+				}
+			}
+			else {
+				isMoving = false;
+
+				if (moveSince != 0) {
+					finishedMove = true;
+				}
+			}
+		}
+
+		if (finishedMove) {
+			finishedMove = false; // Don't want to double catch a "move"
+			while (_board->checkForMatches());
+		}
+	
+	
 #else // Mouse/keyboard
 
 	Mouse *mouse = Input::get<Mouse>();
@@ -137,6 +213,7 @@ void BoardScreenApp::update(float timestep) {
 	if (mouse->buttonPressed().hasLeft()) {
 		isMoving = true;
 		Vec2 pos = mouse->pointerPosition();
+		pos *= inputLimiter;
 		startX = pos.x;
 		startY = pos.y;
 
@@ -149,6 +226,7 @@ void BoardScreenApp::update(float timestep) {
 	if (isMoving) {
 		if (mouse->buttonDown().hasLeft()) {
 			Vec2 pos = mouse->pointerPosition();
+			pos *= inputLimiter;
 			int difX = floor(pos.x / (usedSize + 2.5)) - highlightX;
 			int difY = 4 - floor(pos.y / (usedSize + 2.5)) - highlightY;
 			if (moveSince == 0) {

@@ -5,6 +5,7 @@
 #include <sstream>
 #include <iostream>
 #include <ctime>
+#include <cstdlib>
 
 #include "TileBoard.h"
 #include <cugl/base/CUBase.h>

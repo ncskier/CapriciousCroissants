@@ -16,7 +16,9 @@ TileBoard::TileBoard() :
 _sideSize(5),
 _numColors(5),
 _numPawns(4) {
+	colorLookup = {Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE};
     generateNewBoard();
+	srand((int)time(NULL));
 }
 
 // Allocates this board for a shared pointer
@@ -68,8 +70,8 @@ void TileBoard::removePawn(int i) {
 bool TileBoard::checkForMatches() {
     std::vector<int> toBeReplaced;
 
-    for (int y = 0; y < _sideSize; y++){
-        for (int x = 0; x < _sideSize; x++){
+    for (int x = 0; x < _sideSize; x++){
+        for (int y = 0; y < _sideSize; y++){
             // Check if tile was already removed
             if (get(x,y) != -1) {
                 //Search upwards
@@ -186,7 +188,6 @@ bool TileBoard::checkForMatches() {
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void TileBoard::replaceTile(int tileLocation) {
-    srand((int)time(0));
     _tiles[tileLocation] = rand() % _numColors;
 }
 
@@ -195,7 +196,6 @@ void TileBoard::generateNewBoard() {
     // Setup Tiles
     _tiles = new int[_sideSize*_sideSize];
     int color;
-    srand((int)time(0));
     for (int i = 0; i < _sideSize*_sideSize; i++) {
         color = rand() % _numColors;        // random number in range [0, _numColors-1]
         _tiles[i] = color;
@@ -208,7 +208,7 @@ void TileBoard::generateNewBoard() {
 //Slide row or column by [offset]
 void TileBoard::slide(bool row, int k, int offset) {
     // Copy
-    int line[_sideSize];
+	std::unique_ptr<int[]> line(new int[_sideSize]);
     for (int i = 0; i < _sideSize; i++) {
         int x = row ? i : k;
         int y = row ? k : i;
@@ -238,7 +238,24 @@ void TileBoard::slideCol(int x, int offset) {
 }
 
 // Draws all of the tiles and pawns(in that order) 
-void TileBoard::draw() {
+void TileBoard::draw(const std::shared_ptr<SpriteBatch>& batch) {
+	batch->begin();
+	
+	float tileWidth = (gameWidth - 20) / 5;
+	float tileHeight = (gameHeight- 20) / 5;
+	float usedSize = tileWidth > tileHeight ? tileHeight : tileWidth;
+	Rect bounds = Rect(0, 0, usedSize, usedSize);
+
+	for (int x = 0; x < _sideSize; x++) {
+		float xPos = usedSize * x + (x * 5);
+		for (int y = 0; y < _sideSize; y++) {
+			float yPos = usedSize * y + (y * 5);
+			bounds.set(xPos, yPos, usedSize, usedSize);
+			batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)]), bounds);
+		}
+	}
+
+	batch->end();
     // TODO: draw()
 }
 

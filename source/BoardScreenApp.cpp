@@ -5,6 +5,7 @@
 
 #include "BoardScreenApp.h"
 #include <cugl/base/CUBase.h>
+#include <math.h>
 
 
 using namespace cugl;
@@ -25,6 +26,9 @@ using namespace cugl;
 void BoardScreenApp::onStartup() {
 	Size size = getDisplaySize();
 	size *= GAME_WIDTH / size.width;
+	float tileWidth = (size.width - 20) / 5;
+	float tileHeight = (size.height - 20) / 5;
+	usedSize = tileWidth < tileHeight ? tileWidth : tileHeight;
 
 	// Create a scene graph the same size as the window
 	_scene = Scene::alloc(size.width, size.height);
@@ -44,6 +48,11 @@ void BoardScreenApp::onStartup() {
 
 	// Sets up a board of tiles
 	_board = TileBoard::alloc();
+	_board->gameHeight = size.height;
+	_board->gameWidth = size.width;
+	_board->tileTexture = _assets->get<Texture>("100squareWhite");
+	tileAsset = _assets->get<Texture>("100squareWhite");
+
     CULog("Initialize Board:\n%s", _board->toString().c_str());
     
     // Test get(x, y)
@@ -69,6 +78,7 @@ void BoardScreenApp::onStartup() {
 	Input::activate<Touchscreen>();
 #else
 	Input::activate<Mouse>();
+	Input::get<Mouse>()->setPointerAwareness(Mouse::PointerAwareness::ALWAYS);
 #endif
 
 	// Build the scene from these assets
@@ -117,7 +127,91 @@ void BoardScreenApp::onShutdown() {
 * @param timestep  The amount of time (in seconds) since the last frame
 */
 void BoardScreenApp::update(float timestep) {
+#if defined CU_TOUCH_SCREEN //phone
 
+#else // Mouse/keyboard
+
+	Mouse *mouse = Input::get<Mouse>();
+
+
+	if (mouse->buttonPressed().hasLeft()) {
+		isMoving = true;
+		Vec2 pos = mouse->pointerPosition();
+		startX = pos.x;
+		startY = pos.y;
+
+		highlightX = floor(pos.x / (usedSize + 2.5));
+		highlightY = 4 - floor(pos.y / (usedSize + 2.5));
+		moveSince = 0;
+		finishedMove = false;
+	}
+
+	if (isMoving) {
+		if (mouse->buttonDown().hasLeft()) {
+			Vec2 pos = mouse->pointerPosition();
+			int difX = floor(pos.x / (usedSize + 2.5)) - highlightX;
+			int difY = 4 - floor(pos.y / (usedSize + 2.5)) - highlightY;
+			if (moveSince == 0) {
+				if (difX != 0 || difY != 0) {
+					if (difX != 0) {
+						moveVert = false;
+						_board->slideRow(highlightY, difX > 0 ? 1 : -1);
+						moveSince = difX > 0 ? 1 : -1;
+					}
+					else {
+						moveVert = true;
+						_board->slideCol(highlightX, difY > 0 ? 1 : -1);
+						moveSince = difY > 0 ? 1 : -1;
+					}
+				}
+			}
+			else {
+				if (!moveVert) {
+					difX = difX - moveSince;
+					if (difX != 0) {
+						_board->slideRow(highlightY, difX > 0 ? 1 : -1);
+						moveSince += difX > 0 ? 1 : -1;
+					}
+				}
+				else {
+					difY = difY - moveSince;
+					if (difY != 0) {
+						_board->slideCol(highlightX, difY > 0 ? 1 : -1);
+						moveSince += difY > 0 ? 1 : -1;
+					}
+				}
+			}
+		}
+		else {
+			isMoving = false;
+
+			if (moveSince != 0) {
+				finishedMove = true;
+			}
+		}
+	} 
+
+	if (finishedMove) {
+		finishedMove = false; // Don't want to double catch a "move"
+		while (_board->checkForMatches());
+	}
+
+
+	/*if (mouse->buttonDown().hasLeft()) {
+		Vec2 pos = mouse->pointerPosition();
+		if (pos.x <= usedSize * 5 + 20 && pos.y <= usedSize * 5 + 20) {
+			showHighlight = true;
+			highlightX = floor(pos.x / (usedSize + 2.5));
+			highlightY = 4 - floor(pos.y / (usedSize + 2.5));
+		}
+		else {
+			showHighlight = false;
+		}
+	}
+	else {
+		showHighlight = false;
+	}*/
+#endif
 }
 
 /**
@@ -132,6 +226,13 @@ void BoardScreenApp::update(float timestep) {
 void BoardScreenApp::draw() {
 	// This takes care of begin/end
 	_scene->render(_batch);
+	if (showHighlight) {
+		_batch->begin();
+		Rect bounds = Rect(highlightX * usedSize + (highlightX - 1) * 5, highlightY * usedSize + (highlightY - 1) * 5, usedSize + 10, usedSize + 10);
+		_batch->draw(tileAsset, Color4::GREEN, bounds);
+		_batch->end();
+	}
+	_board->draw(_batch);
 }
 
 /**

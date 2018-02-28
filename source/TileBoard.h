@@ -25,6 +25,8 @@ protected:
     //Number of pawns
     int _numPawns;
 
+	std::vector<cugl::Color4> colorLookup;
+
 	//For now just treat tiles as an array of ints, where an int is the color of the tile
     int *_tiles;
 //    std::shared_ptr<int[]> _tiles;
@@ -45,6 +47,11 @@ protected:
 public:
 	TileBoard();
 	~TileBoard();
+
+	int gameHeight;
+	int gameWidth;
+	
+	std::shared_ptr<cugl::Texture> tileTexture;
     
     //Returns the value at the give (x, y) coordinate
     int get(int x, int y) const;
@@ -82,7 +89,7 @@ public:
     void slideCol(int x, int offset);
 
 	//Draws tiles and pawns
-	void draw();
+	void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);
     
     /**
      * Returns a string representation of the board for debugging purposes.

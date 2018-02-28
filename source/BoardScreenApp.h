@@ -23,6 +23,21 @@ protected:
 	std::shared_ptr<cugl::SpriteBatch> _batch;
 	std::shared_ptr<TileBoard> _board;
 
+	//Temp Variables
+	bool showHighlight = false;
+	float highlightX;
+	float highlightY;
+	std::shared_ptr<cugl::Texture> tileAsset;
+	float usedSize;
+
+
+	float startX;
+	float startY;
+	float moveSince;
+	bool moveVert;
+	bool isMoving;
+	bool finishedMove = false;
+
 	void buildScene();
 
 public:

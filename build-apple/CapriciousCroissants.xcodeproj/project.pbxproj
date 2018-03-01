@@ -7,13 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2065439C2043AED3007D541E /* Source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543972043AED3007D541E /* Source.cpp */; };
 		2065439D2043AED3007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
 		2065439E2043AED3007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
 		206543A32043B1BD007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
 		206543A42043B1BE007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
-		206543A52043B1C8007D541E /* Source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543972043AED3007D541E /* Source.cpp */; };
-		206543A62043B1C9007D541E /* Source.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543972043AED3007D541E /* Source.cpp */; };
 		206543A72043B1CD007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
 		206543A82043B1CE007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
 		EB0FF5092016E4A700517030 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5082016E4A700517030 /* CoreFoundation.framework */; };
@@ -107,7 +104,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		206543972043AED3007D541E /* Source.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Source.cpp; sourceTree = "<group>"; };
 		206543982043AED3007D541E /* TileBoard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TileBoard.cpp; sourceTree = "<group>"; };
 		206543992043AED3007D541E /* TileBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileBoard.h; sourceTree = "<group>"; };
 		2065439A2043AED3007D541E /* BoardScreenApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoardScreenApp.cpp; sourceTree = "<group>"; };
@@ -337,7 +333,6 @@
 			isa = PBXGroup;
 			children = (
 				EB2BE9B41D74952A002FE78B /* main.cpp */,
-				206543972043AED3007D541E /* Source.cpp */,
 				2065439B2043AED3007D541E /* BoardScreenApp.h */,
 				2065439A2043AED3007D541E /* BoardScreenApp.cpp */,
 				206543992043AED3007D541E /* TileBoard.h */,
@@ -416,6 +411,7 @@
 					};
 					EB74548B1D74D75C002FBAE6 = {
 						CreatedOnToolsVersion = 7.3.1;
+						DevelopmentTeam = 25N7YFERVM;
 					};
 					EBBF18901D74904A008E2001 = {
 						CreatedOnToolsVersion = 7.3.1;
@@ -519,7 +515,6 @@
 			files = (
 				206543A82043B1CE007D541E /* TileBoard.cpp in Sources */,
 				206543A42043B1BE007D541E /* BoardScreenApp.cpp in Sources */,
-				206543A62043B1C9007D541E /* Source.cpp in Sources */,
 				EB0FF61D2016F06000517030 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -530,7 +525,6 @@
 			files = (
 				206543A72043B1CD007D541E /* TileBoard.cpp in Sources */,
 				206543A32043B1BD007D541E /* BoardScreenApp.cpp in Sources */,
-				206543A52043B1C8007D541E /* Source.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -540,7 +534,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				2065439E2043AED3007D541E /* BoardScreenApp.cpp in Sources */,
-				2065439C2043AED3007D541E /* Source.cpp in Sources */,
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
 				2065439D2043AED3007D541E /* TileBoard.cpp in Sources */,
 			);
@@ -626,7 +619,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 25N7YFERVM;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";
@@ -649,7 +642,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = 25N7YFERVM;
 				ENABLE_BITCODE = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/iOS-Info.plist";

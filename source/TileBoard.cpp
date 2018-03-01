@@ -20,6 +20,7 @@ _numPawns(4) {
 	colorLookup = {Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE};
     srand((int)time(NULL));
     generateNewBoard();
+    while (checkForMatches());
 	srand((int)time(NULL));
 }
 

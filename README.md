@@ -5,5 +5,10 @@ files to sources and assets, as appropriate.  This will allow access to the Appl
 Android, and Windows IDEs.
 
 You will need to make changes to the project to give it a different name and package
-identifier (to prevent your application from clashing with others).  See the course 
-web page for instructions  
+identifier (to prevent your application from clashing with others).  See the course
+web page for instructions
+
+## Gameplay Prototype
+### Supported platforms
+- Android
+- iOS

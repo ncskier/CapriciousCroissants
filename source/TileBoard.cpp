@@ -6,6 +6,7 @@
 #include <iostream>
 #include <ctime>
 #include <cstdlib>
+#include <set>
 
 #include "TileBoard.h"
 #include <cugl/base/CUBase.h>
@@ -16,7 +17,11 @@ using namespace cugl;
 TileBoard::TileBoard() :
 _sideSize(5),
 _numColors(5),
-_numPawns(4) {
+_numPawns(4),
+offsetRowIdx(-1),
+offsetColIdx(-1),
+offsetRowValue(0.0f),
+offsetColValue(0.0f) {
 	colorLookup = {Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE};
     srand((int)time(NULL));
     generateNewBoard();
@@ -71,123 +76,50 @@ void TileBoard::removePawn(int i) {
 
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
 bool TileBoard::checkForMatches() {
-    std::vector<int> toBeReplaced;
-
-    for (int x = 0; x < _sideSize; x++){
-        for (int y = 0; y < _sideSize; y++){
-            // Check if tile was already removed
-            if (get(x,y) != -1) {
-                //Search upwards
-                if (y > 1) {
-                    // At least 3 in a row?
-                    if (get(x, y-1) == get(x,y) && get(x, y-2) == get(x,y)){
-                        int pointer = y;
-                        bool pointIsMatch = true;
-                        while(pointIsMatch && pointer >= 0){
-                            //Add pointed tile to be replaced if not there already
-                            if(std::find(toBeReplaced.begin(), toBeReplaced.end(), indexOfCoordinate(x, pointer)) == toBeReplaced.end()) {
-                                toBeReplaced.push_back(indexOfCoordinate(x, pointer));
-                            }
-                            pointer--; //Move to next tile
-                            //Check if still match
-                            if (pointer >= 0 && get(x, pointer) == get(x,y)){
-                                pointIsMatch = true;
-                            }
-                            else{
-                                pointIsMatch = false;
-                            }
-                        }
-                    }
+    std::set<int> replaceTiles;
+    int *row = new int[_sideSize];
+    int *col = new int[_sideSize];
+    
+    // Check for matches
+    for (int i = 0; i < _sideSize; i++) {
+        for (int j = 0; j < _sideSize; j++) {
+            row[j] = get(j, i);
+            col[j] = get(i, j);
+            if (j >= 2) {
+                // Check Row
+                if (row[j] == row[j-1] && row[j-1] == row[j-2]) {
+                    replaceTiles.insert(indexOfCoordinate(j, i));
+                    replaceTiles.insert(indexOfCoordinate(j-1, i));
+                    replaceTiles.insert(indexOfCoordinate(j-2, i));
                 }
-                // Search rightwards
-                if (x < _sideSize - 2) {
-                    // At least 3 in a row?
-                    if (get(x+1, y) == get(x,y) && get(x+2, y) == get(x,y)){
-                        int pointer = x;
-                        bool pointIsMatch = true;
-                        while(pointIsMatch && pointer < _sideSize){
-                            //Add pointed tile to be replaced if not there already
-                            if(std::find(toBeReplaced.begin(), toBeReplaced.end(), indexOfCoordinate(pointer, y)) == toBeReplaced.end()) {
-                                toBeReplaced.push_back(indexOfCoordinate(pointer, y));
-                            }
-                            pointer++; //Move to next tile
-                            //Check if still match
-                            if (pointer < _sideSize && get(pointer, y) == get(x,y)){
-                                pointIsMatch = true;
-                            }
-                            else{
-                                pointIsMatch = false;
-                            }
-                        }
-                    }
-                }
-                // Search downwards
-                if (y < _sideSize - 2){
-                    // At least 3 in a row?
-                    if (get(x, y+1) == get(x,y) && get(x, y+2) == get(x,y)){
-                        int pointer = y;
-                        bool pointIsMatch = true;
-                        while(pointIsMatch && pointer < _sideSize){
-                            //Add pointed tile to be replaced if not there already
-                            if(std::find(toBeReplaced.begin(), toBeReplaced.end(), indexOfCoordinate(x, pointer)) == toBeReplaced.end()) {
-                                toBeReplaced.push_back(indexOfCoordinate(x, pointer));
-                            }
-                            pointer++; //Move to next tile
-                            //Check if still match
-                            if (pointer < _sideSize && get(x, pointer) == get(x,y)){
-                                pointIsMatch = true;
-                            }
-                            else{
-                                pointIsMatch = false;
-                            }
-                        }
-                    }
-                }
-                //search leftwards
-                if(x > 1){
-                    // At least 3 in a row?
-                    if (get(x-1, y) == get(x,y) && get(x-2, y) == get(x,y)){
-                        int pointer = x;
-                        bool pointIsMatch = true;
-                        while(pointIsMatch && pointer >= 0){
-                            //Add pointed tile to be replaced if not there already
-                            if(std::find(toBeReplaced.begin(), toBeReplaced.end(), indexOfCoordinate(pointer, y)) == toBeReplaced.end()) {
-                                toBeReplaced.push_back(indexOfCoordinate(pointer, y));
-                            }
-                            pointer--; //Move to next tile
-                            //Check if still match
-                            if (pointer >= 0 && get(pointer, y) == get(x,y)){
-                                pointIsMatch = true;
-                            }
-                            else{
-                                pointIsMatch = false;
-                            }
-                        }
-                    }
+                // Check Column
+                if (col[j] == col[j-1] && col[j-1] == col[j-2]) {
+                    replaceTiles.insert(indexOfCoordinate(i, j));
+                    replaceTiles.insert(indexOfCoordinate(i, j-1));
+                    replaceTiles.insert(indexOfCoordinate(i, j-2));
                 }
             }
         }
     }
-
-    if(!toBeReplaced.empty()) {
-        //Remove pawns that are on tiles to be replaced
-        /*for (int i = 0; i < _numPawns; i++) {
-            if (std::find(toBeReplaced.begin(), toBeReplaced.end(),
-                          indexOfCoordinate(_pawns[i].x, _pawns[i].y)) != toBeReplaced.end()) {
+    
+    bool matchExists = !replaceTiles.empty();
+    delete [] row;
+    delete [] col;
+    
+    // Replace Tiles
+    std::set<int>::iterator iter;
+    for (iter = replaceTiles.begin(); iter != replaceTiles.end(); iter++) {
+        // Replace tile
+        replaceTile(*iter);
+        // Remove pawn
+        for (int i = 0; i < _numPawns; i++) {
+            if (indexOfCoordinate(_pawns[i].x, _pawns[i].y) == *iter) {
                 removePawn(i);
             }
-        }*/
-
-        //Replace tiles that need to be replaced
-        for (int j = 0; j < toBeReplaced.size(); j++){
-            replaceTile(toBeReplaced[j]);
         }
-		toBeReplaced.clear();
-        return true;
     }
-    else{
-        return false;
-    }
+    
+    return matchExists;
 }
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
@@ -229,6 +161,26 @@ void TileBoard::slide(bool row, int k, int offset) {
         }
         set(x, y, line[j]);
     }
+}
+
+//Offset view of row (not model)
+void TileBoard::offsetRow(int idx, float value) {
+    offsetRowIdx = idx;
+    offsetRowValue = value;
+}
+
+//Offset view of col (not model)
+void TileBoard::offsetCol(int idx, float value) {
+    offsetColIdx = idx;
+    offsetColValue = value;
+}
+
+//Offset reset
+void TileBoard::offsetReset() {
+    offsetRowIdx = -1;
+    offsetColIdx = -1;
+    offsetRowValue = 0.0f;
+    offsetColValue = 0.0f;
 }
 
 //Slide row [y] by [offset]

@@ -50,6 +50,11 @@ public:
 
 	int gameHeight;
 	int gameWidth;
+    
+    int offsetRowIdx;
+    int offsetColIdx;
+    float offsetRowValue;
+    float offsetColValue;
 	
 	std::shared_ptr<cugl::Texture> tileTexture;
     
@@ -81,6 +86,15 @@ public:
 
 	//Generates a new board into the _tiles variable
 	void generateNewBoard();
+    
+    //Offset view of row (not model)
+    void offsetRow(int idx, float value);
+    
+    //Offset view of col (not model)
+    void offsetCol(int idx, float value);
+    
+    //Offset reset
+    void offsetReset();
     
     //Slide row [y] by [offset]
     void slideRow(int y, int offset);

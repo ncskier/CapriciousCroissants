@@ -17,7 +17,7 @@ using namespace cugl;
 TileBoard::TileBoard() :
 _sideSize(5),
 _numColors(5),
-_numPawns(4),
+_numPawns(1),
 offsetRowIdx(-1),
 offsetColIdx(-1),
 offsetRowValue(0.0f),
@@ -112,9 +112,11 @@ bool TileBoard::checkForMatches() {
         // Replace tile
         replaceTile(*iter);
         // Remove pawn
-        for (int i = 0; i < _numPawns; i++) {
-            if (indexOfCoordinate(_pawns[i].x, _pawns[i].y) == *iter) {
-                removePawn(i);
+        if (_pawns) {
+            for (int i = 0; i < _numPawns; i++) {
+                if (indexOfCoordinate(_pawns[i].x, _pawns[i].y) == *iter) {
+                    removePawn(i);
+                }
             }
         }
     }
@@ -137,8 +139,18 @@ void TileBoard::generateNewBoard() {
         _tiles[i] = color;
     }
     
+    // Replace any matches
+    while (checkForMatches());
+    
     // Setup Pawns
     _pawns = new Vec2[_numPawns];
+    int x;
+    int y;
+    for (int i = 0; i < _numPawns; i++) {
+        x = rand() % _sideSize;
+        y = rand() % _sideSize;
+        _pawns[i].set(x, y);
+    }
 }
 
 //Slide row or column by [offset]
@@ -210,9 +222,19 @@ void TileBoard::draw(const std::shared_ptr<SpriteBatch>& batch) {
 			batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)]), bounds);
 		}
 	}
+    
+    // Draw Pawns
+    for (int i = 0; i < _numPawns; i++) {
+        Vec2 pawn = _pawns[i];
+        if (pawn.x != -1 && pawn.y != -1) {
+            float xPos = usedSize * pawn.x + (pawn.x * _sideSize) + (usedSize/4.0f);
+            float yPos = usedSize * pawn.y + (pawn.y * _sideSize) + (usedSize/4.0f);
+            bounds.set(xPos, yPos, usedSize/2.0f, usedSize/2.0f);
+            batch->draw(tileTexture, Color4::GRAY, bounds);
+        }
+    }
 
 	batch->end();
-    // TODO: draw()
 }
 
 /**

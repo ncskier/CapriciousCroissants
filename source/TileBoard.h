@@ -43,6 +43,9 @@ protected:
     
     //Slide row or column by [offset]
     void slide(bool row, int k, int offset);
+    
+    // Slide pawns in row or column [k] by [offset]
+    void slidePawns(bool row, int k, int offset);
 	
 public:
 	TileBoard();

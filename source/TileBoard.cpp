@@ -153,6 +153,35 @@ void TileBoard::generateNewBoard() {
     }
 }
 
+// Slide pawns in row or column [k] by [offset]
+void TileBoard::slidePawns(bool row, int k, int offset) {
+    // Slide pawns
+    for (int i = 0; i < _numPawns; i++) {
+        Vec2 pawn = _pawns[i];
+        if (pawn.x != -1 && pawn.y != -1) {
+            if (row) {
+                // Row
+                if (k == pawn.y) {
+                    float x = ((int)pawn.x + offset) % _sideSize;
+                    while (x < 0) {
+                        x += _sideSize;
+                    }
+                    _pawns[i].x = x;
+                }
+            } else {
+                // Column
+                if (k == pawn.x) {
+                    float y = ((int)pawn.y + offset) % _sideSize;
+                    while (y < 0) {
+                        y += _sideSize;
+                    }
+                    _pawns[i].y = y;
+                }
+            }
+        }
+    }
+}
+
 //Slide row or column by [offset]
 void TileBoard::slide(bool row, int k, int offset) {
     // Copy
@@ -173,6 +202,9 @@ void TileBoard::slide(bool row, int k, int offset) {
         }
         set(x, y, line[j]);
     }
+    
+    // Slide pawns
+    slidePawns(row, k, offset);
 }
 
 //Offset view of row (not model)

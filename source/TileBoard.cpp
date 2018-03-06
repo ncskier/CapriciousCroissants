@@ -112,7 +112,7 @@ bool TileBoard::checkForMatches() {
         // Replace tile
         replaceTile(*iter);
         // Remove pawn
-        if (_pawns) {
+        if (_pawns != nullptr) {
             for (int i = 0; i < _numPawns; i++) {
                 if (indexOfCoordinate(_pawns[i].x, _pawns[i].y) == *iter) {
                     removePawn(i);

@@ -143,4 +143,8 @@ public:
 
 };
 
+class BoardModel {
+    
+};
+
 #endif /* __Board_Model_H__ */

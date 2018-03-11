@@ -161,5 +161,14 @@ void PlayMode::update(float dt) {
             _state = State::PLAYER;
             _enemyController.reset();
         }
-    }    
+    }
+}
+
+/**
+ * Draw the game
+ *
+ * @param batch     The SpriteBatch to draw with.
+ */
+void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
+    // TODO: draw bord
 }

@@ -177,6 +177,13 @@ public:
      * Resets the status of the game so that we can play again.
      */
     void reset();
+    
+    /**
+     * Draw the game
+     *
+     * @param batch     The SpriteBatch to draw with.
+     */
+    void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);
 };
 
 #endif /* __Play_Mode_H__ */

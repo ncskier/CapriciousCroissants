@@ -147,7 +147,8 @@ void BoxApp::draw() {
     if (!_loaded) {
         _loading.render(_batch);
     } else {
-        _gameplay.render(_batch);
+        _gameplay.draw(_batch);
+//        _gameplay.render(_batch);
     }
 }
 

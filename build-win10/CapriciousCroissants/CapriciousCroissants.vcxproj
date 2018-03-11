@@ -185,14 +185,36 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\source\BoardController.h" />
+    <ClInclude Include="..\..\source\BoardModel.h" />
     <ClInclude Include="..\..\source\BoardScreenApp.h" />
+    <ClInclude Include="..\..\source\BoxApp.h" />
+    <ClInclude Include="..\..\source\EnemyController.h" />
+    <ClInclude Include="..\..\source\InputController.h" />
+    <ClInclude Include="..\..\source\LoadingMode.h" />
+    <ClInclude Include="..\..\source\MenuMode.h" />
+    <ClInclude Include="..\..\source\PlayerController.h" />
+    <ClInclude Include="..\..\source\PlayerPawnModel.h" />
+    <ClInclude Include="..\..\source\PlayMode.h" />
     <ClInclude Include="..\..\source\TileBoard.h" />
+    <ClInclude Include="..\..\source\TileModel.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\source\BoardController.cpp" />
+    <ClCompile Include="..\..\source\BoardModel.cpp" />
     <ClCompile Include="..\..\source\BoardScreenApp.cpp" />
+    <ClCompile Include="..\..\source\BoxApp.cpp" />
+    <ClCompile Include="..\..\source\EnemyController.cpp" />
+    <ClCompile Include="..\..\source\InputController.cpp" />
+    <ClCompile Include="..\..\source\LoadingMode.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
+    <ClCompile Include="..\..\source\MenuMode.cpp" />
+    <ClCompile Include="..\..\source\PlayerController.cpp" />
+    <ClCompile Include="..\..\source\PlayerPawnModel.cpp" />
+    <ClCompile Include="..\..\source\PlayMode.cpp" />
     <ClCompile Include="..\..\source\TileBoard.cpp" />
+    <ClCompile Include="..\..\source\TileModel.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CapriciousCroissants.rc" />

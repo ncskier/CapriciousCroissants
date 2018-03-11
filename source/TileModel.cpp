@@ -7,3 +7,8 @@
 //
 
 #include "TileModel.h"
+
+void TileModel::setColor(cugl::Color4 c) {
+	_color = c;
+
+}

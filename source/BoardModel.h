@@ -11,4 +11,8 @@
 
 #include <cugl/cugl.h>
 
+class BoardModel {
+    
+};
+
 #endif /* __Board_Model_H__ */

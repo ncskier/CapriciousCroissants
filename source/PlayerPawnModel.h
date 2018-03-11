@@ -11,4 +11,8 @@
 
 #include <cugl/cugl.h>
 
+class playerPawn {
+
+};
+
 #endif /* __Player_Pawn_Model_H__ */

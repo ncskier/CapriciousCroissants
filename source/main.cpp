@@ -28,6 +28,7 @@
 //  Version: 7/1/16
 
 // Include your application class
+#include "BoxApp.h"
 #include "BoardScreenApp.h"
 
 // This keeps us from having to write cugl:: all the time
@@ -48,7 +49,8 @@ using namespace cugl;
  */
 int main(int argc, char * argv[]) {
     // Change this to your application class
-    BoardScreenApp app;
+//    BoardScreenApp app;
+    BoxApp app;
     
     /// SET YOUR APPLICATION PROPERTIES
     
@@ -59,9 +61,9 @@ int main(int argc, char * argv[]) {
     app.setOrganization("GDIAC");
 
     // Set the window properties (Only applies to OS X/Windows Desktop)
+    app.setHighDPI(true);
     app.setSize(GAME_WIDTH, GAME_HEIGHT);
     app.setFPS(60.0f);
-    app.setHighDPI(true);
     
     /// DO NOT MODIFY ANYTHING BELOW THIS LINE
     if (!app.init()) {

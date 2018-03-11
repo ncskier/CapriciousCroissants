@@ -25,6 +25,27 @@
 		20F92DD02055894000F4DCC3 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DCE2055894000F4DCC3 /* InputController.cpp */; };
 		20F92DD12055894000F4DCC3 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DCE2055894000F4DCC3 /* InputController.cpp */; };
 		20F92DD22055894000F4DCC3 /* InputController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DCE2055894000F4DCC3 /* InputController.cpp */; };
+		20F92DD92055A30000F4DCC3 /* MenuMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DD72055A30000F4DCC3 /* MenuMode.cpp */; };
+		20F92DDA2055A30000F4DCC3 /* MenuMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DD72055A30000F4DCC3 /* MenuMode.cpp */; };
+		20F92DDB2055A30000F4DCC3 /* MenuMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DD72055A30000F4DCC3 /* MenuMode.cpp */; };
+		20F92DDE2055A4B300F4DCC3 /* PlayerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DDC2055A4B300F4DCC3 /* PlayerController.cpp */; };
+		20F92DDF2055A4B300F4DCC3 /* PlayerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DDC2055A4B300F4DCC3 /* PlayerController.cpp */; };
+		20F92DE02055A4B300F4DCC3 /* PlayerController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DDC2055A4B300F4DCC3 /* PlayerController.cpp */; };
+		20F92DE42055A73900F4DCC3 /* BoardController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DE22055A73900F4DCC3 /* BoardController.cpp */; };
+		20F92DE52055A73900F4DCC3 /* BoardController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DE22055A73900F4DCC3 /* BoardController.cpp */; };
+		20F92DE62055A73900F4DCC3 /* BoardController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DE22055A73900F4DCC3 /* BoardController.cpp */; };
+		20F92DE92055A74200F4DCC3 /* EnemyController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DE72055A74200F4DCC3 /* EnemyController.cpp */; };
+		20F92DEA2055A74200F4DCC3 /* EnemyController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DE72055A74200F4DCC3 /* EnemyController.cpp */; };
+		20F92DEB2055A74200F4DCC3 /* EnemyController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DE72055A74200F4DCC3 /* EnemyController.cpp */; };
+		20F92DEE2055A81B00F4DCC3 /* BoardModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DEC2055A81B00F4DCC3 /* BoardModel.cpp */; };
+		20F92DEF2055A81B00F4DCC3 /* BoardModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DEC2055A81B00F4DCC3 /* BoardModel.cpp */; };
+		20F92DF02055A81B00F4DCC3 /* BoardModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DEC2055A81B00F4DCC3 /* BoardModel.cpp */; };
+		20F92DF32055A85300F4DCC3 /* TileModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DF12055A85300F4DCC3 /* TileModel.cpp */; };
+		20F92DF42055A85300F4DCC3 /* TileModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DF12055A85300F4DCC3 /* TileModel.cpp */; };
+		20F92DF52055A85300F4DCC3 /* TileModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DF12055A85300F4DCC3 /* TileModel.cpp */; };
+		20F92DF82055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DF62055A8A600F4DCC3 /* PlayerPawnModel.cpp */; };
+		20F92DF92055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DF62055A8A600F4DCC3 /* PlayerPawnModel.cpp */; };
+		20F92DFA2055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DF62055A8A600F4DCC3 /* PlayerPawnModel.cpp */; };
 		EB0FF5092016E4A700517030 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5082016E4A700517030 /* CoreFoundation.framework */; };
 		EB0FF53F2016E83700517030 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5352016E83500517030 /* CoreGraphics.framework */; };
 		EB0FF5412016E83700517030 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5392016E83500517030 /* CoreMotion.framework */; };
@@ -128,6 +149,20 @@
 		20F92DCA2055811C00F4DCC3 /* LoadingMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoadingMode.h; sourceTree = "<group>"; };
 		20F92DCE2055894000F4DCC3 /* InputController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = InputController.cpp; sourceTree = "<group>"; };
 		20F92DCF2055894000F4DCC3 /* InputController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = InputController.h; sourceTree = "<group>"; };
+		20F92DD72055A30000F4DCC3 /* MenuMode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MenuMode.cpp; sourceTree = "<group>"; };
+		20F92DD82055A30000F4DCC3 /* MenuMode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MenuMode.h; sourceTree = "<group>"; };
+		20F92DDC2055A4B300F4DCC3 /* PlayerController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerController.cpp; sourceTree = "<group>"; };
+		20F92DDD2055A4B300F4DCC3 /* PlayerController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerController.h; sourceTree = "<group>"; };
+		20F92DE22055A73900F4DCC3 /* BoardController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoardController.cpp; sourceTree = "<group>"; };
+		20F92DE32055A73900F4DCC3 /* BoardController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoardController.h; sourceTree = "<group>"; };
+		20F92DE72055A74200F4DCC3 /* EnemyController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EnemyController.cpp; sourceTree = "<group>"; };
+		20F92DE82055A74200F4DCC3 /* EnemyController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EnemyController.h; sourceTree = "<group>"; };
+		20F92DEC2055A81B00F4DCC3 /* BoardModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoardModel.cpp; sourceTree = "<group>"; };
+		20F92DED2055A81B00F4DCC3 /* BoardModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoardModel.h; sourceTree = "<group>"; };
+		20F92DF12055A85300F4DCC3 /* TileModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = TileModel.cpp; sourceTree = "<group>"; };
+		20F92DF22055A85300F4DCC3 /* TileModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = TileModel.h; sourceTree = "<group>"; };
+		20F92DF62055A8A600F4DCC3 /* PlayerPawnModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerPawnModel.cpp; sourceTree = "<group>"; };
+		20F92DF72055A8A600F4DCC3 /* PlayerPawnModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerPawnModel.h; sourceTree = "<group>"; };
 		EB0FF5082016E4A700517030 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		EB0FF5352016E83500517030 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		EB0FF5392016E83500517030 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
@@ -242,30 +277,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		20F92DD52055916300F4DCC3 /* Controllers */ = {
-			isa = PBXGroup;
-			children = (
-				20F92DBD20557DE000F4DCC3 /* BoxApp.h */,
-				20F92DBC20557DE000F4DCC3 /* BoxApp.cpp */,
-				20F92DCA2055811C00F4DCC3 /* LoadingMode.h */,
-				20F92DC92055811C00F4DCC3 /* LoadingMode.cpp */,
-				20F92DC52055804500F4DCC3 /* PlayMode.h */,
-				20F92DC42055804500F4DCC3 /* PlayMode.cpp */,
-				20F92DCF2055894000F4DCC3 /* InputController.h */,
-				20F92DCE2055894000F4DCC3 /* InputController.cpp */,
-			);
-			path = Controllers;
-			sourceTree = "<group>";
-		};
-		20F92DD62055918700F4DCC3 /* Models */ = {
-			isa = PBXGroup;
-			children = (
-				206543992043AED3007D541E /* TileBoard.h */,
-				206543982043AED3007D541E /* TileBoard.cpp */,
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
 		EB2BE9B71D749870002FE78B /* Assets */ = {
 			isa = PBXGroup;
 			children = (
@@ -377,10 +388,32 @@
 			isa = PBXGroup;
 			children = (
 				EB2BE9B41D74952A002FE78B /* main.cpp */,
-				20F92DD52055916300F4DCC3 /* Controllers */,
+				20F92DBD20557DE000F4DCC3 /* BoxApp.h */,
+				20F92DBC20557DE000F4DCC3 /* BoxApp.cpp */,
+				20F92DCF2055894000F4DCC3 /* InputController.h */,
+				20F92DCE2055894000F4DCC3 /* InputController.cpp */,
+				20F92DCA2055811C00F4DCC3 /* LoadingMode.h */,
+				20F92DC92055811C00F4DCC3 /* LoadingMode.cpp */,
+				20F92DD82055A30000F4DCC3 /* MenuMode.h */,
+				20F92DD72055A30000F4DCC3 /* MenuMode.cpp */,
+				20F92DC52055804500F4DCC3 /* PlayMode.h */,
+				20F92DC42055804500F4DCC3 /* PlayMode.cpp */,
+				20F92DDD2055A4B300F4DCC3 /* PlayerController.h */,
+				20F92DDC2055A4B300F4DCC3 /* PlayerController.cpp */,
+				20F92DE32055A73900F4DCC3 /* BoardController.h */,
+				20F92DE22055A73900F4DCC3 /* BoardController.cpp */,
+				20F92DE82055A74200F4DCC3 /* EnemyController.h */,
+				20F92DE72055A74200F4DCC3 /* EnemyController.cpp */,
+				20F92DED2055A81B00F4DCC3 /* BoardModel.h */,
+				20F92DEC2055A81B00F4DCC3 /* BoardModel.cpp */,
+				20F92DF22055A85300F4DCC3 /* TileModel.h */,
+				20F92DF12055A85300F4DCC3 /* TileModel.cpp */,
+				20F92DF72055A8A600F4DCC3 /* PlayerPawnModel.h */,
+				20F92DF62055A8A600F4DCC3 /* PlayerPawnModel.cpp */,
 				2065439B2043AED3007D541E /* BoardScreenApp.h */,
 				2065439A2043AED3007D541E /* BoardScreenApp.cpp */,
-				20F92DD62055918700F4DCC3 /* Models */,
+				206543992043AED3007D541E /* TileBoard.h */,
+				206543982043AED3007D541E /* TileBoard.cpp */,
 			);
 			name = Source;
 			path = ../source;
@@ -558,12 +591,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				20F92DC82055804500F4DCC3 /* PlayMode.cpp in Sources */,
+				20F92DE02055A4B300F4DCC3 /* PlayerController.cpp in Sources */,
 				20F92DCD2055811C00F4DCC3 /* LoadingMode.cpp in Sources */,
 				206543A82043B1CE007D541E /* TileBoard.cpp in Sources */,
+				20F92DF52055A85300F4DCC3 /* TileModel.cpp in Sources */,
 				20F92DD22055894000F4DCC3 /* InputController.cpp in Sources */,
+				20F92DFA2055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */,
 				20F92DC020557DE000F4DCC3 /* BoxApp.cpp in Sources */,
+				20F92DE62055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				206543A42043B1BE007D541E /* BoardScreenApp.cpp in Sources */,
+				20F92DF02055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				EB0FF61D2016F06000517030 /* main.cpp in Sources */,
+				20F92DDB2055A30000F4DCC3 /* MenuMode.cpp in Sources */,
+				20F92DEB2055A74200F4DCC3 /* EnemyController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -572,12 +612,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				20F92DC72055804500F4DCC3 /* PlayMode.cpp in Sources */,
+				20F92DDF2055A4B300F4DCC3 /* PlayerController.cpp in Sources */,
 				20F92DCC2055811C00F4DCC3 /* LoadingMode.cpp in Sources */,
 				206543A72043B1CD007D541E /* TileBoard.cpp in Sources */,
+				20F92DF42055A85300F4DCC3 /* TileModel.cpp in Sources */,
 				20F92DD12055894000F4DCC3 /* InputController.cpp in Sources */,
+				20F92DF92055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */,
 				20F92DBF20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
+				20F92DE52055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				206543A32043B1BD007D541E /* BoardScreenApp.cpp in Sources */,
+				20F92DEF2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
+				20F92DDA2055A30000F4DCC3 /* MenuMode.cpp in Sources */,
+				20F92DEA2055A74200F4DCC3 /* EnemyController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -586,12 +633,19 @@
 			buildActionMask = 2147483647;
 			files = (
 				20F92DC62055804500F4DCC3 /* PlayMode.cpp in Sources */,
+				20F92DDE2055A4B300F4DCC3 /* PlayerController.cpp in Sources */,
 				20F92DCB2055811C00F4DCC3 /* LoadingMode.cpp in Sources */,
 				2065439E2043AED3007D541E /* BoardScreenApp.cpp in Sources */,
+				20F92DF32055A85300F4DCC3 /* TileModel.cpp in Sources */,
 				20F92DD02055894000F4DCC3 /* InputController.cpp in Sources */,
+				20F92DF82055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */,
 				20F92DBE20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
+				20F92DE42055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
+				20F92DEE2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				2065439D2043AED3007D541E /* TileBoard.cpp in Sources */,
+				20F92DD92055A30000F4DCC3 /* MenuMode.cpp in Sources */,
+				20F92DE92055A74200F4DCC3 /* EnemyController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

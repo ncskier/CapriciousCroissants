@@ -7,7 +7,9 @@
 //
 
 #include "BoardController.h"
+
 using namespace cugl;
+
 
 #pragma mark -
 #pragma mark Constructors
@@ -18,7 +20,6 @@ using namespace cugl;
  * This allows us to use a controller without a heap pointer.
  */
 BoardController::BoardController() {
-    
 }
 
 /**
@@ -34,6 +35,9 @@ BoardController::BoardController() {
  */
 bool BoardController::init(const std::shared_ptr<BoardModel>& board) {
     _board = board;
+    
+    _debug = false;
+    _complete = false;
     
     return true;
 }
@@ -56,12 +60,13 @@ void BoardController::dispose() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void BoardController::update(float timestep) {
-    
+//    CULog("BoardController Update");
+//    setComplete(true);
 }
 
 /**
  * Resets the status of the game so that we can play again.
  */
 void BoardController::reset() {
-    
+    _complete = false;
 }

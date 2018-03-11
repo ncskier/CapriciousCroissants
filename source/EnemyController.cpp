@@ -7,7 +7,9 @@
 //
 
 #include "EnemyController.h"
+
 using namespace cugl;
+
 
 #pragma mark -
 #pragma mark Constructors
@@ -18,7 +20,6 @@ using namespace cugl;
  * This allows us to use a controller without a heap pointer.
  */
 EnemyController::EnemyController() {
-    
 }
 
 /**
@@ -34,6 +35,9 @@ EnemyController::EnemyController() {
  */
 bool EnemyController::init(const std::shared_ptr<BoardModel>& board) {
     _board = board;
+    
+    _debug = false;
+    _complete = false;
     
     return true;
 }
@@ -56,12 +60,13 @@ void EnemyController::dispose() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void EnemyController::update(float timestep) {
-    
+//    CULog("EnemyController Update");
+//    setComplete(true);
 }
 
 /**
  * Resets the status of the game so that we can play again.
  */
 void EnemyController::reset() {
-    
+    _complete = false;
 }

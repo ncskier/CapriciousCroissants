@@ -23,6 +23,7 @@ using namespace cugl;
  * This allows us to use a controller without a heap pointer.
  */
 PlayMode::PlayMode() : Scene(),
+_state(State::PLAYER),
 _complete(false),
 _debug(false)
 {
@@ -58,9 +59,15 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets) {
     
     // Create board
     populate();
+    _state = State::PLAYER;
     _active = true;
     _complete = false;
     setDebug(false);
+    
+    // Start up turn controllers
+    _playerController.init(_board, &_input);
+    _boardController.init(_board);
+    _enemyController.init(_board);
     
     // Set Background
     Application::get()->setClearColor(Color4(229, 229, 229, 255));
@@ -78,6 +85,7 @@ void PlayMode::dispose() {
         _active = false;
         _complete = false;
         _debug = false;
+        _state = State::PLAYER;
     }
 }
 
@@ -102,7 +110,7 @@ void PlayMode::reset() {
  * with your serialization loader, which would process a level file.
  */
 void PlayMode::populate() {
-    // TODO: Populate
+    // TODO: Create a new BoardModel
 }
 
 
@@ -130,5 +138,28 @@ void PlayMode::update(float dt) {
         Application::get()->quit();
     }
     
-    // TODO: Handle Input
+    // Update
+//    CULog("PlayMode Update");
+    if (_state == State::PLAYER) {
+        // PLAYER turn
+        _playerController.update(dt);
+        if (_playerController.isComplete()) {
+            _state = State::BOARD;
+            _playerController.reset();
+        }
+    } else if (_state == State::BOARD) {
+        // BOARD turn
+        _boardController.update(dt);
+        if (_boardController.isComplete()) {
+            _state = State::ENEMY;
+            _boardController.reset();
+        }
+    } else {
+        // ENEMY turn
+        _enemyController.update(dt);
+        if (_enemyController.isComplete()) {
+            _state = State::PLAYER;
+            _enemyController.reset();
+        }
+    }    
 }

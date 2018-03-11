@@ -11,6 +11,10 @@
 
 #include <cugl/cugl.h>
 #include "InputController.h"
+#include "PlayerController.h"
+#include "BoardController.h"
+#include "EnemyController.h"
+#include "BoardModel.h"
 
 /**
  * This class is the primary gameplay constroller for the demo.
@@ -20,17 +24,39 @@
  * so that we can have a separate mode for the loading screen.
  */
 class PlayMode : public cugl::Scene {
+public:
+    /**
+     * Enum defining the different states of the gameplay loop
+     */
+    enum class State : unsigned int {
+        // Player turn
+        PLAYER = 0,
+        // Board turn
+        BOARD  = 1,
+        // Enemy turn
+        ENEMY  = 2
+    };
+
+    
 protected:
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
     
+    /** Game Board */
+    std::shared_ptr<BoardModel> _board;
+    
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
     InputController _input;
+    PlayerController _playerController;
+    BoardController _boardController;
+    EnemyController _enemyController;
     
     // VIEW
     
     
+    /** Current state of the game */
+    State _state;
     /** Whether we have completed this "game" */
     bool _complete;
     /** Whether or not debug mode is active */

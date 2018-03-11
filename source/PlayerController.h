@@ -18,7 +18,7 @@ class PlayerController {
 protected:
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
-    std::shared_ptr<InputController> _input;
+    const InputController *_input;
     
     // MODEL
     std::shared_ptr<BoardModel> _board;
@@ -65,7 +65,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<BoardModel>& board, const std::shared_ptr<InputController>& input);
+    bool init(const std::shared_ptr<BoardModel>& board, const InputController* input);
     
     
 #pragma mark -

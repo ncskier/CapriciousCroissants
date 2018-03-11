@@ -10,6 +10,7 @@
 
 using namespace cugl;
 
+
 #pragma mark -
 #pragma mark Constructors
 /**
@@ -19,7 +20,6 @@ using namespace cugl;
  * This allows us to use a controller without a heap pointer.
  */
 PlayerController::PlayerController() {
-    
 }
 
 /**
@@ -34,9 +34,12 @@ PlayerController::PlayerController() {
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool PlayerController::init(const std::shared_ptr<BoardModel>& board, const std::shared_ptr<InputController>& input) {
+bool PlayerController::init(const std::shared_ptr<BoardModel>& board, const InputController *input) {
     _board = board;
     _input = input;
+    
+    _debug = false;
+    _complete = false;
     
     return true;
 }
@@ -60,12 +63,13 @@ void PlayerController::dispose() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void PlayerController::update(float timestep) {
-    
+//    CULog("PlayerController Update");
+//    setComplete(true);
 }
 
 /**
  * Resets the status of the game so that we can play again.
  */
 void PlayerController::reset() {
-    
+    _complete = false;
 }

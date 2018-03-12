@@ -56,7 +56,7 @@ _tilePadding(5.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
-    colorLookup = { Color4::WHITE, Color4::RED, Color4::, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
+    colorLookup = { Color4::WHITE, Color4::RED, Color4::CYAN, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
 	srand((int)time(NULL));
 	generateNewBoard();
 	while (checkForMatches());

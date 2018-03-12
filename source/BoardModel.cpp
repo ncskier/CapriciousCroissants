@@ -320,35 +320,38 @@ void BoardModel::slideCol(int x, int offset) {
 
 // Draws all of the tiles and pawns(in that order) 
 void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
-	batch->begin();
+    batch->begin();
+    Rect bounds1 = Rect(0.0f, 0.0f, 50.0f, 50.0f);
+    batch->draw(tileTexture, Color4::GREEN, bounds1);
+    
 
-	float tileWidth = (gameWidth - 20) / 5;
-	float tileHeight = (gameHeight - 20) / 5;
-	float usedSize = tileWidth > tileHeight ? tileHeight : tileWidth;
-	Rect bounds = Rect(0, 0, usedSize, usedSize);
+    float tileWidth = (gameWidth - 20) / 5;
+    float tileHeight = (gameHeight - 20) / 5;
+    float usedSize = tileWidth > tileHeight ? tileHeight : tileWidth;
+    Rect bounds = Rect(0, 0, usedSize, usedSize);
 
-	for (int x = 0; x < _width; x++) {
-		float xPos = usedSize * x + (x * 5);
-		for (int y = 0; y < _height; y++) {
-			float yPos = usedSize * y + (y * 5);
-			bounds.set(xPos, yPos, usedSize, usedSize);
-			batch->draw(tileTexture, _tiles[indexOfCoordinate(x, y)].getColor(), bounds);
-		}
-	}
+    for (int x = 0; x < _width; x++) {
+        float xPos = usedSize * x + (x * 5);
+        for (int y = 0; y < _height; y++) {
+            float yPos = usedSize * y + (y * 5);
+            bounds.set(xPos, yPos, usedSize, usedSize);
+            batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+        }
+    }
 
-	// Draw Pawns
-	/*for (int i = 0; i < _numPawns; i++) {
-		Vec2 pawn = _pawns[i];
-		if (pawn.x != -1 && pawn.y != -1) {
-			float xPos = usedSize * pawn.x + (pawn.x * _sideSize) + (usedSize / 4.0f);
-			float yPos = usedSize * pawn.y + (pawn.y * _sideSize) + (usedSize / 4.0f);
-			bounds.set(xPos, yPos, usedSize / 2.0f, usedSize / 2.0f);
-			batch->draw(tileTexture, Color4::GRAY, bounds);
-		}
-	}*/
-	//TODO ^^^
+    // Draw Pawns
+    /*for (int i = 0; i < _numPawns; i++) {
+        Vec2 pawn = _pawns[i];
+        if (pawn.x != -1 && pawn.y != -1) {
+            float xPos = usedSize * pawn.x + (pawn.x * _sideSize) + (usedSize / 4.0f);
+            float yPos = usedSize * pawn.y + (pawn.y * _sideSize) + (usedSize / 4.0f);
+            bounds.set(xPos, yPos, usedSize / 2.0f, usedSize / 2.0f);
+            batch->draw(tileTexture, Color4::GRAY, bounds);
+        }
+    }*/
+    //TODO ^^^
 
-	batch->end();
+    batch->end();
 }
 
 /**
@@ -370,6 +373,7 @@ std::string BoardModel::toString() const {
         ss << "(" << _allies[i].x << ", " << _allies[i].y << ")";
         ss << "   ";
     }
+    ss << "]";
     return ss.str();
 }
 

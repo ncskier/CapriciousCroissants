@@ -28,7 +28,7 @@ public:
     /**
      * Enum defining the different states of the gameplay loop
      */
-    enum class State : unsigned int {
+    enum State : unsigned int {
         // Player turn
         PLAYER = 0,
         // Board turn

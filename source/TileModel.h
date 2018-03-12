@@ -12,26 +12,17 @@
 #include <cugl/cugl.h>
 class TileModel {
 protected:
-	int _sideSize;
+    int _color;
 
 private:
 	int _index;
-	cugl::Color4 _color;
 
 public:
-	int getIndex() const { return _index; }
+    int getIndex() const { return _index; }
 
-	cugl::Color4 getColor() const { return _color;	}
+    int getColor() const { return _color; }
 
-	void setColor(cugl::Color4 c);
-
-	int x;
-
-	int y;
-
-		
-
-
+    void setColor(int color) { _color = color; }
 };
 
 #endif /* __Tile_Model_H__ */

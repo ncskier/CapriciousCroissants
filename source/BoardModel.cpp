@@ -119,8 +119,8 @@ bool BoardModel::checkForMatches() {
 	// Check for matches
 	for (int i = 0; i < _height; i++) {
 		for (int j = 0; j < _width; j++) {
-			row[j] = get(j, i);
-			col[j] = get(i, j);
+			row[j] = getTile(j, i).getColor();
+			col[j] = getTile(i, j).getColor();
 			if (j >= 2) {
 				// Check Row
 				if (row[j] == row[j - 1] && row[j - 1] == row[j - 2]) {
@@ -163,18 +163,18 @@ bool BoardModel::checkForMatches() {
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void BoardModel::replaceTile(int tileLocation) {
-	Color4 color = colorLookup.at(rand() % _numColors);
+	int color = rand() % _numColors;
 	_tiles[tileLocation].setColor(color);
 }
 
 // Generates a new set of tiles for _tiles that verifies that the board does not have any matches existing
 void BoardModel::generateNewBoard() {
 	// Setup Tiles
-	_tiles = new int[_height*_width];
+	_tiles = new TileModel[_height*_width];
 	int color;
 	for (int i = 0; i < _height*_width; i++) {
 		color = rand() % _numColors;        // random number in range [0, _numColors-1]
-		_tiles[i].setColor(colorLookup.at(color);
+		_tiles[i].setColor(color);
 	}
 
 	// Replace any matches
@@ -333,5 +333,6 @@ std::string BoardModel::toString() const {
 	}
 	return ss.str();*/
 	//TODO^^^ Take into account allies and enemies
+    return "";
 }
 

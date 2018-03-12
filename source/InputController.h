@@ -29,38 +29,36 @@
  * in the constructor.
  */
 class InputController {
+public:
+    /*
+     * Events that can occur for on move in the game
+     */
+    enum MoveEvent : unsigned int {
+        // No attempt at a move (no touch event)
+        NONE = 0,
+        // A move started (or tried to start)
+        START = 1,
+        // A move continued
+        MOVING = 2,
+        // A move ended
+        END = 3
+    };
+
 private:
     /** Whether or not this input is active */
     bool _active;
-    // KEYBOARD EMULATION
-    /** Whether the reset key is down */
-    bool  _keyReset;
-    /** Whether the debug key is down */
-    bool  _keyDebug;
-    /** Whether the exit key is down */
-    bool  _keyExit;
     
     // TOUCH SUPPORT
     /** The initial touch location for the current gesture */
     cugl::Vec2 _initTouch;
-    /** The timestamp for the beginning of the current gesture */
-    cugl::Timestamp _timestamp;
-    /** Did a touch event start? */
-    bool _touchStarted;
-    /** Did a touch event end? */
-    bool _touchEnded;
+    /** The touch id of the touch that starts the move */
+    cugl::TouchID _touchID;
+    /** Move event type */
+    MoveEvent _moveEvent;
     
 protected:
     // INPUT RESULTS
-    /** Whether the reset action was chosen. */
-    bool _resetPressed;
-    /** Whether the debug toggle was chosen. */
-    bool _debugPressed;
-    /** Whether the exit action was chosen. */
-    bool _exitPressed;
-    /** Touch released. */
-    bool _touchReleased;
-    /** Where is the touch event. */
+    /** The current touch location. */
     cugl::Vec2 _touchPosition;
     
 public:
@@ -121,6 +119,11 @@ public:
      */
     void clear();
     
+    /**
+     * The move has been recorded and should now move to the MOVING state.
+     */
+    void recordMove();
+    
 #pragma mark -
 #pragma mark Input Results
     /**
@@ -131,32 +134,23 @@ public:
     cugl::Vec2 getTouchPosition() const { return _touchPosition; }
     
     /**
-     * Returns true if the touch event ended.
+     * Returns the move offset from the initial position
      *
-     * @return true if the touch event ended.
+     * @return the move offset
      */
-    bool touchReleased() const { return _touchReleased; }
+    cugl::Vec2 getMoveOffset() const { return (_touchPosition - _initTouch); }
     
     /**
-     * Returns true if the reset button was pressed.
+     * Returns _moveEvent
      *
-     * @return true if the reset button was pressed.
+     * @return _moveEvent
      */
-    bool didReset() const { return _resetPressed; }
+    MoveEvent getMoveEvent() const { return _moveEvent; }
     
     /**
-     * Returns true if the player wants to go toggle the debug mode.
-     *
-     * @return true if the player wants to go toggle the debug mode.
+     * Set _moveEvent
      */
-    bool didDebug() const { return _debugPressed; }
-    
-    /**
-     * Returns true if the exit button was pressed.
-     *
-     * @return true if the exit button was pressed.
-     */
-    bool didExit() const { return _exitPressed; }
+    void setMoveEvent(MoveEvent moveEvent) { _moveEvent = moveEvent; }
     
     
 #pragma mark -
@@ -176,6 +170,14 @@ public:
      * @param event The associated event
      */
     void touchEndedCB(const cugl::TouchEvent& event, bool focus);
+    
+    /**
+     * Callback for the movement of a touch event
+     *
+     * @param t     The touch information
+     * @param event The associated event
+     */
+    void touchMovedCB(const cugl::TouchEvent& event, const cugl::Vec2& previous, bool focus);
     
 };
 

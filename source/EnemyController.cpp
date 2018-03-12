@@ -39,6 +39,13 @@ bool EnemyController::init(const std::shared_ptr<BoardModel>& board) {
     _debug = false;
     _complete = false;
     
+	//this returns a list of all enemies in the level
+	//_enemies = board.enemies
+
+	//this returns the player
+	//player = board.player
+
+
     return true;
 }
 
@@ -49,6 +56,34 @@ void EnemyController::dispose() {
     _board = nullptr;
 }
 
+/*
+int playerDistance(EnemyPawnModel enemy, PlayerPawnModel player);
+void enemyMovement(EnemyPawnModel enemy);
+void enemyAttack(EnemyPawnModel enemy, PlayerPawnModel player);
+*/
+
+int playerDistance(EnemyPawnModel enemy, PlayerPawnModel player) {
+	return (abs(enemy.x - player.x) + abs(enemy.y - player.y));
+}
+
+void enemyMove(EnemyPawnModel enemy) {
+	int dx = 0;
+	int dy = 0;
+	dx = (rand() % 3)-1; //choose a random direction between -1, 0 and 1
+	//int dy = (1 - std::max(abs(dx),0)) - (rand() % 3) - 1;
+	
+	while (dx == dy || (dx != 0 && dy != 0)) {
+		dx = (rand() % 3) - 1;
+		dy = (rand() % 3) - 1;
+	}
+
+	board.movePawn(enemy, dx*enemy.movementSpeed, dy*enemy.movementSpeed);
+}
+
+void enemyAttack(EnemyPawnModel enemy, PlayerPawnModel player) {
+	//unsure how to implement without health
+
+}
 
 #pragma mark -
 #pragma mark Gameplay Handling
@@ -62,7 +97,18 @@ void EnemyController::dispose() {
 void EnemyController::update(float timestep) {
 //    CULog("EnemyController Update");
 //    setComplete(true);
+
+	for (int i = 0; i < enemies.size(); i++) {
+		//this is assuming all enemies are "dumb"
+		enemyMove(_enemies[i]);
+		if (playerDistance(player, _enemies[i]) < 1){
+			enemyAttack(player, enemies[i]);
+		}
+
+	}
 }
+
+
 
 /**
  * Resets the status of the game so that we can play again.

@@ -63,7 +63,7 @@ bool BoardSettingsMode::init(const std::shared_ptr<cugl::AssetManager>& assets) 
 	_heightLabel->setText(std::to_string(height), true);
 	_widthLabel->setText(std::to_string(width), true);
 	_colorsLabel->setText(std::to_string(colors), true);
-	_alliesLabel->setText(std::to_string(allies), true);
+	_alliesLabel->setText(std::to_string(1), true);
 
 
 
@@ -164,8 +164,8 @@ bool BoardSettingsMode::init(const std::shared_ptr<cugl::AssetManager>& assets) 
 	_downAlliesButton->setListener([=](const std::string& name, bool down) {
 		if (down) {
 			allies--;
-			if (allies < 0) {
-				allies = 0;
+			if (allies < 1) {
+				allies = 1;
 			}
 			_alliesLabel->setText(std::to_string(allies), true);
 		}

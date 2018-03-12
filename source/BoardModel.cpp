@@ -32,11 +32,32 @@ offsetRowIdx(-1),
 offsetColIdx(-1),
 offsetRowValue(0.0f),
 offsetColValue(0.0f) {
-    colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE };
+    colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
     srand((int)time(NULL));
     generateNewBoard();
     while (checkForMatches());
     srand((int)time(NULL));
+}
+
+BoardModel::BoardModel(int width, int height, int colors, int allies, bool placePawn) :
+_height(height),
+_width(width),
+_numColors(colors),
+_numAllies(allies),
+_numEnemies(1),
+_enemies(nullptr),
+_allies(nullptr),
+_tiles(nullptr),
+_placeAllies(placePawn),
+offsetRowIdx(-1),
+offsetColIdx(-1),
+offsetRowValue(0.0f),
+offsetColValue(0.0f) {
+	colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
+	srand((int)time(NULL));
+	generateNewBoard();
+	while (checkForMatches());
+	srand((int)time(NULL));
 }
 
 /**
@@ -330,8 +351,8 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     batch->draw(tileTexture, Color4::GREEN, bounds1);
     
 
-    float tileWidth = (gameWidth - 20) / 5;
-    float tileHeight = (gameHeight - 20) / 5;
+    float tileWidth = (gameWidth - 5 * (_width - 1)) /  _width;
+    float tileHeight = (gameHeight - 5 * (_height - 1) ) / _height;
     float usedSize = tileWidth > tileHeight ? tileHeight : tileWidth;
     Rect bounds = Rect(0, 0, usedSize, usedSize);
 

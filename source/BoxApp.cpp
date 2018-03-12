@@ -140,7 +140,7 @@ void BoxApp::update(float timestep) {
 
 		//At this point you can get values from settings with _settings.height, _settings.width, _settings.allies, _settings.colors, _settings.placePawns
 
-		_gameplay.init(_assets);
+		_gameplay.init(_assets, _settings.height, _settings.width, _settings.colors, _settings.allies, _settings.placePawns);
 		_inSettings = false;
 		_inGameplay = true;
 	} else {

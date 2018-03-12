@@ -65,9 +65,9 @@ public:
 	int height = 5;
 	int width = 5;
 	int colors = 4;
-	int allies = 0;
+	int allies = 1;
 
-	bool placePawns = true;
+	bool placePawns = false;
 
     /**
      * Creates a new loading mode with the default values.

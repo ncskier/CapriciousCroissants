@@ -19,7 +19,9 @@ using namespace cugl;
  * This constructor does not allocate any objects or start the controller.
  * This allows us to use a controller without a heap pointer.
  */
-PlayerController::PlayerController() {
+PlayerController::PlayerController() :
+_debug(false),
+_complete(false){
 }
 
 /**
@@ -34,7 +36,7 @@ PlayerController::PlayerController() {
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool PlayerController::init(const std::shared_ptr<BoardModel>& board, const InputController *input) {
+bool PlayerController::init(const std::shared_ptr<BoardModel>& board, InputController *input) {
     _board = board;
     _input = input;
     
@@ -64,7 +66,53 @@ void PlayerController::dispose() {
  */
 void PlayerController::update(float timestep) {
 //    CULog("PlayerController Update");
-//    setComplete(true);
+    InputController::MoveEvent moveEvent = _input->getMoveEvent();
+    if (moveEvent != InputController::MoveEvent::NONE) {
+        if (moveEvent == InputController::MoveEvent::START) {
+            // START
+            Vec2 position = _input->getTouchPosition();
+            // Check if On Tile
+            if (_board->selectTileAtPosition(position)) {
+                // Valid move start
+                _input->recordMove();
+            } else {
+                // Invalid move start
+                _input->clear();
+            }
+        } else if (moveEvent == InputController::MoveEvent::MOVING) {
+            // MOVING
+            cugl::Vec2 offset = _input->getMoveOffset();
+            float threshold = 20.0f;
+            // Reset offset if below threshold
+            if (_board->offsetRow && abs(offset.x) < threshold/2.0f) {
+                _board->offsetReset();
+            }
+            if (_board->offsetCol && abs(offset.y) < threshold/2.0f) {
+                _board->offsetReset();
+            }
+            // New offset
+            if (!_board->offsetCol && abs(offset.x) >= threshold) {
+                _board->setOffsetRow(offset.x);
+            }
+            if (!_board->offsetRow && abs(offset.y) >= threshold) {
+                _board->setOffsetCol(offset.y);
+            }
+        } else {
+            // END
+            // Calculate movement
+            cugl::Vec2 offset = _input->getMoveOffset();
+            float length = _board->offsetRow ? offset.x : offset.y;
+            int cells = _board->lengthToCells(length);
+            // Check if valid move
+            if (abs(cells) > 0) {
+                // Update board
+                _board->slide(cells);
+                setComplete(true);
+            }
+            _board->deselectTile();
+            _input->clear();
+        }
+    }
 }
 
 /**

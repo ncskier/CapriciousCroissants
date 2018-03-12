@@ -259,6 +259,7 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
 					}
 				}
 			}
+        }
 	}
 }
 

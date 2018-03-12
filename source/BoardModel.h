@@ -151,7 +151,7 @@ public:
 	void placeEnemy(int x, int y, int i);
 
 	// Moves an enemy e to a different location
-	void moveEnemy(int x, int y, PlayerPawnModel e);
+	void moveEnemy(int x, int y, int enemyIdx);
 
 	// Remove ally at index i
 	void removeAlly(int i);

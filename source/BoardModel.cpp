@@ -150,9 +150,9 @@ void BoardModel::placeEnemy(int x, int y, int i) {
 	_enemies[i].y = y;
 }
 
-void BoardModel::moveEnemy(int x, int y, PlayerPawnModel e) {
-	e.x += x;
-	e.y += y;
+void BoardModel::moveEnemy(int dx, int dy, int enemyIdx) {
+    _enemies[enemyIdx].x += dx;
+    _enemies[enemyIdx].y += dy;
 }
 
 // Remove ally at index i

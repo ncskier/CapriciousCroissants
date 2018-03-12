@@ -66,7 +66,7 @@ int EnemyController::playerDistance(PlayerPawnModel enemy, PlayerPawnModel playe
 	return (abs(enemy.x - player.x) + abs(enemy.y - player.y));
 }
 
-void EnemyController::enemyMove(PlayerPawnModel enemy) {
+void EnemyController::enemyMove(PlayerPawnModel enemy, int enemyIdx) {
 	int dx = 0;
 	int dy = 0;
 	//dx = (rand() % 3)-1; //choose a random direction between -1, 0 and 1
@@ -76,8 +76,8 @@ void EnemyController::enemyMove(PlayerPawnModel enemy) {
 		dx = (rand() % 3) - 1;
 		dy = (rand() % 3) - 1;
 	}
-
-	_board->moveEnemy(dx*1, dy*1, enemy);
+    
+    _board->moveEnemy(dx*1, dy*1, enemyIdx);
 }
 
 void EnemyController::enemyAttack(PlayerPawnModel enemy, PlayerPawnModel player) {
@@ -102,7 +102,7 @@ void EnemyController::update(float timestep) {
 	//Loop through every enemy and ally. Move the enemies 1 square randomly in any direction.
 	for (int i = 0; i < _board->getNumEnemies(); i++) {
         PlayerPawnModel enemy = _board->getEnemy(i);
-        enemyMove(enemy);
+        enemyMove(enemy, i);
 		for (int j = 0; j < _board->getNumAllies(); j++) {
             PlayerPawnModel ally = _board->getAlly(j);
 			if (playerDistance(ally, enemy) < 1) {

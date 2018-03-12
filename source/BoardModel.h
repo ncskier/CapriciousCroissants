@@ -38,7 +38,6 @@ protected:
     // Display settings
     float _boardPadding;
     float _tilePadding;
-    float getCellLength();
     
     // Tile selected by move
     int _selectedTile;
@@ -146,6 +145,9 @@ public:
 
 	//Returns the side width
 	int getWidth() const { return _width; }
+    
+    // Returns cell length
+    float getCellLength();
 
 	// Place ally at index i of _allies on location (x, y)
 	void placeAlly(int x, int y, int i);

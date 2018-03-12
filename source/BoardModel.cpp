@@ -34,7 +34,7 @@ _tilePadding(5.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
-    colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
+    colorLookup = { Color4::WHITE, Color4::RED, Color4::CYAN, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
     srand((int)time(NULL));
     generateNewBoard();
     while (checkForMatches());
@@ -56,7 +56,7 @@ _tilePadding(5.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
-	colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
+    colorLookup = { Color4::WHITE, Color4::RED, Color4::, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
 	srand((int)time(NULL));
 	generateNewBoard();
 	while (checkForMatches());
@@ -474,6 +474,22 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
                        bounds.size.width - 10.0f*_tilePadding,
                        bounds.size.height - 10.0f*_tilePadding);
             batch->draw(tileTexture, Color4::GRAY, bounds);
+        }
+    }
+    
+    // Draw Enemies
+    for (int i = 0; i < _numEnemies; i++) {
+         PlayerPawnModel enemy = _enemies[i];
+        if (enemy.x != -1 && enemy.y != -1) {
+            float xOffset = (offsetRow && enemy.y == yOfIndex(_selectedTile)) ? offset : 0.0f;
+            float yOffset = (offsetCol && enemy.x == xOfIndex(_selectedTile)) ? offset : 0.0f;
+            bounds = gridToScreen(enemy.x, enemy.y);
+            bounds.set(
+                       bounds.getMinX() + 5.0f*_tilePadding + xOffset,
+                       bounds.getMinY() + 5.0f*_tilePadding + yOffset,
+                       bounds.size.width - 10.0f*_tilePadding,
+                       bounds.size.height - 10.0f*_tilePadding);
+            batch->draw(tileTexture, Color4::BLACK, bounds);
         }
     }
 

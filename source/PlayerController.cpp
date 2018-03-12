@@ -71,6 +71,7 @@ void PlayerController::update(float timestep) {
         if (moveEvent == InputController::MoveEvent::START) {
             // START
             Vec2 position = _input->getTouchPosition();
+            position.set(position.x, _board->gameHeight-position.y);    // Convert to screen coordinates
             CULog("position: %s", position.toString().c_str());
 //            position *= inputLimiter;
             // Check if On Tile
@@ -84,6 +85,7 @@ void PlayerController::update(float timestep) {
         } else if (moveEvent == InputController::MoveEvent::MOVING) {
             // MOVING
             cugl::Vec2 offset = _input->getMoveOffset();
+            offset.set(offset.x, -offset.y);        // Convert to screen coordinates
 //            offset *= inputLimiter;
             float threshold = 20.0f;
             // Reset offset if below threshold
@@ -101,13 +103,20 @@ void PlayerController::update(float timestep) {
                 _board->setOffsetCol(offset.y);
             }
         } else {
-//            // END
-//            // Calculate movement
-//            // Update board
-//            // Set to board board
-//            // Check if valid move
+            // END
+            // Calculate movement
+            cugl::Vec2 offset = _input->getMoveOffset();
+            offset.set(offset.x, -offset.y);        // Convert to screen coordinates
+            float length = _board->offsetRow ? offset.x : offset.y;
+            int cells = _board->lengthToCells(length);
+            // Check if valid move
+            if (abs(cells) > 0) {
+                // Update board
+                _board->slide(cells);
+                setComplete(true);
+            }
+            _board->deselectTile();
             _input->clear();
-//            setComplete(true);
         }
     }
 }

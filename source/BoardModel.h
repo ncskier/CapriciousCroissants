@@ -163,6 +163,9 @@ public:
 	// Slide column [x] by [offset]
 	void slideCol(int x, int offset);
     
+    // Slide row/col by [offset]
+    void slide(int offset);
+    
     /**
      * Select tile at screen position [position]
      *
@@ -177,6 +180,9 @@ public:
     
     // Convert screen coordinates to grid (x, y)
     std::tuple<int, int> screenToGrid(cugl::Vec2 position);
+    
+    // Convert screen length to grid length
+    int lengthToCells(float length);
 
 	// Draws tiles and pawns
 	void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);

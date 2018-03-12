@@ -338,6 +338,15 @@ void BoardModel::slideCol(int x, int offset) {
 	slide(false, x, offset);
 }
 
+// Slide row/col by [offset]
+void BoardModel::slide(int offset) {
+    if (offsetRow) {
+        slideRow(yOfIndex(_selectedTile), offset);
+    } else {
+        slideCol(xOfIndex(_selectedTile), offset);
+    }
+}
+
 /**
  * Select tile at screen position [position]
  *
@@ -349,6 +358,12 @@ bool BoardModel::selectTileAtPosition(Vec2 position) {
     int x;
     int y;
     std::tie(x, y) = screenToGrid(position);
+    if (x < 0 || _width <= x) {
+        return false;
+    }
+    if (y < 0 || _height <= y) {
+        return false;
+    }
     _selectedTile = indexOfCoordinate(x, y);
     CULog("(%d, %d)", x, y);
     return true;
@@ -389,6 +404,17 @@ std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
     return {x, y};
 }
 
+// Convert screen length to grid length
+int BoardModel::lengthToCells(float length) {
+    float boardPadding = 10.0f;
+    float tilePadding = 5.0f;
+    float tileWidth = ((gameWidth - boardPadding) / _width) - tilePadding/2.0f;
+    float tileHeight = ((gameHeight - boardPadding) / _height) - tilePadding/2.0f;
+    float tileLength = tileWidth > tileHeight ? tileHeight : tileWidth;
+    float cellLength = tileLength + tilePadding;
+    return (int)round( length / cellLength );
+}
+
 // Draws all of the tiles and pawns(in that order) 
 void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
 //    float boardPadding = 10.0f;
@@ -404,7 +430,7 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             bounds = gridToScreen(x, y);
             bounds.set(
                        bounds.getMinX() + tilePadding/2.0f + xOffset,
-                       bounds.getMinY() + tilePadding/2.0f - yOffset,
+                       bounds.getMinY() + tilePadding/2.0f + yOffset,
                        bounds.size.width - tilePadding,
                        bounds.size.height - tilePadding);
             batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);

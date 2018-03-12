@@ -101,6 +101,12 @@ public:
 	// Returns the enemy pawn at index i of _enemies
 	PlayerPawnModel getEnemy(int i) const;
 
+	// Returns the allies
+	PlayerPawnModel getAllies() ;
+
+	// Returns the enemies
+	PlayerPawnModel getEnemies() ;
+
 	// Set the tile at the given (x, y) coordinate
 	void setTile(int x, int y, TileModel t);
 
@@ -124,6 +130,9 @@ public:
 
 	// Place enemy at index i of _enemies on location (x, y)
 	void placeEnemy(int x, int y, int i);
+
+	// Moves an enemy e to a different location
+	void moveEnemy(int x, int y, PlayerPawnModel e);
 
 	// Remove ally at index i
 	void removeAlly(int i);

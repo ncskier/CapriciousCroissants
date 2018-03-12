@@ -40,10 +40,10 @@ bool EnemyController::init(const std::shared_ptr<BoardModel>& board) {
     _complete = false;
     
 	//this returns a list of all enemies in the level
-	//_enemies = board.enemies
+	//_board-> _enemies;
 
-	//this returns the player
-	//player = board.player
+	//this returns the lis of allies
+	//_board-> _allies;
 
 
     return true;
@@ -62,14 +62,14 @@ void enemyMovement(EnemyPawnModel enemy);
 void enemyAttack(EnemyPawnModel enemy, PlayerPawnModel player);
 */
 
-int playerDistance(EnemyPawnModel enemy, PlayerPawnModel player) {
+int EnemyController::playerDistance(PlayerPawnModel enemy, PlayerPawnModel player) {
 	return (abs(enemy.x - player.x) + abs(enemy.y - player.y));
 }
 
-void enemyMove(EnemyPawnModel enemy) {
+void EnemyController::enemyMove(PlayerPawnModel enemy) {
 	int dx = 0;
 	int dy = 0;
-	dx = (rand() % 3)-1; //choose a random direction between -1, 0 and 1
+	//dx = (rand() % 3)-1; //choose a random direction between -1, 0 and 1
 	//int dy = (1 - std::max(abs(dx),0)) - (rand() % 3) - 1;
 	
 	while (dx == dy || (dx != 0 && dy != 0)) {
@@ -77,12 +77,12 @@ void enemyMove(EnemyPawnModel enemy) {
 		dy = (rand() % 3) - 1;
 	}
 
-	board.movePawn(enemy, dx*enemy.movementSpeed, dy*enemy.movementSpeed);
+	_board->moveEnemy(dx*1, dy*1, enemy);
 }
 
-void enemyAttack(EnemyPawnModel enemy, PlayerPawnModel player) {
-	//unsure how to implement without health
-
+void EnemyController::enemyAttack(PlayerPawnModel enemy, PlayerPawnModel player) {
+	//unsure how to implement without or player death
+	//_board->removePawn()
 }
 
 #pragma mark -
@@ -98,11 +98,17 @@ void EnemyController::update(float timestep) {
 //    CULog("EnemyController Update");
 //    setComplete(true);
 
-	for (int i = 0; i < enemies.size(); i++) {
+
+	//Loop through every enemy and ally. Move the enemies 1 square randomly in any direction.
+	for (int i = 0; i < _board->getNumEnemies(); i++) {
+		enemyMove(_board->getEnemy(i));
+		for (int j = 0; j < _board->getNumAllies(); i++) {
+			if (playerDistance(_board -> getAlly(j), _board -> getEnemy(i)) < 1) {
+				enemyAttack(_board -> getAlly(j), _board -> getEnemy(i));
+
+		}
 		//this is assuming all enemies are "dumb"
-		enemyMove(_enemies[i]);
-		if (playerDistance(player, _enemies[i]) < 1){
-			enemyAttack(player, enemies[i]);
+		
 		}
 
 	}

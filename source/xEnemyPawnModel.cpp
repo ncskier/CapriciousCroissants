@@ -8,13 +8,3 @@
 
 #include "EnemyPawnModel.h"
 
-
-
-EnemyPawnModel::EnemyPawnModel()
-{
-}
-
-
-EnemyPawnModel::~EnemyPawnModel()
-{
-}

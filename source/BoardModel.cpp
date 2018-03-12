@@ -88,6 +88,17 @@ PlayerPawnModel BoardModel::getEnemy(int i) const {
 	return _enemies[i];
 }
 
+// Returns the allies
+PlayerPawnModel BoardModel::getAllies()  {
+	return *_allies;
+}
+
+// Returns the enemies
+PlayerPawnModel BoardModel::getEnemies()  {
+	return *_enemies;
+}
+
+
 // Set the value at the given (x, y) coordinate
 void BoardModel::setTile(int x, int y, TileModel t) {
 	_tiles[indexOfCoordinate(x, y)] = t;
@@ -98,11 +109,16 @@ void BoardModel::placeAlly(int x, int y, int i) {
 	_allies[i].x = x;
 	_allies[i].y = y;
 }
-
+	
 // Place enemy at index i of _enemies on location (x, y)
 void BoardModel::placeEnemy(int x, int y, int i) {
 	_enemies[i].x = x;
 	_enemies[i].y = y;
+}
+
+void BoardModel::moveEnemy(int x, int y, PlayerPawnModel e) {
+	e.x += x;
+	e.y += y;
 }
 
 // Remove ally at index i

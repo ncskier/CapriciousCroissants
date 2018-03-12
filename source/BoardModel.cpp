@@ -19,21 +19,24 @@ using namespace cugl;
 
 // Initialize board attributes and call generateNewBoard to generate _tiles, _allies, and _enemies
 BoardModel::BoardModel() :
-	_height(5),
-	_width(5),
-	_numColors(5),
-	_numAllies(1),
-	_numEnemies(1),
-	_placeAllies(false),
-	offsetRowIdx(-1),
-	offsetColIdx(-1),
-	offsetRowValue(0.0f),
-	offsetColValue(0.0f) {
-		colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE };
-		srand((int)time(NULL));
-		generateNewBoard();
-		while (checkForMatches());
-		srand((int)time(NULL));
+_height(5),
+_width(5),
+_numColors(5),
+_numAllies(1),
+_numEnemies(1),
+_enemies(nullptr),
+_allies(nullptr),
+_tiles(nullptr),
+_placeAllies(false),
+offsetRowIdx(-1),
+offsetColIdx(-1),
+offsetRowValue(0.0f),
+offsetColValue(0.0f) {
+    colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE };
+    srand((int)time(NULL));
+    generateNewBoard();
+    while (checkForMatches());
+    srand((int)time(NULL));
 }
 
 /**
@@ -148,6 +151,7 @@ bool BoardModel::checkForMatches() {
 
 	// Replace Tiles
 	std::set<int>::iterator iter;
+    CULog("replace tiles");
 	for (iter = replaceTiles.begin(); iter != replaceTiles.end(); iter++) {
 		// Replace tile
 		replaceTile(*iter);

@@ -11,4 +11,21 @@
 
 #include <cugl/cugl.h>
 
+
+class PlayerPawnModel {
+private:
+	//int _health;
+	//int _maxHealth;
+
+public:
+	//int getHealth() const { return _health; }
+	//void setHealth(int health);
+	//void setMaxHealth();
+	//void changeHealth( int changeAmount);
+	int x;
+	int y;
+	//int getIndex();
+
+};
+
 #endif /* __Player_Pawn_Model_H__ */

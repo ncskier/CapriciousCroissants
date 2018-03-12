@@ -57,10 +57,10 @@ protected:
 	int indexOfCoordinate(int x, int y) const;
     
     // Convert array index to x
-    int columnOfIndex(int i) const;
+    int xOfIndex(int i) const;
     
     // Convert array index to y
-    int rowOfIndex(int i) const;
+    int yOfIndex(int i) const;
 
 	// Slide row or column by [offset]
 	void slide(bool row, int k, int offset);
@@ -172,11 +172,11 @@ public:
      */
     bool selectTileAtPosition(cugl::Vec2 position);
     
-    // Convert grid (x, y) to screen coordinates
-//    cugl::Vec2 gridToScreen(int x, int y);
+//     Convert grid (x, y) to screen coordinates
+    cugl::Rect gridToScreen(int x, int y);
     
     // Convert screen coordinates to grid (x, y)
-//    std::tuple<int, int> screenToGrid(cugl::Vec2 position);
+    std::tuple<int, int> screenToGrid(cugl::Vec2 position);
 
 	// Draws tiles and pawns
 	void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);

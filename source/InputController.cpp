@@ -33,6 +33,7 @@ using namespace cugl;
  */
 InputController::InputController() :
 _active(false),
+_scale(Size::ZERO),
 _touchID(NULL),
 _initTouch(Vec2::ZERO),
 _touchPosition(Vec2::ZERO),
@@ -67,7 +68,8 @@ void InputController::dispose() {
  *
  * @return true if the controller was initialized successfully
  */
-bool InputController::init() {
+bool InputController::init(Size scale) {
+    _scale = scale;
     bool success = true;
     
     // Only process keyboard on desktop
@@ -136,6 +138,7 @@ void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
         // Begin move event
         _moveEvent = MoveEvent::START;
         _initTouch = event.position;
+        _touchPosition = event.position;
         _touchID = event.touch;
     }
 }

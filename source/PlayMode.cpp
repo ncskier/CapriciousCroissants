@@ -55,7 +55,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets) {
     
     // Start up the input handler
     _assets = assets;
-    _input.init();
+    _input.init(dimen);
     
     // Create board
     populate();

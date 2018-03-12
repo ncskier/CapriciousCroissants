@@ -71,7 +71,8 @@ void PlayerController::update(float timestep) {
         if (moveEvent == InputController::MoveEvent::START) {
             // START
             Vec2 position = _input->getTouchPosition();
-//            pos *= inputLimiter;
+            CULog("position: %s", position.toString().c_str());
+//            position *= inputLimiter;
             // Check if On Tile
             if (_board->selectTileAtPosition(position)) {
                 // Valid move start
@@ -80,34 +81,32 @@ void PlayerController::update(float timestep) {
                 // Invalid move start
                 _input->clear();
             }
-//        } else if (moveEvent == InputController::MoveEvent::MOVING) {
-//            // MOVING
-//            cugl::Vec2 offset = _input->getMoveOffset();
-//            float threshold = 5.0f;
-//            // Reset offset if below threshold
-//            if (_board->offsetRow && abs(offset.x) < threshold) {
-//                _board->offsetReset();
-//            }
-//            if (_board->offsetCol && abs(offset.y) < threshold) {
-//                _board->offsetReset();
-//            }
-//            // New offset
-//            if (!_board->offsetCol && abs(offset.x) >= threshold) {
-//                _board->setOffsetRow(offset.x);
-//            }
-//            if (!_board->offsetRow && abs(offset.y) >= threshold) {
-//                _board->setOffsetCol(offset.y);
-//            }
-////            pos *= inputLimiter;
-//            // Store for view
-//            
-//        } else {
+        } else if (moveEvent == InputController::MoveEvent::MOVING) {
+            // MOVING
+            cugl::Vec2 offset = _input->getMoveOffset();
+//            offset *= inputLimiter;
+            float threshold = 20.0f;
+            // Reset offset if below threshold
+            if (_board->offsetRow && abs(offset.x) < threshold/2.0f) {
+                _board->offsetReset();
+            }
+            if (_board->offsetCol && abs(offset.y) < threshold/2.0f) {
+                _board->offsetReset();
+            }
+            // New offset
+            if (!_board->offsetCol && abs(offset.x) >= threshold) {
+                _board->setOffsetRow(offset.x);
+            }
+            if (!_board->offsetRow && abs(offset.y) >= threshold) {
+                _board->setOffsetCol(offset.y);
+            }
+        } else {
 //            // END
 //            // Calculate movement
 //            // Update board
 //            // Set to board board
 //            // Check if valid move
-//            _input->clear();
+            _input->clear();
 //            setComplete(true);
         }
     }

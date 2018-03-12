@@ -47,6 +47,8 @@ public:
 private:
     /** Whether or not this input is active */
     bool _active;
+    /** Scale */
+    cugl::Size _scale;
     
     // TOUCH SUPPORT
     /** The initial touch location for the current gesture */
@@ -91,7 +93,7 @@ public:
      * This method will not dispose of the input controller. It can be reused
      * once it is reinitialized.
      */
-    bool init();
+    bool init(cugl::Size scale);
     
 #pragma mark -
 #pragma mark Input Detection
@@ -138,7 +140,7 @@ public:
      *
      * @return the move offset
      */
-    cugl::Vec2 getMoveOffset() const { return (_touchPosition - _initTouch); }
+    cugl::Vec2 getMoveOffset() const { return (_touchPosition-_initTouch); }
     
     /**
      * Returns _moveEvent

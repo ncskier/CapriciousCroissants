@@ -33,7 +33,7 @@ using namespace cugl;
  */
 InputController::InputController() :
 _active(false),
-_scale(Size::ZERO),
+//_scale(Size::ZERO),
 _touchID(NULL),
 _initTouch(Vec2::ZERO),
 _touchPosition(Vec2::ZERO),
@@ -68,8 +68,8 @@ void InputController::dispose() {
  *
  * @return true if the controller was initialized successfully
  */
-bool InputController::init(Size scale) {
-    _scale = scale;
+bool InputController::init(std::shared_ptr<Camera> camera) {
+    _camera = camera;
     bool success = true;
     
     // Only process keyboard on desktop

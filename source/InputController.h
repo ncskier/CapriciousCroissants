@@ -48,7 +48,8 @@ private:
     /** Whether or not this input is active */
     bool _active;
     /** Scale */
-    cugl::Size _scale;
+//    cugl::Size _scale;
+    std::shared_ptr<cugl::Camera> _camera;
     
     // TOUCH SUPPORT
     /** The initial touch location for the current gesture */
@@ -93,7 +94,7 @@ public:
      * This method will not dispose of the input controller. It can be reused
      * once it is reinitialized.
      */
-    bool init(cugl::Size scale);
+    bool init(std::shared_ptr<cugl::Camera>);
     
 #pragma mark -
 #pragma mark Input Detection
@@ -133,14 +134,14 @@ public:
      *
      * @return the touch location
      */
-    cugl::Vec2 getTouchPosition() const { return _touchPosition; }
+    cugl::Vec2 getTouchPosition() const { return _camera->screenToWorldCoords(_touchPosition); }
     
     /**
      * Returns the move offset from the initial position
      *
      * @return the move offset
      */
-    cugl::Vec2 getMoveOffset() const { return (_touchPosition-_initTouch); }
+    cugl::Vec2 getMoveOffset() const { return (_camera->screenToWorldCoords(_touchPosition)-_camera->screenToWorldCoords(_initTouch)); }
     
     /**
      * Returns _moveEvent

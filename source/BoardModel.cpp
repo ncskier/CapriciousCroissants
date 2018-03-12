@@ -29,6 +29,8 @@ _enemies(nullptr),
 _allies(nullptr),
 _tiles(nullptr),
 _placeAllies(false),
+_boardPadding(10.0f),
+_tilePadding(5.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
@@ -369,56 +371,41 @@ bool BoardModel::selectTileAtPosition(Vec2 position) {
     return true;
 }
 
+float BoardModel::getCellLength() {
+    float tileWidth = ((gameWidth - 2.0f*_boardPadding) / _width) - _tilePadding/2.0f;
+    float tileHeight = ((gameHeight - 2.0f*_boardPadding) / _height) - _tilePadding/2.0f;
+    float tileLength = tileWidth > tileHeight ? tileHeight : tileWidth;
+    return tileLength + _tilePadding;
+}
+
 // Convert grid (x, y) to screen coordinates
 cugl::Rect BoardModel::gridToScreen(int x, int y) {
-    float boardPadding = 10.0f;
-    float tilePadding = 5.0f;
-    float tileWidth = ((gameWidth - boardPadding) / _width) - tilePadding/2.0f;
-    float tileHeight = ((gameHeight - boardPadding) / _height) - tilePadding/2.0f;
-    float tileLength = tileWidth > tileHeight ? tileHeight : tileWidth;
-    float cellLength = tileLength + tilePadding;
+    float cellLength = getCellLength();
     
-    float xPos = boardPadding/2.0f + x*cellLength;
-    float yPos = boardPadding/2.0f + y*cellLength;
+    float xPos = _boardPadding/2.0f + x*cellLength;
+    float yPos = _boardPadding/2.0f + y*cellLength;
     
     return Rect(xPos, yPos, cellLength, cellLength);
 }
 
 // Convert screen coordinates to grid (x, y)
 std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
-    float boardPadding = 10.0f;
-    float tilePadding = 5.0f;
-    float tileWidth = ((gameWidth - boardPadding) / _width) - tilePadding/2.0f;
-    float tileHeight = ((gameHeight - boardPadding) / _height) - tilePadding/2.0f;
-    float tileLength = tileWidth > tileHeight ? tileHeight : tileWidth;
-    float cellLength = tileLength + tilePadding;
-    
-    float xf = (position.x - boardPadding/2.0f) / cellLength;
-    float yf = (position.y - boardPadding/2.0f) / cellLength;
-    int x = (int)round( (position.x - boardPadding/2.0f) / cellLength );
-    int y = (int)round( (position.y - boardPadding/2.0f) / cellLength );
-    
-    CULog("(%f, %f)", xf, yf);
-    CULog("(%d, %d)", x, y);
+    float cellLength = getCellLength();
+
+    int x = (int)floor( (position.x - _boardPadding/2.0f) / cellLength );
+    int y = (int)floor( (position.y - _boardPadding/2.0f) / cellLength );
     
     return {x, y};
 }
 
 // Convert screen length to grid length
 int BoardModel::lengthToCells(float length) {
-    float boardPadding = 10.0f;
-    float tilePadding = 5.0f;
-    float tileWidth = ((gameWidth - boardPadding) / _width) - tilePadding/2.0f;
-    float tileHeight = ((gameHeight - boardPadding) / _height) - tilePadding/2.0f;
-    float tileLength = tileWidth > tileHeight ? tileHeight : tileWidth;
-    float cellLength = tileLength + tilePadding;
+    float cellLength = getCellLength();
     return (int)round( length / cellLength );
 }
 
 // Draws all of the tiles and pawns(in that order) 
 void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
-//    float boardPadding = 10.0f;
-    float tilePadding = 5.0f;
     Rect bounds;
     
     batch->begin();
@@ -429,10 +416,10 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             float yOffset = (offsetCol && x == xOfIndex(_selectedTile)) ? offset : 0.0f;
             bounds = gridToScreen(x, y);
             bounds.set(
-                       bounds.getMinX() + tilePadding/2.0f + xOffset,
-                       bounds.getMinY() + tilePadding/2.0f + yOffset,
-                       bounds.size.width - tilePadding,
-                       bounds.size.height - tilePadding);
+                       bounds.getMinX() + _tilePadding/2.0f + xOffset,
+                       bounds.getMinY() + _tilePadding/2.0f + yOffset,
+                       bounds.size.width - _tilePadding,
+                       bounds.size.height - _tilePadding);
             batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
         }
     }

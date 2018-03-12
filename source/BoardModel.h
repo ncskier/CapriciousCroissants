@@ -35,6 +35,11 @@ protected:
 	// False: Allies are already placed on board initially
 	bool _placeAllies;
     
+    // Display settings
+    float _boardPadding;
+    float _tilePadding;
+    float getCellLength();
+    
     // Tile selected by move
     int _selectedTile;
 

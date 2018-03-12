@@ -55,7 +55,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets) {
     
     // Start up the input handler
     _assets = assets;
-    _input.init(dimen);
+    _input.init(getCamera());
     
     // Create board
     populate();
@@ -114,9 +114,11 @@ void PlayMode::populate() {
     _board = BoardModel::alloc(5, 5);
     _board->tileTexture = _assets->get<Texture>("100squareWhite");
     Size dimen = Application::get()->getDisplaySize();
+    CULog("dimen: %s", dimen.toString().c_str());
     dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
     _board->gameWidth = dimen.width;
     _board->gameHeight = dimen.height;
+    CULog("scale: %s", dimen.toString().c_str());
 }
 
 

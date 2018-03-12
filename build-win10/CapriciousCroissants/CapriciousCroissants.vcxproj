@@ -188,6 +188,7 @@
     <ClInclude Include="..\..\source\BoardController.h" />
     <ClInclude Include="..\..\source\BoardModel.h" />
     <ClInclude Include="..\..\source\BoardScreenApp.h" />
+    <ClInclude Include="..\..\source\BoardSettingsMode.h" />
     <ClInclude Include="..\..\source\BoxApp.h" />
     <ClInclude Include="..\..\source\EnemyController.h" />
     <ClInclude Include="..\..\source\InputController.h" />
@@ -206,6 +207,7 @@
     <ClCompile Include="..\..\source\BoardController.cpp" />
     <ClCompile Include="..\..\source\BoardModel.cpp" />
     <ClCompile Include="..\..\source\BoardScreenApp.cpp" />
+    <ClCompile Include="..\..\source\BoardSettingsMode.cpp" />
     <ClCompile Include="..\..\source\BoxApp.cpp" />
     <ClCompile Include="..\..\source\EnemyController.cpp" />
     <ClCompile Include="..\..\source\InputController.cpp" />

@@ -20,12 +20,425 @@
 			"magfilter":"linear",
 			"wrapS":    "clamp",
 			"wrapT":    "clamp"
-		}
+		},
+        "settingsBG": {
+            "file":    "textures/tempSettings.png",
+            "minfilter":"nearest",
+			"magfilter":"linear",
+			"wrapS":    "clamp",
+			"wrapT":    "clamp"
+        },
+        "checkImage": {
+            "file":    "textures/check.png",
+            "minfilter":"nearest",
+			"magfilter":"linear",
+			"wrapS":    "clamp",
+			"wrapT":    "clamp"
+        }
 	},
 	"fonts": {
 		"charlemagne": {
 			"file":     "fonts/Charlemagne.ttf",
 			"size":     64
-		}
-	}
+		},
+        "script": {
+            "file": "fonts/SCRIPTBL.TTF",
+            "size": 64
+        }
+	},
+    "scenes": {
+        "settings": {
+            "comment": "The scene graph definition for the board settings",
+            "type": "Node",
+            "format" : {
+                "type": "Absolute"
+            },
+            "children" : {
+                "bg" : {
+                    "type" : "Image",
+                    "format" : {
+                        "type": "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "texture" : "settingsBG"
+                    },
+                    "children" : {
+                    },
+                    "layout" : {
+                        "x_anchor" : "fill",
+                        "y_anchor" : "fill"
+                    }
+                },
+                "upheight" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 734,
+                        "y_offset" : 93
+                    }
+                },
+                "downheight" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.7178,
+                        "y_offset" : -0.215
+                    }
+                },
+                "upwidth" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.7178,
+                        "y_offset" : -0.292
+                    }
+                },
+                "downwidth" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.7178,
+                        "y_offset" : -0.347
+                    }
+                },
+                "upcolors" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.7178,
+                        "y_offset" : -0.495
+                    }
+                },
+                "downcolors" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.7178,
+                        "y_offset" : -0.549
+                    }
+                },
+                "upallies" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.7178,
+                        "y_offset" : -0.622
+                    }
+                },
+                "downallies" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.7178,
+                        "y_offset" : -0.677
+                    }
+                },
+                "placepawns" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [65, 65]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.576,
+                        "y_offset" : -0.888
+                    }
+                },
+                "labelheight" : {
+                    "type"   : "Label",
+                        "data"   : {
+                            "font"       : "script",
+                            "text"       : "0",
+                            "foreground" : [0,0,0,255],
+                            "anchor"     : [0.5, 0.5],
+                            "halign"     : "top",
+                            "valign"     : "middle"
+                        },
+                        "layout" : {
+                            "x_anchor" : "top",
+                            "y_anchor" : "left",
+                            "x_offset" : 0.611,
+                            "y_offset" : 0.832
+                        }
+                },
+                "labelwidth" : {
+                    "type"   : "Label",
+                        "data"   : {
+                            "font"       : "script",
+                            "text"       : "0",
+                            "foreground" : [0,0,0,255],
+                            "anchor"     : [0.5, 0.5],
+                            "halign"     : "top",
+                            "valign"     : "middle"
+                        },
+                        "layout" : {
+                            "x_anchor" : "top",
+                            "y_anchor" : "left",
+                            "x_offset" : 0.611,
+                            "y_offset" : 0.707
+                        }
+                },
+                "labelcolors" : {
+                    "type"   : "Label",
+                        "data"   : {
+                            "font"       : "script",
+                            "text"       : "0",
+                            "foreground" : [0,0,0,255],
+                            "anchor"     : [0.5, 0.5],
+                            "halign"     : "top",
+                            "valign"     : "middle"
+                        },
+                        "layout" : {
+                            "x_anchor" : "top",
+                            "y_anchor" : "left",
+                            "x_offset" : 0.611,
+                            "y_offset" : 0.5
+                        }
+                },
+                "labelallies" : {
+                    "type"   : "Label",
+                        "data"   : {
+                            "font"       : "script",
+                            "text"       : "0",
+                            "foreground" : [0,0,0,255],
+                            "anchor"     : [0.5, 0.5],
+                            "halign"     : "top",
+                            "valign"     : "middle"
+                        },
+                        "layout" : {
+                            "x_anchor" : "top",
+                            "y_anchor" : "left",
+                            "x_offset" : 0.611,
+                            "y_offset" : 0.375
+                        }
+                },
+                "check" : {
+                    "type"   : "Image",
+                    "data"   : {
+                        "texture"  : "checkImage"
+                    },
+                    "layout" : {
+                        "x_anchor" : "top",
+                        "y_anchor" : "left"
+                    }
+                },
+                "done" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [180, 67]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.576,
+                        "y_offset" : -0.888
+                    }
+                }
+            }
+        }
+    }
 }

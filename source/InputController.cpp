@@ -115,6 +115,13 @@ void InputController::clear() {
     _moveEvent = MoveEvent::NONE;
 }
 
+/**
+ * The move has been recorded and should now move to the MOVING state.
+ */
+void InputController::recordMove() {
+    _moveEvent = MoveEvent::MOVING;
+}
+
 #pragma mark -
 #pragma mark Touch Callbacks
 /**

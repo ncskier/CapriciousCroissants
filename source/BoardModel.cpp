@@ -24,14 +24,14 @@ _width(5),
 _numColors(5),
 _numAllies(1),
 _numEnemies(1),
+_selectedTile(-1),
 _enemies(nullptr),
 _allies(nullptr),
 _tiles(nullptr),
 _placeAllies(false),
-offsetRowIdx(-1),
-offsetColIdx(-1),
-offsetRowValue(0.0f),
-offsetColValue(0.0f) {
+offsetRow(false),
+offsetCol(false),
+offset(0.0f) {
     colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE };
     srand((int)time(NULL));
     generateNewBoard();
@@ -71,6 +71,16 @@ void BoardModel::dispose() {
 //  6 7 8     (0,2) (1,2) (2,2) (3) (4)
 int BoardModel::indexOfCoordinate(int x, int y) const {
 	return x + (y*_width);
+}
+
+// Convert array index to x
+int BoardModel::columnOfIndex(int i) const {
+    return i % _width;
+}
+
+// Convert array index to y
+int BoardModel::rowOfIndex(int i) const {
+    return i / _width;
 }
 
 // Returns the value at the give (x, y) coordinate
@@ -294,23 +304,28 @@ void BoardModel::slide(bool row, int k, int offset) {
 }
 
 //Offset view of row (not model)
-void BoardModel::offsetRow(int idx, float value) {
-	offsetRowIdx = idx;
-	offsetRowValue = value;
+void BoardModel::setOffsetRow(float value) {
+	offsetRow = true;
+	offset = value;
 }
 
 //Offset view of col (not model)
-void BoardModel::offsetCol(int idx, float value) {
-	offsetColIdx = idx;
-	offsetColValue = value;
+void BoardModel::setOffsetCol(float value) {
+	offsetCol = true;
+	offset = value;
 }
 
 //Offset reset
 void BoardModel::offsetReset() {
-	offsetRowIdx = -1;
-	offsetColIdx = -1;
-	offsetRowValue = 0.0f;
-	offsetColValue = 0.0f;
+	offsetRow = false;
+	offsetCol = false;
+	offset = 0.0f;
+}
+
+// Deselect _selectedTile
+void BoardModel::deselectTile() {
+    _selectedTile = -1;
+    offsetReset();
 }
 
 //Slide row [y] by [offset]
@@ -323,6 +338,32 @@ void BoardModel::slideCol(int x, int offset) {
 	slide(false, x, offset);
 }
 
+/**
+ * Select tile at screen position [position]
+ *
+ * @param position on screen
+ *
+ * @return true if there is a tile, false otherwise
+ */
+bool BoardModel::selectTileAtPosition(Vec2 position) {
+    _selectedTile = 0;
+    return true;
+}
+
+// Convert grid (x, y) to screen coordinates
+//cugl::Vec2 BoardModel::gridToScreen(int x, int y) {
+//    float tileWidth = (gameWidth - 20) / _width;
+//    float tileHeight = (gameHeight - 20) / _height;
+//    float tileLength = tileWidth > tileHeight ? tileHeight : tileWidth;
+//    
+//    return Vec2(0.0f, 0.0f);
+//}
+
+// Convert screen coordinates to grid (x, y)
+//std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
+//    return {0, 0};
+//}
+
 // Draws all of the tiles and pawns(in that order) 
 void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     batch->begin();
@@ -330,8 +371,8 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     batch->draw(tileTexture, Color4::GREEN, bounds1);
     
 
-    float tileWidth = (gameWidth - 20) / 5;
-    float tileHeight = (gameHeight - 20) / 5;
+    float tileWidth = (gameWidth - 20) / _width;
+    float tileHeight = (gameHeight - 20) / _height;
     float usedSize = tileWidth > tileHeight ? tileHeight : tileWidth;
     Rect bounds = Rect(0, 0, usedSize, usedSize);
 

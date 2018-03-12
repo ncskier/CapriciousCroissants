@@ -34,6 +34,9 @@ protected:
 	// True: Player places allies at beggining of game
 	// False: Allies are already placed on board initially
 	bool _placeAllies;
+    
+    // Tile selected by move
+    int _selectedTile;
 
     // Colors to display
 	std::vector<cugl::Color4> colorLookup;
@@ -52,6 +55,12 @@ protected:
 
 	// Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
 	int indexOfCoordinate(int x, int y) const;
+    
+    // Convert array index to x
+    int columnOfIndex(int i) const;
+    
+    // Convert array index to y
+    int rowOfIndex(int i) const;
 
 	// Slide row or column by [offset]
 	void slide(bool row, int k, int offset);
@@ -85,10 +94,9 @@ public:
 	int gameHeight;
 	int gameWidth;
 
-	int offsetRowIdx;
-	int offsetColIdx;
-	float offsetRowValue;
-	float offsetColValue;
+	bool offsetRow;
+	bool offsetCol;
+    float offset;
 
 	std::shared_ptr<cugl::Texture> tileTexture;
 
@@ -138,19 +146,37 @@ public:
 	void generateNewBoard();
 
 	// Offset view of row (not model)
-	void offsetRow(int idx, float value);
+	void setOffsetRow(float value);
 
 	// Offset view of col (not model)
-	void offsetCol(int idx, float value);
+	void setOffsetCol(float value);
 
 	// Offset reset
 	void offsetReset();
+    
+    // Deselect _selectedTile
+    void deselectTile();
 
 	// Slide row [y] by [offset]
 	void slideRow(int y, int offset);
 
 	// Slide column [x] by [offset]
 	void slideCol(int x, int offset);
+    
+    /**
+     * Select tile at screen position [position]
+     *
+     * @param position on screen
+     *
+     * @return true if there is a tile, false otherwise
+     */
+    bool selectTileAtPosition(cugl::Vec2 position);
+    
+    // Convert grid (x, y) to screen coordinates
+//    cugl::Vec2 gridToScreen(int x, int y);
+    
+    // Convert screen coordinates to grid (x, y)
+//    std::tuple<int, int> screenToGrid(cugl::Vec2 position);
 
 	// Draws tiles and pawns
 	void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);

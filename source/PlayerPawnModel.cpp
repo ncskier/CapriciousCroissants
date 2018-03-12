@@ -8,6 +8,28 @@
 
 #include "PlayerPawnModel.h"
 
+PlayerPawnModel::PlayerPawnModel() :
+x(0),
+y(0),
+dx(0),
+dy(1){
+}
+
+void PlayerPawnModel::dispose() {
+}
+
+// Turn Around (inver dx & dy)
+void PlayerPawnModel::turnAround() {
+    dx = -dx;
+    dy = -dy;
+}
+
+// Step Position
+void PlayerPawnModel::step() {
+    x += dx;
+    y += dy;
+}
+
 /*
 void setHealth(int health) {
 	_health = health;

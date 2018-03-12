@@ -118,8 +118,13 @@ PlayerPawnModel BoardModel::getAlly(int i) const {
 }
 
 // Returns the enemy pawn at index i of _enemies
-PlayerPawnModel BoardModel::getEnemy(int i) const {
+PlayerPawnModel BoardModel::getEnemy(int i) {
 	return _enemies[i];
+}
+
+// Returns the enemy pawn at index i of _enemies
+PlayerPawnModel* BoardModel::getEnemyPtr(int i) {
+    return &_enemies[i];
 }
 
 // Returns the allies

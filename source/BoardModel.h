@@ -118,7 +118,10 @@ public:
 	PlayerPawnModel getAlly(int i) const;
 
 	// Returns the enemy pawn at index i of _enemies
-	PlayerPawnModel getEnemy(int i) const;
+	PlayerPawnModel getEnemy(int i);
+    
+    // Returns the enemy pawn at index i of _enemies
+    PlayerPawnModel* getEnemyPtr(int i);
 
 	// Returns the allies
 	PlayerPawnModel getAllies() ;

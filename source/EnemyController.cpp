@@ -67,17 +67,30 @@ int EnemyController::playerDistance(PlayerPawnModel enemy, PlayerPawnModel playe
 }
 
 void EnemyController::enemyMove(PlayerPawnModel enemy, int enemyIdx) {
-	int dx = 0;
-	int dy = 0;
-	//dx = (rand() % 3)-1; //choose a random direction between -1, 0 and 1
-	//int dy = (1 - std::max(abs(dx),0)) - (rand() % 3) - 1;
-	
-	while (dx == dy || (dx != 0 && dy != 0)) {
-		dx = (rand() % 3) - 1;
-		dy = (rand() % 3) - 1;
-	}
+//    int dx = 0;
+//    int dy = 0;
+//    //dx = (rand() % 3)-1; //choose a random direction between -1, 0 and 1
+//    //int dy = (1 - std::max(abs(dx),0)) - (rand() % 3) - 1;
+//
+//    while (dx == dy || (dx != 0 && dy != 0)) {
+//        dx = (rand() % 3) - 1;
+//        dy = (rand() % 3) - 1;
+//    }
+
+    // Move in direction facing
+    int x = enemy.x;
+    int y = enemy.y;
+    x += enemy.dx;
+    y += enemy.dy;
     
-    _board->moveEnemy(dx*1, dy*1, enemyIdx);
+    // Check bounds
+    if (x < 0 || _board->getWidth() <= x) {
+        _board->getEnemyPtr(enemyIdx)->turnAround();
+    } else if (y < 0 || _board->getHeight() <= y) {
+        _board->getEnemyPtr(enemyIdx)->turnAround();
+    } else {
+        _board->getEnemyPtr(enemyIdx)->step();
+    }
 }
 
 void EnemyController::enemyAttack(PlayerPawnModel enemy, PlayerPawnModel player) {

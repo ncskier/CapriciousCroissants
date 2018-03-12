@@ -20,8 +20,8 @@ void PlayerPawnModel::dispose() {
 
 // Face random direction
 void PlayerPawnModel::randomDirection() {
-    srand((int)time(NULL));
     int d = rand() % 2;        // random number in range [0, 1]
+    CULog("d: %d", d);
     dx = d;
     dy = 1-d;
 }

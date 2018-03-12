@@ -259,12 +259,11 @@ void BoardModel::generateNewBoard() {
 	int a;
 	int b;
 	for (int i = 0; i < _numEnemies; i++) {
-        CULog("i: %d", i);
 		a = rand() % _width;
 		b = rand() % _height;
 		_enemies[i].x = a;
 		_enemies[i].y = i;
-//        _enemies[i].randomDirection();
+        _enemies[i].randomDirection();
 	}
     
     CULog("board: \n%s", toString().c_str());
@@ -540,6 +539,24 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             float height = bounds.size.height - 10.0f*_tilePadding;
             bounds.set(xf, yf, width, height);
             batch->draw(tileTexture, Color4::BLACK, bounds);
+            
+            // Direction Indicator
+            float padding = _tilePadding;
+            bounds = gridToScreen(enemy.x, enemy.y);
+            width = bounds.size.width/5.0f;
+            height = bounds.size.height/5.0f;
+            xf = bounds.getMidX() - width/2.0f;
+            yf = bounds.getMidY() - height/2.0f;
+            if (enemy.dx == 1)
+                xf = bounds.getMaxX() - width - 5.0f*_tilePadding - padding;
+            if (enemy.dx == -1)
+                xf = bounds.getMinX() + 5.0f*_tilePadding + padding;
+            if (enemy.dy == 1)
+                yf = bounds.getMaxY() - height - 5.0f*_tilePadding - padding;
+            if (enemy.dy == -1)
+                yf = bounds.getMinY() + 5.0f*_tilePadding + padding;
+            bounds.set(xf+xOffset+xWrap, yf+yOffset+yWrap, width, height);
+            batch->draw(tileTexture, Color4::RED, bounds);
         }
     }
 

@@ -262,6 +262,7 @@ void BoardModel::generateNewBoard() {
 		b = rand() % _height;
 		_enemies[i].x = a;
 		_enemies[i].y = b;
+        _enemies[i].randomDirection();
 	}
 }
 

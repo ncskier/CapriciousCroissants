@@ -36,6 +36,8 @@ public:
     void turnAround();
     // Step Position
     void step();
+    // Face random direction
+    void randomDirection();
 };
 
 #endif /* __Player_Pawn_Model_H__ */

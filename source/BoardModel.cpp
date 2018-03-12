@@ -68,12 +68,12 @@ TileModel BoardModel::getTile(int x, int y) const {
 }
 
 //Returns the value at the give (x, y) coordinate
-TileModel BoardModel::getAlly(int x, int y) const {
+PlayerPawnModel BoardModel::getAlly(int x, int y) const {
 	return _allies[indexOfCoordinate(x, y)];
 }
 
 //Returns the value at the give (x, y) coordinate
-TileModel BoardModel::getEnemy(int x, int y) const {
+PlayerPawnModel BoardModel::getEnemy(int x, int y) const {
 	return _enemies[indexOfCoordinate(x, y)];
 }
 

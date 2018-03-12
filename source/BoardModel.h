@@ -41,10 +41,10 @@ protected:
 	TileModel *_tiles;
 
 	//Array of all allies on the board
-	playerPawn *_allies;
+	PlayerPawnModel *_allies;
 
 	//Array of all enemies on the board
-	playerPawn *_enemies;
+	PlayerPawnModel *_enemies;
 
 	//Replaces a tile at a location in the array with a new value
 	void replaceTile(int tileLocation);
@@ -76,10 +76,10 @@ public:
 	TileModel getTile(int x, int y) const;
 
 	//Returns the value at the give (x, y) coordinate
-	playerPawn getAlly(int x, int y) const;
+	PlayerPawnModel getAlly(int x, int y) const;
 
 	//Returns the value at the give (x, y) coordinate
-	playerPawn getEnemy(int x, int y) const;
+	PlayerPawnModel getEnemy(int x, int y) const;
 
 	//Set the value at the given (x, y) coordinate
 	void set(int x, int y, TileModel t);

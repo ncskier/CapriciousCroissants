@@ -34,11 +34,33 @@ _tilePadding(5.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
-    colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE };
+    colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
     srand((int)time(NULL));
     generateNewBoard();
     while (checkForMatches());
     srand((int)time(NULL));
+}
+
+BoardModel::BoardModel(int width, int height, int colors, int allies, bool placePawn) :
+_height(height),
+_width(width),
+_numColors(colors),
+_numAllies(allies),
+_numEnemies(1),
+_enemies(nullptr),
+_allies(nullptr),
+_tiles(nullptr),
+_placeAllies(placePawn),
+_boardPadding(10.0f),
+_tilePadding(5.0f),
+offsetRow(false),
+offsetCol(false),
+offset(0.0f) {
+	colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::CORNFLOWER };
+	srand((int)time(NULL));
+	generateNewBoard();
+	while (checkForMatches());
+	srand((int)time(NULL));
 }
 
 /**
@@ -100,6 +122,17 @@ PlayerPawnModel BoardModel::getEnemy(int i) const {
 	return _enemies[i];
 }
 
+// Returns the allies
+PlayerPawnModel BoardModel::getAllies()  {
+	return *_allies;
+}
+
+// Returns the enemies
+PlayerPawnModel BoardModel::getEnemies()  {
+	return *_enemies;
+}
+
+
 // Set the value at the given (x, y) coordinate
 void BoardModel::setTile(int x, int y, TileModel t) {
 	_tiles[indexOfCoordinate(x, y)] = t;
@@ -110,11 +143,16 @@ void BoardModel::placeAlly(int x, int y, int i) {
 	_allies[i].x = x;
 	_allies[i].y = y;
 }
-
+	
 // Place enemy at index i of _enemies on location (x, y)
 void BoardModel::placeEnemy(int x, int y, int i) {
 	_enemies[i].x = x;
 	_enemies[i].y = y;
+}
+
+void BoardModel::moveEnemy(int x, int y, PlayerPawnModel e) {
+	e.x += x;
+	e.y += y;
 }
 
 // Remove ally at index i
@@ -407,9 +445,8 @@ int BoardModel::lengthToCells(float length) {
 // Draws all of the tiles and pawns(in that order) 
 void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     Rect bounds;
-    
     batch->begin();
-
+    
     for (int x = 0; x < _width; x++) {
         for (int y = 0; y < _height; y++) {
             float xOffset = (offsetRow && y == yOfIndex(_selectedTile)) ? offset : 0.0f;

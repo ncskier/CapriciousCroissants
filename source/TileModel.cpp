@@ -8,3 +8,7 @@
 
 #include "TileModel.h"
 
+void TileModel::setColor(int c) {
+	_color = c;
+}
+

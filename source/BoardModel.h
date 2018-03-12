@@ -75,6 +75,7 @@ protected:
 
 public:
 	BoardModel();
+	BoardModel(int width, int height, int colors, int allies, bool placePawn);
     
     ~BoardModel() { dispose(); }
     
@@ -96,6 +97,11 @@ public:
         return (board->init(width, height) ? board : nullptr);
     }
 
+	static std::shared_ptr<BoardModel> alloc(int width, int height, int colors, int allies, bool placePawn) {
+		std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>(width, height, colors, allies, placePawn);
+		return (board->init(width, height) ? board : nullptr);
+	}
+
 	int gameHeight;
 	int gameWidth;
 
@@ -113,6 +119,12 @@ public:
 
 	// Returns the enemy pawn at index i of _enemies
 	PlayerPawnModel getEnemy(int i) const;
+
+	// Returns the allies
+	PlayerPawnModel getAllies() ;
+
+	// Returns the enemies
+	PlayerPawnModel getEnemies() ;
 
 	// Set the tile at the given (x, y) coordinate
 	void setTile(int x, int y, TileModel t);
@@ -137,6 +149,9 @@ public:
 
 	// Place enemy at index i of _enemies on location (x, y)
 	void placeEnemy(int x, int y, int i);
+
+	// Moves an enemy e to a different location
+	void moveEnemy(int x, int y, PlayerPawnModel e);
 
 	// Remove ally at index i
 	void removeAlly(int i);

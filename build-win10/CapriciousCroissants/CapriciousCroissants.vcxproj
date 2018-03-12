@@ -188,6 +188,7 @@
     <ClInclude Include="..\..\source\BoardController.h" />
     <ClInclude Include="..\..\source\BoardModel.h" />
     <ClInclude Include="..\..\source\BoardScreenApp.h" />
+    <ClInclude Include="..\..\source\BoardSettingsMode.h" />
     <ClInclude Include="..\..\source\BoxApp.h" />
     <ClInclude Include="..\..\source\EnemyController.h" />
     <ClInclude Include="..\..\source\InputController.h" />
@@ -198,13 +199,15 @@
     <ClInclude Include="..\..\source\PlayMode.h" />
     <ClInclude Include="..\..\source\TileBoard.h" />
     <ClInclude Include="..\..\source\TileModel.h" />
-    <ClInclude Include="EnemyPawnEntity.h" />
-    <ClInclude Include="resource.h" />
+    <ClInclude Include="EnemyPawnModel.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\BoardController.cpp" />
     <ClCompile Include="..\..\source\BoardModel.cpp" />
     <ClCompile Include="..\..\source\BoardScreenApp.cpp" />
+    <ClCompile Include="..\..\source\BoardSettingsMode.cpp" />
     <ClCompile Include="..\..\source\BoxApp.cpp" />
     <ClCompile Include="..\..\source\EnemyController.cpp" />
     <ClCompile Include="..\..\source\InputController.cpp" />
@@ -216,7 +219,9 @@
     <ClCompile Include="..\..\source\PlayMode.cpp" />
     <ClCompile Include="..\..\source\TileBoard.cpp" />
     <ClCompile Include="..\..\source\TileModel.cpp" />
-    <ClCompile Include="EnemyPawnEntity.cpp" />
+    <ClCompile Include="EnemyPawnModel.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CapriciousCroissants.rc" />

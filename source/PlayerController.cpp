@@ -107,7 +107,7 @@ void PlayerController::update(float timestep) {
             if (abs(cells) > 0) {
                 // Update board
                 _board->slide(cells);
-//                setComplete(true);
+                setComplete(true);
             }
             _board->deselectTile();
             _input->clear();

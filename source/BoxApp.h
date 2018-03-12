@@ -12,6 +12,7 @@
 #include <cugl/cugl.h>
 #include "PlayMode.h"
 #include "LoadingMode.h"
+#include "BoardSettingsMode.h"
 
 /**
  * This class represents the application root for the game.
@@ -29,8 +30,13 @@ protected:
     /** The controller for the loading screen */
     LoadingMode _loading;
     
+	/** Settings mode for the board */
+	BoardSettingsMode _settings;
+
     /** Whether or not we have finished loading all assets */
     bool _loaded;
+	bool _inSettings;
+	bool _inGameplay;
     
 public:
 #pragma mark Constructors

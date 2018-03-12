@@ -11,6 +11,8 @@
 
 #include <cugl/cugl.h>
 #include "BoardModel.h"
+#include "PlayerPawnModel.h"
+#include "EnemyPawnModel.h"
 
 
 class EnemyController {
@@ -20,6 +22,9 @@ protected:
     // MODEL
     std::shared_ptr<BoardModel> _board;
     
+	PlayerPawnModel _enemies;
+	PlayerPawnModel _allies;
+
     /** Whether we have completed the enemy turn */
     bool _complete;
     /** Whether or not debug mode is active */
@@ -100,6 +105,10 @@ public:
      */
     void setComplete(bool value) { _complete = value; }
     
+
+	int playerDistance(PlayerPawnModel enemy, PlayerPawnModel player);
+	void enemyMove(PlayerPawnModel enemy);
+	void enemyAttack(PlayerPawnModel enemy, PlayerPawnModel player);
     
 #pragma mark -
 #pragma mark Gameplay Handling

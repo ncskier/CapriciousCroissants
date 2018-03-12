@@ -23,7 +23,7 @@ _height(5),
 _width(5),
 _numColors(5),
 _numAllies(1),
-_numEnemies(1),
+_numEnemies(4),
 _selectedTile(-1),
 _enemies(nullptr),
 _allies(nullptr),
@@ -46,7 +46,7 @@ _height(height),
 _width(width),
 _numColors(colors),
 _numAllies(allies),
-_numEnemies(1),
+_numEnemies(4),
 _enemies(nullptr),
 _allies(nullptr),
 _tiles(nullptr),
@@ -232,6 +232,7 @@ void BoardModel::replaceTile(int tileLocation) {
 // Generates a new set of tiles for _tiles that verifies that the board does not have any matches existing
 void BoardModel::generateNewBoard() {
 	// Setup Tiles
+    srand((int)time(NULL));
 	_tiles = new TileModel[_height*_width];
 	int color;
 	for (int i = 0; i < _height*_width; i++) {
@@ -258,12 +259,15 @@ void BoardModel::generateNewBoard() {
 	int a;
 	int b;
 	for (int i = 0; i < _numEnemies; i++) {
+        CULog("i: %d", i);
 		a = rand() % _width;
 		b = rand() % _height;
 		_enemies[i].x = a;
-		_enemies[i].y = b;
-        _enemies[i].randomDirection();
+		_enemies[i].y = i;
+//        _enemies[i].randomDirection();
 	}
+    
+    CULog("board: \n%s", toString().c_str());
 }
 
 // Slide pawns in row or column [k] by [offset]
@@ -556,9 +560,15 @@ std::string BoardModel::toString() const {
         }
         ss << "\n";
     }
-    ss << "[";
+    ss << "allies: [";
     for (int i = 0; i < _numAllies; i++) {
         ss << "(" << _allies[i].x << ", " << _allies[i].y << ")";
+        ss << "   ";
+    }
+    ss << "]";
+    ss << "\nenemies: [";
+    for (int i = 0; i < _numEnemies; i++) {
+        ss << "(" << _enemies[i].x << ", " << _enemies[i].y << ")";
         ss << "   ";
     }
     ss << "]";

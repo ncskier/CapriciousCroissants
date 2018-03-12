@@ -29,11 +29,11 @@ BoardModel::BoardModel() :
 	offsetColIdx(-1),
 	offsetRowValue(0.0f),
 	offsetColValue(0.0f) {
-	colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE };
-	srand((int)time(NULL));
-	generateNewBoard();
-	while (checkForMatches());
-	srand((int)time(NULL));
+		colorLookup = { Color4::WHITE, Color4::RED, Color4::BLACK, Color4::MAGENTA, Color4::BLUE };
+		srand((int)time(NULL));
+		generateNewBoard();
+		while (checkForMatches());
+		srand((int)time(NULL));
 }
 
 // Allocates this board for a shared pointer
@@ -63,8 +63,18 @@ int BoardModel::indexOfCoordinate(int x, int y) const {
 }
 
 //Returns the value at the give (x, y) coordinate
-TileModel BoardModel::get(int x, int y) const {
+TileModel BoardModel::getTile(int x, int y) const {
 	return _tiles[indexOfCoordinate(x, y)];
+}
+
+//Returns the value at the give (x, y) coordinate
+TileModel BoardModel::getAlly(int x, int y) const {
+	return _allies[indexOfCoordinate(x, y)];
+}
+
+//Returns the value at the give (x, y) coordinate
+TileModel BoardModel::getEnemy(int x, int y) const {
+	return _enemies[indexOfCoordinate(x, y)];
 }
 
 //Set the value at the given (x, y) coordinate
@@ -74,26 +84,30 @@ void BoardModel::set(int x, int y, TileModel t) {
 
 // Place ally at index i of _allies on location (x, y)
 void BoardModel::placeAlly(int x, int y, int i) {
-	_allies[i].x = x;
-	_allies[i].y = y;
+	/*_allies[i].x = x;
+	_allies[i].y = y;*/
+	//TODO^^
 }
 
 // Place enemy at index i of _enemies on location (x, y)
-void BoardModel::placeAlly(int x, int y, int i) {
-	_enemies[i].x = x;
-	_enemies[i].y = y;
+void BoardModel::placeEnemy(int x, int y, int i) {
+	/*_enemies[i].x = x;
+	_enemies[i].y = y;*/
+	//TODO^^
 }
 
 // Remove ally at index i
 void BoardModel::removeAlly(int i) {
-	_allies[i].x = -1;
-	_allies[i].y = -1;
+	/*_allies[i].x = -1;
+	_allies[i].y = -1;*/
+	//TODO^^
 }
 
 // Remove enemy at index i
 void BoardModel::removeEnemy(int i) {
-	_enemies[i].x = -1;
-	_enemies[i].y = -1;
+	/*_enemies[i].x = -1;
+	_enemies[i].y = -1;*/
+	//TODO^^
 }
 
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
@@ -133,14 +147,15 @@ bool BoardModel::checkForMatches() {
 	for (iter = replaceTiles.begin(); iter != replaceTiles.end(); iter++) {
 		// Replace tile
 		replaceTile(*iter);
-		// Remove pawn
+		/*// Remove pawn
 		if (_enemies != nullptr) {
 			for (int i = 0; i < _numEnemies; i++) {
-				if (indexOfCoordinate(_enemies[i].x, _enemies[i].y) == *iter) {
+				if (indexOfCoordinate(_enemies[i].x, _enemies[i].y) == *iter) { 
 					removeEnemy(i);
 				}
 			}
-		}
+		}*/
+		//TODO^^
 	}
 
 	return matchExists;
@@ -159,23 +174,164 @@ void BoardModel::generateNewBoard() {
 	int color;
 	for (int i = 0; i < _height*_width; i++) {
 		color = rand() % _numColors;        // random number in range [0, _numColors-1]
-		_tiles[i] = color;
+		_tiles[i].setColor(colorLookup.at(color);
 	}
 
 	// Replace any matches
 	while (checkForMatches());
 
 	// Setup Pawns
-	_pawns = new Vec2[_numPawns];
+	/*_pawns = new Vec2[_numPawns]; //Should this be a smart pointer?
 	int x;
 	int y;
 	for (int i = 0; i < _numPawns; i++) {
 		x = rand() % _sideSize;
 		y = rand() % _sideSize;
 		_pawns[i].set(x, y);
-	}
+	}*/
+	//TODO^^^^ Need to setup allies and enemies
 }
 
+// Slide pawns in row or column [k] by [offset]
+void BoardModel::slidePawns(bool row, int k, int offset) {
+	/*// Slide pawns
+	for (int i = 0; i < _numPawns; i++) {
+		Vec2 pawn = _pawns[i];
+		if (pawn.x != -1 && pawn.y != -1) {
+			if (row) {
+				// Row
+				if (k == pawn.y) {
+					float x = ((int)pawn.x + offset) % _sideSize;
+					while (x < 0) {
+						x += _sideSize;
+					}
+					_pawns[i].x = x;
+				}
+			}
+			else {
+				// Column
+				if (k == pawn.x) {
+					float y = ((int)pawn.y + offset) % _sideSize;
+					while (y < 0) {
+						y += _sideSize;
+					}
+					_pawns[i].y = y;
+				}
+			}
+		}
+	}*/
+	//TODO^^^^^^ Slide allies and enemies in row/column 
+}
 
+//Slide row or column by [offset]
+void BoardModel::slide(bool row, int k, int offset) {
+	/*// Copy
+	std::unique_ptr<int[]> line(new int[_sideSize]);
+	for (int i = 0; i < _sideSize; i++) {
+		int x = row ? i : k;
+		int y = row ? k : i;
+		line[i] = get(x, y);
+	}
 
+	// Slide/write row
+	for (int i = 0; i < _sideSize; i++) {
+		int x = row ? i : k;
+		int y = row ? k : i;
+		int j = (i - offset) % _sideSize;
+		while (j < 0) {
+			j += _sideSize;
+		}
+		set(x, y, line[j]);
+	}
+
+	// Slide pawns
+	slidePawns(row, k, offset);*/
+	//TODO^^^^^^ Take into account differing height/width
+}
+
+//Offset view of row (not model)
+void BoardModel::offsetRow(int idx, float value) {
+	offsetRowIdx = idx;
+	offsetRowValue = value;
+}
+
+//Offset view of col (not model)
+void BoardModel::offsetCol(int idx, float value) {
+	offsetColIdx = idx;
+	offsetColValue = value;
+}
+
+//Offset reset
+void BoardModel::offsetReset() {
+	offsetRowIdx = -1;
+	offsetColIdx = -1;
+	offsetRowValue = 0.0f;
+	offsetColValue = 0.0f;
+}
+
+//Slide row [y] by [offset]
+void BoardModel::slideRow(int y, int offset) {
+	slide(true, y, offset);
+}
+
+//Slide column [x] by [offset]
+void BoardModel::slideCol(int x, int offset) {
+	slide(false, x, offset);
+}
+
+// Draws all of the tiles and pawns(in that order) 
+void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
+	batch->begin();
+
+	float tileWidth = (gameWidth - 20) / 5;
+	float tileHeight = (gameHeight - 20) / 5;
+	float usedSize = tileWidth > tileHeight ? tileHeight : tileWidth;
+	Rect bounds = Rect(0, 0, usedSize, usedSize);
+
+	for (int x = 0; x < _width; x++) {
+		float xPos = usedSize * x + (x * 5);
+		for (int y = 0; y < _height; y++) {
+			float yPos = usedSize * y + (y * 5);
+			bounds.set(xPos, yPos, usedSize, usedSize);
+			batch->draw(tileTexture, _tiles[indexOfCoordinate(x, y)].getColor(), bounds);
+		}
+	}
+
+	// Draw Pawns
+	/*for (int i = 0; i < _numPawns; i++) {
+		Vec2 pawn = _pawns[i];
+		if (pawn.x != -1 && pawn.y != -1) {
+			float xPos = usedSize * pawn.x + (pawn.x * _sideSize) + (usedSize / 4.0f);
+			float yPos = usedSize * pawn.y + (pawn.y * _sideSize) + (usedSize / 4.0f);
+			bounds.set(xPos, yPos, usedSize / 2.0f, usedSize / 2.0f);
+			batch->draw(tileTexture, Color4::GRAY, bounds);
+		}
+	}*/
+	//TODO ^^^
+
+	batch->end();
+}
+
+/**
+* Returns a string representation of the board for debugging purposes.
+*
+* @return a string representation of this vector for debuggging purposes.
+*/
+std::string BoardModel::toString() const {
+	/*std::stringstream ss;
+	for (int j = 0; j < _height; j++) {
+		for (int i = 0; i < _width; i++) {
+			ss << " ";
+			ss << _tiles[indexOfCoordinate(i, j)];
+		}
+		ss << "\n";
+	}
+	ss << "[";
+	for (int i = 0; i < _numPawns; i++) {
+		ss << _pawns[i].toString();
+		ss << "   ";
+	}
+	return ss.str();*/
+	//TODO^^^ Take into account allies and enemies
+}
 

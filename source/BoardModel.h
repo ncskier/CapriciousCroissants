@@ -73,7 +73,13 @@ public:
 	std::shared_ptr<cugl::Texture> tileTexture;
 
 	//Returns the value at the give (x, y) coordinate
-	TileModel get(int x, int y) const;
+	TileModel getTile(int x, int y) const;
+
+	//Returns the value at the give (x, y) coordinate
+	playerPawn getAlly(int x, int y) const;
+
+	//Returns the value at the give (x, y) coordinate
+	playerPawn getEnemy(int x, int y) const;
 
 	//Set the value at the given (x, y) coordinate
 	void set(int x, int y, TileModel t);

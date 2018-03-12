@@ -198,6 +198,7 @@
     <ClInclude Include="..\..\source\PlayMode.h" />
     <ClInclude Include="..\..\source\TileBoard.h" />
     <ClInclude Include="..\..\source\TileModel.h" />
+    <ClInclude Include="EnemyPawnEntity.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -215,6 +216,7 @@
     <ClCompile Include="..\..\source\PlayMode.cpp" />
     <ClCompile Include="..\..\source\TileBoard.cpp" />
     <ClCompile Include="..\..\source\TileModel.cpp" />
+    <ClCompile Include="EnemyPawnEntity.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CapriciousCroissants.rc" />

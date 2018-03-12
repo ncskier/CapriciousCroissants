@@ -205,6 +205,7 @@
     <ClCompile Include="..\..\source\BoardController.cpp" />
     <ClCompile Include="..\..\source\BoardModel.cpp" />
     <ClCompile Include="..\..\source\BoardScreenApp.cpp" />
+    <ClCompile Include="..\..\source\BoardSettingsMode.cpp" />
     <ClCompile Include="..\..\source\BoxApp.cpp" />
     <ClCompile Include="..\..\source\EnemyController.cpp" />
     <ClCompile Include="..\..\source\InputController.cpp" />

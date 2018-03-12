@@ -42,6 +42,8 @@ void BoxApp::onStartup() {
     // Create a "loading" screen
     _loaded = false;
     _loading.init(_assets);
+	_inSettings = false;
+	_inGameplay = false;
     
     // Que up the other assets
     AudioEngine::start();
@@ -64,6 +66,7 @@ void BoxApp::onStartup() {
 void BoxApp::onShutdown() {
     _loading.dispose();
     _gameplay.dispose();
+	_settings.dispose();
     _assets = nullptr;
     _batch = nullptr;
     
@@ -125,13 +128,24 @@ void BoxApp::onResume() {
 void BoxApp::update(float timestep) {
     if (!_loaded && _loading.isActive()) {
         _loading.update(0.01f);
-    } else if (!_loaded) {
+    } else if (!_loaded && !_inSettings) {
         _loading.dispose(); // Disables the input listeners in this mode
-        _gameplay.init(_assets);
-        _loaded = true;
-    } else {
-        _gameplay.update(timestep);
-    }
+		_settings.init(_assets);
+		_inSettings = true;
+		_loaded = true;
+    } else if (_inSettings && !_inGameplay && !_settings.isDone){
+		_settings.update(timestep);
+	} else if (_inSettings && !_inGameplay) {
+		_settings.dispose();
+
+		//At this point you can get values from settings with _settings.height, _settings.width, _settings.allies, _settings.colors, _settings.placePawns
+
+		_gameplay.init(_assets);
+		_inSettings = false;
+		_inGameplay = true;
+	} else {
+		_gameplay.update(timestep);
+	}
 }
 
 /**
@@ -146,9 +160,10 @@ void BoxApp::update(float timestep) {
 void BoxApp::draw() {
     if (!_loaded) {
         _loading.render(_batch);
-    } else {
-        _gameplay.draw(_batch);
-//        _gameplay.render(_batch);
-    }
+    } else  if (_inSettings) {
+		_settings.render(_batch);
+	} else {
+		_gameplay.draw(_batch);
+	}
 }
 

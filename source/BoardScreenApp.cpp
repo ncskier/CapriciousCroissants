@@ -29,8 +29,8 @@ void BoardScreenApp::onStartup() {
 
 	size *= inputLimiter;
 	
-	float tileWidth = (size.width - 20) / 5;
-	float tileHeight = (size.height - 20) / 5;
+	float tileWidth = size.width / 20;
+	float tileHeight = size.height / 20;
 	usedSize = tileWidth < tileHeight ? tileWidth : tileHeight;
 
 	// Create a scene graph the same size as the window
@@ -53,11 +53,11 @@ void BoardScreenApp::onStartup() {
 	_board = TileBoard::alloc();
 	_board->gameHeight = size.height;
 	_board->gameWidth = size.width;
-	_board->tileTexture = _assets->get<Texture>("100squareWhite");
-	tileAsset = _assets->get<Texture>("100squareWhite");
+	_board->tileTexture = _assets->get<Texture>("tileTexture");
+	tileAsset = _assets->get<Texture>("tileTexture");
 
     CULog("Initialize Board:\n%s", _board->toString().c_str());
-	CULog("Display Width: %d, sizeWidth: %f", getDisplayWidth(), size.width);
+
     
     // Test get(x, y)
 //    CULog("get(0,0) = %d", _board->get(0, 0));
@@ -143,8 +143,8 @@ void BoardScreenApp::update(float timestep) {
 				startX = pos.x;
 				startY = pos.y;
 
-				highlightX = floor(pos.x / (usedSize + 2.5));
-				highlightY = 4 - floor(pos.y / (usedSize + 2.5));
+				highlightX = floor(pos.x / (usedSize));
+				highlightY = 4 - floor(pos.y / (usedSize));
 				moveSince = 0;
 				finishedMove = false;
 			}
@@ -156,8 +156,8 @@ void BoardScreenApp::update(float timestep) {
 				if (touchscreen->touchDown(firstId)) {
 					Vec2 pos = touchscreen->touchPosition(firstId);
 					pos *= inputLimiter;
-					int difX = floor(pos.x / (usedSize + 2.5)) - highlightX;
-					int difY = 4 - floor(pos.y / (usedSize + 2.5)) - highlightY;
+					int difX = floor(pos.x / (usedSize)) - highlightX;
+					int difY = 4 - floor(pos.y / (usedSize)) - highlightY;
 					if (moveSince == 0) {
 						if (difX != 0 || difY != 0) {
 							if (difX != 0) {
@@ -217,8 +217,8 @@ void BoardScreenApp::update(float timestep) {
 		startX = pos.x;
 		startY = pos.y;
 
-		highlightX = floor(pos.x / (usedSize + 2.5));
-		highlightY = 4 - floor(pos.y / (usedSize + 2.5));
+		highlightX = floor(pos.x / (usedSize));
+		highlightY = 4 - floor(pos.y / (usedSize));
 		moveSince = 0;
 		finishedMove = false;
 	}
@@ -227,8 +227,8 @@ void BoardScreenApp::update(float timestep) {
 		if (mouse->buttonDown().hasLeft()) {
 			Vec2 pos = mouse->pointerPosition();
 			pos *= inputLimiter;
-			int difX = floor(pos.x / (usedSize + 2.5)) - highlightX;
-			int difY = 4 - floor(pos.y / (usedSize + 2.5)) - highlightY;
+			int difX = floor(pos.x / (usedSize)) - highlightX;
+			int difY = 4 - floor(pos.y / (usedSize)) - highlightY;
 			if (moveSince == 0) {
 				if (difX != 0 || difY != 0) {
 					if (difX != 0) {

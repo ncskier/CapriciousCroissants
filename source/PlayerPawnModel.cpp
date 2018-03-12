@@ -7,3 +7,18 @@
 //
 
 #include "PlayerPawnModel.h"
+
+/*
+void setHealth(int health) {
+	_health = health;
+}
+
+void changeHealth(int changeAmount){
+	setHealth(_health + changeAmount);
+}
+
+void setMaxHealth(){
+	setHealth(maxHealth);
+}
+
+*/

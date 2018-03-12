@@ -36,14 +36,22 @@ BoardModel::BoardModel() :
 		srand((int)time(NULL));
 }
 
-// Allocates this board for a shared pointer
-std::shared_ptr<BoardModel> BoardModel::alloc() {
-	std::shared_ptr<BoardModel> result = std::make_shared<BoardModel>();
-	return result;
+/**
+ * Initializes the board
+ *
+ * @param width     The board width (num tiles)
+ * @param height    The board height (num tiles)
+ *
+ * @return true if the controller is initialized properly, false otherwise.
+ */
+bool BoardModel::init(int width, int height) {
+    _width = width;
+    _height = height;
+    return true;
 }
 
 // Destroy any values needed to be deleted for this class
-BoardModel::~BoardModel() {
+void BoardModel::dispose() {
 	delete[] _tiles;
 	delete[] _allies;
 	delete[] _enemies;
@@ -54,7 +62,7 @@ BoardModel::~BoardModel() {
 }
 
 //Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
-//Example for sideSize = 3
+// Example for sideSize = 3
 //  0 1 2     (0,0) (1,0) (2,0)
 //  3 4 5     (0,1) (1,1) (2,1)
 //  6 7 8     (0,2) (1,2) (2,2) (3) (4)
@@ -62,23 +70,23 @@ int BoardModel::indexOfCoordinate(int x, int y) const {
 	return x + (y*_width);
 }
 
-//Returns the value at the give (x, y) coordinate
+// Returns the value at the give (x, y) coordinate
 TileModel BoardModel::getTile(int x, int y) const {
 	return _tiles[indexOfCoordinate(x, y)];
 }
 
-//Returns the value at the give (x, y) coordinate
+// Returns the value at the give (x, y) coordinate
 PlayerPawnModel BoardModel::getAlly(int x, int y) const {
 	return _allies[indexOfCoordinate(x, y)];
 }
 
-//Returns the value at the give (x, y) coordinate
+// Returns the value at the give (x, y) coordinate
 PlayerPawnModel BoardModel::getEnemy(int x, int y) const {
 	return _enemies[indexOfCoordinate(x, y)];
 }
 
-//Set the value at the given (x, y) coordinate
-void BoardModel::set(int x, int y, TileModel t) {
+// Set the value at the given (x, y) coordinate
+void BoardModel::setTile(int x, int y, TileModel t) {
 	_tiles[indexOfCoordinate(x, y)] = t;
 }
 
@@ -318,21 +326,19 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
 * @return a string representation of this vector for debuggging purposes.
 */
 std::string BoardModel::toString() const {
-	/*std::stringstream ss;
-	for (int j = 0; j < _height; j++) {
-		for (int i = 0; i < _width; i++) {
-			ss << " ";
-			ss << _tiles[indexOfCoordinate(i, j)];
-		}
-		ss << "\n";
-	}
-	ss << "[";
-	for (int i = 0; i < _numPawns; i++) {
-		ss << _pawns[i].toString();
-		ss << "   ";
-	}
-	return ss.str();*/
-	//TODO^^^ Take into account allies and enemies
-    return "";
+    std::stringstream ss;
+    for (int j = 0; j < _height; j++) {
+        for (int i = 0; i < _width; i++) {
+            ss << " ";
+            ss << _tiles[indexOfCoordinate(i, j)].getColor();
+        }
+        ss << "\n";
+    }
+    ss << "[";
+    for (int i = 0; i < _numAllies; i++) {
+        ss << "(" << _allies[i].x << ", " << _allies[i].y << ")";
+        ss << "   ";
+    }
+    return ss.str();
 }
 

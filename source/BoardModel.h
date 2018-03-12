@@ -16,43 +16,44 @@
 /** Class of the board model*/
 class BoardModel {
 protected:
-	//Size of vertical (column) side of the square board
+	// Size of vertical (column) side of the square board
 	int _height;
 
-	//Size of horizontal (row) side of the square board
+	// Size of horizontal (row) side of the square board
 	int _width;
 
-	//Number of colors of tiles available to the board
+	// Number of colors of tiles available to the board
 	int _numColors;
 
-	//Number of allies
+	// Number of allies
 	int _numAllies;
 
-	//Number of enemies
+	// Number of enemies
 	int _numEnemies;
 
-	//True: Player places allies at beggining of game
-	//False: Allies are already placed on board initially
+	// True: Player places allies at beggining of game
+	// False: Allies are already placed on board initially
 	bool _placeAllies;
 
+    // Colors to display
 	std::vector<cugl::Color4> colorLookup;
 
-	//Array of all tiles on the board, array index can be translated to coordinates
+	// Array of all tiles on the board, array index can be translated to coordinates
 	TileModel *_tiles;
 
-	//Array of all allies on the board
+	// Array of all allies on the board
 	PlayerPawnModel *_allies;
 
-	//Array of all enemies on the board
+	// Array of all enemies on the board
 	PlayerPawnModel *_enemies;
 
-	//Replaces a tile at a location in the array with a new value
+	// Replaces a tile at a location in the array with a new value
 	void replaceTile(int tileLocation);
 
-	//Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
+	// Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
 	int indexOfCoordinate(int x, int y) const;
 
-	//Slide row or column by [offset]
+	// Slide row or column by [offset]
 	void slide(bool row, int k, int offset);
 
 	// Slide pawns in row or column [k] by [offset]
@@ -60,7 +61,26 @@ protected:
 
 public:
 	BoardModel();
-	~BoardModel();
+    
+    ~BoardModel() { dispose(); }
+    
+    void dispose();
+    
+    /**
+     * Initializes the board
+     *
+     * @param width     The board width (num tiles)
+     * @param height    The board height (num tiles)
+     *
+     * @return true if the controller is initialized properly, false otherwise.
+     */
+    bool init(int width, int height);
+    
+    // Allocates this board for a shared pointer
+    static std::shared_ptr<BoardModel> alloc(int width, int height) {
+        std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
+        return (board->init(width, height) ? board : nullptr);
+    }
 
 	int gameHeight;
 	int gameWidth;
@@ -72,19 +92,19 @@ public:
 
 	std::shared_ptr<cugl::Texture> tileTexture;
 
-	//Returns the value at the give (x, y) coordinate
+	// Returns the value at the give (x, y) coordinate
 	TileModel getTile(int x, int y) const;
 
-	//Returns the value at the give (x, y) coordinate
+	// Returns the value at the give (x, y) coordinate
 	PlayerPawnModel getAlly(int x, int y) const;
 
-	//Returns the value at the give (x, y) coordinate
+	// Returns the value at the give (x, y) coordinate
 	PlayerPawnModel getEnemy(int x, int y) const;
 
-	//Set the value at the given (x, y) coordinate
-	void set(int x, int y, TileModel t);
+	// Set the tile at the given (x, y) coordinate
+	void setTile(int x, int y, TileModel t);
 
-	//Returns the number of allies
+	// Returns the number of allies
 	int getNumAllies() const { return _numAllies; }
 
 	//Returns the number of enemies
@@ -111,30 +131,28 @@ public:
 	// Remove enemy at index i
 	void removeEnemy(int i);
 
-	//Return true if a match is found (and replace those matches, damaging pawns on matches), otherwise false
+	// Return true if a match is found (and replace those matches, damaging pawns on matches), otherwise false
 	bool checkForMatches();
 
-	static std::shared_ptr<BoardModel> alloc();
-
-	//Generates a new board into the _tiles variable
+	// Generates a new board into the _tiles variable
 	void generateNewBoard();
 
-	//Offset view of row (not model)
+	// Offset view of row (not model)
 	void offsetRow(int idx, float value);
 
-	//Offset view of col (not model)
+	// Offset view of col (not model)
 	void offsetCol(int idx, float value);
 
-	//Offset reset
+	// Offset reset
 	void offsetReset();
 
-	//Slide row [y] by [offset]
+	// Slide row [y] by [offset]
 	void slideRow(int y, int offset);
 
-	//Slide column [x] by [offset]
+	// Slide column [x] by [offset]
 	void slideCol(int x, int offset);
 
-	//Draws tiles and pawns
+	// Draws tiles and pawns
 	void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);
 
 	/**

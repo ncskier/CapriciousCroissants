@@ -111,6 +111,7 @@ void PlayMode::reset() {
  */
 void PlayMode::populate() {
     // TODO: Create a new BoardModel
+    _board = BoardModel::alloc(5, 5);
 }
 
 
@@ -163,4 +164,5 @@ void PlayMode::update(float dt) {
  */
 void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
     // TODO: draw bord
+    
 }

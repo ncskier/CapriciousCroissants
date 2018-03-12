@@ -462,16 +462,20 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     }
 
     // Draw Pawns
-    /*for (int i = 0; i < _numPawns; i++) {
-        Vec2 pawn = _pawns[i];
-        if (pawn.x != -1 && pawn.y != -1) {
-            float xPos = usedSize * pawn.x + (pawn.x * _sideSize) + (usedSize / 4.0f);
-            float yPos = usedSize * pawn.y + (pawn.y * _sideSize) + (usedSize / 4.0f);
-            bounds.set(xPos, yPos, usedSize / 2.0f, usedSize / 2.0f);
+    for (int i = 0; i < _numAllies; i++) {
+        PlayerPawnModel ally = _allies[i];
+        if (ally.x != -1 && ally.y != -1) {
+            float xOffset = (offsetRow && ally.y == yOfIndex(_selectedTile)) ? offset : 0.0f;
+            float yOffset = (offsetCol && ally.x == xOfIndex(_selectedTile)) ? offset : 0.0f;
+            bounds = gridToScreen(ally.x, ally.y);
+            bounds.set(
+                       bounds.getMinX() + 5.0f*_tilePadding + xOffset,
+                       bounds.getMinY() + 5.0f*_tilePadding + yOffset,
+                       bounds.size.width - 10.0f*_tilePadding,
+                       bounds.size.height - 10.0f*_tilePadding);
             batch->draw(tileTexture, Color4::GRAY, bounds);
         }
-    }*/
-    //TODO ^^^
+    }
 
     batch->end();
 }

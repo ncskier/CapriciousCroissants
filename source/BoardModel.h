@@ -95,11 +95,11 @@ public:
 	// Returns the value at the give (x, y) coordinate
 	TileModel getTile(int x, int y) const;
 
-	// Returns the value at the give (x, y) coordinate
-	PlayerPawnModel getAlly(int x, int y) const;
+	// Returns the ally pawn at index i of _allies
+	PlayerPawnModel getAlly(int i) const;
 
-	// Returns the value at the give (x, y) coordinate
-	PlayerPawnModel getEnemy(int x, int y) const;
+	// Returns the enemy pawn at index i of _enemies
+	PlayerPawnModel getEnemy(int i) const;
 
 	// Set the tile at the given (x, y) coordinate
 	void setTile(int x, int y, TileModel t);

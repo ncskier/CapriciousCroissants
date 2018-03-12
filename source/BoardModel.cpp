@@ -75,14 +75,14 @@ TileModel BoardModel::getTile(int x, int y) const {
 	return _tiles[indexOfCoordinate(x, y)];
 }
 
-// Returns the value at the give (x, y) coordinate
-PlayerPawnModel BoardModel::getAlly(int x, int y) const {
-	return _allies[indexOfCoordinate(x, y)];
+// Returns the ally pawn at index i of _allies
+PlayerPawnModel BoardModel::getAlly(int i) const {
+	return _allies[i];
 }
 
-// Returns the value at the give (x, y) coordinate
-PlayerPawnModel BoardModel::getEnemy(int x, int y) const {
-	return _enemies[indexOfCoordinate(x, y)];
+// Returns the enemy pawn at index i of _enemies
+PlayerPawnModel BoardModel::getEnemy(int i) const {
+	return _enemies[i];
 }
 
 // Set the value at the given (x, y) coordinate
@@ -92,30 +92,26 @@ void BoardModel::setTile(int x, int y, TileModel t) {
 
 // Place ally at index i of _allies on location (x, y)
 void BoardModel::placeAlly(int x, int y, int i) {
-	/*_allies[i].x = x;
-	_allies[i].y = y;*/
-	//TODO^^
+	_allies[i].x = x;
+	_allies[i].y = y;
 }
 
 // Place enemy at index i of _enemies on location (x, y)
 void BoardModel::placeEnemy(int x, int y, int i) {
-	/*_enemies[i].x = x;
-	_enemies[i].y = y;*/
-	//TODO^^
+	_enemies[i].x = x;
+	_enemies[i].y = y;
 }
 
 // Remove ally at index i
 void BoardModel::removeAlly(int i) {
-	/*_allies[i].x = -1;
-	_allies[i].y = -1;*/
-	//TODO^^
+	_allies[i].x = -1;
+	_allies[i].y = -1;
 }
 
 // Remove enemy at index i
 void BoardModel::removeEnemy(int i) {
-	/*_enemies[i].x = -1;
-	_enemies[i].y = -1;*/
-	//TODO^^
+	_enemies[i].x = -1;
+	_enemies[i].y = -1;
 }
 
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
@@ -155,15 +151,14 @@ bool BoardModel::checkForMatches() {
 	for (iter = replaceTiles.begin(); iter != replaceTiles.end(); iter++) {
 		// Replace tile
 		replaceTile(*iter);
-		/*// Remove pawn
+		// Remove enemies
 		if (_enemies != nullptr) {
 			for (int i = 0; i < _numEnemies; i++) {
 				if (indexOfCoordinate(_enemies[i].x, _enemies[i].y) == *iter) { 
 					removeEnemy(i);
 				}
 			}
-		}*/
-		//TODO^^
+		}
 	}
 
 	return matchExists;
@@ -188,73 +183,109 @@ void BoardModel::generateNewBoard() {
 	// Replace any matches
 	while (checkForMatches());
 
-	// Setup Pawns
-	/*_pawns = new Vec2[_numPawns]; //Should this be a smart pointer?
+	// Setup Allies
+	_allies = new PlayerPawnModel[_numAllies];
 	int x;
 	int y;
-	for (int i = 0; i < _numPawns; i++) {
-		x = rand() % _sideSize;
-		y = rand() % _sideSize;
-		_pawns[i].set(x, y);
-	}*/
-	//TODO^^^^ Need to setup allies and enemies
+	for (int i = 0; i < _numAllies; i++) {
+		x = rand() % _width;
+		y = rand() % _height;
+		_allies[i].x = x;
+		_allies[i].y = y;
+	}
+
+	//Setup Enemies
+	_enemies = new PlayerPawnModel[_numEnemies];
+	int a;
+	int b;
+	for (int i = 0; i < _numEnemies; i++) {
+		a = rand() % _width;
+		b = rand() % _height;
+		_enemies[i].x = a;
+		_enemies[i].y = b;
+	}
 }
 
 // Slide pawns in row or column [k] by [offset]
 void BoardModel::slidePawns(bool row, int k, int offset) {
-	/*// Slide pawns
-	for (int i = 0; i < _numPawns; i++) {
-		Vec2 pawn = _pawns[i];
+	// Slide Allies
+	for (int i = 0; i < _numAllies; i++) {
+		PlayerPawnModel pawn = _allies[i];
 		if (pawn.x != -1 && pawn.y != -1) {
 			if (row) {
 				// Row
 				if (k == pawn.y) {
-					float x = ((int)pawn.x + offset) % _sideSize;
+					float x = ((int)pawn.x + offset) % _width;
 					while (x < 0) {
-						x += _sideSize;
+						x += _width;
 					}
-					_pawns[i].x = x;
+					_allies[i].x = x;
 				}
 			}
 			else {
 				// Column
 				if (k == pawn.x) {
-					float y = ((int)pawn.y + offset) % _sideSize;
+					float y = ((int)pawn.y + offset) % _height;
 					while (y < 0) {
-						y += _sideSize;
+						y += _height;
 					}
-					_pawns[i].y = y;
+					_allies[i].y = y;
 				}
 			}
 		}
-	}*/
-	//TODO^^^^^^ Slide allies and enemies in row/column 
+
+		// Slide Enemies
+		for (int i = 0; i < _numEnemies; i++) {
+			PlayerPawnModel pawn = _enemies[i];
+			if (pawn.x != -1 && pawn.y != -1) {
+				if (row) {
+					// Row
+					if (k == pawn.y) {
+						float x = ((int)pawn.x + offset) % _width;
+						while (x < 0) {
+							x += _width;
+						}
+						_enemies[i].x = x;
+					}
+				}
+				else {
+					// Column
+					if (k == pawn.x) {
+						float y = ((int)pawn.y + offset) % _height;
+						while (y < 0) {
+							y += _height;
+						}
+						_enemies[i].y = y;
+					}
+				}
+			}
+	}
 }
 
 //Slide row or column by [offset]
 void BoardModel::slide(bool row, int k, int offset) {
-	/*// Copy
-	std::unique_ptr<int[]> line(new int[_sideSize]);
-	for (int i = 0; i < _sideSize; i++) {
+	// Copy
+	int sideSize = row ? _width : _height;
+	TileModel *line = new TileModel[sideSize];
+	for (int i = 0; i < sideSize; i++) {
 		int x = row ? i : k;
 		int y = row ? k : i;
-		line[i] = get(x, y);
+		line[i] = getTile(x, y);
 	}
 
 	// Slide/write row
-	for (int i = 0; i < _sideSize; i++) {
+	for (int i = 0; i < sideSize; i++) {
 		int x = row ? i : k;
 		int y = row ? k : i;
-		int j = (i - offset) % _sideSize;
+		int j = (i - offset) % sideSize;
 		while (j < 0) {
-			j += _sideSize;
+			j += sideSize;
 		}
-		set(x, y, line[j]);
+		setTile(x, y, line[j]);
 	}
 
 	// Slide pawns
-	slidePawns(row, k, offset);*/
-	//TODO^^^^^^ Take into account differing height/width
+	slidePawns(row, k, offset);
 }
 
 //Offset view of row (not model)

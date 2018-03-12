@@ -82,7 +82,8 @@ void EnemyController::enemyMove(PlayerPawnModel enemy) {
 
 void EnemyController::enemyAttack(PlayerPawnModel enemy, PlayerPawnModel player) {
 	//unsure how to implement without or player death
-	//_board->removePawn()
+    player.x = -1;
+    player.y = -1;
 }
 
 #pragma mark -
@@ -96,22 +97,21 @@ void EnemyController::enemyAttack(PlayerPawnModel enemy, PlayerPawnModel player)
  */
 void EnemyController::update(float timestep) {
 //    CULog("EnemyController Update");
-//    setComplete(true);
 
 
 	//Loop through every enemy and ally. Move the enemies 1 square randomly in any direction.
 	for (int i = 0; i < _board->getNumEnemies(); i++) {
-		enemyMove(_board->getEnemy(i));
-		for (int j = 0; j < _board->getNumAllies(); i++) {
-			if (playerDistance(_board -> getAlly(j), _board -> getEnemy(i)) < 1) {
-				enemyAttack(_board -> getAlly(j), _board -> getEnemy(i));
-
+        PlayerPawnModel enemy = _board->getEnemy(i);
+        enemyMove(enemy);
+		for (int j = 0; j < _board->getNumAllies(); j++) {
+            PlayerPawnModel ally = _board->getAlly(j);
+			if (playerDistance(ally, enemy) < 1) {
+				enemyAttack(ally, enemy);
+            }
+            //this is assuming all enemies are "dumb"
 		}
-		//this is assuming all enemies are "dumb"
-		
-		}
-
 	}
+    setComplete(true);
 }
 
 

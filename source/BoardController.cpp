@@ -62,7 +62,6 @@ void BoardController::dispose() {
 void BoardController::update(float timestep) {
 //    CULog("BoardController Update");
 	setComplete(!_board->checkForMatches());
-//    setComplete(true);
 }
 
 /**

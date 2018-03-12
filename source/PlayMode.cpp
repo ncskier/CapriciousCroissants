@@ -101,6 +101,7 @@ void PlayMode::dispose() {
 void PlayMode::reset() {
     setComplete(false);
     populate();
+    CULog("populated board:\n%s", _board->toString().c_str());
 }
 
 /**
@@ -110,7 +111,12 @@ void PlayMode::reset() {
  * with your serialization loader, which would process a level file.
  */
 void PlayMode::populate() {
-    // TODO: Create a new BoardModel
+    _board = BoardModel::alloc(5, 5);
+    _board->tileTexture = _assets->get<Texture>("100squareWhite");
+    Size dimen = Application::get()->getDisplaySize();
+    dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
+    _board->gameWidth = dimen.width;
+    _board->gameHeight = dimen.height;
 }
 
 
@@ -162,5 +168,9 @@ void PlayMode::update(float dt) {
  * @param batch     The SpriteBatch to draw with.
  */
 void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
-    // TODO: draw bord
+    // Render anything on the SceneGraph
+    render(batch);
+    
+    // Draw the Board
+    _board->draw(batch);
 }

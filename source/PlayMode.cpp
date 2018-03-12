@@ -130,14 +130,6 @@ void PlayMode::populate() {
 void PlayMode::update(float dt) {
     _input.update(dt);
     
-    // Process the toggled key commands
-    if (_input.didDebug()) { setDebug(!isDebug()); }
-    if (_input.didReset()) { reset(); }
-    if (_input.didExit())  {
-        CULog("Shutting down");
-        Application::get()->quit();
-    }
-    
     // Update
 //    CULog("PlayMode Update");
     if (_state == State::PLAYER) {

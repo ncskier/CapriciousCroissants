@@ -33,16 +33,10 @@ using namespace cugl;
  */
 InputController::InputController() :
 _active(false),
-_resetPressed(false),
-_debugPressed(false),
-_exitPressed(false),
-_keyReset(false),
-_keyDebug(false),
-_keyExit(false),
-_touchStarted(false),
-_touchEnded(false),
-_touchReleased(false),
-_touchPosition(0.0f, 0.0f) {
+_touchID(NULL),
+_initTouch(Vec2::ZERO),
+_touchPosition(Vec2::ZERO),
+_moveEvent(MoveEvent::NONE) {
 }
 
 /**
@@ -74,7 +68,6 @@ void InputController::dispose() {
  * @return true if the controller was initialized successfully
  */
 bool InputController::init() {
-    _timestamp.mark();
     bool success = true;
     
     // Only process keyboard on desktop
@@ -82,11 +75,14 @@ bool InputController::init() {
     success = Input::activate<Keyboard>();
 #else
     Touchscreen* touch = Input::get<Touchscreen>();
-    touch->addBeginListener(LISTENER_KEY,[=](const cugl::TouchEvent& event, bool focus) {
-        this->touchBeganCB(event,focus);
+    touch->addBeginListener(LISTENER_KEY, [=](const cugl::TouchEvent& event, bool focus) {
+        this->touchBeganCB(event, focus);
     });
-    touch->addEndListener(LISTENER_KEY,[=](const cugl::TouchEvent& event, bool focus) {
-        this->touchEndedCB(event,focus);
+    touch->addEndListener(LISTENER_KEY, [=](const cugl::TouchEvent& event, bool focus) {
+        this->touchEndedCB(event, focus);
+    });
+    touch->addMotionListener(LISTENER_KEY, [=](const cugl::TouchEvent& event, const cugl::Vec2 previous, bool focus) {
+        this->touchMovedCB(event, previous, focus);
     });
 #endif
     _active = success;
@@ -104,52 +100,19 @@ bool InputController::init() {
  * frame, so we need to accumulate all of the data together.
  */
 void InputController::update(float dt) {
-#ifndef CU_TOUCH_SCREEN
-    // DESKTOP CONTROLS
-    Keyboard* keys = Input::get<Keyboard>();
-    
-    // Map "keyboard" events to the current frame boundary
-    _keyReset  = keys->keyPressed(RESET_KEY);
-    _keyDebug  = keys->keyPressed(DEBUG_KEY);
-    _keyExit   = keys->keyPressed(EXIT_KEY);
-#endif
-    
-    _resetPressed = _keyReset;
-    _debugPressed = _keyDebug;
-    _exitPressed  = _keyExit;
-    
-    // Touch Events
-    if (_touchEnded && !_touchStarted) {
-        _touchReleased= true;
-        _touchEnded = false;
-    } else {
-        _touchReleased = false;
-    }
-    
-    
-    // If it does not support keyboard, we must reset "virtual" keyboard
-#ifdef CU_TOUCH_SCREEN
-    _keyDebug = false;
-    _keyReset = false;
-    _keyDebug = false;
-#endif
+    // TODO: Could have this clear itself when a move is done
+    //       just need to make sure the PlayMode controller gets it
+    //       before the information is cleared.
 }
 
 /**
  * Clears any buffered inputs so that we may start fresh.
  */
 void InputController::clear() {
-    _resetPressed = false;
-    _debugPressed = false;
-    _exitPressed  = false;
-    
-    _touchStarted  = false;
-    _touchEnded    = false;
-    _touchReleased = false;
+    _touchID = NULL;
     _touchPosition = Vec2::ZERO;
-    
     _initTouch = Vec2::ZERO;
-    _timestamp.mark();
+    _moveEvent = MoveEvent::NONE;
 }
 
 #pragma mark -
@@ -161,14 +124,13 @@ void InputController::clear() {
  * @param event The associated event
  */
 void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
-    // Update the touch location for later gestures
-    _timestamp = event.timestamp;
-    _initTouch = event.position;
-    
-    // Set touch
-    _touchStarted = true;
-    _touchEnded = false;
-    _touchPosition = event.position;
+    // Begin the move event
+    if (_moveEvent == MoveEvent::NONE) {
+        // Begin move event
+        _moveEvent = MoveEvent::START;
+        _initTouch = event.position;
+        _touchID = event.touch;
+    }
 }
 
 /**
@@ -178,11 +140,24 @@ void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
  * @param event The associated event
  */
 void InputController::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
-    // TODO: Gesture has ended.  Give it meaning.
-//    Vec2 diff = event.position-_initTouch;
-    
-    // Set touch
-    _touchStarted = false;
-    _touchEnded = true;
-    _touchPosition = event.position;
+    if (_moveEvent != MoveEvent::END) {
+        if (event.touch == _touchID) {
+            _touchPosition = event.position;
+            _moveEvent = MoveEvent::END;
+        }
+    }
+}
+
+/**
+ * Callback for the movement of a touch event
+ *
+ * @param t     The touch information
+ * @param event The associated event
+ */
+void InputController::touchMovedCB(const cugl::TouchEvent& event, const Vec2& previous, bool focus) {
+    if (_moveEvent != MoveEvent::END) {
+        if (event.touch == _touchID) {
+            _touchPosition = event.position;
+        }
+    }
 }

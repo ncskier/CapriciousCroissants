@@ -72,7 +72,7 @@ public:
 	int width = 5;
 	int colors = 4;
 	int allies = 1;
-	int enemies = 1;
+	int enemies = 5;
 
 	bool placePawns = false;
 

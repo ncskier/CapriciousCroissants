@@ -175,34 +175,32 @@ void BoardModel::removeEnemy(int i) {
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
 bool BoardModel::checkForMatches() {
 	std::set<int> replaceTiles;
-	int *row = new int[_height];
-	int *col = new int[_width];
 
 	// Check for matches
-	for (int i = 0; i < _height; i++) {
-		for (int j = 0; j < _width; j++) {
-			row[j] = getTile(j, i).getColor();
-			col[j] = getTile(i, j).getColor();
-			if (j >= 2) {
-				// Check Row
-				if (row[j] == row[j - 1] && row[j - 1] == row[j - 2]) {
-					replaceTiles.insert(indexOfCoordinate(j, i));
-					replaceTiles.insert(indexOfCoordinate(j - 1, i));
-					replaceTiles.insert(indexOfCoordinate(j - 2, i));
+	for (int x = 0; x < _width; x++) {
+		for (int y = 0; y < _height; y++) {
+			// Check Row
+			if (x > 2) {
+				if (_tiles[indexOfCoordinate(x,y)].getColor() == _tiles[indexOfCoordinate(x - 1, y)].getColor()
+					&& _tiles[indexOfCoordinate(x - 1, y)].getColor() == _tiles[indexOfCoordinate(x - 2, y)].getColor()) {
+					replaceTiles.insert(indexOfCoordinate(x, y));
+					replaceTiles.insert(indexOfCoordinate(x - 1, y));
+					replaceTiles.insert(indexOfCoordinate(x - 2, y));
 				}
-				// Check Column
-				if (col[j] == col[j - 1] && col[j - 1] == col[j - 2]) {
-					replaceTiles.insert(indexOfCoordinate(i, j));
-					replaceTiles.insert(indexOfCoordinate(i, j - 1));
-					replaceTiles.insert(indexOfCoordinate(i, j - 2));
+			}
+			// Check Column
+			if (y > 2) {
+				if (_tiles[indexOfCoordinate(x, y)].getColor() == _tiles[indexOfCoordinate(x, y - 1)].getColor()
+					&& _tiles[indexOfCoordinate(x, y - 1)].getColor() == _tiles[indexOfCoordinate(x, y - 2)].getColor()) {
+					replaceTiles.insert(indexOfCoordinate(x, y));
+					replaceTiles.insert(indexOfCoordinate(x, y - 1));
+					replaceTiles.insert(indexOfCoordinate(x, y - 2));
 				}
 			}
 		}
 	}
 
 	bool matchExists = !replaceTiles.empty();
-	delete[] row;
-	delete[] col;
 
 	// Replace Tiles
 	std::set<int>::iterator iter;

@@ -255,19 +255,60 @@ void BoardModel::generateNewBoard() {
 	for (int i = 0; i < _numAllies; i++) {
 		x = rand() % _width;
 		y = rand() % _height;
+		if (i > 0) {
+			while (true) {
+				bool match = false;
+				for (int j = 0; j < i; j++) {
+					PlayerPawnModel temp = _allies[j];
+					if (temp.x == x && temp.y == y) {
+						x = rand() % _width;
+						y = rand() % _height;
+						match = true;
+					}
+				}
+				if (!match) {
+					break;
+				}
+			}
+		}
+		
 		_allies[i].x = x;
 		_allies[i].y = y;
 	}
 
 	//Setup Enemies
 	_enemies = new PlayerPawnModel[_numEnemies];
-	int a;
-	int b;
 	for (int i = 0; i < _numEnemies; i++) {
-		a = rand() % _width;
-		b = rand() % _height;
-		_enemies[i].x = a;
-		_enemies[i].y = i;
+		x = rand() % _width;
+		y = rand() % _height;
+		while (true) {
+			bool match = false;
+			for (int j = 0; j < _numAllies; j++) {
+				PlayerPawnModel temp = _allies[j];
+				if (temp.x == x && temp.y == y) {
+					x = rand() % _width;
+					y = rand() % _height;
+					match = true;
+				}
+			}
+			if (i > 0) {
+				for (int j = 0; j < i; j++) {
+					PlayerPawnModel temp = _enemies[j];
+					if (temp.x == x && temp.y == y) {
+						x = rand() % _width;
+						y = rand() % _height;
+						match = true;
+					}
+				}
+			}
+
+			if (!match) {
+				break;
+			}
+		}
+
+		_enemies[i].x = x;
+		_enemies[i].y = y;
         _enemies[i].randomDirection();
 	}
     
@@ -472,13 +513,13 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             float xWrap = 0.0f;
             float yWrap = 0.0f;
             if (bounds.getMidX()+xOffset <= 0)
-                xWrap = gameLength;
-            if (bounds.getMidX()+xOffset > gameLength)
-                xWrap = -gameLength;
+                xWrap = gameWidth;
+            if (bounds.getMidX()+xOffset > gameWidth)
+                xWrap = -gameWidth;
             if (bounds.getMidY()+yOffset <= 0)
-                yWrap = gameLength;
-            if (bounds.getMidY()+yOffset > gameLength)
-                yWrap = -gameLength;
+                yWrap = gameHeight;
+            if (bounds.getMidY()+yOffset > gameHeight)
+                yWrap = -gameHeight;
             // Bounds
             float xf = bounds.getMinX() + xOffset + _tilePadding/2.0f + xWrap;
             float yf = bounds.getMinY() + yOffset + _tilePadding/2.0f + yWrap;

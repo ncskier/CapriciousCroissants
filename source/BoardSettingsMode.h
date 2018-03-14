@@ -38,6 +38,10 @@ protected:
 	std::shared_ptr<cugl::Button> _downColorsButton;
 	std::shared_ptr<cugl::Button> _upAlliesButton;
 	std::shared_ptr<cugl::Button> _downAlliesButton;
+
+	std::shared_ptr<cugl::Button> _upEnemiesButton;
+	std::shared_ptr<cugl::Button> _downEnemiesButton;
+
 	std::shared_ptr<cugl::Button> _placePawnsButton;
 	std::shared_ptr<cugl::Button> _doneButton;
 
@@ -45,6 +49,8 @@ protected:
 	std::shared_ptr<cugl::Label> _widthLabel;
 	std::shared_ptr<cugl::Label> _colorsLabel;
 	std::shared_ptr<cugl::Label> _alliesLabel;
+
+	std::shared_ptr<cugl::Label> _enemiesLabel;
 
 	std::shared_ptr<cugl::PolygonNode> _checkmark;
 
@@ -66,6 +72,7 @@ public:
 	int width = 5;
 	int colors = 4;
 	int allies = 1;
+	int enemies = 1;
 
 	bool placePawns = false;
 

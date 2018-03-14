@@ -77,7 +77,7 @@ protected:
      */
     void populate();
 
-	void populate(int height, int width, int colors, int allies, bool place);
+	void populate(int height, int width, int colors, int allies, int enemies, bool place);
     
     
 public:
@@ -116,7 +116,7 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets);
-	bool init(const std::shared_ptr<cugl::AssetManager>& assets, int width, int height, int colors, int allies, bool placePawn);
+	bool init(const std::shared_ptr<cugl::AssetManager>& assets, int width, int height, int colors, int allies, int enemies, bool placePawn);
     
     
 #pragma mark -

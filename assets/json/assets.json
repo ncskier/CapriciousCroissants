@@ -437,6 +437,75 @@
                         "x_offset" : 0.576,
                         "y_offset" : -0.888
                     }
+                },
+                "labelenemies" : {
+                    "type"   : "Label",
+                        "data"   : {
+                            "font"       : "script",
+                            "text"       : "0",
+                            "foreground" : [0,0,0,255],
+                            "anchor"     : [0.5, 0.5],
+                            "halign"     : "top",
+                            "valign"     : "middle"
+                        },
+                        "layout" : {
+                            "x_anchor" : "top",
+                            "y_anchor" : "left",
+                            "x_offset" : 0.611,
+                            "y_offset" : 0.832
+                        }
+                },
+                "upenemies" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "left",
+                        "y_anchor" : "top",
+                        "x_offset" : 0.7178,
+                        "y_offset" : -0.622
+                    }
+                },
+                "downenemies" : {
+                    "type" : "Button",
+                    "format": {
+                        "type" : "Absolute"
+                    },
+                    "data" : {
+                        "anchor" : [0,0],
+                        "up": {
+                             "type" : "Node",
+                            "format" : {
+                                "type" : "Anchored"
+                            },
+                            "data" : {
+                                "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                                "size"     : [27, 27]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    }
                 }
             }
         }

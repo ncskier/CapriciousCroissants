@@ -75,7 +75,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets) {
     return true;
 }
 
-bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int height, int colors, int allies, bool placePawn) {
+bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int height, int colors, int allies, int enemies, bool placePawn) {
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -91,7 +91,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	_input.init(getCamera());
 
 	// Create board
-	populate(width, height, colors, allies, placePawn);
+	populate(width, height, colors, allies, enemies, placePawn);
 	_state = State::PLAYER;
 	_active = true;
 	_complete = false;
@@ -154,8 +154,8 @@ void PlayMode::populate() {
     CULog("scale: %s", dimen.toString().c_str());
 }
 
-void PlayMode::populate(int height, int width, int colors, int allies, bool place) {
-	_board = BoardModel::alloc(width, height, colors, allies, place);
+void PlayMode::populate(int height, int width, int colors, int allies, int enemies, bool place) {
+	_board = BoardModel::alloc(width, height, colors, allies, enemies, place);
 	_board->tileTexture = _assets->get<Texture>("100squareWhite");
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution

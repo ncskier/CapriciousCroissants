@@ -54,9 +54,11 @@ bool BoardSettingsMode::init(const std::shared_ptr<cugl::AssetManager>& assets) 
 	_colorsLabel->setPosition(position.set(626, 576 - 288));
 	_alliesLabel = std::dynamic_pointer_cast<Label>(assets->get<Node>("settings_labelallies"));
 	_alliesLabel->setPosition(position.set(626, 576 - 360));
+	_enemiesLabel = std::dynamic_pointer_cast<Label>(assets->get<Node>("settings_labelenemies"));
+	_enemiesLabel->setPosition(position.set(626, 576 - 435));
 
 	_checkmark = std::dynamic_pointer_cast<PolygonNode>(assets->get<Node>("settings_check"));
-	_checkmark->setPosition(position.set(594, 576 - 505));
+	_checkmark->setPosition(position.set(594, 576 - 545));
 	_checkmark->setVisible(placePawns);
 
 
@@ -64,6 +66,7 @@ bool BoardSettingsMode::init(const std::shared_ptr<cugl::AssetManager>& assets) 
 	_widthLabel->setText(std::to_string(width), true);
 	_colorsLabel->setText(std::to_string(colors), true);
 	_alliesLabel->setText(std::to_string(1), true);
+	_enemiesLabel->setText(std::to_string(1), true);
 
 
 
@@ -172,8 +175,34 @@ bool BoardSettingsMode::init(const std::shared_ptr<cugl::AssetManager>& assets) 
 	});
 	_downAlliesButton->activate(8);
 
+	_upEnemiesButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("settings_upenemies"));
+	_upEnemiesButton->setPosition(position.set(734, 576 - 432));
+	_upEnemiesButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+			enemies++;
+			if (enemies > 5) {
+				enemies = 5;
+			}
+			_enemiesLabel->setText(std::to_string(enemies), true);
+		}
+	});
+	_upEnemiesButton->activate(11);
+
+	_downEnemiesButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("settings_downenemies"));
+	_downEnemiesButton->setPosition(position.set(734, 576 - 463));
+	_downEnemiesButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+			enemies--;
+			if (enemies < 1) {
+				enemies = 1;
+			}
+			_enemiesLabel->setText(std::to_string(enemies), true);
+		}
+	});
+	_downEnemiesButton->activate(12);
+
 	_placePawnsButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("settings_placepawns"));
-	_placePawnsButton->setPosition(position.set(590, 576 - 512));
+	_placePawnsButton->setPosition(position.set(590, 576 - 552));
 	_placePawnsButton->setListener([=](const std::string& name, bool down) {
 		if (down) {
 			placePawns = !placePawns;
@@ -228,6 +257,12 @@ void BoardSettingsMode::dispose() {
 	if (_downAlliesButton) {
 		_downAlliesButton->deactivate();
 	}
+	if (_upEnemiesButton) {
+		_upEnemiesButton->deactivate();
+	}
+	if (_downEnemiesButton) {
+		_downEnemiesButton->deactivate();
+	}
 	if (_doneButton) {
 		_doneButton->deactivate();
 	}
@@ -242,11 +277,14 @@ void BoardSettingsMode::dispose() {
 	_downAlliesButton = nullptr;
 	_placePawnsButton = nullptr;
 	_doneButton = nullptr;
+	_upEnemiesButton = nullptr;
+	_downEnemiesButton = nullptr;
 
 	_heightLabel = nullptr;
 	_widthLabel = nullptr;
 	_colorsLabel = nullptr;
 	_alliesLabel = nullptr;
+	_enemiesLabel = nullptr;
 
 	_assets = nullptr;
 }

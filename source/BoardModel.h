@@ -74,7 +74,7 @@ protected:
 
 public:
 	BoardModel();
-	BoardModel(int width, int height, int colors, int allies, bool placePawn);
+	BoardModel(int width, int height, int colors, int allies, int enemies, bool placePawn);
     
     ~BoardModel() { dispose(); }
     
@@ -96,8 +96,8 @@ public:
         return (board->init(width, height) ? board : nullptr);
     }
 
-	static std::shared_ptr<BoardModel> alloc(int width, int height, int colors, int allies, bool placePawn) {
-		std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>(width, height, colors, allies, placePawn);
+	static std::shared_ptr<BoardModel> alloc(int width, int height, int colors, int allies, int enemies, bool placePawn) {
+		std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>(width, height, colors, allies, enemies, placePawn);
 		return (board->init(width, height) ? board : nullptr);
 	}
 

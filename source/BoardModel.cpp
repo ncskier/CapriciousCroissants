@@ -41,12 +41,12 @@ offset(0.0f) {
     srand((int)time(NULL));
 }
 
-BoardModel::BoardModel(int width, int height, int colors, int allies, bool placePawn) :
+BoardModel::BoardModel(int width, int height, int colors, int allies, int enemies, bool placePawn) :
 _height(height),
 _width(width),
 _numColors(colors),
 _numAllies(allies),
-_numEnemies(4),
+_numEnemies(enemies),
 _selectedTile(-1),
 _enemies(nullptr),
 _allies(nullptr),
@@ -504,7 +504,7 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     batch->begin();
     
     for (int x = 0; x < _width; x++) {
-        for (int y = 0; y < _height; y++) {
+        for (int y = 0; y < _height; y++) {  //USE FUNCTIONS, 90% OF THIS CODE IS REPEATED 4x, EDITING IT IS A NIGHTMARE
             // Offset
             float xOffset = (offsetRow && y == yOfIndex(_selectedTile)) ? offset : 0.0f;
             float yOffset = (offsetCol && x == xOfIndex(_selectedTile)) ? offset : 0.0f;
@@ -513,13 +513,13 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             float xWrap = 0.0f;
             float yWrap = 0.0f;
             if (bounds.getMidX()+xOffset <= 0)
-                xWrap = gameWidth;
-            if (bounds.getMidX()+xOffset > gameWidth)
-                xWrap = -gameWidth;
+                xWrap = getCellLength() * _width;
+            if (bounds.getMidX()+xOffset > getCellLength() * _width)
+                xWrap = -getCellLength() * _width;
             if (bounds.getMidY()+yOffset <= 0)
-                yWrap = gameHeight;
-            if (bounds.getMidY()+yOffset > gameHeight)
-                yWrap = -gameHeight;
+                yWrap = getCellLength() * _height;
+            if (bounds.getMidY()+yOffset > getCellLength() * _height)
+                yWrap = -getCellLength() * _height;
             // Bounds
             float xf = bounds.getMinX() + xOffset + _tilePadding/2.0f + xWrap;
             float yf = bounds.getMinY() + yOffset + _tilePadding/2.0f + yWrap;
@@ -541,14 +541,14 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             bounds = gridToScreen(ally.x, ally.y);
             float xWrap = 0.0f;
             float yWrap = 0.0f;
-            if (bounds.getMidX()+xOffset <= 0)
-                xWrap = gameLength;
-            if (bounds.getMidX()+xOffset > gameLength)
-                xWrap = -gameLength;
-            if (bounds.getMidY()+yOffset <= 0)
-                yWrap = gameLength;
-            if (bounds.getMidY()+yOffset > gameLength)
-                yWrap = -gameLength;
+			if (bounds.getMidX() + xOffset <= 0)
+				xWrap = getCellLength() * _width;
+			if (bounds.getMidX() + xOffset > getCellLength() * _width)
+				xWrap = -getCellLength() * _width;
+			if (bounds.getMidY() + yOffset <= 0)
+				yWrap = getCellLength() * _height;
+			if (bounds.getMidY() + yOffset > getCellLength() * _height)
+				yWrap = -getCellLength() * _height;
             // Bounds
             float xf = bounds.getMinX() + xOffset + 5.0f*_tilePadding + xWrap;
             float yf = bounds.getMinY() + yOffset + 5.0f*_tilePadding + yWrap;
@@ -570,14 +570,14 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             bounds = gridToScreen(enemy.x, enemy.y);
             float xWrap = 0.0f;
             float yWrap = 0.0f;
-            if (bounds.getMidX()+xOffset <= 0)
-                xWrap = gameLength;
-            if (bounds.getMidX()+xOffset > gameLength)
-                xWrap = -gameLength;
-            if (bounds.getMidY()+yOffset <= 0)
-                yWrap = gameLength;
-            if (bounds.getMidY()+yOffset > gameLength)
-                yWrap = -gameLength;
+			if (bounds.getMidX() + xOffset <= 0)
+				xWrap = getCellLength() * _width;
+			if (bounds.getMidX() + xOffset > getCellLength() * _width)
+				xWrap = -getCellLength() * _width;
+			if (bounds.getMidY() + yOffset <= 0)
+				yWrap = getCellLength() * _height;
+			if (bounds.getMidY() + yOffset > getCellLength() * _height)
+				yWrap = -getCellLength() * _height;
             // Bounds
             float xf = bounds.getMinX() + xOffset + 5.0f*_tilePadding + xWrap;
             float yf = bounds.getMinY() + yOffset + 5.0f*_tilePadding + yWrap;
@@ -617,14 +617,14 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
         bounds = gridToScreen(x, y);
         float xWrap = 0.0f;
         float yWrap = 0.0f;
-        if (bounds.getMidX()+xOffset <= 0)
-            xWrap = gameLength;
-        if (bounds.getMidX()+xOffset > gameLength)
-            xWrap = -gameLength;
-        if (bounds.getMidY()+yOffset <= 0)
-            yWrap = gameLength;
-        if (bounds.getMidY()+yOffset > gameLength)
-            yWrap = -gameLength;
+		if (bounds.getMidX() + xOffset <= 0)
+			xWrap = getCellLength() * _width;
+		if (bounds.getMidX() + xOffset > getCellLength() * _width)
+			xWrap = -getCellLength() * _width;
+		if (bounds.getMidY() + yOffset <= 0)
+			yWrap = getCellLength() * _height;
+		if (bounds.getMidY() + yOffset > getCellLength() * _height)
+			yWrap = -getCellLength() * _height;
         float xf = bounds.getMinX() + xOffset + xWrap;
         float yf = bounds.getMinY() + yOffset + yWrap;
         float width = bounds.size.width;

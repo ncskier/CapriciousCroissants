@@ -62,6 +62,14 @@ void BoardController::dispose() {
 void BoardController::update(float timestep) {
 //    CULog("BoardController Update");
 	setComplete(!_board->checkForMatches());
+
+	win = true;
+	for (int i = 0; i < _board->getNumEnemies(); i++) {
+		PlayerPawnModel temp = _board->getEnemy(i);
+		if (temp.x != -1) {
+			win = false;
+		}
+	}
 }
 
 /**

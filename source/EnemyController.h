@@ -32,6 +32,7 @@ protected:
     
     
 public:
+	bool lose = false;
 #pragma mark -
 #pragma mark Constructors
     /**

@@ -125,17 +125,25 @@ void EnemyController::update(float timestep) {
 
 	//Loop through every enemy and ally. Move the enemies 1 square randomly in any direction.
 	for (int i = 0; i < _board->getNumEnemies(); i++) {
-        PlayerPawnModel enemy = _board->getEnemy(i);
-        enemyMove(enemy, i);
+        PlayerPawnModel *enemy = _board->getEnemyPtr(i);
+        enemyMove(*enemy, i);
 		for (int j = 0; j < _board->getNumAllies(); j++) {
-            PlayerPawnModel* ally = _board->getAllyPtr(j);
-			if (playerDistance(*ally, enemy) < 1) {
-				enemyAttack(enemy, ally);
+            PlayerPawnModel ally = _board->getAlly(j);
+			if (playerDistance(ally, *enemy) < 1) {
+				_board->removeAlly(j);
             }
             //this is assuming all enemies are "dumb"
 		}
 	}
     setComplete(true);
+
+	lose = true;
+	for (int i = 0; i < _board->getNumAllies(); i++) {
+		PlayerPawnModel temp = _board->getAlly(i);
+		if (temp.x != -1) {
+			lose = false;
+		}
+	}
 }
 
 

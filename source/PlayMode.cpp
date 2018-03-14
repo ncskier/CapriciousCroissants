@@ -90,6 +90,14 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	_assets = assets;
 	_input.init(getCamera());
 
+	auto layer = assets->get<Node>("game");
+	layer->setContentSize(dimen);
+	layer->doLayout(); // This rearranges the children to fit the screen
+	addChild(layer);
+
+	_text = std::dynamic_pointer_cast<Label>(assets->get<Node>("game_labelend"));
+	_text->setVisible(false);
+
 	// Create board
 	populate(width, height, colors, allies, enemies, placePawn);
 	_state = State::PLAYER;
@@ -180,29 +188,47 @@ void PlayMode::update(float dt) {
     _input.update(dt);
     
     // Update
-//    CULog("PlayMode Update");
-    if (_state == State::PLAYER) {
-        // PLAYER turn
-        _playerController.update(dt);
-        if (_playerController.isComplete()) {
-            _state = State::BOARD;
-            _playerController.reset();
-        }
-    } else if (_state == State::BOARD) {
-        // BOARD turn
-        _boardController.update(dt);
-        if (_boardController.isComplete()) {
-            _state = State::ENEMY;
-            _boardController.reset();
-        }
-    } else {
-        // ENEMY turn
-        _enemyController.update(dt);
-        if (_enemyController.isComplete()) {
-            _state = State::PLAYER;
-            _enemyController.reset();
-        }
-    }
+	if (!done) {
+		//    CULog("PlayMode Update");
+		if (_state == State::PLAYER) {
+			// PLAYER turn
+			_playerController.update(dt);
+			if (_playerController.isComplete()) {
+				_state = State::BOARD;
+				_playerController.reset();
+			}
+		}
+		else if (_state == State::BOARD) {
+			// BOARD turn
+			_boardController.update(dt);
+			if (_boardController.isComplete()) {
+				if (_boardController.win) {
+					done = true;
+					win = true;
+
+					_text->setText("You win");
+					_text->setVisible(true);
+				}
+				_state = State::ENEMY;
+				_boardController.reset();
+			}
+		}
+		else {
+			// ENEMY turn
+			_enemyController.update(dt);
+			if (_enemyController.isComplete()) {
+				if (_enemyController.lose) {
+					done = true;
+					win = false;
+
+					_text->setText("You lose");
+					_text->setVisible(true);
+				}
+				_state = State::PLAYER;
+				_enemyController.reset();
+			}
+		}
+	}
 }
 
 /**
@@ -211,9 +237,10 @@ void PlayMode::update(float dt) {
  * @param batch     The SpriteBatch to draw with.
  */
 void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
-    // Render anything on the SceneGraph
-    render(batch);
-    
     // Draw the Board
     _board->draw(batch);
+
+	// Render anything on the SceneGraph
+	render(batch);
+	CULog(_text->isVisible() ? "Yes" : "No");
 }

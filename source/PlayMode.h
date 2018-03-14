@@ -39,8 +39,11 @@ public:
 
     
 protected:
+	bool done = false;
+	bool win = false;
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
+	std::shared_ptr<cugl::Label> _text;
     
     /** Game Board */
     std::shared_ptr<BoardModel> _board;

@@ -27,6 +27,7 @@ protected:
     
     
 public:
+	bool win = false;
 #pragma mark -
 #pragma mark Constructors
     /**

@@ -508,6 +508,30 @@
                     }
                 }
             }
+        },
+        "game": {
+            "comment": "The scene graph definition for the board settings",
+            "type": "Node",
+            "format" : {
+                "type": "Anchored"
+            },
+            "children" : {
+                "labelend" : {
+                    "type"   : "Label",
+                    "data"   : {
+                        "font"       : "script",
+                        "text"       : "",
+                        "foreground" : [0,0,0,255],
+                        "anchor"     : [0.5, 0.5],
+                        "halign"     : "center",
+                        "valign"     : "middle"
+                    },
+                    "layout" : {
+                        "x_anchor" : "fill",
+                        "y_anchor" : "fill"
+                    }
+                }
+            }
         }
-    }
+    }    
 }

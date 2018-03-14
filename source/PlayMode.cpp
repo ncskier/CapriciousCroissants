@@ -154,6 +154,7 @@ void PlayMode::reset() {
 void PlayMode::populate() {
     _board = BoardModel::alloc(5, 5);
     _board->tileTexture = _assets->get<Texture>("100squareWhite");
+    _board->playerTexture = _assets->get<Texture>("player");
     Size dimen = Application::get()->getDisplaySize();
     CULog("dimen: %s", dimen.toString().c_str());
     dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
@@ -165,6 +166,7 @@ void PlayMode::populate() {
 void PlayMode::populate(int height, int width, int colors, int allies, int enemies, bool place) {
 	_board = BoardModel::alloc(width, height, colors, allies, enemies, place);
 	_board->tileTexture = _assets->get<Texture>("100squareWhite");
+    _board->playerTexture = _assets->get<Texture>("player");
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
 	_board->gameWidth = dimen.width;

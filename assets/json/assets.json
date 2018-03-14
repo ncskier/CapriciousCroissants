@@ -1,5 +1,12 @@
 {
 	"textures": {
+        "player": {
+            "file":     "textures/bernette.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
 		"claw": {
 			"file":     "textures/Claw.png",
 			"minfilter":"nearest",

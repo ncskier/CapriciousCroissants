@@ -124,6 +124,7 @@ public:
     float offset;
 
 	std::shared_ptr<cugl::Texture> tileTexture;
+    std::shared_ptr<cugl::Texture> playerTexture;
 
 	// Returns the value at the give (x, y) coordinate
 	TileModel getTile(int x, int y) const;

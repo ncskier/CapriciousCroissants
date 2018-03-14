@@ -82,20 +82,17 @@ void PlayerController::update(float timestep) {
         } else if (moveEvent == InputController::MoveEvent::MOVING) {
             // MOVING
             cugl::Vec2 offset = _input->getMoveOffset();
-            float threshold = 20.0f;
-            // Reset offset if below threshold
-            if (_board->offsetRow && abs(offset.x) < threshold/2.0f) {
+//            float threshold = _board->getCellLength()/5.0f;
+            if (abs(offset.x) > abs(offset.y)) {
+                // Offset Row
                 _board->offsetReset();
-            }
-            if (_board->offsetCol && abs(offset.y) < threshold/2.0f) {
+                float offsetValue = (offset.x > 0) ? offset.x-abs(offset.y) : offset.x+abs(offset.y);
+                _board->setOffsetRow(offsetValue);
+            } else {
+                // Offset Col
                 _board->offsetReset();
-            }
-            // New offset
-            if (!_board->offsetCol && abs(offset.x) >= threshold) {
-                _board->setOffsetRow(offset.x);
-            }
-            if (!_board->offsetRow && abs(offset.y) >= threshold) {
-                _board->setOffsetCol(offset.y);
+                float offsetValue = (offset.y > 0) ? offset.y-abs(offset.x) : offset.y+abs(offset.x);
+                _board->setOffsetCol(offsetValue);
             }
         } else {
             // END
@@ -112,7 +109,7 @@ void PlayerController::update(float timestep) {
             _board->deselectTile();
             _input->clear();
         }
-    }
+	}
 }
 
 /**

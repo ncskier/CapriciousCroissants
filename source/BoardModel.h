@@ -38,7 +38,6 @@ protected:
     // Display settings
     float _boardPadding;
     float _tilePadding;
-    float getCellLength();
     
     // Tile selected by move
     int _selectedTile;
@@ -117,6 +116,9 @@ public:
 	// Returns the ally pawn at index i of _allies
 	PlayerPawnModel getAlly(int i) const;
 
+	// Returns the ally pawn at index i of _allies
+	PlayerPawnModel* getAllyPtr(int i) ;
+
 	// Returns the enemy pawn at index i of _enemies
 	PlayerPawnModel getEnemy(int i);
     
@@ -146,6 +148,9 @@ public:
 
 	//Returns the side width
 	int getWidth() const { return _width; }
+    
+    // Returns cell length
+    float getCellLength();
 
 	// Place ally at index i of _allies on location (x, y)
 	void placeAlly(int x, int y, int i);

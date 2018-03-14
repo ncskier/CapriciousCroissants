@@ -49,7 +49,11 @@ _moveEvent(MoveEvent::NONE) {
 void InputController::dispose() {
     if (_active) {
 #ifndef CU_TOUCH_SCREEN
-        Input::deactivate<Keyboard>();
+		Mouse *touch = Input::get<Mouse>();
+		touch->removePressListener(LISTENER_KEY);
+		touch->removeReleaseListener(LISTENER_KEY);
+		touch->removeDragListener(LISTENER_KEY);
+        Input::deactivate<Mouse>();
 #else
         Touchscreen* touch = Input::get<Touchscreen>();
         touch->removeBeginListener(LISTENER_KEY);
@@ -74,7 +78,20 @@ bool InputController::init(std::shared_ptr<Camera> camera) {
     
     // Only process keyboard on desktop
 #ifndef CU_TOUCH_SCREEN
-    success = Input::activate<Keyboard>();
+    success = Input::activate<Mouse>();
+	Mouse *mouse = Input::get<Mouse>();
+	mouse->setPointerAwareness(Mouse::PointerAwareness::DRAG);
+	mouse->addPressListener(LISTENER_KEY, [=](const cugl::MouseEvent& event, Uint8 clicks, bool focus) {
+		this->touchBeganCB(event, focus);
+	});
+	mouse->addReleaseListener(LISTENER_KEY, [=](const cugl::MouseEvent& event, Uint8 clicks, bool focus) {
+		this->touchEndedCB(event, focus);
+	});
+	mouse->addDragListener(LISTENER_KEY, [=](const cugl::MouseEvent& event, const cugl::Vec2 previous, bool focus) {
+		this->touchMovedCB(event, previous,  focus);
+	});
+
+	
 #else
     Touchscreen* touch = Input::get<Touchscreen>();
     touch->addBeginListener(LISTENER_KEY, [=](const cugl::TouchEvent& event, bool focus) {
@@ -150,7 +167,7 @@ void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
  * @param event The associated event
  */
 void InputController::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
-    if (_moveEvent != MoveEvent::END) {
+    if (_moveEvent == MoveEvent::START || _moveEvent == MoveEvent::MOVING) {
         if (event.touch == _touchID) {
             _touchPosition = event.position;
             _moveEvent = MoveEvent::END;
@@ -170,4 +187,51 @@ void InputController::touchMovedCB(const cugl::TouchEvent& event, const Vec2& pr
             _touchPosition = event.position;
         }
     }
+}
+
+#pragma mark -
+#pragma mark Mouse Callbacks
+/**
+* Callback for the beginning of a touch event
+*
+* @param t     The touch information
+* @param event The associated event
+*/
+void InputController::touchBeganCB(const cugl::MouseEvent& event, bool focus) {
+	// Begin the move event
+	if (_moveEvent == MoveEvent::NONE && event.buttons.hasLeft()) {
+		// Begin move event
+		_moveEvent = MoveEvent::START;
+		_initTouch = event.position;
+		_touchPosition = event.position;
+	}
+}
+
+/**
+* Callback for the end of a touch event
+*
+* @param t     The touch information
+* @param event The associated event
+*/
+void InputController::touchEndedCB(const cugl::MouseEvent& event, bool focus) {
+	if (_moveEvent == MoveEvent::START || _moveEvent == MoveEvent::MOVING) {
+		if (event.buttons.hasLeft()) {
+			_touchPosition = event.position;
+			_moveEvent = MoveEvent::END;
+		}
+	}
+}
+
+/**
+* Callback for the movement of a touch event
+*
+* @param t     The touch information
+* @param event The associated event
+*/
+void InputController::touchMovedCB(const cugl::MouseEvent& event, const Vec2& previous, bool focus) {
+	if (_moveEvent != MoveEvent::END) {
+		if (event.buttons.hasLeft()) {
+			_touchPosition = event.position;
+		}
+	}
 }

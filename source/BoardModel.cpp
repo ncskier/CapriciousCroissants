@@ -47,6 +47,7 @@ _width(width),
 _numColors(colors),
 _numAllies(allies),
 _numEnemies(4),
+_selectedTile(-1),
 _enemies(nullptr),
 _allies(nullptr),
 _tiles(nullptr),
@@ -116,6 +117,12 @@ TileModel BoardModel::getTile(int x, int y) const {
 PlayerPawnModel BoardModel::getAlly(int i) const {
 	return _allies[i];
 }
+
+// Returns the ally pawn at index i of _allies
+PlayerPawnModel* BoardModel::getAllyPtr(int i) {
+	return &_allies[i];
+}
+
 
 // Returns the enemy pawn at index i of _enemies
 PlayerPawnModel BoardModel::getEnemy(int i) {
@@ -556,6 +563,33 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             bounds.set(xf+xOffset+xWrap, yf+yOffset+yWrap, width, height);
             batch->draw(tileTexture, Color4::RED, bounds);
         }
+    }
+    
+    // Draw over selected tile
+    if (_selectedTile != -1) {
+        int x = xOfIndex(_selectedTile);
+        int y = yOfIndex(_selectedTile);
+        // Offset
+        float xOffset = (offsetRow) ? offset : 0.0f;
+        float yOffset = (offsetCol) ? offset : 0.0f;
+        // Wrap
+        bounds = gridToScreen(x, y);
+        float xWrap = 0.0f;
+        float yWrap = 0.0f;
+        if (bounds.getMidX()+xOffset <= 0)
+            xWrap = gameLength;
+        if (bounds.getMidX()+xOffset > gameLength)
+            xWrap = -gameLength;
+        if (bounds.getMidY()+yOffset <= 0)
+            yWrap = gameLength;
+        if (bounds.getMidY()+yOffset > gameLength)
+            yWrap = -gameLength;
+        float xf = bounds.getMinX() + xOffset + xWrap;
+        float yf = bounds.getMinY() + yOffset + yWrap;
+        float width = bounds.size.width;
+        float height = bounds.size.height;
+        bounds.set(xf, yf, width, height);
+        batch->draw(tileTexture, Color4f(0.0f, 0.0f, 0.0f, 0.2f), bounds);
     }
 
     batch->end();

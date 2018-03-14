@@ -187,7 +187,7 @@ bool BoardModel::checkForMatches() {
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
 			// Check Row
-			if (x > 2) {
+			if (x >= 2) {
 				if (_tiles[indexOfCoordinate(x,y)].getColor() == _tiles[indexOfCoordinate(x - 1, y)].getColor()
 					&& _tiles[indexOfCoordinate(x - 1, y)].getColor() == _tiles[indexOfCoordinate(x - 2, y)].getColor()) {
 					replaceTiles.insert(indexOfCoordinate(x, y));
@@ -196,7 +196,7 @@ bool BoardModel::checkForMatches() {
 				}
 			}
 			// Check Column
-			if (y > 2) {
+			if (y >= 2) {
 				if (_tiles[indexOfCoordinate(x, y)].getColor() == _tiles[indexOfCoordinate(x, y - 1)].getColor()
 					&& _tiles[indexOfCoordinate(x, y - 1)].getColor() == _tiles[indexOfCoordinate(x, y - 2)].getColor()) {
 					replaceTiles.insert(indexOfCoordinate(x, y));
@@ -499,7 +499,7 @@ int BoardModel::lengthToCells(float length) {
 
 // Draws all of the tiles and pawns(in that order) 
 void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
-    float gameLength = (gameWidth > gameHeight) ? gameHeight : gameWidth;
+//    float gameLength = (gameWidth > gameHeight) ? gameHeight : gameWidth;
     Rect bounds;
     batch->begin();
     

@@ -369,65 +369,63 @@ void BoardModel::generateNewBoard() {
 		_enemies[i].y = y;
         _enemies[i].randomDirection();
 	}
-    
-    CULog("board: \n%s", toString().c_str());
 }
 
 // Slide pawns in row or column [k] by [offset]
 void BoardModel::slidePawns(bool row, int k, int offset) {
-	// Slide Allies
-	for (int i = 0; i < _numAllies; i++) {
-		PlayerPawnModel pawn = _allies[i];
-		if (pawn.x != -1 && pawn.y != -1) {
-			if (row) {
-				// Row
-				if (k == pawn.y) {
-					float x = ((int)pawn.x + offset) % _width;
-					while (x < 0) {
-						x += _width;
-					}
-					_allies[i].x = x;
-				}
-			}
-			else {
-				// Column
-				if (k == pawn.x) {
-					float y = ((int)pawn.y + offset) % _height;
-					while (y < 0) {
-						y += _height;
-					}
-					_allies[i].y = y;
-				}
-			}
-		}
-
-		// Slide Enemies
-		for (int i = 0; i < _numEnemies; i++) {
-			PlayerPawnModel pawn = _enemies[i];
-			if (pawn.x != -1 && pawn.y != -1) {
-				if (row) {
-					// Row
-					if (k == pawn.y) {
-						float x = ((int)pawn.x + offset) % _width;
-						while (x < 0) {
-							x += _width;
-						}
-						_enemies[i].x = x;
-					}
-				}
-				else {
-					// Column
-					if (k == pawn.x) {
-						float y = ((int)pawn.y + offset) % _height;
-						while (y < 0) {
-							y += _height;
-						}
-						_enemies[i].y = y;
-					}
-				}
-			}
+    // Slide Allies
+    for (int i = 0; i < _numAllies; i++) {
+        PlayerPawnModel pawn = _allies[i];
+        if (pawn.x != -1 && pawn.y != -1) {
+            if (row) {
+                // Row
+                if (k == pawn.y) {
+                    float x = ((int)pawn.x + offset) % _width;
+                    while (x < 0) {
+                        x += _width;
+                    }
+                    _allies[i].x = x;
+                }
+            }
+            else {
+                // Column
+                if (k == pawn.x) {
+                    float y = ((int)pawn.y + offset) % _height;
+                    while (y < 0) {
+                        y += _height;
+                    }
+                    _allies[i].y = y;
+                }
+            }
         }
-	}
+    }
+
+    // Slide Enemies
+    for (int i = 0; i < _numEnemies; i++) {
+        PlayerPawnModel pawn = _enemies[i];
+        if (pawn.x != -1 && pawn.y != -1) {
+            if (row) {
+                // Row
+                if (k == pawn.y) {
+                    float x = ((int)pawn.x + offset) % _width;
+                    while (x < 0) {
+                        x += _width;
+                    }
+                    _enemies[i].x = x;
+                }
+            }
+            else {
+                // Column
+                if (k == pawn.x) {
+                    float y = ((int)pawn.y + offset) % _height;
+                    while (y < 0) {
+                        y += _height;
+                    }
+                    _enemies[i].y = y;
+                }
+            }
+        }
+    }
 }
 
 //Slide row or column by [offset]
@@ -453,7 +451,7 @@ void BoardModel::slide(bool row, int k, int offset) {
 	}
 
 	// Slide pawns
-	slidePawns(row, k, offset);
+    slidePawns(row, k, offset);
 }
 
 //Offset view of row (not model)
@@ -518,7 +516,6 @@ bool BoardModel::selectTileAtPosition(Vec2 position) {
         return false;
     }
     _selectedTile = indexOfCoordinate(x, y);
-    CULog("(%d, %d)", x, y);
     return true;
 }
 

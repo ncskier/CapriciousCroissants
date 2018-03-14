@@ -181,6 +181,32 @@ public:
      * @param event The associated event
      */
     void touchMovedCB(const cugl::TouchEvent& event, const cugl::Vec2& previous, bool focus);
+
+#pragma mark -
+#pragma mark Mouse Callbacks
+	/**
+	* Callback for the beginning of a mouse event
+	*
+	* @param t     The touch information
+	* @param event The associated event
+	*/
+	void touchBeganCB(const cugl::MouseEvent& event, bool focus);
+
+	/**
+	* Callback for the end of a touch event
+	*
+	* @param t     The touch information
+	* @param event The associated event
+	*/
+	void touchEndedCB(const cugl::MouseEvent& event, bool focus);
+
+	/**
+	* Callback for the movement of a touch event
+	*
+	* @param t     The touch information
+	* @param event The associated event
+	*/
+	void touchMovedCB(const cugl::MouseEvent& event, const cugl::Vec2& previous, bool focus);
     
 };
 

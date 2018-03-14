@@ -12,10 +12,19 @@
 #include <cugl/cugl.h>
 #include "TileModel.h"
 #include "PlayerPawnModel.h"
+#include <set>
 
 /** Class of the board model*/
 class BoardModel {
 protected:
+	//Temp variables for cool animation
+	std::set<int>::iterator totalIter;
+	std::set<int> totalReplaceTiles;
+	int animationCounter = -1;
+
+
+
+
 	// Size of vertical (column) side of the square board
 	int _height;
 
@@ -73,6 +82,12 @@ protected:
 	void slidePawns(bool row, int k, int offset);
 
 public:
+	//TEMPORARY FOR COOL ANIMATION
+	void triggerResets();
+	bool checkForMatchesTemp();
+
+
+
 	BoardModel();
 	BoardModel(int width, int height, int colors, int allies, int enemies, bool placePawn);
     

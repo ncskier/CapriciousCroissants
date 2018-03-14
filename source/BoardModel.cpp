@@ -187,7 +187,7 @@ bool BoardModel::checkForMatches() {
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
 			// Check Row
-			if (x > 2) {
+			if (x >= 2) {
 				if (_tiles[indexOfCoordinate(x,y)].getColor() == _tiles[indexOfCoordinate(x - 1, y)].getColor()
 					&& _tiles[indexOfCoordinate(x - 1, y)].getColor() == _tiles[indexOfCoordinate(x - 2, y)].getColor()) {
 					replaceTiles.insert(indexOfCoordinate(x, y));
@@ -196,7 +196,7 @@ bool BoardModel::checkForMatches() {
 				}
 			}
 			// Check Column
-			if (y > 2) {
+			if (y >= 2) {
 				if (_tiles[indexOfCoordinate(x, y)].getColor() == _tiles[indexOfCoordinate(x, y - 1)].getColor()
 					&& _tiles[indexOfCoordinate(x, y - 1)].getColor() == _tiles[indexOfCoordinate(x, y - 2)].getColor()) {
 					replaceTiles.insert(indexOfCoordinate(x, y));
@@ -211,7 +211,6 @@ bool BoardModel::checkForMatches() {
 
 	// Replace Tiles
 	std::set<int>::iterator iter;
-    CULog("replace tiles");
 	for (iter = replaceTiles.begin(); iter != replaceTiles.end(); iter++) {
 		// Replace tile
 		replaceTile(*iter);
@@ -227,6 +226,65 @@ bool BoardModel::checkForMatches() {
 
 	return matchExists;
 }
+
+
+// TEMPORARY FUNCTIONS FOR COOL ANIMATION
+// Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
+bool BoardModel::checkForMatchesTemp() {
+
+	// Check for matches
+	for (int x = 0; x < _width; x++) {
+		for (int y = 0; y < _height; y++) {
+			// Check Row
+			if (x >= 2) {
+				if (_tiles[indexOfCoordinate(x, y)].getColor() == _tiles[indexOfCoordinate(x - 1, y)].getColor()
+					&& _tiles[indexOfCoordinate(x - 1, y)].getColor() == _tiles[indexOfCoordinate(x - 2, y)].getColor()) {
+					totalReplaceTiles.insert(indexOfCoordinate(x, y));
+					totalReplaceTiles.insert(indexOfCoordinate(x - 1, y));
+					totalReplaceTiles.insert(indexOfCoordinate(x - 2, y));
+				}
+			}
+			// Check Column
+			if (y >= 2) {
+				if (_tiles[indexOfCoordinate(x, y)].getColor() == _tiles[indexOfCoordinate(x, y - 1)].getColor()
+					&& _tiles[indexOfCoordinate(x, y - 1)].getColor() == _tiles[indexOfCoordinate(x, y - 2)].getColor()) {
+					totalReplaceTiles.insert(indexOfCoordinate(x, y));
+					totalReplaceTiles.insert(indexOfCoordinate(x, y - 1));
+					totalReplaceTiles.insert(indexOfCoordinate(x, y - 2));
+				}
+			}
+		}
+	}
+
+	bool matchExists = !totalReplaceTiles.empty();
+	if (matchExists) {
+		animationCounter = 0;
+	}
+
+	return matchExists;
+}
+
+void BoardModel::triggerResets() {
+	// Replace Tiles
+	for (totalIter = totalReplaceTiles.begin(); totalIter != totalReplaceTiles.end(); totalIter++) {
+		// Replace tile
+		replaceTile(*totalIter);
+		// Remove enemies
+		if (_enemies != nullptr) {
+			for (int i = 0; i < _numEnemies; i++) {
+				if (indexOfCoordinate(_enemies[i].x, _enemies[i].y) == *totalIter) {
+					removeEnemy(i);
+				}
+			}
+		}
+	}
+
+	animationCounter = 60;
+
+	
+}
+
+
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void BoardModel::replaceTile(int tileLocation) {
@@ -502,7 +560,16 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     float gameLength = (gameWidth > gameHeight) ? gameHeight : gameWidth;
     Rect bounds;
     batch->begin();
-    
+	if (animationCounter >= 0) {
+		animationCounter++;
+	}
+	if (animationCounter == 60) {
+		triggerResets();
+	}
+	if (animationCounter > 120) {
+		totalReplaceTiles.clear();
+		animationCounter = -1;
+	}
     for (int x = 0; x < _width; x++) {
         for (int y = 0; y < _height; y++) {  //USE FUNCTIONS, 90% OF THIS CODE IS REPEATED 4x, EDITING IT IS A NIGHTMARE
             // Offset
@@ -525,8 +592,42 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             float yf = bounds.getMinY() + yOffset + _tilePadding/2.0f + yWrap;
             float width = bounds.size.width - _tilePadding;
             float height = bounds.size.height - _tilePadding;
-            bounds.set(xf, yf, width, height);
-            batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+			//Temporary for cool animation
+			if (animationCounter >= 0) {
+				int locat = indexOfCoordinate(x, y);
+				if (totalReplaceTiles.find(locat) != totalReplaceTiles.end() && animationCounter < 100) {
+					if (animationCounter < 60) { //Destroy
+						if (animationCounter < 30) {
+							bounds.set(xf + animationCounter * getCellLength() / 300, yf + animationCounter * getCellLength() / 300, width - animationCounter * getCellLength() / 150, height - animationCounter * getCellLength() / 150);
+						}
+						if (animationCounter < 54) {
+							bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
+						}
+						else {
+							bounds.set(xf + ((animationCounter-54) * getCellLength() / 42), yf + ((animationCounter - 54) * getCellLength() / 20), width - ((animationCounter - 54) * getCellLength() / 10), height - ((animationCounter - 54) * getCellLength() / 10));
+						}
+					}
+					else { //Regenerate
+						if (animationCounter > 66) {
+							bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
+						}
+						else {
+							bounds.set(xf + ((66 - animationCounter) * getCellLength() / 20), yf + ((66 - animationCounter) * getCellLength() / 20), width - ((66 - animationCounter) * getCellLength() / 10), height - ((66 - animationCounter) * getCellLength() / 10));
+						}
+					}
+					batch->draw(tileTexture, Color4(colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor())).scale(.85, false), bounds);
+				}
+				else {
+					bounds.set(xf, yf, width, height);
+					batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+				}
+			}
+			else {
+				bounds.set(xf, yf, width, height);
+				batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+			}
+			//end of cool animation
+            //bounds.set(xf, yf, width, height);
         }
     }
 

@@ -242,5 +242,4 @@ void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
 
 	// Render anything on the SceneGraph
 	render(batch);
-	CULog(_text->isVisible() ? "Yes" : "No");
 }

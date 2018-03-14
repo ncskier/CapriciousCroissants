@@ -38,6 +38,8 @@ bool BoardController::init(const std::shared_ptr<BoardModel>& board) {
     
     _debug = false;
     _complete = false;
+	_animating = false;
+	counter = 0;
     
     return true;
 }
@@ -61,7 +63,23 @@ void BoardController::dispose() {
  */
 void BoardController::update(float timestep) {
 //    CULog("BoardController Update");
-	setComplete(!_board->checkForMatches());
+	if (!_animating) {
+		if (_board->checkForMatchesTemp()) {
+			_animating = true;
+		}
+		else {
+			setComplete(true);
+		}
+	}
+	else {
+		counter++;
+		if (counter > 121) {
+			counter = 0;
+			_animating = false;
+		}
+	}
+
+	//setComplete(!_board->checkForMatches());
 
 	win = true;
 	for (int i = 0; i < _board->getNumEnemies(); i++) {
@@ -77,4 +95,5 @@ void BoardController::update(float timestep) {
  */
 void BoardController::reset() {
     _complete = false;
+	_animating = false;
 }

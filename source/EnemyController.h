@@ -108,7 +108,7 @@ public:
 
 	int playerDistance(PlayerPawnModel enemy, PlayerPawnModel player);
 	void enemyMove(PlayerPawnModel enemy, int enemyIdx);
-	void enemyAttack(PlayerPawnModel enemy, PlayerPawnModel player);
+	void enemyAttack(PlayerPawnModel enemy, PlayerPawnModel* player);
     
 #pragma mark -
 #pragma mark Gameplay Handling

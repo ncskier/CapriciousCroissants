@@ -167,7 +167,7 @@ void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
  * @param event The associated event
  */
 void InputController::touchEndedCB(const cugl::TouchEvent& event, bool focus) {
-    if (_moveEvent != MoveEvent::END) {
+    if (_moveEvent == MoveEvent::START || _moveEvent == MoveEvent::MOVING) {
         if (event.touch == _touchID) {
             _touchPosition = event.position;
             _moveEvent = MoveEvent::END;
@@ -214,7 +214,7 @@ void InputController::touchBeganCB(const cugl::MouseEvent& event, bool focus) {
 * @param event The associated event
 */
 void InputController::touchEndedCB(const cugl::MouseEvent& event, bool focus) {
-	if (_moveEvent != MoveEvent::END) {
+	if (_moveEvent == MoveEvent::START || _moveEvent == MoveEvent::MOVING) {
 		if (event.buttons.hasLeft()) {
 			_touchPosition = event.position;
 			_moveEvent = MoveEvent::END;

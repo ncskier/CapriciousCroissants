@@ -89,14 +89,25 @@ void EnemyController::enemyMove(PlayerPawnModel enemy, int enemyIdx) {
     } else if (y < 0 || _board->getHeight() <= y) {
         _board->getEnemyPtr(enemyIdx)->turnAround();
     } else {
-        _board->getEnemyPtr(enemyIdx)->step();
+		bool enemyInWay = false;
+		for (int i = 0; i < _board->getNumEnemies(); i++) {
+			if (i != enemyIdx) {
+				PlayerPawnModel temp = _board->getEnemy(i);
+				if (temp.x == x && temp.y == y) {
+					enemyInWay = true;
+				}
+			}
+		}
+		if (!enemyInWay) {
+			_board->getEnemyPtr(enemyIdx)->step();
+		}
     }
 }
 
-void EnemyController::enemyAttack(PlayerPawnModel enemy, PlayerPawnModel player) {
+void EnemyController::enemyAttack(PlayerPawnModel enemy, PlayerPawnModel *player) {
 	//unsure how to implement without or player death
-    player.x = -1;
-    player.y = -1;
+    player->x = -1;
+    player->y = -1;
 }
 
 #pragma mark -
@@ -117,9 +128,9 @@ void EnemyController::update(float timestep) {
         PlayerPawnModel enemy = _board->getEnemy(i);
         enemyMove(enemy, i);
 		for (int j = 0; j < _board->getNumAllies(); j++) {
-            PlayerPawnModel ally = _board->getAlly(j);
-			if (playerDistance(ally, enemy) < 1) {
-				enemyAttack(ally, enemy);
+            PlayerPawnModel* ally = _board->getAllyPtr(j);
+			if (playerDistance(*ally, enemy) < 1) {
+				enemyAttack(enemy, ally);
             }
             //this is assuming all enemies are "dumb"
 		}

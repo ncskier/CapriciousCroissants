@@ -118,6 +118,12 @@ PlayerPawnModel BoardModel::getAlly(int i) const {
 	return _allies[i];
 }
 
+// Returns the ally pawn at index i of _allies
+PlayerPawnModel* BoardModel::getAllyPtr(int i) {
+	return &_allies[i];
+}
+
+
 // Returns the enemy pawn at index i of _enemies
 PlayerPawnModel BoardModel::getEnemy(int i) {
 	return _enemies[i];
@@ -176,8 +182,8 @@ void BoardModel::removeEnemy(int i) {
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
 bool BoardModel::checkForMatches() {
 	std::set<int> replaceTiles;
-	int *row = new int[_height];
-	int *col = new int[_width];
+	std::unique_ptr<int[]> row(new int[_height]);
+	std::unique_ptr<int[]> col(new int[_width]);
 
 	// Check for matches
 	for (int i = 0; i < _height; i++) {
@@ -202,8 +208,6 @@ bool BoardModel::checkForMatches() {
 	}
 
 	bool matchExists = !replaceTiles.empty();
-	delete[] row;
-	delete[] col;
 
 	// Replace Tiles
 	std::set<int>::iterator iter;

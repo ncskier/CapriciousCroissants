@@ -109,7 +109,7 @@ void PlayerController::update(float timestep) {
             _board->deselectTile();
             _input->clear();
         }
-    }
+	}
 }
 
 /**

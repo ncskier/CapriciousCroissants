@@ -7,6 +7,20 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "tile1": {
+            "file":     "textures/tile1.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "tile2": {
+            "file":     "textures/tile2.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
 		"claw": {
 			"file":     "textures/Claw.png",
 			"minfilter":"nearest",

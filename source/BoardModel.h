@@ -125,6 +125,8 @@ public:
 
 	std::shared_ptr<cugl::Texture> tileTexture;
     std::shared_ptr<cugl::Texture> playerTexture;
+    std::shared_ptr<cugl::Texture> tile1Texture;
+    std::shared_ptr<cugl::Texture> tile2Texture;
 
 	// Returns the value at the give (x, y) coordinate
 	TileModel getTile(int x, int y) const;

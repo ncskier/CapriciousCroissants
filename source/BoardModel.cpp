@@ -612,16 +612,35 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
 							bounds.set(xf + ((66 - animationCounter) * getCellLength() / 20), yf + ((66 - animationCounter) * getCellLength() / 20), width - ((66 - animationCounter) * getCellLength() / 10), height - ((66 - animationCounter) * getCellLength() / 10));
 						}
 					}
-					batch->draw(tileTexture, Color4(colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor())).scale(.85, false), bounds);
+                    if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
+                        batch->draw(tile1Texture, bounds);
+                    } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
+                        batch->draw(tile2Texture, bounds);
+                    } else {
+                        batch->draw(tileTexture, Color4(colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor())).scale(.85, false), bounds);
+                    }
 				}
 				else {
 					bounds.set(xf, yf, width, height);
-					batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+                    if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
+                        batch->draw(tile1Texture, bounds);
+                    } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
+                        batch->draw(tile2Texture, bounds);
+                    } else {
+                        batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+                    }
+                    
 				}
 			}
 			else {
 				bounds.set(xf, yf, width, height);
-				batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+                if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
+                    batch->draw(tile1Texture, bounds);
+                } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
+                    batch->draw(tile2Texture, bounds);
+                } else {
+                    batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+                }
 			}
 			//end of cool animation
             //bounds.set(xf, yf, width, height);

@@ -557,7 +557,7 @@ int BoardModel::lengthToCells(float length) {
 
 // Draws all of the tiles and pawns(in that order) 
 void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
-    float gameLength = (gameWidth > gameHeight) ? gameHeight : gameWidth;
+//    float gameLength = (gameWidth > gameHeight) ? gameHeight : gameWidth;
     Rect bounds;
     batch->begin();
 	if (animationCounter >= 0) {

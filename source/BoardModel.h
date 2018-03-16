@@ -136,12 +136,18 @@ public:
 
 	// Returns the ally pawn at index i of _allies
 	PlayerPawnModel* getAllyPtr(int i) ;
+    
+    // Returns the ally pawn at (x, y)
+    PlayerPawnModel* getAllyPtr(int x, int y) const;
 
 	// Returns the enemy pawn at index i of _enemies
 	PlayerPawnModel getEnemy(int i);
     
     // Returns the enemy pawn at index i of _enemies
     PlayerPawnModel* getEnemyPtr(int i);
+    
+    // Returns the enemy pawn at (x, y)
+    PlayerPawnModel* getEnemyPtr(int x, int y) const;
 
 	// Returns the allies
 	PlayerPawnModel getAllies() ;
@@ -237,7 +243,7 @@ public:
      * Draws tile given tile bounds
      * Batch has already begun
      */
-    void drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds);
+    void drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, TileModel tile);
     
     /**
      * Draws ally given tile bounds

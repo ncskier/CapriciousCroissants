@@ -123,6 +123,16 @@ PlayerPawnModel* BoardModel::getAllyPtr(int i) {
 	return &_allies[i];
 }
 
+// Returns the ally pawn at (x, y)
+PlayerPawnModel* BoardModel::getAllyPtr(int x, int y) const {
+    for (int i = 0; i < _numAllies; i++) {
+        PlayerPawnModel *ally = &_allies[i];
+        if (ally->x == x && ally->y == y) {
+            return ally;
+        }
+    }
+    return nullptr;
+}
 
 // Returns the enemy pawn at index i of _enemies
 PlayerPawnModel BoardModel::getEnemy(int i) {
@@ -132,6 +142,17 @@ PlayerPawnModel BoardModel::getEnemy(int i) {
 // Returns the enemy pawn at index i of _enemies
 PlayerPawnModel* BoardModel::getEnemyPtr(int i) {
     return &_enemies[i];
+}
+
+// Returns the enemy pawn at (x, y)
+PlayerPawnModel* BoardModel::getEnemyPtr(int x, int y) const {
+    for (int i = 0; i < _numEnemies; i++) {
+        PlayerPawnModel *enemy = &_enemies[i];
+        if (enemy->x == x && enemy->y == y) {
+            return enemy;
+        }
+    }
+    return nullptr;
 }
 
 // Returns the allies
@@ -594,8 +615,14 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
  * Draws tile given tile bounds
  * Batch has already begun
  */
-void BoardModel::drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds) {
-    
+void BoardModel::drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, TileModel tile) {
+    if (tile.getColor() == 0) {
+        batch->draw(tile1Texture, tileBounds);
+    } else if (tile.getColor() == 1) {
+        batch->draw(tile2Texture, tileBounds);
+    } else {
+        batch->draw(tileTexture, colorLookup.at(tile.getColor()), tileBounds);
+    }
 }
 
 /**
@@ -606,7 +633,8 @@ void BoardModel::drawAlly(const std::shared_ptr<cugl::SpriteBatch>& batch, Rect 
     float width = playerTexture->getSize().width / playerTexture->getSize().height * tileBounds.size.height;
     float height = tileBounds.size.height;
     float x = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
-    float y = tileBounds.getMinY() + tileBounds.size.height/4.0f;
+//    float y = tileBounds.getMinY() + tileBounds.size.height/4.0f;
+    float y = tileBounds.getMinY() + tileBounds.size.height*0.4f;
     Rect bounds = Rect(x, y, width, height);
     batch->draw(playerTexture, bounds);
 }
@@ -646,135 +674,133 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     Rect bounds;
     batch->begin();
     
-    // Draw Test
-//    for (int y = 0; y < _height; y++) {
-//        for (int x = 0; x < _width; x++) {
-//            // Draw tiles
-//            bounds = calculateDrawBounds(x, y);
-//            Color4 color = Color4(colorLookup.at((x+y) % 5));
-//            batch->draw(tileTexture, color, bounds);
+//    if (animationCounter >= 0) {
+//        animationCounter++;
+//    }
+//    if (animationCounter == 60) {
+//        triggerResets();
+//    }
+//    if (animationCounter > 120) {
+//        totalReplaceTiles.clear();
+//        animationCounter = -1;
+//    }
+//    for (int x = 0; x < _width; x++) {
+//        for (int y = 0; y < _height; y++) {  //USE FUNCTIONS, 90% OF THIS CODE IS REPEATED 4x, EDITING IT IS A NIGHTMARE
+//            // Offset
+//            float xOffset = (offsetRow && y == yOfIndex(_selectedTile)) ? offset : 0.0f;
+//            float yOffset = (offsetCol && x == xOfIndex(_selectedTile)) ? offset : 0.0f;
+//            // Wrap
+//            bounds = gridToScreen(x, y);
+//            float xWrap = 0.0f;
+//            float yWrap = 0.0f;
+//            if (bounds.getMidX()+xOffset <= 0)
+//                xWrap = getCellLength() * _width;
+//            if (bounds.getMidX()+xOffset > getCellLength() * _width)
+//                xWrap = -getCellLength() * _width;
+//            if (bounds.getMidY()+yOffset <= 0)
+//                yWrap = getCellLength() * _height;
+//            if (bounds.getMidY()+yOffset > getCellLength() * _height)
+//                yWrap = -getCellLength() * _height;
+//            // Bounds
+//            float xf = bounds.getMinX() + xOffset + _tilePadding/2.0f + xWrap;
+//            float yf = bounds.getMinY() + yOffset + _tilePadding/2.0f + yWrap;
+//            float width = bounds.size.width - _tilePadding;
+//            float height = bounds.size.height - _tilePadding;
+//            //Temporary for cool animation
+//            if (animationCounter >= 0) {
+//                int locat = indexOfCoordinate(x, y);
+//                if (totalReplaceTiles.find(locat) != totalReplaceTiles.end() && animationCounter < 100) {
+//                    if (animationCounter < 60) { //Destroy
+//                        if (animationCounter < 30) {
+//                            bounds.set(xf + animationCounter * getCellLength() / 300, yf + animationCounter * getCellLength() / 300, width - animationCounter * getCellLength() / 150, height - animationCounter * getCellLength() / 150);
+//                        }
+//                        if (animationCounter < 54) {
+//                            bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
+//                        }
+//                        else {
+//                            bounds.set(xf + ((animationCounter-54) * getCellLength() / 42), yf + ((animationCounter - 54) * getCellLength() / 20), width - ((animationCounter - 54) * getCellLength() / 10), height - ((animationCounter - 54) * getCellLength() / 10));
+//                        }
+//                    }
+//                    else { //Regenerate
+//                        if (animationCounter > 66) {
+//                            bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
+//                        }
+//                        else {
+//                            bounds.set(xf + ((66 - animationCounter) * getCellLength() / 20), yf + ((66 - animationCounter) * getCellLength() / 20), width - ((66 - animationCounter) * getCellLength() / 10), height - ((66 - animationCounter) * getCellLength() / 10));
+//                        }
+//                    }
+//                    if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
+//                        batch->draw(tile1Texture, bounds);
+//                    } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
+//                        batch->draw(tile2Texture, bounds);
+//                    } else {
+//                        batch->draw(tileTexture, Color4(colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor())).scale(.85, false), bounds);
+//                    }
+//                }
+//                else {
+//                    bounds.set(xf, yf, width, height);
+//                    if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
+//                        batch->draw(tile1Texture, bounds);
+//                    } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
+//                        batch->draw(tile2Texture, bounds);
+//                    } else {
+//                        batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+//                    }
+//
+//                }
+//            }
+//            else {
+//                bounds.set(xf, yf, width, height);
+//                if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
+//                    batch->draw(tile1Texture, bounds);
+//                } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
+//                    batch->draw(tile2Texture, bounds);
+//                } else {
+//                    batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
+//                }
+//            }
+//            //end of cool animation
+//            //bounds.set(xf, yf, width, height);
 //        }
 //    }
-    
+
     // Draw Loop
-    for (int y = 0; y < _height; y++) {
+    for (int y = _height-1; y >= 0; y--) {
         for (int x = 0; x < _width; x++) {
-            bounds = calculateDrawBounds(x, y);
-
-        }
-    }
-    
-    if (animationCounter >= 0) {
-        animationCounter++;
-    }
-    if (animationCounter == 60) {
-        triggerResets();
-    }
-    if (animationCounter > 120) {
-        totalReplaceTiles.clear();
-        animationCounter = -1;
-    }
-    for (int x = 0; x < _width; x++) {
-        for (int y = 0; y < _height; y++) {  //USE FUNCTIONS, 90% OF THIS CODE IS REPEATED 4x, EDITING IT IS A NIGHTMARE
-            // Offset
-            float xOffset = (offsetRow && y == yOfIndex(_selectedTile)) ? offset : 0.0f;
-            float yOffset = (offsetCol && x == xOfIndex(_selectedTile)) ? offset : 0.0f;
-            // Wrap
-            bounds = gridToScreen(x, y);
-            float xWrap = 0.0f;
-            float yWrap = 0.0f;
-            if (bounds.getMidX()+xOffset <= 0)
-                xWrap = getCellLength() * _width;
-            if (bounds.getMidX()+xOffset > getCellLength() * _width)
-                xWrap = -getCellLength() * _width;
-            if (bounds.getMidY()+yOffset <= 0)
-                yWrap = getCellLength() * _height;
-            if (bounds.getMidY()+yOffset > getCellLength() * _height)
-                yWrap = -getCellLength() * _height;
-            // Bounds
-            float xf = bounds.getMinX() + xOffset + _tilePadding/2.0f + xWrap;
-            float yf = bounds.getMinY() + yOffset + _tilePadding/2.0f + yWrap;
-            float width = bounds.size.width - _tilePadding;
-            float height = bounds.size.height - _tilePadding;
-            //Temporary for cool animation
-            if (animationCounter >= 0) {
-                int locat = indexOfCoordinate(x, y);
-                if (totalReplaceTiles.find(locat) != totalReplaceTiles.end() && animationCounter < 100) {
-                    if (animationCounter < 60) { //Destroy
-                        if (animationCounter < 30) {
-                            bounds.set(xf + animationCounter * getCellLength() / 300, yf + animationCounter * getCellLength() / 300, width - animationCounter * getCellLength() / 150, height - animationCounter * getCellLength() / 150);
-                        }
-                        if (animationCounter < 54) {
-                            bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
-                        }
-                        else {
-                            bounds.set(xf + ((animationCounter-54) * getCellLength() / 42), yf + ((animationCounter - 54) * getCellLength() / 20), width - ((animationCounter - 54) * getCellLength() / 10), height - ((animationCounter - 54) * getCellLength() / 10));
-                        }
-                    }
-                    else { //Regenerate
-                        if (animationCounter > 66) {
-                            bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
-                        }
-                        else {
-                            bounds.set(xf + ((66 - animationCounter) * getCellLength() / 20), yf + ((66 - animationCounter) * getCellLength() / 20), width - ((66 - animationCounter) * getCellLength() / 10), height - ((66 - animationCounter) * getCellLength() / 10));
-                        }
-                    }
-                    if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
-                        batch->draw(tile1Texture, bounds);
-                    } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
-                        batch->draw(tile2Texture, bounds);
-                    } else {
-                        batch->draw(tileTexture, Color4(colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor())).scale(.85, false), bounds);
-                    }
-                }
-                else {
-                    bounds.set(xf, yf, width, height);
-                    if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
-                        batch->draw(tile1Texture, bounds);
-                    } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
-                        batch->draw(tile2Texture, bounds);
-                    } else {
-                        batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
-                    }
-
+            Rect tileBounds = calculateDrawBounds(x, y);
+            
+//            if (_selectedTile != -1) {
+//                int selX = xOfIndex(_selectedTile);
+//                int selY = yOfIndex(_selectedTile);
+//                if (selX == x && selY == y) {
+//                    float padding = _tilePadding/2.0f;
+//                    float newX = tileBounds.getMinX() + padding/2.0f;
+//                    float newY = tileBounds.getMinY() - padding/2.0f;
+//                    float newWidth = tileBounds.size.width - padding;
+//                    float newHeight = tileBounds.size.height - padding;
+//                    tileBounds.set(newX, newY, newWidth, newHeight);
+//                }
+//            }
+            
+            // Draw Tile
+            drawTile(batch, tileBounds, getTile(x, y));
+            
+            // Draw selection over selected tile (TODO: change this to maybe scale tileBounds down as if pressed down)
+            if (_selectedTile != -1) {
+                int selX = xOfIndex(_selectedTile);
+                int selY = yOfIndex(_selectedTile);
+                if (selX == x && selY == y) {
+                    batch->draw(tileTexture, Color4f(0.0f, 0.0f, 0.0f, 0.2f), tileBounds);
                 }
             }
-            else {
-                bounds.set(xf, yf, width, height);
-                if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
-                    batch->draw(tile1Texture, bounds);
-                } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
-                    batch->draw(tile2Texture, bounds);
-                } else {
-                    batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
-                }
-            }
-            //end of cool animation
-            //bounds.set(xf, yf, width, height);
-        }
-    }
-
-    // Draw over selected tile
-    if (_selectedTile != -1) {
-        int x = xOfIndex(_selectedTile);
-        int y = yOfIndex(_selectedTile);
-        bounds = calculateDrawBounds(x, y);
-        batch->draw(tileTexture, Color4f(0.0f, 0.0f, 0.0f, 0.2f), bounds);
-    }
-
-    // Draw Allies
-    for (int i = 0; i < _numAllies; i++) {
-        PlayerPawnModel ally = _allies[i];
-        if (ally.x != -1 && ally.y != -1) {
-            drawAlly(batch, calculateDrawBounds(ally.x, ally.y));
-        }
-    }
-
-    // Draw Enemies
-    for (int i = 0; i < _numEnemies; i++) {
-         PlayerPawnModel enemy = _enemies[i];
-        if (enemy.x != -1 && enemy.y != -1) {
-            drawEnemy(batch, calculateDrawBounds(enemy.x, enemy.y), enemy);
+            
+            // Draw Ally
+            PlayerPawnModel *ally = getAllyPtr(x, y);
+            if (ally) { drawAlly(batch, tileBounds); }
+            
+            // Draw Enemy
+            PlayerPawnModel *enemy = getEnemyPtr(x, y);
+            if (enemy) { drawEnemy(batch, tileBounds, *enemy); }
         }
     }
 

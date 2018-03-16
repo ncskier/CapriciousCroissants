@@ -605,6 +605,14 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
 //        }
 //    }
     
+    // Draw Loop
+    for (int y = 0; y < _height; y++) {
+        for (int x = 0; x < _width; x++) {
+            bounds = calculateDrawBounds(x, y);
+
+        }
+    }
+    
     if (animationCounter >= 0) {
         animationCounter++;
     }
@@ -699,26 +707,7 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     if (_selectedTile != -1) {
         int x = xOfIndex(_selectedTile);
         int y = yOfIndex(_selectedTile);
-        // Offset
-        float xOffset = (offsetRow) ? offset : 0.0f;
-        float yOffset = (offsetCol) ? offset : 0.0f;
-        // Wrap
-        bounds = gridToScreen(x, y);
-        float xWrap = 0.0f;
-        float yWrap = 0.0f;
-        if (bounds.getMidX() + xOffset <= 0)
-        xWrap = getCellLength() * _width;
-        if (bounds.getMidX() + xOffset > getCellLength() * _width)
-        xWrap = -getCellLength() * _width;
-        if (bounds.getMidY() + yOffset <= 0)
-        yWrap = getCellLength() * _height;
-        if (bounds.getMidY() + yOffset > getCellLength() * _height)
-        yWrap = -getCellLength() * _height;
-        float xf = bounds.getMinX() + xOffset + xWrap;
-        float yf = bounds.getMinY() + yOffset + yWrap;
-        float width = bounds.size.width;
-        float height = bounds.size.height;
-        bounds.set(xf, yf, width, height);
+        bounds = calculateDrawBounds(x, y);
         batch->draw(tileTexture, Color4f(0.0f, 0.0f, 0.0f, 0.2f), bounds);
     }
 
@@ -726,28 +715,9 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     for (int i = 0; i < _numAllies; i++) {
         PlayerPawnModel ally = _allies[i];
         if (ally.x != -1 && ally.y != -1) {
-            // Offset
-            float xOffset = (offsetRow && ally.y == yOfIndex(_selectedTile)) ? offset : 0.0f;
-            float yOffset = (offsetCol && ally.x == xOfIndex(_selectedTile)) ? offset : 0.0f;
-            // Wrap
-            bounds = gridToScreen(ally.x, ally.y);
-            float xWrap = 0.0f;
-            float yWrap = 0.0f;
-            if (bounds.getMidX() + xOffset <= 0)
-                xWrap = getCellLength() * _width;
-            if (bounds.getMidX() + xOffset > getCellLength() * _width)
-                xWrap = -getCellLength() * _width;
-            if (bounds.getMidY() + yOffset <= 0)
-                yWrap = getCellLength() * _height;
-            if (bounds.getMidY() + yOffset > getCellLength() * _height)
-                yWrap = -getCellLength() * _height;
-            // Bounds
-            float xf = bounds.getMinX() + xOffset + 5.0f*_tilePadding + xWrap;
-            float yf = bounds.getMinY() + yOffset + 5.0f*_tilePadding + yWrap;
-            float width = bounds.size.width - 10.0f*_tilePadding;
-//            float height = bounds.size.height - 10.0f*_tilePadding;
-            float height = playerTexture->getSize().height / playerTexture->getSize().width * width;
-            bounds.set(xf, yf, width, height);
+            bounds = calculateDrawBounds(ally.x, ally.y);
+            float width = playerTexture->getSize().width / playerTexture->getSize().height * bounds.size.height;
+            bounds.set(bounds.getMinX()+(bounds.size.width-width)/2.0f, bounds.getMinY()+_tilePadding, width, bounds.size.height);
             batch->draw(playerTexture, bounds);
 //            batch->draw(playerTexture, Color4::GRAY, bounds);
         }
@@ -757,45 +727,29 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     for (int i = 0; i < _numEnemies; i++) {
          PlayerPawnModel enemy = _enemies[i];
         if (enemy.x != -1 && enemy.y != -1) {
-            // Offset
-            float xOffset = (offsetRow && enemy.y == yOfIndex(_selectedTile)) ? offset : 0.0f;
-            float yOffset = (offsetCol && enemy.x == xOfIndex(_selectedTile)) ? offset : 0.0f;
-            // Wrap
-            bounds = gridToScreen(enemy.x, enemy.y);
-            float xWrap = 0.0f;
-            float yWrap = 0.0f;
-            if (bounds.getMidX() + xOffset <= 0)
-                xWrap = getCellLength() * _width;
-            if (bounds.getMidX() + xOffset > getCellLength() * _width)
-                xWrap = -getCellLength() * _width;
-            if (bounds.getMidY() + yOffset <= 0)
-                yWrap = getCellLength() * _height;
-            if (bounds.getMidY() + yOffset > getCellLength() * _height)
-                yWrap = -getCellLength() * _height;
-            // Bounds
-            float xf = bounds.getMinX() + xOffset + 5.0f*_tilePadding + xWrap;
-            float yf = bounds.getMinY() + yOffset + 5.0f*_tilePadding + yWrap;
-            float width = bounds.size.width - 10.0f*_tilePadding;
-            float height = bounds.size.height - 10.0f*_tilePadding;
-            bounds.set(xf, yf, width, height);
+            bounds = calculateDrawBounds(enemy.x, enemy.y);
+            float width = bounds.size.width * 0.5f;
+            float height = bounds.size.height * 0.5f;
+            float x = bounds.getMinX() + (bounds.size.width-width)/2.0f;
+            float y = bounds.getMinY() + (bounds.size.height-height)/2.0f;
+            bounds.set(x, y, width, height);
             batch->draw(tileTexture, Color4::BLACK, bounds);
 
             // Direction Indicator
-            float padding = _tilePadding;
-            bounds = gridToScreen(enemy.x, enemy.y);
-            width = bounds.size.width/5.0f;
-            height = bounds.size.height/5.0f;
-            xf = bounds.getMidX() - width/2.0f;
-            yf = bounds.getMidY() - height/2.0f;
+            float padding = _tilePadding * 0.5f;
+            width = bounds.size.width * 0.25f;
+            height = bounds.size.height * 0.25f;
+            x = bounds.getMidX() - width/2.0f;
+            y = bounds.getMidY() - height/2.0f;
             if (enemy.dx == 1)
-                xf = bounds.getMaxX() - width - 5.0f*_tilePadding - padding;
+                x = bounds.getMaxX() - width - padding;
             if (enemy.dx == -1)
-                xf = bounds.getMinX() + 5.0f*_tilePadding + padding;
+                x = bounds.getMinX() + padding;
             if (enemy.dy == 1)
-                yf = bounds.getMaxY() - height - 5.0f*_tilePadding - padding;
+                y = bounds.getMaxY() - height - padding;
             if (enemy.dy == -1)
-                yf = bounds.getMinY() + 5.0f*_tilePadding + padding;
-            bounds.set(xf+xOffset+xWrap, yf+yOffset+yWrap, width, height);
+                y = bounds.getMinY() + padding;
+            bounds.set(x, y, width, height);
             batch->draw(tileTexture, Color4::RED, bounds);
         }
     }

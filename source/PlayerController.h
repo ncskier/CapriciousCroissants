@@ -108,6 +108,13 @@ public:
 #pragma mark -
 #pragma mark Gameplay Handling
     /**
+     * Calculate real offset from input offset
+     *
+     * @return {row, offsetValue} where [row] is true if the row is offset and false if the column is offset
+     */
+    std::tuple<bool, float> calculateOffset(cugl::Vec2 inputOffset);
+    
+    /**
      * The method called to update the player turn.
      *
      * This method contains any gameplay code that is not an OpenGL call.

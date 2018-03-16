@@ -58,6 +58,23 @@ void PlayerController::dispose() {
 #pragma mark -
 #pragma mark Gameplay Handling
 /**
+ * Calculate real offset from input offset
+ *
+ * @return {row, offsetValue} where [row] is true if the row is offset and false if the column is offset
+ */
+std::tuple<bool, float> PlayerController::calculateOffset(Vec2 inputOffset) {
+    if (abs(inputOffset.x) > abs(inputOffset.y)) {
+        // Offset Row
+        float offsetValue = (inputOffset.x > 0) ? inputOffset.x-abs(inputOffset.y) : inputOffset.x+abs(inputOffset.y);
+        return {true, offsetValue};
+    } else {
+        // Offset Col
+        float offsetValue = (inputOffset.y > 0) ? inputOffset.y-abs(inputOffset.x) : inputOffset.y+abs(inputOffset.x);
+        return {false, offsetValue};
+    }
+}
+
+/**
  * The method called to update the player turn.
  *
  * This method contains any gameplay code that is not an OpenGL call.
@@ -81,25 +98,28 @@ void PlayerController::update(float timestep) {
             }
         } else if (moveEvent == InputController::MoveEvent::MOVING) {
             // MOVING
-            cugl::Vec2 offset = _input->getMoveOffset();
+            cugl::Vec2 inputOffset = _input->getMoveOffset();
 //            float threshold = _board->getCellLength()/5.0f;
-            if (abs(offset.x) > abs(offset.y)) {
+            bool row;
+            float offsetValue;
+            std::tie(row, offsetValue) = calculateOffset(inputOffset);
+            _board->offsetReset();
+            if (row) {
                 // Offset Row
-                _board->offsetReset();
-                float offsetValue = (offset.x > 0) ? offset.x-abs(offset.y) : offset.x+abs(offset.y);
                 _board->setOffsetRow(offsetValue);
             } else {
-                // Offset Col
-                _board->offsetReset();
-                float offsetValue = (offset.y > 0) ? offset.y-abs(offset.x) : offset.y+abs(offset.x);
+                // Offset Column
                 _board->setOffsetCol(offsetValue);
             }
+            
         } else {
             // END
             // Calculate movement
-            cugl::Vec2 offset = _input->getMoveOffset();
-            float length = _board->offsetRow ? offset.x : offset.y;
-            int cells = _board->lengthToCells(length);
+            cugl::Vec2 inputOffset = _input->getMoveOffset();
+            bool row;
+            float offsetValue;
+            std::tie(row, offsetValue) = calculateOffset(inputOffset);
+            int cells = _board->lengthToCells(offsetValue);
             // Check if valid move
             if (abs(cells) > 0) {
                 // Update board
@@ -109,7 +129,7 @@ void PlayerController::update(float timestep) {
             _board->deselectTile();
             _input->clear();
         }
-	}
+    }
 }
 
 /**

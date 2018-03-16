@@ -9,14 +9,11 @@ identifier (to prevent your application from clashing with others).  See the cou
 web page for instructions
 
 ## Technical Prototype
-### Supported platforms
+### Supported Platforms
 - Android
 - iOS
 - Mac
 - PC
-
-### APK Location
-`CapriciousCroissants/build-android/app/build/outputs/apk/debug/apk-debug.apk`
 
 ### Settings Menu
 The settings menu is for testing purposes; it will not be part of the game.

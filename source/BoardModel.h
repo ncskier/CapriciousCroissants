@@ -233,6 +233,23 @@ public:
     // Apply padding, offset, and wrap to return tile bounds
     cugl::Rect calculateDrawBounds(int x, int y);
     
+    /**
+     * Draws tile given tile bounds
+     * Batch has already begun
+     */
+    void drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds);
+    
+    /**
+     * Draws ally given tile bounds
+     * Batch has already begun
+     */
+    void drawAlly(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds);
+    
+    /**
+     * Draws enemy given tile bounds
+     * Batch has already begun
+     */
+    void drawEnemy(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, PlayerPawnModel enemy);
 
 	// Draws tiles and pawns
 	void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);

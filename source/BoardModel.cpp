@@ -590,6 +590,57 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     return bounds;
 }
 
+/**
+ * Draws tile given tile bounds
+ * Batch has already begun
+ */
+void BoardModel::drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds) {
+    
+}
+
+/**
+ * Draws ally given tile bounds
+ * Batch has already begun
+ */
+void BoardModel::drawAlly(const std::shared_ptr<cugl::SpriteBatch>& batch, Rect tileBounds) {
+    float width = playerTexture->getSize().width / playerTexture->getSize().height * tileBounds.size.height;
+    float height = tileBounds.size.height;
+    float x = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
+    float y = tileBounds.getMinY() + tileBounds.size.height/4.0f;
+    Rect bounds = Rect(x, y, width, height);
+    batch->draw(playerTexture, bounds);
+}
+
+/**
+ * Draws enemy given tile bounds
+ * Batch has already begun
+ */
+void BoardModel::drawEnemy(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, PlayerPawnModel enemy) {
+    float width = tileBounds.size.width * 0.5f;
+    float height = tileBounds.size.height * 0.5f;
+    float x = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
+    float y = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f;
+    Rect bounds = Rect(x, y, width, height);
+    batch->draw(tileTexture, Color4::BLACK, bounds);
+    
+    // Direction Indicator
+    float padding = _tilePadding * 0.5f;
+    width = bounds.size.width * 0.25f;
+    height = bounds.size.height * 0.25f;
+    x = bounds.getMidX() - width/2.0f;
+    y = bounds.getMidY() - height/2.0f;
+    if (enemy.dx == 1)
+        x = bounds.getMaxX() - width - padding;
+    if (enemy.dx == -1)
+        x = bounds.getMinX() + padding;
+    if (enemy.dy == 1)
+        y = bounds.getMaxY() - height - padding;
+    if (enemy.dy == -1)
+        y = bounds.getMinY() + padding;
+    bounds.set(x, y, width, height);
+    batch->draw(tileTexture, Color4::RED, bounds);
+}
+
 // Draws all of the tiles and pawns(in that order) 
 void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     Rect bounds;
@@ -711,15 +762,11 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
         batch->draw(tileTexture, Color4f(0.0f, 0.0f, 0.0f, 0.2f), bounds);
     }
 
-    // Draw Pawns
+    // Draw Allies
     for (int i = 0; i < _numAllies; i++) {
         PlayerPawnModel ally = _allies[i];
         if (ally.x != -1 && ally.y != -1) {
-            bounds = calculateDrawBounds(ally.x, ally.y);
-            float width = playerTexture->getSize().width / playerTexture->getSize().height * bounds.size.height;
-            bounds.set(bounds.getMinX()+(bounds.size.width-width)/2.0f, bounds.getMinY()+_tilePadding, width, bounds.size.height);
-            batch->draw(playerTexture, bounds);
-//            batch->draw(playerTexture, Color4::GRAY, bounds);
+            drawAlly(batch, calculateDrawBounds(ally.x, ally.y));
         }
     }
 
@@ -727,30 +774,7 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
     for (int i = 0; i < _numEnemies; i++) {
          PlayerPawnModel enemy = _enemies[i];
         if (enemy.x != -1 && enemy.y != -1) {
-            bounds = calculateDrawBounds(enemy.x, enemy.y);
-            float width = bounds.size.width * 0.5f;
-            float height = bounds.size.height * 0.5f;
-            float x = bounds.getMinX() + (bounds.size.width-width)/2.0f;
-            float y = bounds.getMinY() + (bounds.size.height-height)/2.0f;
-            bounds.set(x, y, width, height);
-            batch->draw(tileTexture, Color4::BLACK, bounds);
-
-            // Direction Indicator
-            float padding = _tilePadding * 0.5f;
-            width = bounds.size.width * 0.25f;
-            height = bounds.size.height * 0.25f;
-            x = bounds.getMidX() - width/2.0f;
-            y = bounds.getMidY() - height/2.0f;
-            if (enemy.dx == 1)
-                x = bounds.getMaxX() - width - padding;
-            if (enemy.dx == -1)
-                x = bounds.getMinX() + padding;
-            if (enemy.dy == 1)
-                y = bounds.getMaxY() - height - padding;
-            if (enemy.dy == -1)
-                y = bounds.getMinY() + padding;
-            bounds.set(x, y, width, height);
-            batch->draw(tileTexture, Color4::RED, bounds);
+            drawEnemy(batch, calculateDrawBounds(enemy.x, enemy.y), enemy);
         }
     }
 

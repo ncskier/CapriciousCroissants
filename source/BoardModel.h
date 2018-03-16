@@ -229,6 +229,10 @@ public:
     
     // Convert screen length to grid length
     int lengthToCells(float length);
+    
+    // Apply padding, offset, and wrap to return tile bounds
+    cugl::Rect calculateDrawBounds(int x, int y);
+    
 
 	// Draws tiles and pawns
 	void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);

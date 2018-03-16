@@ -29,8 +29,8 @@ _enemies(nullptr),
 _allies(nullptr),
 _tiles(nullptr),
 _placeAllies(false),
-_boardPadding(10.0f),
-_tilePadding(5.0f),
+_boardPadding(25.0f),
+_tilePadding(10.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
@@ -52,8 +52,8 @@ _enemies(nullptr),
 _allies(nullptr),
 _tiles(nullptr),
 _placeAllies(placePawn),
-_boardPadding(10.0f),
-_tilePadding(5.0f),
+_boardPadding(25.0f),
+_tilePadding(10.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
@@ -520,18 +520,17 @@ bool BoardModel::selectTileAtPosition(Vec2 position) {
 }
 
 float BoardModel::getCellLength() {
-    float tileWidth = ((gameWidth - 2.0f*_boardPadding) / _width) - _tilePadding/2.0f;
-    float tileHeight = ((gameHeight - 2.0f*_boardPadding) / _height) - _tilePadding/2.0f;
-    float tileLength = tileWidth > tileHeight ? tileHeight : tileWidth;
-    return tileLength + _tilePadding;
+    float cellWidth = (gameWidth - 2.0f*_boardPadding) / _width;
+    float cellHeight = (gameHeight - 2.0f*_boardPadding) / _height;
+    return fmin(cellWidth, cellHeight);
 }
 
 // Convert grid (x, y) to screen coordinates
 cugl::Rect BoardModel::gridToScreen(int x, int y) {
     float cellLength = getCellLength();
     
-    float xPos = _boardPadding/2.0f + x*cellLength;
-    float yPos = _boardPadding/2.0f + y*cellLength;
+    float xPos = _boardPadding + x*cellLength;
+    float yPos = _boardPadding + y*cellLength;
     
     return Rect(xPos, yPos, cellLength, cellLength);
 }
@@ -552,21 +551,70 @@ int BoardModel::lengthToCells(float length) {
     return (int)round( length / cellLength );
 }
 
+// Apply padding, offset, and wrap to return tile bounds
+Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
+    Rect bounds = gridToScreen(gridX, gridY);
+    
+    // Apply Padding to Bounds
+    float x = bounds.getMinX() + _tilePadding/2.0f;
+    float y = bounds.getMinY() + _tilePadding/2.0f;
+    float width = bounds.size.width - _tilePadding;
+    float height = bounds.size.height - _tilePadding;
+    bounds.set(x, y, width, height);
+    
+    // Calculate Offset
+    float xOffset = (offsetRow && gridY == yOfIndex(_selectedTile)) ? offset : 0.0f;
+    float yOffset = (offsetCol && gridX == xOfIndex(_selectedTile)) ? offset : 0.0f;
+    
+    // Calculate Wrap (wrapping tiles around the board as they are moved)
+    float xWrap = 0.0f;
+    float yWrap = 0.0f;
+    float cellLength = getCellLength();
+    float boardWidth = _width*cellLength;
+    float boardHeight = _height*cellLength;
+    if (x + width/2.0f + xOffset <= _boardPadding + _tilePadding/2.0f)
+        xWrap = boardWidth;
+    if (x + width/2.0f + xOffset >= _boardPadding + boardWidth - _tilePadding/2.0f)
+        xWrap = -boardWidth;
+    if (y + width/2.0f + yOffset <= _boardPadding + _tilePadding/2.0f)
+        yWrap = boardHeight;
+    if (y + width/2.0f + yOffset >= _boardPadding + boardWidth - _tilePadding/2.0f)
+        yWrap = -boardHeight;
+    
+    // Calculate new bounds
+    bounds.set(
+               x + xOffset + xWrap,
+               y + yOffset + yWrap,
+               width,
+               height);
+    return bounds;
+}
+
 // Draws all of the tiles and pawns(in that order) 
 void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
-//    float gameLength = (gameWidth > gameHeight) ? gameHeight : gameWidth;
     Rect bounds;
     batch->begin();
-	if (animationCounter >= 0) {
-		animationCounter++;
-	}
-	if (animationCounter == 60) {
-		triggerResets();
-	}
-	if (animationCounter > 120) {
-		totalReplaceTiles.clear();
-		animationCounter = -1;
-	}
+    
+    // Draw Test
+//    for (int y = 0; y < _height; y++) {
+//        for (int x = 0; x < _width; x++) {
+//            // Draw tiles
+//            bounds = calculateDrawBounds(x, y);
+//            Color4 color = Color4(colorLookup.at((x+y) % 5));
+//            batch->draw(tileTexture, color, bounds);
+//        }
+//    }
+    
+    if (animationCounter >= 0) {
+        animationCounter++;
+    }
+    if (animationCounter == 60) {
+        triggerResets();
+    }
+    if (animationCounter > 120) {
+        totalReplaceTiles.clear();
+        animationCounter = -1;
+    }
     for (int x = 0; x < _width; x++) {
         for (int y = 0; y < _height; y++) {  //USE FUNCTIONS, 90% OF THIS CODE IS REPEATED 4x, EDITING IT IS A NIGHTMARE
             // Offset
@@ -589,29 +637,29 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             float yf = bounds.getMinY() + yOffset + _tilePadding/2.0f + yWrap;
             float width = bounds.size.width - _tilePadding;
             float height = bounds.size.height - _tilePadding;
-			//Temporary for cool animation
-			if (animationCounter >= 0) {
-				int locat = indexOfCoordinate(x, y);
-				if (totalReplaceTiles.find(locat) != totalReplaceTiles.end() && animationCounter < 100) {
-					if (animationCounter < 60) { //Destroy
-						if (animationCounter < 30) {
-							bounds.set(xf + animationCounter * getCellLength() / 300, yf + animationCounter * getCellLength() / 300, width - animationCounter * getCellLength() / 150, height - animationCounter * getCellLength() / 150);
-						}
-						if (animationCounter < 54) {
-							bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
-						}
-						else {
-							bounds.set(xf + ((animationCounter-54) * getCellLength() / 42), yf + ((animationCounter - 54) * getCellLength() / 20), width - ((animationCounter - 54) * getCellLength() / 10), height - ((animationCounter - 54) * getCellLength() / 10));
-						}
-					}
-					else { //Regenerate
-						if (animationCounter > 66) {
-							bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
-						}
-						else {
-							bounds.set(xf + ((66 - animationCounter) * getCellLength() / 20), yf + ((66 - animationCounter) * getCellLength() / 20), width - ((66 - animationCounter) * getCellLength() / 10), height - ((66 - animationCounter) * getCellLength() / 10));
-						}
-					}
+            //Temporary for cool animation
+            if (animationCounter >= 0) {
+                int locat = indexOfCoordinate(x, y);
+                if (totalReplaceTiles.find(locat) != totalReplaceTiles.end() && animationCounter < 100) {
+                    if (animationCounter < 60) { //Destroy
+                        if (animationCounter < 30) {
+                            bounds.set(xf + animationCounter * getCellLength() / 300, yf + animationCounter * getCellLength() / 300, width - animationCounter * getCellLength() / 150, height - animationCounter * getCellLength() / 150);
+                        }
+                        if (animationCounter < 54) {
+                            bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
+                        }
+                        else {
+                            bounds.set(xf + ((animationCounter-54) * getCellLength() / 42), yf + ((animationCounter - 54) * getCellLength() / 20), width - ((animationCounter - 54) * getCellLength() / 10), height - ((animationCounter - 54) * getCellLength() / 10));
+                        }
+                    }
+                    else { //Regenerate
+                        if (animationCounter > 66) {
+                            bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
+                        }
+                        else {
+                            bounds.set(xf + ((66 - animationCounter) * getCellLength() / 20), yf + ((66 - animationCounter) * getCellLength() / 20), width - ((66 - animationCounter) * getCellLength() / 10), height - ((66 - animationCounter) * getCellLength() / 10));
+                        }
+                    }
                     if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
                         batch->draw(tile1Texture, bounds);
                     } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
@@ -619,9 +667,9 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
                     } else {
                         batch->draw(tileTexture, Color4(colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor())).scale(.85, false), bounds);
                     }
-				}
-				else {
-					bounds.set(xf, yf, width, height);
+                }
+                else {
+                    bounds.set(xf, yf, width, height);
                     if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
                         batch->draw(tile1Texture, bounds);
                     } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
@@ -629,11 +677,11 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
                     } else {
                         batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
                     }
-                    
-				}
-			}
-			else {
-				bounds.set(xf, yf, width, height);
+
+                }
+            }
+            else {
+                bounds.set(xf, yf, width, height);
                 if (_tiles[indexOfCoordinate(x, y)].getColor() == 0) {
                     batch->draw(tile1Texture, bounds);
                 } else if (_tiles[indexOfCoordinate(x, y)].getColor() == 1) {
@@ -641,12 +689,12 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
                 } else {
                     batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
                 }
-			}
-			//end of cool animation
+            }
+            //end of cool animation
             //bounds.set(xf, yf, width, height);
         }
     }
-    
+
     // Draw over selected tile
     if (_selectedTile != -1) {
         int x = xOfIndex(_selectedTile);
@@ -685,14 +733,14 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             bounds = gridToScreen(ally.x, ally.y);
             float xWrap = 0.0f;
             float yWrap = 0.0f;
-			if (bounds.getMidX() + xOffset <= 0)
-				xWrap = getCellLength() * _width;
-			if (bounds.getMidX() + xOffset > getCellLength() * _width)
-				xWrap = -getCellLength() * _width;
-			if (bounds.getMidY() + yOffset <= 0)
-				yWrap = getCellLength() * _height;
-			if (bounds.getMidY() + yOffset > getCellLength() * _height)
-				yWrap = -getCellLength() * _height;
+            if (bounds.getMidX() + xOffset <= 0)
+                xWrap = getCellLength() * _width;
+            if (bounds.getMidX() + xOffset > getCellLength() * _width)
+                xWrap = -getCellLength() * _width;
+            if (bounds.getMidY() + yOffset <= 0)
+                yWrap = getCellLength() * _height;
+            if (bounds.getMidY() + yOffset > getCellLength() * _height)
+                yWrap = -getCellLength() * _height;
             // Bounds
             float xf = bounds.getMinX() + xOffset + 5.0f*_tilePadding + xWrap;
             float yf = bounds.getMinY() + yOffset + 5.0f*_tilePadding + yWrap;
@@ -704,7 +752,7 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
 //            batch->draw(playerTexture, Color4::GRAY, bounds);
         }
     }
-    
+
     // Draw Enemies
     for (int i = 0; i < _numEnemies; i++) {
          PlayerPawnModel enemy = _enemies[i];
@@ -716,14 +764,14 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             bounds = gridToScreen(enemy.x, enemy.y);
             float xWrap = 0.0f;
             float yWrap = 0.0f;
-			if (bounds.getMidX() + xOffset <= 0)
-				xWrap = getCellLength() * _width;
-			if (bounds.getMidX() + xOffset > getCellLength() * _width)
-				xWrap = -getCellLength() * _width;
-			if (bounds.getMidY() + yOffset <= 0)
-				yWrap = getCellLength() * _height;
-			if (bounds.getMidY() + yOffset > getCellLength() * _height)
-				yWrap = -getCellLength() * _height;
+            if (bounds.getMidX() + xOffset <= 0)
+                xWrap = getCellLength() * _width;
+            if (bounds.getMidX() + xOffset > getCellLength() * _width)
+                xWrap = -getCellLength() * _width;
+            if (bounds.getMidY() + yOffset <= 0)
+                yWrap = getCellLength() * _height;
+            if (bounds.getMidY() + yOffset > getCellLength() * _height)
+                yWrap = -getCellLength() * _height;
             // Bounds
             float xf = bounds.getMinX() + xOffset + 5.0f*_tilePadding + xWrap;
             float yf = bounds.getMinY() + yOffset + 5.0f*_tilePadding + yWrap;
@@ -731,7 +779,7 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
             float height = bounds.size.height - 10.0f*_tilePadding;
             bounds.set(xf, yf, width, height);
             batch->draw(tileTexture, Color4::BLACK, bounds);
-            
+
             // Direction Indicator
             float padding = _tilePadding;
             bounds = gridToScreen(enemy.x, enemy.y);

@@ -8,7 +8,17 @@
 
 #include "TileModel.h"
 
-void TileModel::setColor(int c) {
-	_color = c;
+#pragma mark -
+#pragma mark Constructors/Destructors
+
+/** Initialize a new tile with random color */
+bool TileModel::init(int numColors) {
+    srand((int)time(NULL));
+    _color = rand() % numColors;
+    return true;
 }
 
+/** Disposes all resources and assets of this tile */
+void TileModel::dispose() {
+    _sprite = nullptr;
+}

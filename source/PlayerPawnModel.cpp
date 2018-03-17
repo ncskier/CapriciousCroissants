@@ -1,5 +1,5 @@
 //
-//  PlayerPawnModel.cpp
+//  PlayerPawnModel.h
 //  CapriciousCroissants
 //
 //  Created by Brandon Walker on 3/11/18.
@@ -8,48 +8,18 @@
 
 #include "PlayerPawnModel.h"
 
-PlayerPawnModel::PlayerPawnModel() :
-x(0),
-y(0),
-dx(0),
-dy(1){
+#pragma mark -
+#pragma mark Constructors/Destructors
+
+/** Initialize a new player pawn at (x, y) */
+bool PlayerPawnModel::init(int x, int y) {
+    _x = x;
+    _y = y;
+    return true;
 }
 
+/** Disposes all resources and assets of this enemy */
 void PlayerPawnModel::dispose() {
+    _sprite = nullptr;
 }
 
-// Face random direction
-void PlayerPawnModel::randomDirection() {
-    int d = rand() % 2;        // random number in range [0, 1]
-    CULog("d: %d", d);
-    dx = d;
-    dy = 1-d;
-}
-
-// Turn Around (inver dx & dy)
-void PlayerPawnModel::turnAround() {
-    dx = -dx;
-    dy = -dy;
-}
-
-// Step Position
-void PlayerPawnModel::step() {
-    x += dx;
-    y += dy;
-}
-
-/*
-void setHealth(int health) {
-	_health = health;
-}
-
-void changeHealth(int changeAmount){
-	setHealth(_health + changeAmount);
-}
-
-void setMaxHealth(){
-	setHealth(maxHealth);
-}
-
-
-*/

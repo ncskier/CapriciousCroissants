@@ -107,9 +107,9 @@ public:
     void setComplete(bool value) { _complete = value; }
     
 
-	int playerDistance(EnemyPawnModel enemy, PlayerPawnModel player);
-	void enemyMove(EnemyPawnModel enemy, int enemyIdx);
-	void enemyAttack(EnemyPawnModel enemy, PlayerPawnModel* player);
+    int playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
+    void enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemyIdx);
+    void enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
     
 #pragma mark -
 #pragma mark Gameplay Handling

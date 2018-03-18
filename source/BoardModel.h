@@ -14,6 +14,11 @@
 #include "PlayerPawnModel.h"
 #include "EnemyPawnModel.h"
 #include <set>
+#include <vector>
+
+
+#pragma mark -
+#pragma mark Board Model
 
 /** Class of the board model*/
 class BoardModel {
@@ -22,18 +27,6 @@ protected:
     std::set<int>::iterator totalIter;
     std::set<int> totalReplaceTiles;
     int animationCounter = -1;
-    
-    /** Reference to node in SceneGraph */
-    std::shared_ptr<cugl::Node> _node;
-    
-	// Size of vertical (column) side of the square board
-	int _height;
-
-	// Size of horizontal (row) side of the square board
-	int _width;
-
-	// Number of colors of tiles available to the board
-	int _numColors;
 
 	// Number of allies
 	int _numAllies;
@@ -45,52 +38,72 @@ protected:
 	// False: Allies are already placed on board initially
 	bool _placeAllies;
     
-    // Display settings
-    float _boardPadding;
-    float _tilePadding;
-    
     // Tile selected by move
     int _selectedTile;
 
     // Colors to display
 	std::vector<cugl::Color4> colorLookup;
 
-	// Array of all tiles on the board, array index can be translated to coordinates
-	TileModel *_tiles;
-
-	// Array of all allies on the board
-	PlayerPawnModel *_allies;
-
-	// Array of all enemies on the board
-	EnemyPawnModel *_enemies;
-
 	// Replaces a tile at a location in the array with a new value
 	void replaceTile(int tileLocation);
-
-	// Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
-	int indexOfCoordinate(int x, int y) const;
-    
-    // Convert array index to x
-    int xOfIndex(int i) const;
-    
-    // Convert array index to y
-    int yOfIndex(int i) const;
 
 	// Slide row or column by [offset]
 	void slide(bool row, int k, int offset);
 
 	// Slide pawns in row or column [k] by [offset]
 	void slidePawns(bool row, int k, int offset);
+    
+
+#pragma mark -
+#pragma mark Protected Variables
+    
+    /** Reference to node in SceneGraph */
+    std::shared_ptr<cugl::Node> _node;
+    
+    /** The asset manager for play mode. */
+    std::shared_ptr<cugl::AssetManager> _assets;
+    
+    /** Display settings */
+    float _boardPadding;
+    float _tilePadding;
+    
+    /** Size of vertical (column) side of the square board */
+    int _height;
+    
+    /** Size of horizontal (row) side of the square board */
+    int _width;
+    
+    // Number of colors of tiles available to the board
+    int _numColors;
+    
+    /** Array of all tiles on the board, array index can be translated to coordinates and vice versa */
+    std::vector<std::shared_ptr<TileModel>> _tiles;
+    
+    /** Vector storing all allies on the board */
+    std::vector<std::shared_ptr<PlayerPawnModel>> _allies;
+    
+    /** Vector storing all enemies on the board */
+    std::vector<std::shared_ptr<EnemyPawnModel>> _enemies;
+    
+    // Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
+    int indexOfCoordinate(int x, int y) const;
+    
+    // Convert array index to x
+    int xOfIndex(int i) const;
+    
+    // Convert array index to y
+    int yOfIndex(int i) const;
+    
+    
 
 public:
 	//TEMPORARY FOR COOL ANIMATION
 	void triggerResets();
 	bool checkForMatchesTemp();
 
-
-
+#pragma mark -
+#pragma mark Constructors/Destructors
 	BoardModel();
-	BoardModel(int width, int height, int colors, int allies, int enemies, bool placePawn);
     
     ~BoardModel() { dispose(); }
     
@@ -106,17 +119,33 @@ public:
      */
     bool init(int width, int height);
     
-    // Allocates this board for a shared pointer
+    bool init(int width, int height, int colors, int allies, int enemies, bool placePawn);
+    
+    bool init(int width, int height, int colors, int allies, int enemies, bool placePawn, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen);
+    
+#pragma mark -
+#pragma mark Static Constructors
+    /** Allocates board for a shared pointer */
     static std::shared_ptr<BoardModel> alloc(int width, int height) {
         std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
         return (board->init(width, height) ? board : nullptr);
     }
 
+    /** Allocates board for shared pointer */
 	static std::shared_ptr<BoardModel> alloc(int width, int height, int colors, int allies, int enemies, bool placePawn) {
-		std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>(width, height, colors, allies, enemies, placePawn);
-		return (board->init(width, height) ? board : nullptr);
+		std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
+		return (board->init(width, height, colors, allies, enemies, placePawn) ? board : nullptr);
 	}
+    
+    /** Allocates board for shared pointer */
+    static std::shared_ptr<BoardModel> alloc(int width, int height, int colors, int allies, int enemies, bool placePawn, std::shared_ptr<cugl::AssetManager> assets, cugl::Size dimen) {
+        std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
+        return (board->init(width, height, colors, allies, enemies, placePawn, assets, dimen) ? board : nullptr);
+    }
 
+    
+#pragma mark -
+#pragma mark Accessors/Mutators
 	int gameHeight;
 	int gameWidth;
 
@@ -130,37 +159,31 @@ public:
     std::shared_ptr<cugl::Texture> tile2Texture;
 
 	// Returns the value at the give (x, y) coordinate
-	TileModel getTile(int x, int y) const;
+    std::shared_ptr<TileModel>& getTile(int x, int y);
 
 	// Returns the ally pawn at index i of _allies
-	PlayerPawnModel getAlly(int i) const;
-
-	// Returns the ally pawn at index i of _allies
-	PlayerPawnModel* getAllyPtr(int i) ;
+    std::shared_ptr<PlayerPawnModel> getAlly(int i);
     
     // Returns the ally pawn at (x, y)
-    PlayerPawnModel* getAllyPtr(int x, int y) const;
+    std::shared_ptr<PlayerPawnModel> getAlly(int x, int y);
 
 	// Returns the enemy pawn at index i of _enemies
-	EnemyPawnModel getEnemy(int i);
+    std::shared_ptr<EnemyPawnModel> getEnemy(int i);
     
-    // Returns the enemy pawn at index i of _enemies
-    EnemyPawnModel* getEnemyPtr(int i);
-    
-    // Returns the enemy pawn at (x, y)
-    EnemyPawnModel* getEnemyPtr(int x, int y) const;
+    // Returns the enemy pawn at (x, y) or nullptr
+    std::shared_ptr<EnemyPawnModel> getEnemy(int x, int y);
 
 	// Returns the allies
-	PlayerPawnModel getAllies() ;
+    std::vector<std::shared_ptr<PlayerPawnModel>>& getAllies();
 
 	// Returns the enemies
-	EnemyPawnModel getEnemies() ;
+        std::vector<std::shared_ptr<EnemyPawnModel>>& getEnemies();
 
 	// Set the tile at the given (x, y) coordinate
-	void setTile(int x, int y, TileModel t);
+    void setTile(int x, int y, std::shared_ptr<TileModel> t);
 
 	// Returns the number of allies
-	int getNumAllies() const { return _numAllies; }
+    int getNumAllies() const { return _numAllies; }
 
 	//Returns the number of enemies
 	int getNumEnemies() const { return _numEnemies; }
@@ -219,6 +242,11 @@ public:
     // Slide row/col by [offset]
     void slide(int offset);
     
+#pragma mark -
+#pragma mark Drawing/Animation
+    /** Get board node */
+    std::shared_ptr<cugl::Node>& getNode() { return _node; }
+    
     /**
      * Select tile at screen position [position]
      *
@@ -240,26 +268,26 @@ public:
     // Apply padding, offset, and wrap to return tile bounds
     cugl::Rect calculateDrawBounds(int x, int y);
     
-    /**
-     * Draws tile given tile bounds
-     * Batch has already begun
-     */
-    void drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, TileModel tile);
-    
-    /**
-     * Draws ally given tile bounds
-     * Batch has already begun
-     */
-    void drawAlly(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds);
-    
-    /**
-     * Draws enemy given tile bounds
-     * Batch has already begun
-     */
-    void drawEnemy(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, EnemyPawnModel enemy);
-
-	// Draws tiles and pawns
-	void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);
+//    /**
+//     * Draws tile given tile bounds
+//     * Batch has already begun
+//     */
+//    void drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, TileModel tile);
+//
+//    /**
+//     * Draws ally given tile bounds
+//     * Batch has already begun
+//     */
+//    void drawAlly(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds);
+//
+//    /**
+//     * Draws enemy given tile bounds
+//     * Batch has already begun
+//     */
+//    void drawEnemy(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, EnemyPawnModel enemy);
+//
+//    // Draws tiles and pawns
+//    void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);
 
 	/**
 	* Returns a string representation of the board for debugging purposes.

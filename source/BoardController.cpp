@@ -83,8 +83,8 @@ void BoardController::update(float timestep) {
 
 	win = true;
 	for (int i = 0; i < _board->getNumEnemies(); i++) {
-		EnemyPawnModel temp = _board->getEnemy(i);
-		if (temp.getX() != -1) {
+        std::shared_ptr<EnemyPawnModel> temp = _board->getEnemy(i);
+		if (temp->getX() != -1) {
 			win = false;
 		}
 	}

@@ -64,7 +64,10 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 //    _worldNode = Node::allocWithBounds(dimen);
     _worldNode = _assets->get<Node>("game");
     _worldNode->setContentSize(dimen);
+    _worldNode->setAnchor(Vec2::ZERO);
     _worldNode->doLayout(); // This rearranges the children to fit the screen
+    CULog("anchor: %s", _worldNode->getAnchor().toString().c_str());
+    CULog("origin: %s", _worldNode->getPosition().toString().c_str());
 	addChild(_worldNode);
 
     // Setup win/lose text
@@ -73,17 +76,21 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 
 	// Create board
     auto boardNode = Node::alloc();
-    boardNode->setContentSize(dimen);
-    _worldNode->addChild(boardNode);
-    auto tileNode = AnimationNode::alloc(_assets->get<Texture>("tile1_strip"), TILE_IMG_ROWS, TILE_IMG_COLS, TILE_IMG_SIZE);
-    auto playerNode = AnimationNode::alloc(_assets->get<Texture>("player1_strip"), PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
-    auto enemyNode = AnimationNode::alloc(_assets->get<Texture>("enemy1_strip"), ENEMY_IMG_ROWS, ENEMY_IMG_COLS, ENEMY_IMG_SIZE);
-    boardNode->addChild(tileNode, 2);
-    boardNode->addChild(playerNode, 1);
-    boardNode->addChild(enemyNode, 0);
-//    tileNode->setZOrder(3);
-//    enemyNode->setZOrder(4);
-//    playerNode->setZOrder(5);
+//    boardNode->setContentSize(dimen);
+//    _worldNode->addChild(boardNode);
+    _board = BoardModel::alloc(width, height, colors, allies, enemies, placePawn, _assets, dimen);
+//    _board->getNode()->setContentSize(dimen);
+    _worldNode->addChild(_board->getNode());
+//    std::shared_ptr<TileModel> tile = TileModel::alloc(3);
+//    tile->setSprite(_assets);
+//    boardNode->addChild(tile->getSprite());
+    
+//    auto tileNode = AnimationNode::alloc(_assets->get<Texture>("tile1_strip"), TILE_IMG_ROWS, TILE_IMG_COLS, TILE_IMG_SIZE);
+//    auto playerNode = AnimationNode::alloc(_assets->get<Texture>("player1_strip"), PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
+//    auto enemyNode = AnimationNode::alloc(_assets->get<Texture>("enemy1_strip"), ENEMY_IMG_ROWS, ENEMY_IMG_COLS, ENEMY_IMG_SIZE);
+//    boardNode->addChild(tileNode, 2);
+//    boardNode->addChild(playerNode, 1);
+//    boardNode->addChild(enemyNode, 0);
 //    populate(width, height, colors, allies, enemies, placePawn);
 	_state = State::PLAYER;
 	_active = true;
@@ -126,8 +133,8 @@ void PlayMode::dispose() {
  */
 void PlayMode::reset() {
     setComplete(false);
-    populate();
-    CULog("populated board:\n%s", _board->toString().c_str());
+//    populate();
+//    CULog("populated board:\n%s", _board->toString().c_str());
 }
 
 /**
@@ -136,29 +143,29 @@ void PlayMode::reset() {
  * This method is really, really long.  In practice, you would replace this
  * with your serialization loader, which would process a level file.
  */
-void PlayMode::populate() {
-    _board = BoardModel::alloc(5, 5);
-    _board->tileTexture = _assets->get<Texture>("100squareWhite");
-    _board->playerTexture = _assets->get<Texture>("player");
-    Size dimen = Application::get()->getDisplaySize();
-    CULog("dimen: %s", dimen.toString().c_str());
-    dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
-    _board->gameWidth = dimen.width;
-    _board->gameHeight = dimen.height;
-    CULog("scale: %s", dimen.toString().c_str());
-}
-
-void PlayMode::populate(int height, int width, int colors, int allies, int enemies, bool place) {
-	_board = BoardModel::alloc(width, height, colors, allies, enemies, place);
-	_board->tileTexture = _assets->get<Texture>("100squareWhite");
-    _board->playerTexture = _assets->get<Texture>("player");
-    _board->tile1Texture = _assets->get<Texture>("tile1");
-    _board->tile2Texture = _assets->get<Texture>("tile2");
-	Size dimen = Application::get()->getDisplaySize();
-	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
-	_board->gameWidth = dimen.width;
-	_board->gameHeight = dimen.height;
-}
+//void PlayMode::populate() {
+//    _board = BoardModel::alloc(5, 5);
+//    _board->tileTexture = _assets->get<Texture>("100squareWhite");
+//    _board->playerTexture = _assets->get<Texture>("player");
+//    Size dimen = Application::get()->getDisplaySize();
+//    CULog("dimen: %s", dimen.toString().c_str());
+//    dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
+//    _board->gameWidth = dimen.width;
+//    _board->gameHeight = dimen.height;
+//    CULog("scale: %s", dimen.toString().c_str());
+//}
+//
+//void PlayMode::populate(int height, int width, int colors, int allies, int enemies, bool place) {
+//    _board = BoardModel::alloc(width, height, colors, allies, enemies, place);
+//    _board->tileTexture = _assets->get<Texture>("100squareWhite");
+//    _board->playerTexture = _assets->get<Texture>("player");
+//    _board->tile1Texture = _assets->get<Texture>("tile1");
+//    _board->tile2Texture = _assets->get<Texture>("tile2");
+//    Size dimen = Application::get()->getDisplaySize();
+//    dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
+//    _board->gameWidth = dimen.width;
+//    _board->gameHeight = dimen.height;
+//}
 
 #pragma mark -
 #pragma mark Gameplay Handling
@@ -227,7 +234,7 @@ void PlayMode::update(float dt) {
  */
 void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
     // Draw the Board
-    _board->draw(batch);
+//    _board->draw(batch);
 
     // Render anything on the SceneGraph
     render(batch);

@@ -21,6 +21,18 @@
 #define TILE_IMG_COLS 1
 #define TILE_IMG_SIZE 1
 
+/** Tile texture keys */
+#define TILE_TEXTURE_KEY_0 "tile0_strip"
+#define TILE_TEXTURE_KEY_1 "tile1_strip"
+#define TILE_TEXTURE_KEY_2 "tile0_strip"
+#define TILE_TEXTURE_KEY_3 "tile0_strip"
+#define TILE_TEXTURE_KEY_4 "tile0_strip"
+#define TILE_TEXTURE_KEY_5 "tile0_strip"
+#define TILE_TEXTURE_KEY_6 "tile0_strip"
+#define TILE_TEXTURE_KEY_7 "tile0_strip"
+#define TILE_TEXTURE_KEY_8 "tile0_strip"
+#define TILE_TEXTURE_KEY_9 "tile0_strip"
+
 
 #pragma mark -
 #pragma mark Tile Model
@@ -37,7 +49,11 @@ protected:
     
     /** Reference to image in SceneGraph for animation */
     std::shared_ptr<cugl::AnimationNode> _sprite;
+    
+    /** Sets the film strip with [bounds] */
+    void setSprite(const cugl::Rect bounds, const std::shared_ptr<cugl::AssetManager>& assets);
 
+    
 public:
 #pragma mark -
 #pragma mark Constructors/Destructors
@@ -53,8 +69,11 @@ public:
     /** Initialize a new tile with color 0 */
     virtual bool init() { return true; }
     
-    /** Initialize a new tile with random color */
-    virtual bool init(int numColors);
+    /** Initialize a new tile with [color] */
+    virtual bool init(int color);
+    
+    /** Initialize a new tile with [color] and dimensions [dimen] with anchor (0,0) */
+    virtual bool init(int color, cugl::Rect bounds, std::shared_ptr<cugl::AssetManager>& assets);
     
 #pragma mark -
 #pragma mark Static Constructors
@@ -64,10 +83,16 @@ public:
         return (result->init() ? result : nullptr);
     }
     
-    /** Returns newly allocated tile with random color */
-    static std::shared_ptr<TileModel> alloc(int numColors) {
+    /** Returns newly allocated tile with [color] */
+    static std::shared_ptr<TileModel> alloc(int color) {
         std::shared_ptr<TileModel> result = std::make_shared<TileModel>();
-        return (result->init(numColors) ? result : nullptr);
+        return (result->init(color) ? result : nullptr);
+    }
+    
+    /** Returns newly allocated tile with [color] and dimensions [dimen] with anchor (0,0) */
+    static std::shared_ptr<TileModel> alloc(int color, cugl::Rect bounds, std::shared_ptr<cugl::AssetManager>& assets) {
+        std::shared_ptr<TileModel> result = std::make_shared<TileModel>();
+        return (result->init(color, bounds, assets) ? result : nullptr);
     }
     
 #pragma mark -

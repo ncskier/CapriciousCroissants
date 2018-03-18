@@ -21,8 +21,22 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "tile0_strip": {
+            "file":     "textures/tile0_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "tile1_strip": {
             "file":     "textures/tile1_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "tileNULL_strip": {
+            "file":     "textures/100squareWhite.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",

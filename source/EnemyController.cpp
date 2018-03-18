@@ -62,11 +62,11 @@ void enemyMovement(EnemyPawnModel enemy);
 void enemyAttack(EnemyPawnModel enemy, PlayerPawnModel player);
 */
 
-int EnemyController::playerDistance(EnemyPawnModel enemy, PlayerPawnModel player) {
-	return (abs(enemy.getX() - player.getX()) + abs(enemy.getY() - player.getY()));
+int EnemyController::playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
+	return (abs(enemy->getX() - player->getX()) + abs(enemy->getY() - player->getY()));
 }
 
-void EnemyController::enemyMove(EnemyPawnModel enemy, int enemyIdx) {
+void EnemyController::enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemyIdx) {
 //    int dx = 0;
 //    int dy = 0;
 //    //dx = (rand() % 3)-1; //choose a random direction between -1, 0 and 1
@@ -78,30 +78,30 @@ void EnemyController::enemyMove(EnemyPawnModel enemy, int enemyIdx) {
 //    }
 
     // Move in direction facing
-    enemy.step();
+    enemy->step();
     
     // Check bounds
-    if (enemy.getX() < 0 || _board->getWidth() <= enemy.getX()) {
-        _board->getEnemyPtr(enemyIdx)->turnAround();
-    } else if (enemy.getY() < 0 || _board->getHeight() <= enemy.getY()) {
-        _board->getEnemyPtr(enemyIdx)->turnAround();
+    if (enemy->getX() < 0 || _board->getWidth() <= enemy->getX()) {
+        _board->getEnemy(enemyIdx)->turnAround();
+    } else if (enemy->getY() < 0 || _board->getHeight() <= enemy->getY()) {
+        _board->getEnemy(enemyIdx)->turnAround();
     } else {
 		bool enemyInWay = false;
 		for (int i = 0; i < _board->getNumEnemies(); i++) {
 			if (i != enemyIdx) {
-				EnemyPawnModel temp = _board->getEnemy(i);
-				if (temp.getX() == enemy.getX() && temp.getY() == enemy.getY()) {
+                std::shared_ptr<EnemyPawnModel> temp = _board->getEnemy(i);
+				if (temp->getX() == enemy->getX() && temp->getY() == enemy->getY()) {
 					enemyInWay = true;
 				}
 			}
 		}
 		if (!enemyInWay) {
-			_board->getEnemyPtr(enemyIdx)->step();
+			_board->getEnemy(enemyIdx)->step();
 		}
     }
 }
 
-void EnemyController::enemyAttack(EnemyPawnModel enemy, PlayerPawnModel *player) {
+void EnemyController::enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
 	//unsure how to implement without or player death
     player->setXY(-1, -1);
 }
@@ -121,11 +121,11 @@ void EnemyController::update(float timestep) {
 
 	//Loop through every enemy and ally. Move the enemies 1 square randomly in any direction.
 	for (int i = 0; i < _board->getNumEnemies(); i++) {
-        EnemyPawnModel *enemy = _board->getEnemyPtr(i);
-        enemyMove(*enemy, i);
+        std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
+        enemyMove(enemy, i);
 		for (int j = 0; j < _board->getNumAllies(); j++) {
-            PlayerPawnModel ally = _board->getAlly(j);
-			if (playerDistance(*enemy, ally) < 1) {
+            std::shared_ptr<PlayerPawnModel> ally = _board->getAlly(j);
+			if (playerDistance(enemy, ally) < 1) {
 				_board->removeAlly(j);
             }
             //this is assuming all enemies are "dumb"
@@ -135,8 +135,8 @@ void EnemyController::update(float timestep) {
 
 	lose = true;
 	for (int i = 0; i < _board->getNumAllies(); i++) {
-		PlayerPawnModel temp = _board->getAlly(i);
-		if (temp.getX() != -1) {
+        std::shared_ptr<PlayerPawnModel> temp = _board->getAlly(i);
+		if (temp->getX() != -1) {
 			lose = false;
 		}
 	}

@@ -45,6 +45,9 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
 	std::shared_ptr<cugl::Label> _text;
     
+    /** World node for scene graph */
+    std::shared_ptr<cugl::Node> _worldNode;
+    
     /** Game Board */
     std::shared_ptr<BoardModel> _board;
     

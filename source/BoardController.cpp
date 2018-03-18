@@ -63,28 +63,28 @@ void BoardController::dispose() {
  */
 void BoardController::update(float timestep) {
 //    CULog("BoardController Update");
-	if (!_animating) {
-		if (_board->checkForMatchesTemp()) {
-			_animating = true;
-		}
-		else {
-			setComplete(true);
-		}
-	}
-	else {
-		counter++;
-		if (counter > 121) {
-			counter = 0;
-			_animating = false;
-		}
-	}
+//    if (!_animating) {
+//        if (_board->checkForMatchesTemp()) {
+//            _animating = true;
+//        }
+//        else {
+//            setComplete(true);
+//        }
+//    }
+//    else {
+//        counter++;
+//        if (counter > 121) {
+//            counter = 0;
+//            _animating = false;
+//        }
+//    }
 
-	//setComplete(!_board->checkForMatches());
+    setComplete(!_board->checkForMatches());
 
 	win = true;
 	for (int i = 0; i < _board->getNumEnemies(); i++) {
-		PlayerPawnModel temp = _board->getEnemy(i);
-		if (temp.x != -1) {
+		EnemyPawnModel temp = _board->getEnemy(i);
+		if (temp.getX() != -1) {
 			win = false;
 		}
 	}

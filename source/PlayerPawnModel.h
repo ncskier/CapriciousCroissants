@@ -15,9 +15,9 @@
 #define ENEMY_IMG_NORMAL 0
 
 /** Number of rows and cols in film strip */
-#define PLAYER_IMG_ROWS 5
-#define PLAYER_IMG_COLS 5
-#define PLAYER_IMG_SIZE 25
+#define PLAYER_IMG_ROWS 1
+#define PLAYER_IMG_COLS 1
+#define PLAYER_IMG_SIZE 1
 
 
 #pragma mark -

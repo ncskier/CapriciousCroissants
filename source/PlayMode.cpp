@@ -44,35 +44,7 @@ _debug(false)
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool PlayMode::init(const std::shared_ptr<AssetManager>& assets) {
-    // Initialize the scene to a locked width
-    Size dimen = Application::get()->getDisplaySize();
-    dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
-    if (assets == nullptr) {
-        return false;
-    } else if (!Scene::init(dimen)) {
-        return false;
-    }
-    
-    // Start up the input handler
-    _assets = assets;
-    _input.init(getCamera());
-    
-    // Create board
-    populate();
-    _state = State::PLAYER;
-    _active = true;
-    _complete = false;
-    setDebug(false);
-    
-    // Start up turn controllers
-    _playerController.init(_board, &_input);
-    _boardController.init(_board);
-    _enemyController.init(_board);
-    
-    // Set Background
-    Application::get()->setClearColor(Color4(229, 229, 229, 255));
-    
-    return true;
+    return init(assets, 5, 5, 5, 3, 5, false);
 }
 
 bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int height, int colors, int allies, int enemies, bool placePawn) {
@@ -81,8 +53,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
 	if (assets == nullptr) {
 		return false;
-	}
-	else if (!Scene::init(dimen)) {
+	} else if (!Scene::init(dimen)) {
 		return false;
 	}
 
@@ -90,16 +61,30 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	_assets = assets;
 	_input.init(getCamera());
 
-	auto layer = assets->get<Node>("game");
-	layer->setContentSize(dimen);
-	layer->doLayout(); // This rearranges the children to fit the screen
-	addChild(layer);
+//    _worldNode = Node::allocWithBounds(dimen);
+    _worldNode = _assets->get<Node>("game");
+    _worldNode->setContentSize(dimen);
+    _worldNode->doLayout(); // This rearranges the children to fit the screen
+	addChild(_worldNode);
 
+    // Setup win/lose text
 	_text = std::dynamic_pointer_cast<Label>(assets->get<Node>("game_labelend"));
 	_text->setVisible(false);
 
 	// Create board
-	populate(width, height, colors, allies, enemies, placePawn);
+    auto boardNode = Node::alloc();
+    boardNode->setContentSize(dimen);
+    _worldNode->addChild(boardNode);
+    auto tileNode = AnimationNode::alloc(_assets->get<Texture>("tile1_strip"), TILE_IMG_ROWS, TILE_IMG_COLS, TILE_IMG_SIZE);
+    auto playerNode = AnimationNode::alloc(_assets->get<Texture>("player1_strip"), PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
+    auto enemyNode = AnimationNode::alloc(_assets->get<Texture>("enemy1_strip"), ENEMY_IMG_ROWS, ENEMY_IMG_COLS, ENEMY_IMG_SIZE);
+    boardNode->addChild(tileNode, 2);
+    boardNode->addChild(playerNode, 1);
+    boardNode->addChild(enemyNode, 0);
+//    tileNode->setZOrder(3);
+//    enemyNode->setZOrder(4);
+//    playerNode->setZOrder(5);
+//    populate(width, height, colors, allies, enemies, placePawn);
 	_state = State::PLAYER;
 	_active = true;
 	_complete = false;
@@ -244,6 +229,7 @@ void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
     // Draw the Board
     _board->draw(batch);
 
-	// Render anything on the SceneGraph
-	render(batch);
+    // Render anything on the SceneGraph
+    render(batch);
 }
+

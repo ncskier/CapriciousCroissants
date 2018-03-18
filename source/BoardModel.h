@@ -12,19 +12,20 @@
 #include <cugl/cugl.h>
 #include "TileModel.h"
 #include "PlayerPawnModel.h"
+#include "EnemyPawnModel.h"
 #include <set>
 
 /** Class of the board model*/
 class BoardModel {
 protected:
-	//Temp variables for cool animation
-	std::set<int>::iterator totalIter;
-	std::set<int> totalReplaceTiles;
-	int animationCounter = -1;
-
-
-
-
+    //Temp variables for cool animation
+    std::set<int>::iterator totalIter;
+    std::set<int> totalReplaceTiles;
+    int animationCounter = -1;
+    
+    /** Reference to node in SceneGraph */
+    std::shared_ptr<cugl::Node> _node;
+    
 	// Size of vertical (column) side of the square board
 	int _height;
 
@@ -61,7 +62,7 @@ protected:
 	PlayerPawnModel *_allies;
 
 	// Array of all enemies on the board
-	PlayerPawnModel *_enemies;
+	EnemyPawnModel *_enemies;
 
 	// Replaces a tile at a location in the array with a new value
 	void replaceTile(int tileLocation);
@@ -141,19 +142,19 @@ public:
     PlayerPawnModel* getAllyPtr(int x, int y) const;
 
 	// Returns the enemy pawn at index i of _enemies
-	PlayerPawnModel getEnemy(int i);
+	EnemyPawnModel getEnemy(int i);
     
     // Returns the enemy pawn at index i of _enemies
-    PlayerPawnModel* getEnemyPtr(int i);
+    EnemyPawnModel* getEnemyPtr(int i);
     
     // Returns the enemy pawn at (x, y)
-    PlayerPawnModel* getEnemyPtr(int x, int y) const;
+    EnemyPawnModel* getEnemyPtr(int x, int y) const;
 
 	// Returns the allies
 	PlayerPawnModel getAllies() ;
 
 	// Returns the enemies
-	PlayerPawnModel getEnemies() ;
+	EnemyPawnModel getEnemies() ;
 
 	// Set the tile at the given (x, y) coordinate
 	void setTile(int x, int y, TileModel t);
@@ -255,7 +256,7 @@ public:
      * Draws enemy given tile bounds
      * Batch has already begun
      */
-    void drawEnemy(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, PlayerPawnModel enemy);
+    void drawEnemy(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, EnemyPawnModel enemy);
 
 	// Draws tiles and pawns
 	void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);

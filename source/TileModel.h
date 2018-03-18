@@ -17,9 +17,9 @@
 #define TILE_IMG_DISAPPEAR 24
 
 /** Number of rows and cols in film strip */
-#define TILE_IMG_ROWS 5
-#define TILE_IMG_COLS 5
-#define TILE_IMG_SIZE 25
+#define TILE_IMG_ROWS 1
+#define TILE_IMG_COLS 1
+#define TILE_IMG_SIZE 1
 
 
 #pragma mark -

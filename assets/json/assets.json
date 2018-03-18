@@ -21,6 +21,27 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "tile1_strip": {
+            "file":     "textures/tile1_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "player1_strip": {
+            "file":     "textures/player1_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "enemy1_strip": {
+            "file":     "textures/enemy1_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
 		"claw": {
 			"file":     "textures/Claw.png",
 			"minfilter":"nearest",
@@ -531,7 +552,7 @@
             }
         },
         "game": {
-            "comment": "The scene graph definition for the board settings",
+            "comment": "The scene graph definition for the game",
             "type": "Node",
             "format" : {
                 "type": "Anchored"

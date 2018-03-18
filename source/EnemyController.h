@@ -22,7 +22,7 @@ protected:
     // MODEL
     std::shared_ptr<BoardModel> _board;
     
-	PlayerPawnModel _enemies;
+	EnemyPawnModel _enemies;
 	PlayerPawnModel _allies;
 
     /** Whether we have completed the enemy turn */
@@ -107,9 +107,9 @@ public:
     void setComplete(bool value) { _complete = value; }
     
 
-	int playerDistance(PlayerPawnModel enemy, PlayerPawnModel player);
-	void enemyMove(PlayerPawnModel enemy, int enemyIdx);
-	void enemyAttack(PlayerPawnModel enemy, PlayerPawnModel* player);
+	int playerDistance(EnemyPawnModel enemy, PlayerPawnModel player);
+	void enemyMove(EnemyPawnModel enemy, int enemyIdx);
+	void enemyAttack(EnemyPawnModel enemy, PlayerPawnModel* player);
     
 #pragma mark -
 #pragma mark Gameplay Handling

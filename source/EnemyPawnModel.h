@@ -15,9 +15,9 @@
 #define ENEMY_IMG_NORMAL 0
 
 /** Number of rows and cols in film strip */
-#define ENEMY_IMG_ROWS 5
-#define ENEMY_IMG_COLS 5
-#define ENEMY_IMG_SIZE 25
+#define ENEMY_IMG_ROWS 1
+#define ENEMY_IMG_COLS 1
+#define ENEMY_IMG_SIZE 1
 
 
 #pragma mark -
@@ -118,6 +118,18 @@ public:
     
     /** Set direction */
     void setDirection(Direction direction) { _direction = direction; }
+    
+    /** Step one unit forward in the direction the enemy is facing */
+    void step();
+    
+    /** Step one unit backward in the direction the enemy is facing */
+    void stepBack();
+    
+    /** Turn 180 degrees around */
+    void turnAround();
+    
+    /** Set random direction */
+    void setRandomDirection();
     
     
 #pragma mark -

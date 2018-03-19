@@ -8,6 +8,9 @@
 
 #include "EnemyPawnModel.h"
 
+using namespace cugl;
+
+
 #pragma mark -
 #pragma mark Constructors/Destructors
 
@@ -24,6 +27,24 @@ bool EnemyPawnModel::init(int x, int y, Direction direction) {
     _x = x;
     _y = y;
     _direction = direction;
+    return true;
+}
+
+/** Initialize a new player pawn at (x, y) tile with [tileBounds] facing NORTH */
+bool EnemyPawnModel::init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
+    return init(x, y, Direction::NORTH, tileBounds, assets);
+}
+
+/** Initialize a new player pawn at (x, y) tile with [tileBounds] facing [direction] */
+bool EnemyPawnModel::init(int x, int y, Direction direction, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
+    _x = x;
+    _y = y;
+    _direction = direction;
+    // Create sprite
+    std::shared_ptr<Texture> texture = assets->get<Texture>(ENEMY_TEXTURE_KEY_0);
+    _sprite = AnimationNode::alloc(texture, ENEMY_IMG_ROWS, ENEMY_IMG_COLS, ENEMY_IMG_SIZE);
+    _sprite->setAnchor(Vec2::ZERO);
+    setSpriteBounds(tileBounds);
     return true;
 }
 
@@ -91,4 +112,18 @@ void EnemyPawnModel::turnAround() {
 void EnemyPawnModel::setRandomDirection() {
     srand((int)time(NULL));
     _direction = (Direction)(rand() % 4);
+}
+
+
+#pragma mark -
+#pragma mark Animation
+
+/** Set sprite bounds from tile [tileBounds] */
+void EnemyPawnModel::setSpriteBounds(cugl::Rect tileBounds) {
+    float width = tileBounds.size.width * 0.5f;
+    float height = tileBounds.size.height * 0.5f;
+    float positionX = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
+    float positionY = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f;
+    _sprite->setPosition(positionX, positionY);
+    _sprite->setContentSize(width, height);
 }

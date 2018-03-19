@@ -19,6 +19,9 @@
 #define ENEMY_IMG_COLS 1
 #define ENEMY_IMG_SIZE 1
 
+/** Player Texture Key */
+#define ENEMY_TEXTURE_KEY_0 "enemy0_strip"
+
 
 #pragma mark -
 #pragma mark Enemy Pawn Model
@@ -71,6 +74,12 @@ public:
     /** Initialize a new enemy at (x, y) facing [direction] */
     virtual bool init(int x, int y, Direction direction);
     
+    /** Initialize a new player pawn at (x, y) tile with [tileBounds] facing NORTH */
+    virtual bool init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets);
+    
+    /** Initialize a new player pawn at (x, y) tile with [tileBounds] facing [direction] */
+    virtual bool init(int x, int y, Direction direction, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets);
+    
     
 #pragma mark -
 #pragma mark Static Constructors
@@ -90,6 +99,18 @@ public:
     static std::shared_ptr<EnemyPawnModel> alloc(int x, int y, Direction direction) {
         std::shared_ptr<EnemyPawnModel> result = std::make_shared<EnemyPawnModel>();
         return (result->init(x, y, direction) ? result : nullptr);
+    }
+    
+    /** Returns newly allocated player pawn at (x, y) tile with [tileBounds] facing NORTH */
+    static std::shared_ptr<EnemyPawnModel> alloc(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
+        std::shared_ptr<EnemyPawnModel> result = std::make_shared<EnemyPawnModel>();
+        return (result->init(x, y, tileBounds, assets) ? result : nullptr);
+    }
+    
+    /** Returns newly allocated player pawn at (x, y) tile with [tileBounds] facing [direction] */
+    static std::shared_ptr<EnemyPawnModel> alloc(int x, int y, Direction direction, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
+        std::shared_ptr<EnemyPawnModel> result = std::make_shared<EnemyPawnModel>();
+        return (result->init(x, y, direction, tileBounds, assets) ? result : nullptr);
     }
     
     
@@ -136,6 +157,9 @@ public:
 #pragma mark Animation
     /** Returns a reference to the film strip */
     std::shared_ptr<cugl::AnimationNode>& getSprite() { return _sprite; }
+    
+    /** Set sprite bounds from tile [tileBounds] */
+    void setSpriteBounds(cugl::Rect tileBounds);
     
     /** Sets the film strip */
     void setSprite(const std::shared_ptr<cugl::AnimationNode>& sprite) { _sprite = sprite; }

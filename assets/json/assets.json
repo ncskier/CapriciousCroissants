@@ -42,15 +42,15 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
-        "player1_strip": {
-            "file":     "textures/player1_strip.png",
+        "player0_strip": {
+            "file":     "textures/player0_strip.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
-        "enemy1_strip": {
-            "file":     "textures/enemy1_strip.png",
+        "enemy0_strip": {
+            "file":     "textures/enemy0_strip.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",

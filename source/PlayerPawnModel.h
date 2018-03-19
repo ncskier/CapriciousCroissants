@@ -19,6 +19,9 @@
 #define PLAYER_IMG_COLS 1
 #define PLAYER_IMG_SIZE 1
 
+/** Player Texture Key */
+#define PLAYER_TEXTURE_KEY_0 "player0_strip"
+
 
 #pragma mark -
 #pragma mark Player Pawn Model
@@ -54,6 +57,9 @@ public:
     /** Initialize a new player pawn at (x, y) */
     virtual bool init(int x, int y);
     
+    /** Initialize a new player pawn at (x, y) tile with [tileBounds] */
+    virtual bool init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets);
+    
     
 #pragma mark -
 #pragma mark Static Constructors
@@ -67,6 +73,12 @@ public:
     static std::shared_ptr<PlayerPawnModel> alloc(int x, int y) {
         std::shared_ptr<PlayerPawnModel> result = std::make_shared<PlayerPawnModel>();
         return (result->init(x, y) ? result : nullptr);
+    }
+    
+    /** Returns newly allocated player pawn at (x, y) tile with [tileBounds] */
+    static std::shared_ptr<PlayerPawnModel> alloc(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
+        std::shared_ptr<PlayerPawnModel> result = std::make_shared<PlayerPawnModel>();
+        return (result->init(x, y, tileBounds, assets) ? result : nullptr);
     }
     
     
@@ -95,6 +107,9 @@ public:
 #pragma mark Animation
     /** Returns a reference to the film strip */
     std::shared_ptr<cugl::AnimationNode>& getSprite() { return _sprite; }
+    
+    /** Set sprite bounds from tile [tileBounds] */
+    void setSpriteBounds(cugl::Rect tileBounds);
     
     /** Sets the film strip */
     void setSprite(const std::shared_ptr<cugl::AnimationNode>& sprite) { _sprite = sprite; }

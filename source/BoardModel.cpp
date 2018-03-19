@@ -161,6 +161,7 @@ void BoardModel::placeAlly(int x, int y, int i) {
 // Place enemy at index i of _enemies on location (x, y)
 void BoardModel::placeEnemy(int x, int y, int i) {
 	_enemies[i]->setXY(x, y);
+    _enemies[i]->getSprite()->setPosition(calculateDrawBounds(x, y).origin);
 }
 
 void BoardModel::moveEnemy(int dx, int dy, int enemyIdx) {
@@ -169,12 +170,13 @@ void BoardModel::moveEnemy(int dx, int dy, int enemyIdx) {
 
 // Remove ally at index i
 void BoardModel::removeAlly(int i) {
-	_allies[i]->setX(-1);
-	_allies[i]->setY(-1);
+    _node->removeChild(_allies[i]->getSprite());
+	_allies[i]->setXY(-1, -1);
 }
 
 // Remove enemy at index i
 void BoardModel::removeEnemy(int i) {
+    _node->removeChild(_enemies[i]->getSprite());
 	_enemies[i]->setXY(-1, -1);
 }
 
@@ -287,8 +289,13 @@ void BoardModel::triggerResets() {
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void BoardModel::replaceTile(int tileLocation) {
-	int color = rand() % _numColors;
-	_tiles[tileLocation]->setColor(color);
+    _node->removeChild(_tiles[tileLocation]->getSprite());
+    // New random color
+    int color = rand() % _numColors;
+    Rect bounds = calculateDrawBounds(xOfIndex(tileLocation), yOfIndex(tileLocation));
+    std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
+    _node->addChild(tile->getSprite());
+	_tiles[tileLocation] = tile;
 }
 
 // Generates a new set of tiles for _tiles that verifies that the board does not have any matches existing
@@ -307,68 +314,68 @@ void BoardModel::generateNewBoard() {
         _tiles.push_back(tile);
     }
     
-//    // Replace any matches
-//    while (checkForMatches());
-//
-//    // Setup Allies
-//    int x;
-//    int y;
-//    for (int i = 0; i < _numAllies; i++) {
-//        x = rand() % _width;
-//        y = rand() % _height;
-//        if (i > 0) {
-//            while (true) {
-//                bool match = false;
-//                for (int j = 0; j < i; j++) {
-//                    std::shared_ptr<PlayerPawnModel> temp = _allies[j];
-//                    if (temp->getX() == x && temp->getY() == y) {
-//                        x = rand() % _width;
-//                        y = rand() % _height;
-//                        match = true;
-//                    }
-//                }
-//                if (!match) {
-//                    break;
-//                }
-//            }
-//        }
-//
-//        _allies[i]->setXY(x, y);
-//    }
-//
-//    //Setup Enemies
-//    for (int i = 0; i < _numEnemies; i++) {
-//        x = rand() % _width;
-//        y = rand() % _height;
-//        while (true) {
-//            bool match = false;
-//            for (int j = 0; j < _numAllies; j++) {
-//                std::shared_ptr<PlayerPawnModel> temp = _allies[j];
-//                if (temp->getX() == x && temp->getY() == y) {
-//                    x = rand() % _width;
-//                    y = rand() % _height;
-//                    match = true;
-//                }
-//            }
-//            if (i > 0) {
-//                for (int j = 0; j < i; j++) {
-//                    std::shared_ptr<EnemyPawnModel> temp = _enemies[j];
-//                    if (temp->getX() == x && temp->getY() == y) {
-//                        x = rand() % _width;
-//                        y = rand() % _height;
-//                        match = true;
-//                    }
-//                }
-//            }
-//
-//            if (!match) {
-//                break;
-//            }
-//        }
-//
-//        _enemies[i]->setXY(x, y);
-//        _enemies[i]->setRandomDirection();
-//    }
+    // Replace any matches
+    while (checkForMatches());
+
+    // Setup Allies
+    int x;
+    int y;
+    for (int i = 0; i < _numAllies; i++) {
+        x = rand() % _width;
+        y = rand() % _height;
+        while (true) {
+            bool match = false;
+            for (int j = 0; j < i; j++) {
+                std::shared_ptr<PlayerPawnModel> temp = _allies[j];
+                if (temp->getX() == x && temp->getY() == y) {
+                    x = rand() % _width;
+                    y = rand() % _height;
+                    match = true;
+                }
+            }
+            if (!match) {
+                break;
+            }
+        }
+        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
+        _node->addChild(ally->getSprite());
+        _allies.push_back(ally);
+    }
+
+    //Setup Enemies
+    for (int i = 0; i < _numEnemies; i++) {
+        x = rand() % _width;
+        y = rand() % _height;
+        while (true) {
+            bool match = false;
+            for (int j = 0; j < _numAllies; j++) {
+                std::shared_ptr<PlayerPawnModel> temp = _allies[j];
+                if (temp->getX() == x && temp->getY() == y) {
+                    x = rand() % _width;
+                    y = rand() % _height;
+                    match = true;
+                }
+            }
+            if (i > 0) {
+                for (int j = 0; j < i; j++) {
+                    std::shared_ptr<EnemyPawnModel> temp = _enemies[j];
+                    if (temp->getX() == x && temp->getY() == y) {
+                        x = rand() % _width;
+                        y = rand() % _height;
+                        match = true;
+                    }
+                }
+            }
+
+            if (!match) {
+                break;
+            }
+        }
+        std::shared_ptr<EnemyPawnModel> enemy = EnemyPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
+        enemy->setRandomDirection();
+        _node->addChild(enemy->getSprite());
+        _enemies.push_back(enemy);
+    }
 }
 
 // Slide pawns in row or column [k] by [offset]

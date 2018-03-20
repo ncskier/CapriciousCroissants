@@ -134,14 +134,18 @@ public:
      *
      * @return the touch location
      */
-    cugl::Vec2 getTouchPosition() const { return _camera->screenToWorldCoords(_touchPosition); }
+    cugl::Vec2 getTouchPosition() const {
+        return _camera->screenToWorldCoords(_touchPosition);
+    }
     
     /**
      * Returns the move offset from the initial position
      *
      * @return the move offset
      */
-    cugl::Vec2 getMoveOffset() const { return (_camera->screenToWorldCoords(_touchPosition)-_camera->screenToWorldCoords(_initTouch)); }
+    cugl::Vec2 getMoveOffset() const {
+        return (_camera->screenToWorldCoords(_touchPosition)-_camera->screenToWorldCoords(_initTouch));
+    }
     
     /**
      * Returns _moveEvent

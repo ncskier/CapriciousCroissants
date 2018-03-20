@@ -85,7 +85,13 @@ protected:
     /** Vector storing all enemies on the board */
     std::vector<std::shared_ptr<EnemyPawnModel>> _enemies;
     
-    // Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
+    /**
+     * Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
+     * Example for sideSize = 3
+     *  0 1 2     (0,0) (1,0) (2,0)
+     *  3 4 5     (0,1) (1,1) (2,1)
+     *  6 7 8     (0,2) (1,2) (2,2) (3) (4)
+     */
     int indexOfCoordinate(int x, int y) const;
     
     // Convert array index to x
@@ -157,7 +163,7 @@ public:
     std::shared_ptr<cugl::Texture> playerTexture;
     std::shared_ptr<cugl::Texture> tile1Texture;
     std::shared_ptr<cugl::Texture> tile2Texture;
-
+    
 	// Returns the value at the give (x, y) coordinate
     std::shared_ptr<TileModel>& getTile(int x, int y);
 
@@ -268,26 +274,26 @@ public:
     // Apply padding, offset, and wrap to return tile bounds
     cugl::Rect calculateDrawBounds(int x, int y);
     
-//    /**
-//     * Draws tile given tile bounds
-//     * Batch has already begun
-//     */
-//    void drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, TileModel tile);
-//
-//    /**
-//     * Draws ally given tile bounds
-//     * Batch has already begun
-//     */
-//    void drawAlly(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds);
-//
-//    /**
-//     * Draws enemy given tile bounds
-//     * Batch has already begun
-//     */
-//    void drawEnemy(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, EnemyPawnModel enemy);
-//
-//    // Draws tiles and pawns
-//    void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);
+    /**
+     * Draws tile given tile bounds
+     * Batch has already begun
+     */
+    void drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, TileModel tile);
+
+    /**
+     * Draws ally given tile bounds
+     * Batch has already begun
+     */
+    void drawAlly(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds);
+
+    /**
+     * Draws enemy given tile bounds
+     * Batch has already begun
+     */
+    void drawEnemy(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, EnemyPawnModel enemy);
+
+    // Draws tiles and pawns
+    void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);
 
 	/**
 	* Returns a string representation of the board for debugging purposes.

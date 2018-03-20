@@ -77,3 +77,13 @@ void TileModel::setSprite(const Rect bounds, const std::shared_ptr<cugl::AssetMa
     _sprite->setPosition(bounds.origin);
     _sprite->setContentSize(bounds.size);
 }
+
+
+#pragma mark -
+#pragma mark Animation
+
+/** Set sprite [bounds] */
+void TileModel::setSpriteBounds(cugl::Rect bounds) {
+    _sprite->setPosition(bounds.origin);
+    _sprite->setContentSize(bounds.size);
+}

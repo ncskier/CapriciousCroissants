@@ -108,6 +108,9 @@ public:
     /** Returns a reference to the film strip */
     std::shared_ptr<cugl::AnimationNode>& getSprite() { return _sprite; }
     
+    /** Set sprite [bounds] */
+    void setSpriteBounds(cugl::Rect bounds);
+    
     /** Sets the film strip */
     void setSprite(const std::shared_ptr<cugl::AnimationNode>& sprite) { _sprite = sprite; }
 

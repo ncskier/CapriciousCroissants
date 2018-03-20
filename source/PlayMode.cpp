@@ -57,9 +57,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 		return false;
 	}
 
-	// Start up the input handler
 	_assets = assets;
-	_input.init(getCamera());
 
 //    _worldNode = Node::allocWithBounds(dimen);
     _worldNode = _assets->get<Node>("game");
@@ -96,6 +94,9 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	_active = true;
 	_complete = false;
 	setDebug(false);
+    
+    // Setup Input handler
+    _input.init(getCamera());
 
 	// Start up turn controllers
 	_playerController.init(_board, &_input);
@@ -234,7 +235,7 @@ void PlayMode::update(float dt) {
  */
 void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
     // Draw the Board
-//    _board->draw(batch);
+    _board->draw(batch);
 
     // Render anything on the SceneGraph
     render(batch);

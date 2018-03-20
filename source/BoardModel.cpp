@@ -81,11 +81,13 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
 void BoardModel::dispose() {
 }
 
-//Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
-// Example for sideSize = 3
-//  0 1 2     (0,0) (1,0) (2,0)
-//  3 4 5     (0,1) (1,1) (2,1)
-//  6 7 8     (0,2) (1,2) (2,2) (3) (4)
+/**
+ * Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
+ * Example for sideSize = 3
+ *  0 1 2     (0,0) (1,0) (2,0)
+ *  3 4 5     (0,1) (1,1) (2,1)
+ *  6 7 8     (0,2) (1,2) (2,2) (3) (4)
+ */
 int BoardModel::indexOfCoordinate(int x, int y) const {
 	return x + (y*_width);
 }
@@ -151,6 +153,7 @@ std::vector<std::shared_ptr<EnemyPawnModel>>& BoardModel::getEnemies() {
 // Set the value at the given (x, y) coordinate
 void BoardModel::setTile(int x, int y, std::shared_ptr<TileModel> t) {
 	_tiles[indexOfCoordinate(x, y)] = t;
+//    _tiles[indexOfCoordinate(x, y)]->setSpriteBounds(calculateDrawBounds(x, y));
 }
 
 // Place ally at index i of _allies on location (x, y)
@@ -392,6 +395,7 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
                         x += _width;
                     }
                     _allies[i]->setX(x);
+//                    _allies[i]->setSpriteBounds(calculateDrawBounds(x, k));
                 }
             }
             else {
@@ -402,6 +406,7 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
                         y += _height;
                     }
                     _allies[i]->setY(y);
+//                    _allies[i]->setSpriteBounds(calculateDrawBounds(k, y));
                 }
             }
         }
@@ -419,6 +424,7 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
                         x += _width;
                     }
                     _enemies[i]->setX(x);
+//                    _enemies[i]->setSpriteBounds(calculateDrawBounds(x, k));
                 }
             }
             else {
@@ -429,6 +435,7 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
                         y += _height;
                     }
                     _enemies[i]->setY(y);
+//                    _enemies[i]->setSpriteBounds(calculateDrawBounds(k, y));
                 }
             }
         }
@@ -437,6 +444,7 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
 
 //Slide row or column by [offset]
 void BoardModel::slide(bool row, int k, int offset) {
+    CULog("SLIDE");
 	// Copy
 	int sideSize = row ? _width : _height;
     std::shared_ptr<TileModel>* line = new std::shared_ptr<TileModel>[sideSize];
@@ -465,12 +473,62 @@ void BoardModel::slide(bool row, int k, int offset) {
 void BoardModel::setOffsetRow(float value) {
 	offsetRow = true;
 	offset = value;
+//    int y = yOfIndex(_selectedTile);
+//    for (int x = 0; x < _width; x++) {
+//        std::shared_ptr<TileModel>& tile = _tiles[indexOfCoordinate(x, y)];
+//        Rect bounds = calculateDrawBounds(x, y);
+//        bounds.origin += Vec2(value, 0);
+//        tile->setSpriteBounds(bounds);
+//    }
+//    for (unsigned i = 0; i < _allies.size(); i++) {
+//        std::shared_ptr<PlayerPawnModel>& ally = _allies[i];
+//        if (ally->getY() == y) {
+//            int x = ally->getX();
+//            Rect bounds = calculateDrawBounds(x, y);
+//            bounds.origin += Vec2(value, 0);
+//            ally->setSpriteBounds(bounds);
+//        }
+//    }
+//    for (unsigned i = 0; i < _enemies.size(); i++) {
+//        std::shared_ptr<EnemyPawnModel>& enemy = _enemies[i];
+//        if (enemy->getY() == y) {
+//            int x = enemy->getX();
+//            Rect bounds = calculateDrawBounds(x, y);
+//            bounds.origin += Vec2(value, 0);
+//            enemy->setSpriteBounds(bounds);
+//        }
+//    }
 }
 
 //Offset view of col (not model)
 void BoardModel::setOffsetCol(float value) {
 	offsetCol = true;
 	offset = value;
+//    int x = xOfIndex(_selectedTile);
+//    for (int y = 0; y < _height; y++) {
+//        std::shared_ptr<TileModel>& tile = _tiles[indexOfCoordinate(x, y)];
+//        Rect bounds = calculateDrawBounds(x, y);
+//        bounds.origin += Vec2(0, value);
+//        tile->setSpriteBounds(bounds);
+//    }
+//    for (unsigned i = 0; i < _allies.size(); i++) {
+//        std::shared_ptr<PlayerPawnModel>& ally = _allies[i];
+//        if (ally->getX() == x) {
+//            int y = ally->getY();
+//            Rect bounds = calculateDrawBounds(x, y);
+//            bounds.origin += Vec2(0, value);
+//            ally->setSpriteBounds(bounds);
+//        }
+//    }
+//    for (unsigned i = 0; i < _enemies.size(); i++) {
+//        std::shared_ptr<EnemyPawnModel>& enemy = _enemies[i];
+//        if (enemy->getX() == x) {
+//            int y = enemy->getY();
+//            Rect bounds = calculateDrawBounds(x, y);
+//            bounds.origin += Vec2(0, value);
+//            enemy->setSpriteBounds(bounds);
+//        }
+//    }
 }
 
 //Offset reset

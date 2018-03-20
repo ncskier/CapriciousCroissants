@@ -667,13 +667,13 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     float cellLength = getCellLength();
     float boardWidth = _width*cellLength;
     float boardHeight = _height*cellLength;
-    if (x + width/2.0f + xOffset <= _boardPadding + _tilePadding/2.0f)
+    if (bounds.getMidX() + xOffset <= _boardPadding)
         xWrap = boardWidth;
-    if (x + width/2.0f + xOffset >= _boardPadding + boardWidth - _tilePadding/2.0f)
+    if (bounds.getMidX() + xOffset >= boardWidth + _boardPadding)
         xWrap = -boardWidth;
-    if (y + width/2.0f + yOffset <= _boardPadding + _tilePadding/2.0f)
+    if (bounds.getMidY() + yOffset <= _boardPadding)
         yWrap = boardHeight;
-    if (y + width/2.0f + yOffset >= _boardPadding + boardWidth - _tilePadding/2.0f)
+    if (bounds.getMidY() + yOffset >= boardHeight + _boardPadding)
         yWrap = -boardHeight;
     
     // Calculate new bounds
@@ -697,7 +697,6 @@ int BoardModel::calculateDrawZ(int x, int y, bool tile) {
         while (row < 0) {
             row += _height;
         }
-        CULog("row: %d", row);
     }
     int base = (_height-row) * 10;
     return tile ? base : base+5;

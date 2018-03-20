@@ -584,6 +584,36 @@ bool BoardModel::selectTileAtPosition(Vec2 position) {
     return true;
 }
 
+
+#pragma mark -
+#pragma mark Drawing/Animation
+
+/** Update nodes */
+void BoardModel::updateNodes() {
+    // Tiles
+    for (int x = 0; x < _width; x++) {
+        for (int y = 0; y < _height; y++) {
+            _tiles[indexOfCoordinate(x, y)]->setSpriteBounds(calculateDrawBounds(x, y));
+            _tiles[indexOfCoordinate(x, y)]->getSprite()->setZOrder(calculateDrawZ(x, y, true));
+        }
+    }
+    
+    // Allies
+    for (std::vector<std::shared_ptr<PlayerPawnModel>>::iterator it = _allies.begin(); it != _allies.end(); ++it) {
+        (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
+        (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+    }
+    
+    // Enemies
+    for (std::vector<std::shared_ptr<EnemyPawnModel>>::iterator it = _enemies.begin(); it != _enemies.end(); ++it) {
+        (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
+        (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+    }
+    
+    // Resort z order
+    _node->sortZOrder();
+}
+
 float BoardModel::getCellLength() {
     float cellWidth = (gameWidth - 2.0f*_boardPadding) / _width;
     float cellHeight = (gameHeight - 2.0f*_boardPadding) / _height;
@@ -653,6 +683,16 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
                width,
                height);
     return bounds;
+}
+
+/**
+ * Calculate z-axis coordinate given (x,y) cell in grid.
+ *   Tiles at 10s
+ *   Pawns at  Tile number + 5
+ */
+int BoardModel::calculateDrawZ(int x, int y, bool tile) {
+    int base = (_height-y) * 10;
+    return tile ? base : base+5;
 }
 
 ///**
@@ -860,7 +900,7 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
 */
 std::string BoardModel::toString() const {
     std::stringstream ss;
-    for (int j = 0; j < _height; j++) {
+    for (int j = _height-1; j >= 0; j--) {
         for (int i = 0; i < _width; i++) {
             ss << " ";
             ss << _tiles[indexOfCoordinate(i, j)]->getColor();

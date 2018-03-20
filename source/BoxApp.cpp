@@ -164,7 +164,7 @@ void BoxApp::draw() {
 		_settings.render(_batch);
 	} else {
 //        _gameplay.render(_batch);
-        _gameplay.draw(_b{atch);
+        _gameplay.draw(_batch);
 	}
 }
 

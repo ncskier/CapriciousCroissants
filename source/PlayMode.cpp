@@ -64,8 +64,6 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
     _worldNode->setContentSize(dimen);
     _worldNode->setAnchor(Vec2::ZERO);
     _worldNode->doLayout(); // This rearranges the children to fit the screen
-    CULog("anchor: %s", _worldNode->getAnchor().toString().c_str());
-    CULog("origin: %s", _worldNode->getPosition().toString().c_str());
 	addChild(_worldNode);
 
     // Setup win/lose text
@@ -135,7 +133,6 @@ void PlayMode::dispose() {
 void PlayMode::reset() {
     setComplete(false);
 //    populate();
-//    CULog("populated board:\n%s", _board->toString().c_str());
 }
 
 /**
@@ -226,6 +223,7 @@ void PlayMode::update(float dt) {
 			}
 		}
 	}
+    _board->updateNodes();
 }
 
 /**
@@ -235,7 +233,7 @@ void PlayMode::update(float dt) {
  */
 void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
     // Draw the Board
-    _board->draw(batch);
+//    _board->draw(batch);
 
     // Render anything on the SceneGraph
     render(batch);

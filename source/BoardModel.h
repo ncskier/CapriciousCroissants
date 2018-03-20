@@ -253,6 +253,9 @@ public:
     /** Get board node */
     std::shared_ptr<cugl::Node>& getNode() { return _node; }
     
+    /** Update nodes positions */
+    void updateNodes();
+    
     /**
      * Select tile at screen position [position]
      *
@@ -273,6 +276,13 @@ public:
     
     // Apply padding, offset, and wrap to return tile bounds
     cugl::Rect calculateDrawBounds(int x, int y);
+    
+    /**
+     * Calculate z-axis coordinate given (x,y) cell in grid.
+     *   Tiles at 10s
+     *   Pawns at  Tile number + 5
+     */
+    int calculateDrawZ(int x, int y, bool tile);
     
     /**
      * Draws tile given tile bounds

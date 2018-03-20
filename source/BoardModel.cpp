@@ -691,7 +691,15 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
  *   Pawns at  Tile number + 5
  */
 int BoardModel::calculateDrawZ(int x, int y, bool tile) {
-    int base = (_height-y) * 10;
+    int row = y;
+    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
+        row = (row + lengthToCells(offset)) % _height;
+        while (row < 0) {
+            row += _height;
+        }
+        CULog("row: %d", row);
+    }
+    int base = (_height-row) * 10;
     return tile ? base : base+5;
 }
 

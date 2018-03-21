@@ -85,6 +85,11 @@ protected:
     /** Vector storing all enemies on the board */
     std::vector<std::shared_ptr<EnemyPawnModel>> _enemies;
     
+    /** Set storing all tiles to be added to the board */
+    
+    
+#pragma mark -
+#pragma mark Index Transformation Functions
     /**
      * Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
      * Example for sideSize = 3
@@ -103,10 +108,6 @@ protected:
     
 
 public:
-	//TEMPORARY FOR COOL ANIMATION
-	void triggerResets();
-	bool checkForMatchesTemp();
-
 #pragma mark -
 #pragma mark Constructors/Destructors
 	BoardModel();
@@ -221,6 +222,8 @@ public:
 	// Remove enemy at index i
 	void removeEnemy(int i);
 
+#pragma mark -
+#pragma mark Logic
 	// Return true if a match is found (and replace those matches, damaging pawns on matches), otherwise false
 	bool checkForMatches();
 
@@ -283,27 +286,6 @@ public:
      *   Pawns at  Tile number + 5
      */
     int calculateDrawZ(int x, int y, bool tile);
-    
-    /**
-     * Draws tile given tile bounds
-     * Batch has already begun
-     */
-    void drawTile(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, TileModel tile);
-
-    /**
-     * Draws ally given tile bounds
-     * Batch has already begun
-     */
-    void drawAlly(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds);
-
-    /**
-     * Draws enemy given tile bounds
-     * Batch has already begun
-     */
-    void drawEnemy(const std::shared_ptr<cugl::SpriteBatch>& batch, cugl::Rect tileBounds, EnemyPawnModel enemy);
-
-    // Draws tiles and pawns
-    void draw(const std::shared_ptr<cugl::SpriteBatch>& batch);
 
 	/**
 	* Returns a string representation of the board for debugging purposes.

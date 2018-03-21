@@ -22,14 +22,35 @@
             "wrapT":    "clamp"
         },
         "tile0_strip": {
-            "file":     "textures/tile0_strip.png",
+            "file":     "textures/tile0.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
         "tile1_strip": {
-            "file":     "textures/tile1_strip.png",
+            "file":     "textures/tile1.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "tile2_strip": {
+            "file":     "textures/tile2.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "tile3_strip": {
+            "file":     "textures/tile3.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "tile4_strip": {
+            "file":     "textures/tile4.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",

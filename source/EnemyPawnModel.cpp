@@ -45,6 +45,7 @@ bool EnemyPawnModel::init(int x, int y, Direction direction, cugl::Rect tileBoun
     _sprite = AnimationNode::alloc(texture, ENEMY_IMG_ROWS, ENEMY_IMG_COLS, ENEMY_IMG_SIZE);
     _sprite->setAnchor(Vec2::ZERO);
     setSpriteBounds(tileBounds);
+    updateSpriteDirection();
     return true;
 }
 
@@ -74,23 +75,6 @@ void EnemyPawnModel::step() {
     }
 }
 
-/** Step one unit backward in the direction the enemy is facing */
-void EnemyPawnModel::stepBack() {
-    if (_direction == Direction::NORTH) {
-        // NORTH
-        _y -= 1;
-    } else if (_direction == Direction::SOUTH) {
-        // SOUTH
-        _y += 1;
-    } else if (_direction == Direction::EAST) {
-        // EAST
-        _x -= 1;
-    } else {
-        // WEST
-        _x += 1;
-    }
-}
-
 /** Turn 180 degrees around */
 void EnemyPawnModel::turnAround() {
     if (_direction == Direction::NORTH) {
@@ -106,12 +90,32 @@ void EnemyPawnModel::turnAround() {
         // WEST
         _direction = Direction::EAST;
     }
+    updateSpriteDirection();
+}
+
+/** Move 1 space forward and turn around if blocked */
+void EnemyPawnModel::move(int boardWidth, int boardHeight) {
+    if (_direction == Direction::NORTH){
+        // NORTH
+        if (_y == boardHeight-1) { turnAround(); }
+    } else if (_direction == Direction::SOUTH) {
+        // SOUTH
+        if (_y == 0) { turnAround(); }
+    } else if (_direction == Direction::EAST) {
+        // EAST
+        if (_x == boardWidth-1) { turnAround(); }
+    } else {
+        // WEST
+        if (_x == 0) { turnAround(); }
+    }
+    step();
 }
 
 /** Set random direction */
 void EnemyPawnModel::setRandomDirection() {
     srand((int)time(NULL));
     _direction = (Direction)(rand() % 4);
+    updateSpriteDirection();
 }
 
 
@@ -126,4 +130,21 @@ void EnemyPawnModel::setSpriteBounds(cugl::Rect tileBounds) {
     float positionY = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f;
     _sprite->setPosition(positionX, positionY);
     _sprite->setContentSize(width, height);
+}
+
+/** Set sprite according to direction */
+void EnemyPawnModel::updateSpriteDirection() {
+    if (_direction == Direction::NORTH){
+        // NORTH
+        _sprite->setFrame(ENEMY_IMG_NORTH);
+    } else if (_direction == Direction::SOUTH) {
+        // SOUTH
+        _sprite->setFrame(ENEMY_IMG_SOUTH);
+    } else if (_direction == Direction::EAST) {
+        // EAST
+        _sprite->setFrame(ENEMY_IMG_EAST);
+    } else {
+        // WEST
+        _sprite->setFrame(ENEMY_IMG_WEST);
+    }
 }

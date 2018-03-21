@@ -13,11 +13,15 @@
 
 /** Tile Frame Sprite numbers */
 #define ENEMY_IMG_NORMAL 0
+#define ENEMY_IMG_NORTH 0
+#define ENEMY_IMG_SOUTH 1
+#define ENEMY_IMG_EAST  2
+#define ENEMY_IMG_WEST  3
 
 /** Number of rows and cols in film strip */
 #define ENEMY_IMG_ROWS 1
-#define ENEMY_IMG_COLS 1
-#define ENEMY_IMG_SIZE 1
+#define ENEMY_IMG_COLS 4
+#define ENEMY_IMG_SIZE 4
 
 /** Player Texture Key */
 #define ENEMY_TEXTURE_KEY_0 "enemy0_strip"
@@ -143,11 +147,11 @@ public:
     /** Step one unit forward in the direction the enemy is facing */
     void step();
     
-    /** Step one unit backward in the direction the enemy is facing */
-    void stepBack();
-    
     /** Turn 180 degrees around */
     void turnAround();
+    
+    /** Move 1 space forward and turn around if blocked */
+    void move(int boardWidth, int boardHeight);
     
     /** Set random direction */
     void setRandomDirection();
@@ -160,6 +164,9 @@ public:
     
     /** Set sprite bounds from tile [tileBounds] */
     void setSpriteBounds(cugl::Rect tileBounds);
+    
+    /** Set sprite according to direction */
+    void updateSpriteDirection();
     
     /** Sets the film strip */
     void setSprite(const std::shared_ptr<cugl::AnimationNode>& sprite) { _sprite = sprite; }

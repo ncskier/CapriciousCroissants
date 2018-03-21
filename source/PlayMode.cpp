@@ -58,6 +58,9 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	}
 
 	_assets = assets;
+    _actions = ActionManager::alloc();
+    std::shared_ptr<FadeIn> tileFadeIn = FadeIn::alloc(0.5f);
+    std::shared_ptr<FadeOut> tileFadeOut = FadeOut::alloc(0.5f);
 
 //    _worldNode = Node::allocWithBounds(dimen);
     _worldNode = _assets->get<Node>("game");

@@ -46,13 +46,13 @@ void TileModel::setSprite(const Rect bounds, const std::shared_ptr<cugl::AssetMa
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_1);
     } else if (_color == 2) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_2);
-        color = Color4::RED;
+//        color = Color4::RED;
     } else if (_color == 3) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_3);
-        color = Color4::CYAN;
+//        color = Color4::CYAN;
     } else if (_color == 4) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_4);
-        color = Color4::GREEN;
+//        color = Color4::GREEN;
     } else if (_color == 5) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_5);
         color = Color4::YELLOW;

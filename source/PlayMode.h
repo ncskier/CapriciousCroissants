@@ -45,6 +45,9 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
 	std::shared_ptr<cugl::Label> _text;
     
+    /** The action manager for this game mode. */
+    std::shared_ptr<cugl::ActionManager> _actions;
+    
     /** World node for scene graph */
     std::shared_ptr<cugl::Node> _worldNode;
     
@@ -57,8 +60,6 @@ protected:
     PlayerController _playerController;
     BoardController _boardController;
     EnemyController _enemyController;
-    
-    // VIEW
     
     
     /** Current state of the game */

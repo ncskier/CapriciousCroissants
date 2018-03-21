@@ -288,8 +288,8 @@ public:
      *
      * @return a newly allocated fade-in towards opacity
      */
-    static std::shared_ptr<FadeOut> alloc(float time) {
-        std::shared_ptr<FadeOut> result = std::make_shared<FadeOut>();
+    static std::shared_ptr<FadeIn> alloc(float time) {
+        std::shared_ptr<FadeIn> result = std::make_shared<FadeIn>();
         return (result->init(time) ? result : nullptr);
     }
     

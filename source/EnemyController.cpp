@@ -77,28 +77,29 @@ void EnemyController::enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemy
 //        dy = (rand() % 3) - 1;
 //    }
 
-    // Move in direction facing
-    enemy->step();
-    
-    // Check bounds
-    if (enemy->getX() < 0 || _board->getWidth() <= enemy->getX()) {
-        _board->getEnemy(enemyIdx)->turnAround();
-    } else if (enemy->getY() < 0 || _board->getHeight() <= enemy->getY()) {
-        _board->getEnemy(enemyIdx)->turnAround();
-    } else {
-		bool enemyInWay = false;
-		for (int i = 0; i < _board->getNumEnemies(); i++) {
-			if (i != enemyIdx) {
-                std::shared_ptr<EnemyPawnModel> temp = _board->getEnemy(i);
-				if (temp->getX() == enemy->getX() && temp->getY() == enemy->getY()) {
-					enemyInWay = true;
-				}
-			}
-		}
-		if (!enemyInWay) {
-			_board->getEnemy(enemyIdx)->step();
-		}
-    }
+//    // Move in direction facing
+//    enemy->step();
+//
+//    // Check bounds
+//    if (enemy->getX() < 0 || _board->getWidth() <= enemy->getX()) {
+//        _board->getEnemy(enemyIdx)->turnAround();
+//    } else if (enemy->getY() < 0 || _board->getHeight() <= enemy->getY()) {
+//        _board->getEnemy(enemyIdx)->turnAround();
+//    } else {
+//        bool enemyInWay = false;
+//        for (int i = 0; i < _board->getNumEnemies(); i++) {
+//            if (i != enemyIdx) {
+//                std::shared_ptr<EnemyPawnModel> temp = _board->getEnemy(i);
+//                if (temp->getX() == enemy->getX() && temp->getY() == enemy->getY()) {
+//                    enemyInWay = true;
+//                }
+//            }
+//        }
+//        if (!enemyInWay) {
+//            _board->getEnemy(enemyIdx)->step();
+//        }
+//    }
+    enemy->move(_board->getWidth(), _board->getHeight());
 }
 
 void EnemyController::enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
@@ -118,15 +119,16 @@ void EnemyController::enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::sh
 void EnemyController::update(float timestep) {
 //    CULog("EnemyController Update");
 
-
-	//Loop through every enemy and ally. Move the enemies 1 square randomly in any direction.
+	// Loop through every enemy and ally. Move the enemies 1 square randomly in any direction.
 	for (int i = 0; i < _board->getNumEnemies(); i++) {
         std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
-        enemyMove(enemy, i);
+        enemy->move(_board->getWidth(), _board->getHeight());
+//        enemyMove(enemy, i);
 		for (int j = 0; j < _board->getNumAllies(); j++) {
             std::shared_ptr<PlayerPawnModel> ally = _board->getAlly(j);
 			if (playerDistance(enemy, ally) < 1) {
-				_board->removeAlly(j);
+                CULog("Remove ally");
+                _board->removeAlly(j);
             }
             //this is assuming all enemies are "dumb"
 		}
@@ -140,6 +142,8 @@ void EnemyController::update(float timestep) {
 			lose = false;
 		}
 	}
+    
+    CULog("board: \n%s", _board->toString().c_str());
 }
 
 

@@ -6,6 +6,8 @@
 //  Copyright © 2018 Game Design Initiative at Cornell. All rights reserved.
 //
 
+#include <sstream>
+#include <set>
 #include "PlayMode.h"
 
 using namespace cugl;
@@ -161,8 +163,7 @@ void PlayMode::populate(int height, int width, int colors, int allies, int enemi
         _actions->activate(key.str(), _board->tileAddAction, (*tileIter)->getSprite());
         i++;
     }
-    _board->clearAddedTiles();
-    
+
     // Add allies
     i = 0;
     std::set<std::shared_ptr<PlayerPawnModel>>::iterator allyIter;

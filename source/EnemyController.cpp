@@ -6,6 +6,7 @@
 //  Copyright © 2018 Game Design Initiative at Cornell. All rights reserved.
 //
 
+#include <sstream>
 #include "EnemyController.h"
 
 using namespace cugl;

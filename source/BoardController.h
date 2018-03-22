@@ -14,11 +14,31 @@
 
 
 class BoardController {
+public:
+    /**
+     * Enum defining the different states of the gameplay loop
+     */
+    enum State : unsigned int {
+        // Check for matches
+        CHECK  = 0,
+        // Remove tiles and enemies
+        REMOVE = 1,
+        // Add new Tiles
+        ADD    = 2,
+    };
 protected:
     // CONTROLLERS
     
     // MODEL
+    /** The action manager. */
+    std::shared_ptr<cugl::ActionManager> _actions;
+    /** Set of interrupting animations */
+    std::set<const std::string> _interruptingActions;
+    /** Game board */
     std::shared_ptr<BoardModel> _board;
+    
+    /** State of controller */
+    State _state;
     
     /** Whether we have completed the board turn */
     bool _complete;
@@ -66,7 +86,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<BoardModel>& board);
+    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board);
     
     
 #pragma mark -
@@ -104,6 +124,9 @@ public:
      * @param value whether the level is completed.
      */
     void setComplete(bool value) { _complete = value; }
+    
+    /** Returns interrupting actions */
+    std::set<const std::string>& getInterruptingActions() { return _interruptingActions; }
     
     
 #pragma mark -

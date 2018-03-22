@@ -90,11 +90,11 @@ void BoardModel::dispose() {
 #pragma mark Index Transformation Functions
 
 /**
- * Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
+ * Convert (x, y) coordinate to array index. (0, 0) is the bottom left corner
  * Example for sideSize = 3
- *  0 1 2     (0,0) (1,0) (2,0)
+ *  6 7 8     (0,2) (1,2) (2,2)
  *  3 4 5     (0,1) (1,1) (2,1)
- *  6 7 8     (0,2) (1,2) (2,2) (3) (4)
+ *  0 1 2     (0,0) (1,0) (2,0)
  */
 int BoardModel::indexOfCoordinate(int x, int y) const {
 	return x + (y*_width);
@@ -151,17 +151,6 @@ std::shared_ptr<EnemyPawnModel> BoardModel::getEnemy(int x, int y) {
     return nullptr;
 }
 
-// Returns the allies
-std::vector<std::shared_ptr<PlayerPawnModel>>& BoardModel::getAllies() {
-	return _allies;
-}
-
-// Returns the enemies
-std::vector<std::shared_ptr<EnemyPawnModel>>& BoardModel::getEnemies() {
-	return _enemies;
-}
-
-
 // Set the value at the given (x, y) coordinate
 void BoardModel::setTile(int x, int y, std::shared_ptr<TileModel> t) {
 	_tiles[indexOfCoordinate(x, y)] = t;
@@ -183,14 +172,18 @@ void BoardModel::moveEnemy(int dx, int dy, int enemyIdx) {
 
 // Remove ally at index i
 void BoardModel::removeAlly(int i) {
-    _node->removeChild(_allies[i]->getSprite());
-	_allies[i]->setXY(-1, -1);
+//    _node->removeChild(_allies[i]->getSprite());
+    _removedAllies.insert(_allies[i]);
+    _allies.erase(_allies.begin() + i);
+    _numAllies--;
 }
 
 // Remove enemy at index i
 void BoardModel::removeEnemy(int i) {
-    _node->removeChild(_enemies[i]->getSprite());
-	_enemies[i]->setXY(-1, -1);
+//    _node->removeChild(_enemies[i]->getSprite());
+    _removedEnemies.insert(_enemies[i]);
+    _enemies.erase(_enemies.begin() + i);
+    _numEnemies--;
 }
 
 
@@ -200,7 +193,7 @@ void BoardModel::removeEnemy(int i) {
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
 bool BoardModel::checkForMatches() {
 	std::set<int> replaceTiles;
-
+    
 	// Check for matches
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
@@ -247,13 +240,15 @@ bool BoardModel::checkForMatches() {
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void BoardModel::replaceTile(int tileLocation) {
-    _node->removeChild(_tiles[tileLocation]->getSprite());
+//    _node->removeChild(_tiles[tileLocation]->getSprite());
+    _removedTiles.insert(_tiles[tileLocation]);
     // New random color
     int color = rand() % _numColors;
     Rect bounds = calculateDrawBounds(xOfIndex(tileLocation), yOfIndex(tileLocation));
     std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
-    _node->addChild(tile->getSprite());
-	_tiles[tileLocation] = tile;
+    _tiles[tileLocation] = tile;
+//    _node->addChild(tile->getSprite());
+    _addedTiles.insert(tile);
 }
 
 // Generates a new set of tiles for _tiles that verifies that the board does not have any matches existing
@@ -268,8 +263,9 @@ void BoardModel::generateNewBoard() {
         std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
         CULog("anchor: %s", tile->getSprite()->getAnchor().toString().c_str());
         CULog("origin: %s", tile->getSprite()->getPosition().toString().c_str());
-        _node->addChild(tile->getSprite());
+//        _node->addChild(tile->getSprite());
         _tiles.push_back(tile);
+        _addedTiles.insert(tile);
     }
     
     // Replace any matches
@@ -296,8 +292,9 @@ void BoardModel::generateNewBoard() {
             }
         }
         std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
-        _node->addChild(ally->getSprite());
+//        _node->addChild(ally->getSprite());
         _allies.push_back(ally);
+        _addedAllies.insert(ally);
     }
 
     //Setup Enemies
@@ -331,8 +328,9 @@ void BoardModel::generateNewBoard() {
         }
         std::shared_ptr<EnemyPawnModel> enemy = EnemyPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
         enemy->setRandomDirection();
-        _node->addChild(enemy->getSprite());
+//        _node->addChild(enemy->getSprite());
         _enemies.push_back(enemy);
+        _addedEnemies.insert(enemy);
     }
 }
 
@@ -621,18 +619,22 @@ std::string BoardModel::toString() const {
         }
         ss << "\n";
     }
-    ss << "allies: [";
-    for (int i = 0; i < _numAllies; i++) {
-        ss << "(" << _allies[i]->getX() << ", " << _allies[i]->getY() << ")";
-        ss << "   ";
+    if (!_allies.empty()) {
+        ss << "allies: [";
+        for (int i = 0; i < _numAllies; i++) {
+            ss << "(" << _allies[i]->getX() << ", " << _allies[i]->getY() << ")";
+            ss << "   ";
+        }
+        ss << "]";
     }
-    ss << "]";
-    ss << "\nenemies: [";
-    for (int i = 0; i < _numEnemies; i++) {
-        ss << "(" << _enemies[i]->getX() << ", " << _enemies[i]->getY() << ")";
-        ss << "   ";
+    if (!_enemies.empty()) {
+        ss << "\nenemies: [";
+        for (int i = 0; i < _numEnemies; i++) {
+            ss << "(" << _enemies[i]->getX() << ", " << _enemies[i]->getY() << ")";
+            ss << "   ";
+        }
+        ss << "]";
     }
-    ss << "]";
     return ss.str();
 }
 

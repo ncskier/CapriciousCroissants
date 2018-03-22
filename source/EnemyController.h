@@ -20,6 +20,11 @@ protected:
     // CONTROLLERS
     
     // MODEL
+    /** The action manager. */
+    std::shared_ptr<cugl::ActionManager> _actions;
+    /** Set of interrupting animations */
+    std::set<const std::string> _interruptingActions;
+    /** Game board */
     std::shared_ptr<BoardModel> _board;
     
 	EnemyPawnModel _enemies;
@@ -67,7 +72,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<BoardModel>& board);
+    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board);
     
     
 #pragma mark -
@@ -105,6 +110,9 @@ public:
      * @param value whether the level is completed.
      */
     void setComplete(bool value) { _complete = value; }
+    
+    /** Returns interrupting actions */
+    std::set<const std::string>& getInterruptingActions() { return _interruptingActions; }
     
 
     int playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);

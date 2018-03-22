@@ -33,7 +33,8 @@ EnemyController::EnemyController() {
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool EnemyController::init(const std::shared_ptr<BoardModel>& board) {
+bool EnemyController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board) {
+    _actions = actions;
     _board = board;
     
     _debug = false;
@@ -122,16 +123,17 @@ void EnemyController::update(float timestep) {
 	// Loop through every enemy and ally. Move the enemies 1 square randomly in any direction.
 	for (int i = 0; i < _board->getNumEnemies(); i++) {
         std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
-        enemy->move(_board->getWidth(), _board->getHeight());
-//        enemyMove(enemy, i);
-		for (int j = 0; j < _board->getNumAllies(); j++) {
-            std::shared_ptr<PlayerPawnModel> ally = _board->getAlly(j);
-			if (playerDistance(enemy, ally) < 1) {
-                CULog("Remove ally");
-                _board->removeAlly(j);
+        if (enemy->getX() != -1) {
+            enemy->move(_board->getWidth(), _board->getHeight());
+            for (int j = 0; j < _board->getNumAllies(); j++) {
+                std::shared_ptr<PlayerPawnModel> ally = _board->getAlly(j);
+                if (playerDistance(enemy, ally) < 1) {
+                    CULog("Remove ally");
+                    _board->removeAlly(j);
+                }
+                //this is assuming all enemies are "dumb"
             }
-            //this is assuming all enemies are "dumb"
-		}
+        }
 	}
     setComplete(true);
 

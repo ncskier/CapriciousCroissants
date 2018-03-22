@@ -85,17 +85,33 @@ protected:
     /** Vector storing all enemies on the board */
     std::vector<std::shared_ptr<EnemyPawnModel>> _enemies;
     
-    /** Set storing all tiles to be added to the board */
+    /** Set storing all tiles added to the board (store for animation) */
+    std::set<std::shared_ptr<TileModel>> _addedTiles;
+    
+    /** Set storing all allies added to the board (store for animation) */
+    std::set<std::shared_ptr<PlayerPawnModel>> _addedAllies;
+    
+    /** Set storing all enemies added to the board (store for animation) */
+    std::set<std::shared_ptr<EnemyPawnModel>> _addedEnemies;
+    
+    /** Set storing all tiles removed from the board (store for animation) */
+    std::set<std::shared_ptr<TileModel>> _removedTiles;
+    
+    /** Set storing all allies removed from the board (store for animation) */
+    std::set<std::shared_ptr<PlayerPawnModel>> _removedAllies;
+    
+    /** Set storing all enemies removed from the board (store for animation) */
+    std::set<std::shared_ptr<EnemyPawnModel>> _removedEnemies;
     
     
 #pragma mark -
 #pragma mark Index Transformation Functions
     /**
-     * Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
+     * Convert (x, y) coordinate to array index. (0, 0) is the bottom left corner
      * Example for sideSize = 3
-     *  0 1 2     (0,0) (1,0) (2,0)
+     *  6 7 8     (0,2) (1,2) (2,2)
      *  3 4 5     (0,1) (1,1) (2,1)
-     *  6 7 8     (0,2) (1,2) (2,2) (3) (4)
+     *  0 1 2     (0,0) (1,0) (2,0)
      */
     int indexOfCoordinate(int x, int y) const;
     
@@ -180,11 +196,30 @@ public:
     // Returns the enemy pawn at (x, y) or nullptr
     std::shared_ptr<EnemyPawnModel> getEnemy(int x, int y);
 
+    // Returns the tiles
+    std::vector<std::shared_ptr<TileModel>>& getTiles() { return _tiles; }
+    
 	// Returns the allies
-    std::vector<std::shared_ptr<PlayerPawnModel>>& getAllies();
+    std::vector<std::shared_ptr<PlayerPawnModel>>& getAllies() { return _allies; }
 
 	// Returns the enemies
-        std::vector<std::shared_ptr<EnemyPawnModel>>& getEnemies();
+    std::vector<std::shared_ptr<EnemyPawnModel>>& getEnemies() { return _enemies; }
+    
+    /** Return added/removed sets */
+    std::set<std::shared_ptr<TileModel>>& getAddedTiles() { return _addedTiles; }
+    std::set<std::shared_ptr<PlayerPawnModel>>& getAddedAllies() { return _addedAllies; }
+    std::set<std::shared_ptr<EnemyPawnModel>>& getAddedEnemies() { return _addedEnemies; }
+    std::set<std::shared_ptr<TileModel>>& getRemovedTiles() { return _removedTiles; }
+    std::set<std::shared_ptr<PlayerPawnModel>>& getRemovedAllies() { return _removedAllies; }
+    std::set<std::shared_ptr<EnemyPawnModel>>& getRemovedEnemies() { return _removedEnemies; }
+    
+    /** Clear added/removed sets */
+    void clearAddedTiles() { _addedTiles.clear(); }
+    void clearAddedAllies() { _addedAllies.clear(); }
+    void clearAddedEnemies() { _addedEnemies.clear(); }
+    void clearRemovedTiles() { _removedTiles.clear(); }
+    void clearRemovedAllies() { _removedAllies.clear(); }
+    void clearRemovedEnemies() { _removedEnemies.clear(); }
 
 	// Set the tile at the given (x, y) coordinate
     void setTile(int x, int y, std::shared_ptr<TileModel> t);
@@ -253,6 +288,14 @@ public:
     
 #pragma mark -
 #pragma mark Drawing/Animation
+    /** Actions */
+    std::shared_ptr<cugl::FadeIn> tileAddAction = cugl::FadeIn::alloc(1.0f);
+    std::shared_ptr<cugl::FadeOut> tileRemoveAction = cugl::FadeOut::alloc(1.0);
+    std::shared_ptr<cugl::FadeIn> enemyAddAction = cugl::FadeIn::alloc(1.0);
+    std::shared_ptr<cugl::FadeOut> enemyRemoveAction = cugl::FadeOut::alloc(1.0);
+    std::shared_ptr<cugl::FadeIn> allyAddAction = cugl::FadeIn::alloc(1.0);
+    std::shared_ptr<cugl::FadeOut> allyRemoveAction = cugl::FadeOut::alloc(1.0);
+    
     /** Get board node */
     std::shared_ptr<cugl::Node>& getNode() { return _node; }
     

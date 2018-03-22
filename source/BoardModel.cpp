@@ -57,7 +57,6 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
     _numAllies = allies;
     _numEnemies = enemies;
     _placeAllies = placePawn;
-    colorLookup = { Color4::CORNFLOWER, Color4::RED, Color4::CYAN, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::WHITE };
     
     srand((int)time(NULL));
     generateNewBoard();
@@ -113,6 +112,26 @@ int BoardModel::yOfIndex(int i) const {
 
 #pragma mark -
 #pragma mark Accessors/Mutators
+// Get random color
+int BoardModel::randomColor() {
+    if (_colorLookup.empty()) {
+        CULog("reset");
+        resetRandom();
+    }
+    int i = rand() % _colorLookup.size();
+    int color = _colorLookup[i];
+    _colorLookup.erase(_colorLookup.begin()+i);
+    CULog("random: %d", color);
+    return color;
+}
+
+// Reset color lookup
+void BoardModel::resetRandom() {
+    _colorLookup.clear();
+    for (int i = 0; i < _numColors; i++) {
+        _colorLookup.push_back(i);
+    }
+}
 
 // Returns the value at the give (x, y) coordinate
 std::shared_ptr<TileModel>& BoardModel::getTile(int x, int y) {
@@ -243,7 +262,8 @@ void BoardModel::replaceTile(int tileLocation) {
 //    _node->removeChild(_tiles[tileLocation]->getSprite());
     _removedTiles.insert(_tiles[tileLocation]);
     // New random color
-    int color = rand() % _numColors;
+    int color = randomColor();
+//    int color = rand() % _numColors;
     Rect bounds = calculateDrawBounds(xOfIndex(tileLocation), yOfIndex(tileLocation));
     std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
     _tiles[tileLocation] = tile;
@@ -258,7 +278,8 @@ void BoardModel::generateNewBoard() {
     srand((int)time(NULL));
 	int color;
     for (int i = 0; i < _height*_width; i++) {
-        color = rand() % _numColors;        // random number in range [0, _numColors-1]
+        color = randomColor();
+//        color = rand() % _numColors;        // random number in range [0, _numColors-1]
         Rect bounds = calculateDrawBounds(xOfIndex(i), yOfIndex(i));
         std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
         CULog("anchor: %s", tile->getSprite()->getAnchor().toString().c_str());

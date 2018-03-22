@@ -42,7 +42,10 @@ protected:
     int _selectedTile;
 
     // Colors to display
-	std::vector<cugl::Color4> colorLookup;
+	std::vector<int> _colorLookup;
+    // Reset color lookup
+    void resetRandom();
+    int randomColor();
 
 	// Replaces a tile at a location in the array with a new value
 	void replaceTile(int tileLocation);

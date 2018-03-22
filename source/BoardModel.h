@@ -289,12 +289,14 @@ public:
 #pragma mark -
 #pragma mark Drawing/Animation
     /** Actions */
-    std::shared_ptr<cugl::FadeIn> tileAddAction = cugl::FadeIn::alloc(1.0f);
-    std::shared_ptr<cugl::FadeOut> tileRemoveAction = cugl::FadeOut::alloc(1.0);
-    std::shared_ptr<cugl::FadeIn> enemyAddAction = cugl::FadeIn::alloc(1.0);
-    std::shared_ptr<cugl::FadeOut> enemyRemoveAction = cugl::FadeOut::alloc(1.0);
-    std::shared_ptr<cugl::FadeIn> allyAddAction = cugl::FadeIn::alloc(1.0);
-    std::shared_ptr<cugl::FadeOut> allyRemoveAction = cugl::FadeOut::alloc(1.0);
+//    std::shared_ptr<cugl::FadeIn> tileAddAction = cugl::FadeIn::alloc(1.0f);
+    std::shared_ptr<cugl::Animate> tileAddAction = cugl::Animate::alloc(TILE_IMG_APPEAR_START, TILE_IMG_APPEAR_END, TILE_IMG_APPEAR_TIME);
+//    std::shared_ptr<cugl::FadeOut> tileRemoveAction = cugl::FadeOut::alloc(1.0);
+    std::shared_ptr<cugl::Animate> tileRemoveAction = cugl::Animate::alloc(TILE_IMG_DISAPPEAR_START, TILE_IMG_DISAPPEAR_END, TILE_IMG_DISAPPEAR_TIME);
+    std::shared_ptr<cugl::FadeIn> enemyAddAction = cugl::FadeIn::alloc(TILE_IMG_APPEAR_TIME);
+    std::shared_ptr<cugl::FadeOut> enemyRemoveAction = cugl::FadeOut::alloc(TILE_IMG_DISAPPEAR_TIME);
+    std::shared_ptr<cugl::FadeIn> allyAddAction = cugl::FadeIn::alloc(TILE_IMG_APPEAR_TIME);
+    std::shared_ptr<cugl::FadeOut> allyRemoveAction = cugl::FadeOut::alloc(TILE_IMG_DISAPPEAR_TIME);
     
     /** Get board node */
     std::shared_ptr<cugl::Node>& getNode() { return _node; }

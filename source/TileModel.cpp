@@ -70,8 +70,9 @@ void TileModel::setSprite(const Rect bounds, const std::shared_ptr<cugl::AssetMa
         color = Color4::ORANGE;
     }
     
-    // Create Animation Node
+        // Create Animation Node
     _sprite = AnimationNode::alloc(texture, TILE_IMG_ROWS, TILE_IMG_COLS, TILE_IMG_SIZE);
+    _sprite->setFrame(TILE_IMG_NORMAL);
     _sprite->setColor(color);
     _sprite->setAnchor(Vec2::ZERO);
     _sprite->setPosition(bounds.origin);

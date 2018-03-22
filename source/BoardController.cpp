@@ -64,9 +64,7 @@ void BoardController::dispose() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void BoardController::update(float timestep) {
-    CULog("BoardController Update");
     if (_state == State::CHECK) {
-        CULog("CHECK");
         // Check for matches
         bool matchesExist = _board->checkForMatches();
         if (!matchesExist) {
@@ -75,8 +73,6 @@ void BoardController::update(float timestep) {
             _state = State::REMOVE;
         }
     } else if (_state == State::REMOVE) {
-        CULog("REMOVE");
-        CULog("board: \n%s", _board->toString().c_str());
         // Remove Tiles &
         // Tile animations
         int i = 0;
@@ -94,7 +90,6 @@ void BoardController::update(float timestep) {
                 i++;
             }
         }
-        _board->clearRemovedTiles();
         
         // Enemy animations
         i = 0;
@@ -102,11 +97,10 @@ void BoardController::update(float timestep) {
         for (enemyIter = _board->getRemovedEnemies().begin(); enemyIter != _board->getRemovedEnemies().end(); ++enemyIter) {
             std::stringstream key;
             key << "int_enemy_remove_" << i;
-            _actions->activate(key.str(), _board->tileRemoveAction, (*enemyIter)->getSprite());
+            _actions->activate(key.str(), _board->enemyRemoveAction, (*enemyIter)->getSprite());
             _interruptingActions.insert(key.str());
             i++;
         }
-        _board->clearRemovedEnemies();
         
         // Check win condition
         win = true;
@@ -119,21 +113,29 @@ void BoardController::update(float timestep) {
         
         _state = State::ADD;
     } else {
-        CULog("ADD");
         // ADD
         // Remove removed tiles from board node
         std::set<std::shared_ptr<TileModel>>::iterator it;
         for (it = _board->getRemovedTiles().begin(); it != _board->getRemovedTiles().end(); ++it) {
             _board->getNode()->removeChild((*it)->getSprite());
         }
+        _board->clearRemovedTiles();
+
+        // Remove removed enemies from board node
+        std::set<std::shared_ptr<EnemyPawnModel>>::iterator enemyIter;
+        for (enemyIter = _board->getRemovedEnemies().begin(); enemyIter != _board->getRemovedEnemies().end(); ++enemyIter) {
+            _board->getNode()->removeChild((*enemyIter)->getSprite());
+        }
+        _board->clearRemovedEnemies();
         
         // Add added tiles to board node and animate
         int i = 0;
         for (it = _board->getAddedTiles().begin(); it != _board->getAddedTiles().end(); ++it) {
             _board->getNode()->addChild((*it)->getSprite());
-            Color4 color = (*it)->getSprite()->getColor();
-            color.a = 0.0f;
-            (*it)->getSprite()->setColor(color);
+            (*it)->getSprite()->setFrame(TILE_IMG_APPEAR_START);
+//            Color4 color = (*it)->getSprite()->getColor();
+//            color.a = 0.0f;
+//            (*it)->getSprite()->setColor(color);
             std::stringstream key;
             key << "int_tile_add_" << i;
             _actions->activate(key.str(), _board->tileAddAction, (*it)->getSprite());

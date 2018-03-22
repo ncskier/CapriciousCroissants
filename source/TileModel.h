@@ -12,14 +12,18 @@
 #include <cugl/cugl.h>
 
 /** Tile Frame Sprite numbers */
-#define TILE_IMG_APPEAR 0
-#define TILE_IMG_NORMAL 7
-#define TILE_IMG_DISAPPEAR 24
+#define TILE_IMG_APPEAR_START    16
+#define TILE_IMG_APPEAR_END      23
+#define TILE_IMG_NORMAL          0
+#define TILE_IMG_DISAPPEAR_START 0
+#define TILE_IMG_DISAPPEAR_END   15
+#define TILE_IMG_APPEAR_TIME    0.3f
+#define TILE_IMG_DISAPPEAR_TIME 0.6f
 
 /** Number of rows and cols in film strip */
-#define TILE_IMG_ROWS 1
-#define TILE_IMG_COLS 1
-#define TILE_IMG_SIZE 1
+#define TILE_IMG_ROWS 3
+#define TILE_IMG_COLS 8
+#define TILE_IMG_SIZE 24
 
 /** Tile texture keys */
 #define TILE_TEXTURE_KEY_0 "tile0_strip"

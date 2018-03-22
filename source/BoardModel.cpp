@@ -513,25 +513,31 @@ bool BoardModel::selectTileAtPosition(Vec2 position) {
 #pragma mark Drawing/Animation
 
 /** Update nodes */
-void BoardModel::updateNodes() {
+void BoardModel::updateNodes(bool position, bool z) {
     // Tiles
     for (int x = 0; x < _width; x++) {
         for (int y = 0; y < _height; y++) {
-            _tiles[indexOfCoordinate(x, y)]->setSpriteBounds(calculateDrawBounds(x, y));
-            _tiles[indexOfCoordinate(x, y)]->getSprite()->setZOrder(calculateDrawZ(x, y, true));
+            if (position)
+                _tiles[indexOfCoordinate(x, y)]->setSpriteBounds(calculateDrawBounds(x, y));
+            if (z)
+                _tiles[indexOfCoordinate(x, y)]->getSprite()->setZOrder(calculateDrawZ(x, y, true));
         }
     }
     
     // Allies
     for (std::vector<std::shared_ptr<PlayerPawnModel>>::iterator it = _allies.begin(); it != _allies.end(); ++it) {
-        (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
-        (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+        if (position)
+            (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
+        if (z)
+            (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
     }
     
     // Enemies
     for (std::vector<std::shared_ptr<EnemyPawnModel>>::iterator it = _enemies.begin(); it != _enemies.end(); ++it) {
-        (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
-        (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+        if (position)
+            (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
+        if (z)
+            (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
     }
     
     // Resort z order
@@ -615,15 +621,22 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
  *   Pawns at  Tile number + 5
  */
 int BoardModel::calculateDrawZ(int x, int y, bool tile) {
-    int row = y;
-    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
-        row = (row + lengthToCells(offset)) % _height;
-        while (row < 0) {
-            row += _height;
-        }
+    if (tile) {
+        // Start from 10 with increments of 10
+        return 10 + 10*(_height-y-1);
+    } else {
+        // Start from 10*height + 5 with increments of 10
+        return (10*_height + 5) + 10*(_height-y-1);
     }
-    int base = (_height-row) * 10;
-    return tile ? base : base+5;
+//    int row = y;
+//    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
+//        row = (row + lengthToCells(offset)) % _height;
+//        while (row < 0) {
+//            row += _height;
+//        }
+//    }
+//    int base = (_height-row) * 10;
+//    return tile ? base : base+5;
 }
 
 /**

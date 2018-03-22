@@ -230,6 +230,8 @@ void PlayMode::updateEnemyTurn(float dt) {
             
             _text->setText("You lose");
             _text->setVisible(true);
+            _text->setZOrder(1000);
+            sortZOrder();
         }
         _state = State::PLAYER;
         _enemyController.reset();
@@ -282,7 +284,6 @@ void PlayMode::update(float dt) {
                 updateEnemyTurn(dt);
             }
         }
-        _board->updateNodes();
     } else {
         // Update Interrupting Animations
         if (!_playerController.getInterruptingActions().empty()) { updateInterruptingAnimations(_playerController.getInterruptingActions()); }

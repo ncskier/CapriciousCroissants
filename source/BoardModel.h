@@ -304,8 +304,8 @@ public:
     /** Get board node */
     std::shared_ptr<cugl::Node>& getNode() { return _node; }
     
-    /** Update nodes positions */
-    void updateNodes();
+    /** Update nodes positions (can choose to only update position or z) */
+    void updateNodes(bool position=true, bool z=true);
     
     /**
      * Select tile at screen position [position]
@@ -330,8 +330,8 @@ public:
     
     /**
      * Calculate z-axis coordinate given (x,y) cell in grid.
-     *   Tiles at 10s
-     *   Pawns at  Tile number + 5
+     *   Tiles start at 10s through 10*height
+     *   Pawns at 10*height + 5 through 20*height + 5
      */
     int calculateDrawZ(int x, int y, bool tile);
 

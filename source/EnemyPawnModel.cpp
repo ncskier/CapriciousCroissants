@@ -113,7 +113,6 @@ void EnemyPawnModel::move(int boardWidth, int boardHeight) {
 
 /** Set random direction */
 void EnemyPawnModel::setRandomDirection() {
-    srand((int)time(NULL));
     _direction = (Direction)(rand() % 4);
     updateSpriteDirection();
 }

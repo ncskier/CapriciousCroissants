@@ -23,7 +23,10 @@
 #define ENEMY_IMG_COLS 4
 #define ENEMY_IMG_SIZE 4
 
-/** Player Texture Key */
+/** Movement animation speed (tiles/sec) */
+#define ENEMY_IMG_SPEED 2.0f
+
+/** Enemy Texture Key */
 #define ENEMY_TEXTURE_KEY_0 "enemy0_strip"
 
 

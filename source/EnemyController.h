@@ -16,6 +16,18 @@
 
 
 class EnemyController {
+public:
+    /**
+     * Enum defining the different states of the gameplay loop
+     */
+    enum State : unsigned int {
+        // Move enemies
+        MOVE   = 0,
+        // Enemies attack
+        ATTACK = 1,
+        // Check for lose
+        CHECK  = 2,
+    };
 protected:
     // CONTROLLERS
     
@@ -34,6 +46,9 @@ protected:
     bool _complete;
     /** Whether or not debug mode is active */
     bool _debug;
+    
+    /** Internal state */
+    State _state;
     
     
 public:

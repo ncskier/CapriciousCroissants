@@ -149,6 +149,9 @@ void BoardController::update(float timestep) {
         // Set complete
         _state = State::CHECK;
     }
+    
+    // Update board node positions
+    _board->updateNodes();
 }
 
 /**

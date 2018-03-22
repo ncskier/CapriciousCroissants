@@ -134,6 +134,9 @@ void PlayerController::update(float timestep) {
             _input->clear();
         }
 	}
+    
+    // Update board node positions
+    _board->updateNodes();
 }
 
 /**

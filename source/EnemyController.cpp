@@ -101,7 +101,6 @@ void EnemyController::update(float timestep) {
                 std::stringstream key;
                 key << "int_enemy_move_" << i;
                 std::shared_ptr<MoveBy> moveAction = MoveBy::alloc(movement, ((float)tiles)/ENEMY_IMG_SPEED);
-    //            std::shared_ptr<MoveTo> moveAction = MoveTo::alloc(bounds.origin, 1.0f/ENEMY_IMG_SPEED);
                 _actions->activate(key.str(), moveAction, enemy->getSprite());
                 _interruptingActions.insert(key.str());
             }
@@ -121,6 +120,12 @@ void EnemyController::update(float timestep) {
                     std::shared_ptr<PlayerPawnModel> ally = _board->getAlly(j);
                     if (playerDistance(enemy, ally) < 1) {
                         _board->removeAlly(j);
+                        
+                        // Create animation
+                        std::stringstream key;
+                        key << "int_ally_remove_" << j;
+                        _actions->activate(key.str(), _board->allyRemoveAction, ally->getSprite());
+                        _interruptingActions.insert(key.str());
                     }
                 }
             }
@@ -128,6 +133,12 @@ void EnemyController::update(float timestep) {
         _state = State::CHECK;
     } else {
         // CHECK
+        std::set<std::shared_ptr<PlayerPawnModel>>::iterator it;
+        for (it = _board->getRemovedAllies().begin(); it != _board->getRemovedAllies().end(); ++it) {
+            _board->getNode()->removeChild((*it)->getSprite());
+        }
+        _board->clearRemovedAllies();
+        
         setComplete(true);
         
         lose = true;

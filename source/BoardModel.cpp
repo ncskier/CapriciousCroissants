@@ -72,7 +72,6 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
     _node = Node::alloc();
     _node->setContentSize(dimen);
     _node->setAnchor(Vec2::ZERO);
-    CULog("dimen: %s", dimen.toString().c_str());
     gameWidth = dimen.width;
     gameHeight = dimen.height;
     
@@ -115,13 +114,11 @@ int BoardModel::yOfIndex(int i) const {
 // Get random color
 int BoardModel::randomColor() {
     if (_colorLookup.empty()) {
-        CULog("reset");
         resetRandom();
     }
     int i = rand() % _colorLookup.size();
     int color = _colorLookup[i];
     _colorLookup.erase(_colorLookup.begin()+i);
-    CULog("random: %d", color);
     return color;
 }
 
@@ -282,8 +279,6 @@ void BoardModel::generateNewBoard() {
 //        color = rand() % _numColors;        // random number in range [0, _numColors-1]
         Rect bounds = calculateDrawBounds(xOfIndex(i), yOfIndex(i));
         std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
-        CULog("anchor: %s", tile->getSprite()->getAnchor().toString().c_str());
-        CULog("origin: %s", tile->getSprite()->getPosition().toString().c_str());
 //        _node->addChild(tile->getSprite());
         _tiles.push_back(tile);
         _addedTiles.insert(tile);
@@ -418,7 +413,6 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
 
 //Slide row or column by [offset]
 void BoardModel::slide(bool row, int k, int offset) {
-    CULog("SLIDE");
 	// Copy
 	int sideSize = row ? _width : _height;
     std::shared_ptr<TileModel>* line = new std::shared_ptr<TileModel>[sideSize];

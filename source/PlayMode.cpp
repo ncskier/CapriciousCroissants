@@ -155,7 +155,6 @@ void PlayMode::populate(int height, int width, int colors, int allies, int enemi
     // Add tiles
     int i = 0;
     for (tileIter = _board->getAddedTiles().begin(); tileIter != _board->getAddedTiles().end(); ++tileIter) {
-        CULog("add tile %d", i);
         _board->getNode()->addChild((*tileIter)->getSprite());
         std::stringstream key;
         key << "int_add_tile_" << i;
@@ -168,7 +167,6 @@ void PlayMode::populate(int height, int width, int colors, int allies, int enemi
     i = 0;
     std::set<std::shared_ptr<PlayerPawnModel>>::iterator allyIter;
     for (allyIter = _board->getAddedAllies().begin(); allyIter != _board->getAddedAllies().end(); ++allyIter) {
-        CULog("add ally %d", i);
         _board->getNode()->addChild((*allyIter)->getSprite());
         std::stringstream key;
         key << "int_add_ally_" << i;
@@ -181,7 +179,6 @@ void PlayMode::populate(int height, int width, int colors, int allies, int enemi
     i = 0;
     std::set<std::shared_ptr<EnemyPawnModel>>::iterator enemyIter;
     for (enemyIter = _board->getAddedEnemies().begin(); enemyIter != _board->getAddedEnemies().end(); ++enemyIter) {
-        CULog("add enemy %d", i);
         _board->getNode()->addChild((*enemyIter)->getSprite());
         std::stringstream key;
         key << "int_add_enemy_" << i;
@@ -213,6 +210,8 @@ void PlayMode::updateBoardTurn(float dt) {
             
             _text->setText("You win");
             _text->setVisible(true);
+            _text->setZOrder(1000);
+            sortZOrder();
         }
         _state = State::ENEMY;
         _boardController.reset();

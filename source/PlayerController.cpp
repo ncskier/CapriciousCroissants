@@ -129,7 +129,6 @@ void PlayerController::update(float timestep) {
                 _board->slide(cells);
                 setComplete(true);
             }
-            CULog("board: \n%s", _board->toString().c_str());
             _board->deselectTile();
             _input->clear();
         }

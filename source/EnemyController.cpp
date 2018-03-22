@@ -84,7 +84,6 @@ void EnemyController::update(float timestep) {
 
     if (_state == State::MOVE) {
         // MOVE
-        CULog("move");
         for (int i = 0; i < _board->getNumEnemies(); i++) {
             std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
             if (enemy->getX() != -1) {
@@ -98,7 +97,6 @@ void EnemyController::update(float timestep) {
                 Rect newBounds = _board->calculateDrawBounds(enemy->getX(), enemy->getY());
                 Vec2 movement = newBounds.origin - oldBounds.origin;
                 int tiles = _board->lengthToCells(movement.length());
-                CULog("movement: %s", movement.toString().c_str());
                 std::stringstream key;
                 key << "int_enemy_move_" << i;
                 std::shared_ptr<MoveBy> moveAction = MoveBy::alloc(movement, ((float)tiles)/ENEMY_IMG_SPEED);
@@ -114,7 +112,6 @@ void EnemyController::update(float timestep) {
         _state = State::ATTACK;
     } else if (_state == State::ATTACK) {
         // ATTACK
-        CULog("attack");
         for (int i = 0; i < _board->getNumEnemies(); i++) {
             std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
             if (enemy->getX() != -1) {

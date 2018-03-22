@@ -33,6 +33,8 @@ _selectedTile(-1),
 _placeAllies(false),
 _boardPadding(25.0f),
 _tilePadding(0.0f),
+_tilePaddingX(0.0f),
+_tilePaddingY(0.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
@@ -575,10 +577,14 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     Rect bounds = gridToScreen(gridX, gridY);
     
     // Apply Padding to Bounds
-    float x = bounds.getMinX() + _tilePadding/2.0f;
-    float y = bounds.getMinY() + _tilePadding/2.0f;
-    float width = bounds.size.width - _tilePadding;
-    float height = bounds.size.height - _tilePadding;
+//    float x = bounds.getMinX() + _tilePadding/2.0f;
+//    float y = bounds.getMinY() + _tilePadding/2.0f;
+//    float width = bounds.size.width - _tilePadding;
+//    float height = bounds.size.height - _tilePadding;
+    float x = bounds.getMinX() + _tilePaddingX/2.0f;
+    float y = bounds.getMinY() + _tilePaddingY/2.0f;
+    float width = bounds.size.width - _tilePaddingX;
+    float height = bounds.size.height - _tilePaddingY;
     bounds.set(x, y, width, height);
     
     // Calculate Offset
@@ -615,12 +621,19 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
  *   Pawns at  Tile number + 5
  */
 int BoardModel::calculateDrawZ(int x, int y, bool tile) {
+    int row = y;
+    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
+        row = (row + lengthToCells(offset)) % _height;
+        while (row < 0) {
+            row += _height;
+        }
+    }
     if (tile) {
         // Start from 10 with increments of 10
-        return 10 + 10*(_height-y-1);
+        return 10 + 10*(_height-row-1);
     } else {
         // Start from 10*height + 5 with increments of 10
-        return (10*_height + 5) + 10*(_height-y-1);
+        return (10*_height + 5) + 10*(_height-row-1);
     }
 //    int row = y;
 //    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {

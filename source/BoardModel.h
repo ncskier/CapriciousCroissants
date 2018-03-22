@@ -69,6 +69,8 @@ protected:
     /** Display settings */
     float _boardPadding;
     float _tilePadding;
+    float _tilePaddingX;
+    float _tilePaddingY;
     
     /** Size of vertical (column) side of the square board */
     int _height;

@@ -203,6 +203,7 @@
     <ClInclude Include="..\..\source\PlayerController.h" />
     <ClInclude Include="..\..\source\PlayerPawnModel.h" />
     <ClInclude Include="..\..\source\PlayMode.h" />
+    <ClInclude Include="..\..\source\System.h" />
     <ClInclude Include="..\..\source\TileBoard.h" />
     <ClInclude Include="..\..\source\TileModel.h" />
     <ClInclude Include="EnemyPawnModel.h">
@@ -224,6 +225,7 @@
     <ClCompile Include="..\..\source\PlayerController.cpp" />
     <ClCompile Include="..\..\source\PlayerPawnModel.cpp" />
     <ClCompile Include="..\..\source\PlayMode.cpp" />
+    <ClCompile Include="..\..\source\System.cpp" />
     <ClCompile Include="..\..\source\TileBoard.cpp" />
     <ClCompile Include="..\..\source\TileModel.cpp" />
     <ClCompile Include="EnemyPawnModel.cpp">

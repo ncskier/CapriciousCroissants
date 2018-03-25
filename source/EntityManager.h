@@ -8,12 +8,14 @@
 #include <Entity.h>
 #include <ComponentType.h>
 #include <ComponentStore.h>
+#include <System.h>
 
 #include <map>
 #include <unordered_map>
 #include <memory>
 #include <typeinfo>
 #include <cassert>
+#include <vector>
 
 // Class of an entity manager that maintains the connections between entities and their components
 class EntityManager {
@@ -21,6 +23,7 @@ private:
 	long nextEntityId = 0;
 	std::unordered_map<EntityId, ComponentTypeSet> entityCache;
 	std::map<ComponentType, IComponentStore::Ptr> componentStores;
+	std::vector<EntitySystem::Ptr> systems;
 
 public:
 	EntityManager();
@@ -90,4 +93,12 @@ public:
 		ComponentStore<C> store = getComponentStore<C>();
 		return store.extractCopy(entityId);
 	}
+
+	void addSystem(const EntitySystem::Ptr& systemPtr);
+
+	size_t registerEntity(const EntityId entity);
+
+	size_t unregisterEntity(const EntityId entity);
+
+	size_t updateEntities();
 };

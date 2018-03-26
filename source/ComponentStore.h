@@ -1,11 +1,11 @@
 #pragma once
 
-#include <Components.h>
-#include <Entity.h>
+#include "Components.h"
+#include "Entity.h"
 #include <memory>
 #include <unordered_map>
 #include <typeinfo>
-#include <ComponentType.h>
+#include "ComponentType.h"
 
 class IComponentStore {
 public:

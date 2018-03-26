@@ -13,6 +13,15 @@
 		206543A42043B1BE007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
 		206543A72043B1CD007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
 		206543A82043B1CE007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
+		20BD4E75206945E600424848 /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E70206945E500424848 /* System.cpp */; };
+		20BD4E76206945E600424848 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E71206945E500424848 /* Entity.cpp */; };
+		20BD4E77206945E600424848 /* EntityManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E72206945E500424848 /* EntityManager.cpp */; };
+		20BD4E78206945EA00424848 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E71206945E500424848 /* Entity.cpp */; };
+		20BD4E79206945EA00424848 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E71206945E500424848 /* Entity.cpp */; };
+		20BD4E7A206945F900424848 /* EntityManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E72206945E500424848 /* EntityManager.cpp */; };
+		20BD4E7B206945FA00424848 /* EntityManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E72206945E500424848 /* EntityManager.cpp */; };
+		20BD4E7C206945FD00424848 /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E70206945E500424848 /* System.cpp */; };
+		20BD4E7D206945FD00424848 /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E70206945E500424848 /* System.cpp */; };
 		20F92DBE20557DE000F4DCC3 /* BoxApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DBC20557DE000F4DCC3 /* BoxApp.cpp */; };
 		20F92DBF20557DE000F4DCC3 /* BoxApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DBC20557DE000F4DCC3 /* BoxApp.cpp */; };
 		20F92DC020557DE000F4DCC3 /* BoxApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92DBC20557DE000F4DCC3 /* BoxApp.cpp */; };
@@ -153,6 +162,15 @@
 		206543992043AED3007D541E /* TileBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileBoard.h; sourceTree = "<group>"; };
 		2065439A2043AED3007D541E /* BoardScreenApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoardScreenApp.cpp; sourceTree = "<group>"; };
 		2065439B2043AED3007D541E /* BoardScreenApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoardScreenApp.h; sourceTree = "<group>"; };
+		20BD4E69206945E400424848 /* ComponentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentType.h; sourceTree = "<group>"; };
+		20BD4E6D206945E400424848 /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = System.h; sourceTree = "<group>"; };
+		20BD4E6E206945E500424848 /* Components.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Components.h; sourceTree = "<group>"; };
+		20BD4E6F206945E500424848 /* ComponentStore.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentStore.h; sourceTree = "<group>"; };
+		20BD4E70206945E500424848 /* System.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = System.cpp; sourceTree = "<group>"; };
+		20BD4E71206945E500424848 /* Entity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Entity.cpp; sourceTree = "<group>"; };
+		20BD4E72206945E500424848 /* EntityManager.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EntityManager.cpp; sourceTree = "<group>"; };
+		20BD4E73206945E500424848 /* Entity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Entity.h; sourceTree = "<group>"; };
+		20BD4E74206945E600424848 /* EntityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EntityManager.h; sourceTree = "<group>"; };
 		20F92DBC20557DE000F4DCC3 /* BoxApp.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = BoxApp.cpp; sourceTree = "<group>"; };
 		20F92DBD20557DE000F4DCC3 /* BoxApp.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BoxApp.h; sourceTree = "<group>"; };
 		20F92DC42055804500F4DCC3 /* PlayMode.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PlayMode.cpp; sourceTree = "<group>"; };
@@ -407,6 +425,15 @@
 		EBBF18B11D749176008E2001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				20BD4E6E206945E500424848 /* Components.h */,
+				20BD4E6F206945E500424848 /* ComponentStore.h */,
+				20BD4E69206945E400424848 /* ComponentType.h */,
+				20BD4E71206945E500424848 /* Entity.cpp */,
+				20BD4E73206945E500424848 /* Entity.h */,
+				20BD4E72206945E500424848 /* EntityManager.cpp */,
+				20BD4E74206945E600424848 /* EntityManager.h */,
+				20BD4E70206945E500424848 /* System.cpp */,
+				20BD4E6D206945E400424848 /* System.h */,
 				20F92E052056676400F4DCC3 /* BoardSettingsMode.h */,
 				20F92E022056676100F4DCC3 /* BoardSettingsMode.cpp */,
 				20F92E082056676600F4DCC3 /* EnemyPawnEntity.h */,
@@ -618,6 +645,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20BD4E7D206945FD00424848 /* System.cpp in Sources */,
 				20F92DC82055804500F4DCC3 /* PlayMode.cpp in Sources */,
 				20F92E0F2056676800F4DCC3 /* xEnemyPawnModel.cpp in Sources */,
 				20F92DE02055A4B300F4DCC3 /* PlayerController.cpp in Sources */,
@@ -629,12 +657,14 @@
 				20F92DFA2055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */,
 				20F92E0C2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */,
 				20F92DC020557DE000F4DCC3 /* BoxApp.cpp in Sources */,
+				20BD4E79206945EA00424848 /* Entity.cpp in Sources */,
 				20F92DE62055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				20F92E152056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */,
 				206543A42043B1BE007D541E /* BoardScreenApp.cpp in Sources */,
 				20F92DF02055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				EB0FF61D2016F06000517030 /* main.cpp in Sources */,
 				20F92DDB2055A30000F4DCC3 /* MenuMode.cpp in Sources */,
+				20BD4E7B206945FA00424848 /* EntityManager.cpp in Sources */,
 				20F92DEB2055A74200F4DCC3 /* EnemyController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -643,6 +673,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				20BD4E7C206945FD00424848 /* System.cpp in Sources */,
 				20F92DC72055804500F4DCC3 /* PlayMode.cpp in Sources */,
 				20F92E0E2056676800F4DCC3 /* xEnemyPawnModel.cpp in Sources */,
 				20F92DDF2055A4B300F4DCC3 /* PlayerController.cpp in Sources */,
@@ -654,12 +685,14 @@
 				20F92DF92055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */,
 				20F92E0B2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */,
 				20F92DBF20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
+				20BD4E78206945EA00424848 /* Entity.cpp in Sources */,
 				20F92DE52055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				20F92E142056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */,
 				206543A32043B1BD007D541E /* BoardScreenApp.cpp in Sources */,
 				20F92DEF2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
 				20F92DDA2055A30000F4DCC3 /* MenuMode.cpp in Sources */,
+				20BD4E7A206945F900424848 /* EntityManager.cpp in Sources */,
 				20F92DEA2055A74200F4DCC3 /* EnemyController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -676,6 +709,7 @@
 				20F92E102056676800F4DCC3 /* EnemyPawnEntity.cpp in Sources */,
 				20F92DF32055A85300F4DCC3 /* TileModel.cpp in Sources */,
 				20F92DD02055894000F4DCC3 /* InputController.cpp in Sources */,
+				20BD4E76206945E600424848 /* Entity.cpp in Sources */,
 				20F92DF82055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */,
 				20F92E0A2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */,
 				20F92DBE20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
@@ -684,7 +718,9 @@
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
 				20F92DEE2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				2065439D2043AED3007D541E /* TileBoard.cpp in Sources */,
+				20BD4E75206945E600424848 /* System.cpp in Sources */,
 				20F92DD92055A30000F4DCC3 /* MenuMode.cpp in Sources */,
+				20BD4E77206945E600424848 /* EntityManager.cpp in Sources */,
 				20F92DE92055A74200F4DCC3 /* EnemyController.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

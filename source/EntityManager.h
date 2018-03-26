@@ -4,11 +4,11 @@
 #pragma once
 
 
-#include <Components.h>
-#include <Entity.h>
-#include <ComponentType.h>
-#include <ComponentStore.h>
-#include <System.h>
+#include "Components.h"
+#include "Entity.h"
+#include "ComponentType.h"
+#include "ComponentStore.h"
+#include "System.h"
 
 #include <map>
 #include <unordered_map>

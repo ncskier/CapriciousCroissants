@@ -190,13 +190,20 @@
     <ClInclude Include="..\..\source\BoardScreenApp.h" />
     <ClInclude Include="..\..\source\BoardSettingsMode.h" />
     <ClInclude Include="..\..\source\BoxApp.h" />
+    <ClInclude Include="..\..\source\Components.h" />
+    <ClInclude Include="..\..\source\ComponentStore.h" />
+    <ClInclude Include="..\..\source\ComponentType.h" />
     <ClInclude Include="..\..\source\EnemyController.h" />
+    <ClInclude Include="..\..\source\Entity.h" />
+    <ClInclude Include="..\..\source\EntityBuilder.h" />
+    <ClInclude Include="..\..\source\EntityManager.h" />
     <ClInclude Include="..\..\source\InputController.h" />
     <ClInclude Include="..\..\source\LoadingMode.h" />
     <ClInclude Include="..\..\source\MenuMode.h" />
     <ClInclude Include="..\..\source\PlayerController.h" />
     <ClInclude Include="..\..\source\PlayerPawnModel.h" />
     <ClInclude Include="..\..\source\PlayMode.h" />
+    <ClInclude Include="..\..\source\System.h" />
     <ClInclude Include="..\..\source\TileBoard.h" />
     <ClInclude Include="..\..\source\TileModel.h" />
     <ClInclude Include="EnemyPawnModel.h">
@@ -210,6 +217,7 @@
     <ClCompile Include="..\..\source\BoardSettingsMode.cpp" />
     <ClCompile Include="..\..\source\BoxApp.cpp" />
     <ClCompile Include="..\..\source\EnemyController.cpp" />
+    <ClCompile Include="..\..\source\EntityManager.cpp" />
     <ClCompile Include="..\..\source\InputController.cpp" />
     <ClCompile Include="..\..\source\LoadingMode.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />
@@ -217,6 +225,7 @@
     <ClCompile Include="..\..\source\PlayerController.cpp" />
     <ClCompile Include="..\..\source\PlayerPawnModel.cpp" />
     <ClCompile Include="..\..\source\PlayMode.cpp" />
+    <ClCompile Include="..\..\source\System.cpp" />
     <ClCompile Include="..\..\source\TileBoard.cpp" />
     <ClCompile Include="..\..\source\TileModel.cpp" />
     <ClCompile Include="EnemyPawnModel.cpp">

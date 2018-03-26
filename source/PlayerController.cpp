@@ -100,7 +100,7 @@ void PlayerController::update(float timestep) {
             }
         } else if (moveEvent == InputController::MoveEvent::MOVING) {
             // MOVING
-            cugl::Vec2 inputOffset = _board->getNode()->worldToNodeCoords(_input->getMoveOffset());
+            cugl::Vec2 inputOffset = _input->getMoveOffset();
 //            float threshold = _board->getCellLength()/5.0f;
             bool row;
             float offsetValue;
@@ -118,7 +118,6 @@ void PlayerController::update(float timestep) {
             // END
             // Calculate movement
             Vec2 inputOffset = _input->getMoveOffset();
-            inputOffset = _board->getNode()->worldToNodeCoords(inputOffset);
             bool row;
             float offsetValue;
             std::tie(row, offsetValue) = calculateOffset(inputOffset);

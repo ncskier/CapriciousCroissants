@@ -71,11 +71,17 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
     _assets = assets;
     
     // Setup Board Node
-    _node = Node::alloc();
-    _node->setContentSize(dimen);
-    _node->setAnchor(Vec2::ZERO);
     gameWidth = dimen.width;
     gameHeight = dimen.height;
+    _node = Node::alloc();
+    float gameLength = (dimen.width > dimen.height) ? dimen.height : dimen.width;
+    _node->setContentSize(gameLength, gameLength);
+//    _node->setContentSize(dimen);
+    _node->setAnchor(Vec2::ANCHOR_CENTER);
+    _node->setPosition(dimen.width/2.0f, dimen.height/2.0f);
+//    _node->setAnchor(Vec2::ZERO);
+    
+//    _node->setAnchor(Vec2::ZERO);
     
     // Initialize everything else
     return init(width, height, colors, allies, enemies, placePawn);
@@ -562,7 +568,7 @@ std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
 
     int x = (int)floor( (position.x - _boardPadding/2.0f) / cellLength );
     int y = (int)floor( (position.y - _boardPadding/2.0f) / cellLength );
-    
+        
     return {x, y};
 }
 

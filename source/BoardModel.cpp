@@ -11,11 +11,16 @@
 #include <ctime>
 #include <cstdlib>
 #include <set>
+#include <vector>
 
 #include "BoardModel.h"
 #include <cugl/base/CUBase.h>
 
 using namespace cugl;
+
+
+#pragma mark -
+#pragma mark Constructors/Destructors
 
 // Initialize board attributes and call generateNewBoard to generate _tiles, _allies, and _enemies
 BoardModel::BoardModel() :
@@ -25,43 +30,14 @@ _numColors(5),
 _numAllies(1),
 _numEnemies(4),
 _selectedTile(-1),
-_enemies(nullptr),
-_allies(nullptr),
-_tiles(nullptr),
 _placeAllies(false),
-_boardPadding(10.0f),
-_tilePadding(5.0f),
+_boardPadding(25.0f),
+_tilePadding(0.0f),
+_tilePaddingX(0.0f),
+_tilePaddingY(0.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
-    colorLookup = { Color4::CORNFLOWER, Color4::RED, Color4::CYAN, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::WHITE };
-    srand((int)time(NULL));
-    generateNewBoard();
-    while (checkForMatches());
-    srand((int)time(NULL));
-}
-
-BoardModel::BoardModel(int width, int height, int colors, int allies, int enemies, bool placePawn) :
-_height(height),
-_width(width),
-_numColors(colors),
-_numAllies(allies),
-_numEnemies(enemies),
-_selectedTile(-1),
-_enemies(nullptr),
-_allies(nullptr),
-_tiles(nullptr),
-_placeAllies(placePawn),
-_boardPadding(10.0f),
-_tilePadding(5.0f),
-offsetRow(false),
-offsetCol(false),
-offset(0.0f) {
-    colorLookup = { Color4::CORNFLOWER, Color4::RED, Color4::CYAN, Color4::MAGENTA, Color4::BLUE, Color4::GREEN, Color4::YELLOW, Color4::WHITE };
-	srand((int)time(NULL));
-	generateNewBoard();
-	while (checkForMatches());
-	srand((int)time(NULL));
 }
 
 /**
@@ -73,27 +49,53 @@ offset(0.0f) {
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool BoardModel::init(int width, int height) {
-    _width = width;
+    return init(width, height, _numColors, _numAllies, _numEnemies, _placeAllies);
+}
+
+bool BoardModel::init(int width, int height, int colors, int allies, int enemies, bool placePawn) {
     _height = height;
+    _width = width;
+    _numColors = colors;
+    _numAllies = allies;
+    _numEnemies = enemies;
+    _placeAllies = placePawn;
+    
+    srand((int)time(NULL));
+    generateNewBoard();
+    while (checkForMatches());
+    srand((int)time(NULL));
     return true;
+}
+
+bool BoardModel::init(int width, int height, int colors, int allies, int enemies, bool placePawn, std::shared_ptr<cugl::AssetManager>& assets, Size dimen) {
+    _assets = assets;
+    
+    // Setup Board Node
+    _node = Node::alloc();
+    _node->setContentSize(dimen);
+    _node->setAnchor(Vec2::ZERO);
+    gameWidth = dimen.width;
+    gameHeight = dimen.height;
+    
+    // Initialize everything else
+    return init(width, height, colors, allies, enemies, placePawn);
 }
 
 // Destroy any values needed to be deleted for this class
 void BoardModel::dispose() {
-	delete[] _tiles;
-	delete[] _allies;
-	delete[] _enemies;
-
-	_tiles = nullptr;
-	_allies = nullptr;
-	_enemies = nullptr;
 }
 
-//Convert (x, y) coordinate to array index. (0, 0) is the upper left corner
-// Example for sideSize = 3
-//  0 1 2     (0,0) (1,0) (2,0)
-//  3 4 5     (0,1) (1,1) (2,1)
-//  6 7 8     (0,2) (1,2) (2,2) (3) (4)
+
+#pragma mark -
+#pragma mark Index Transformation Functions
+
+/**
+ * Convert (x, y) coordinate to array index. (0, 0) is the bottom left corner
+ * Example for sideSize = 3
+ *  6 7 8     (0,2) (1,2) (2,2)
+ *  3 4 5     (0,1) (1,1) (2,1)
+ *  0 1 2     (0,0) (1,0) (2,0)
+ */
 int BoardModel::indexOfCoordinate(int x, int y) const {
 	return x + (y*_width);
 }
@@ -108,88 +110,115 @@ int BoardModel::yOfIndex(int i) const {
     return i / _width;
 }
 
+
+#pragma mark -
+#pragma mark Accessors/Mutators
+// Get random color
+int BoardModel::randomColor() {
+    if (_colorLookup.empty()) {
+        resetRandom();
+    }
+    int i = rand() % _colorLookup.size();
+    int color = _colorLookup[i];
+    _colorLookup.erase(_colorLookup.begin()+i);
+    return color;
+}
+
+// Reset color lookup
+void BoardModel::resetRandom() {
+    _colorLookup.clear();
+    for (int i = 0; i < _numColors; i++) {
+        _colorLookup.push_back(i);
+    }
+}
+
 // Returns the value at the give (x, y) coordinate
-TileModel BoardModel::getTile(int x, int y) const {
+std::shared_ptr<TileModel>& BoardModel::getTile(int x, int y) {
 	return _tiles[indexOfCoordinate(x, y)];
 }
 
 // Returns the ally pawn at index i of _allies
-PlayerPawnModel BoardModel::getAlly(int i) const {
+std::shared_ptr<PlayerPawnModel> BoardModel::getAlly(int i) {
 	return _allies[i];
 }
 
-// Returns the ally pawn at index i of _allies
-PlayerPawnModel* BoardModel::getAllyPtr(int i) {
-	return &_allies[i];
+// Returns the ally pawn at (x, y)
+std::shared_ptr<PlayerPawnModel> BoardModel::getAlly(int x, int y) {
+    for (int i = 0; i < _numAllies; i++) {
+        std::shared_ptr<PlayerPawnModel>& ally = _allies[i];
+        if (ally->getX() == x && ally->getY() == y) {
+            return ally;
+        }
+    }
+    return nullptr;
 }
 
-
 // Returns the enemy pawn at index i of _enemies
-PlayerPawnModel BoardModel::getEnemy(int i) {
+std::shared_ptr<EnemyPawnModel> BoardModel::getEnemy(int i) {
 	return _enemies[i];
 }
 
-// Returns the enemy pawn at index i of _enemies
-PlayerPawnModel* BoardModel::getEnemyPtr(int i) {
-    return &_enemies[i];
+// Returns the enemy pawn at (x, y)
+std::shared_ptr<EnemyPawnModel> BoardModel::getEnemy(int x, int y) {
+    for (int i = 0; i < _numEnemies; i++) {
+        std::shared_ptr<EnemyPawnModel>& enemy = _enemies[i];
+        if (enemy->getX() == x && enemy->getY() == y) {
+            return enemy;
+        }
+    }
+    return nullptr;
 }
-
-// Returns the allies
-PlayerPawnModel BoardModel::getAllies()  {
-	return *_allies;
-}
-
-// Returns the enemies
-PlayerPawnModel BoardModel::getEnemies()  {
-	return *_enemies;
-}
-
 
 // Set the value at the given (x, y) coordinate
-void BoardModel::setTile(int x, int y, TileModel t) {
+void BoardModel::setTile(int x, int y, std::shared_ptr<TileModel> t) {
 	_tiles[indexOfCoordinate(x, y)] = t;
 }
 
 // Place ally at index i of _allies on location (x, y)
 void BoardModel::placeAlly(int x, int y, int i) {
-	_allies[i].x = x;
-	_allies[i].y = y;
+	_allies[i]->setXY(x, y);
 }
 	
 // Place enemy at index i of _enemies on location (x, y)
 void BoardModel::placeEnemy(int x, int y, int i) {
-	_enemies[i].x = x;
-	_enemies[i].y = y;
+	_enemies[i]->setXY(x, y);
 }
 
 void BoardModel::moveEnemy(int dx, int dy, int enemyIdx) {
-    _enemies[enemyIdx].x += dx;
-    _enemies[enemyIdx].y += dy;
+    _enemies[enemyIdx]->step();
 }
 
 // Remove ally at index i
 void BoardModel::removeAlly(int i) {
-	_allies[i].x = -1;
-	_allies[i].y = -1;
+//    _node->removeChild(_allies[i]->getSprite());
+    _removedAllies.insert(_allies[i]);
+    _allies.erase(_allies.begin() + i);
+    _numAllies--;
 }
 
 // Remove enemy at index i
 void BoardModel::removeEnemy(int i) {
-	_enemies[i].x = -1;
-	_enemies[i].y = -1;
+//    _node->removeChild(_enemies[i]->getSprite());
+    _removedEnemies.insert(_enemies[i]);
+    _enemies.erase(_enemies.begin() + i);
+    _numEnemies--;
 }
+
+
+#pragma mark -
+#pragma mark Logic
 
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
 bool BoardModel::checkForMatches() {
 	std::set<int> replaceTiles;
-
+    
 	// Check for matches
 	for (int x = 0; x < _width; x++) {
 		for (int y = 0; y < _height; y++) {
 			// Check Row
 			if (x >= 2) {
-				if (_tiles[indexOfCoordinate(x,y)].getColor() == _tiles[indexOfCoordinate(x - 1, y)].getColor()
-					&& _tiles[indexOfCoordinate(x - 1, y)].getColor() == _tiles[indexOfCoordinate(x - 2, y)].getColor()) {
+				if (_tiles[indexOfCoordinate(x,y)]->getColor() == _tiles[indexOfCoordinate(x - 1, y)]->getColor()
+					&& _tiles[indexOfCoordinate(x - 1, y)]->getColor() == _tiles[indexOfCoordinate(x - 2, y)]->getColor()) {
 					replaceTiles.insert(indexOfCoordinate(x, y));
 					replaceTiles.insert(indexOfCoordinate(x - 1, y));
 					replaceTiles.insert(indexOfCoordinate(x - 2, y));
@@ -197,8 +226,8 @@ bool BoardModel::checkForMatches() {
 			}
 			// Check Column
 			if (y >= 2) {
-				if (_tiles[indexOfCoordinate(x, y)].getColor() == _tiles[indexOfCoordinate(x, y - 1)].getColor()
-					&& _tiles[indexOfCoordinate(x, y - 1)].getColor() == _tiles[indexOfCoordinate(x, y - 2)].getColor()) {
+				if (_tiles[indexOfCoordinate(x, y)]->getColor() == _tiles[indexOfCoordinate(x, y - 1)]->getColor()
+					&& _tiles[indexOfCoordinate(x, y - 1)]->getColor() == _tiles[indexOfCoordinate(x, y - 2)]->getColor()) {
 					replaceTiles.insert(indexOfCoordinate(x, y));
 					replaceTiles.insert(indexOfCoordinate(x, y - 1));
 					replaceTiles.insert(indexOfCoordinate(x, y - 2));
@@ -211,190 +240,144 @@ bool BoardModel::checkForMatches() {
 
 	// Replace Tiles
 	std::set<int>::iterator iter;
-	for (iter = replaceTiles.begin(); iter != replaceTiles.end(); iter++) {
+	for (iter = replaceTiles.begin(); iter != replaceTiles.end(); ++iter) {
 		// Replace tile
 		replaceTile(*iter);
 		// Remove enemies
-		if (_enemies != nullptr) {
-			for (int i = 0; i < _numEnemies; i++) {
-				if (indexOfCoordinate(_enemies[i].x, _enemies[i].y) == *iter) { 
-					removeEnemy(i);
-				}
-			}
-		}
+        if (!_enemies.empty()) {
+            for (int i = 0; i < _enemies.size(); i++) {
+                if (indexOfCoordinate(_enemies[i]->getX(), _enemies[i]->getY()) == *iter) {
+                    removeEnemy(i);
+                }
+            }
+        }
 	}
 
 	return matchExists;
 }
-
-
-// TEMPORARY FUNCTIONS FOR COOL ANIMATION
-// Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
-bool BoardModel::checkForMatchesTemp() {
-
-	// Check for matches
-	for (int x = 0; x < _width; x++) {
-		for (int y = 0; y < _height; y++) {
-			// Check Row
-			if (x >= 2) {
-				if (_tiles[indexOfCoordinate(x, y)].getColor() == _tiles[indexOfCoordinate(x - 1, y)].getColor()
-					&& _tiles[indexOfCoordinate(x - 1, y)].getColor() == _tiles[indexOfCoordinate(x - 2, y)].getColor()) {
-					totalReplaceTiles.insert(indexOfCoordinate(x, y));
-					totalReplaceTiles.insert(indexOfCoordinate(x - 1, y));
-					totalReplaceTiles.insert(indexOfCoordinate(x - 2, y));
-				}
-			}
-			// Check Column
-			if (y >= 2) {
-				if (_tiles[indexOfCoordinate(x, y)].getColor() == _tiles[indexOfCoordinate(x, y - 1)].getColor()
-					&& _tiles[indexOfCoordinate(x, y - 1)].getColor() == _tiles[indexOfCoordinate(x, y - 2)].getColor()) {
-					totalReplaceTiles.insert(indexOfCoordinate(x, y));
-					totalReplaceTiles.insert(indexOfCoordinate(x, y - 1));
-					totalReplaceTiles.insert(indexOfCoordinate(x, y - 2));
-				}
-			}
-		}
-	}
-
-	bool matchExists = !totalReplaceTiles.empty();
-	if (matchExists) {
-		animationCounter = 0;
-	}
-
-	return matchExists;
-}
-
-void BoardModel::triggerResets() {
-	// Replace Tiles
-	for (totalIter = totalReplaceTiles.begin(); totalIter != totalReplaceTiles.end(); totalIter++) {
-		// Replace tile
-		replaceTile(*totalIter);
-		// Remove enemies
-		if (_enemies != nullptr) {
-			for (int i = 0; i < _numEnemies; i++) {
-				if (indexOfCoordinate(_enemies[i].x, _enemies[i].y) == *totalIter) {
-					removeEnemy(i);
-				}
-			}
-		}
-	}
-
-	animationCounter = 60;
-
-	
-}
-
-
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void BoardModel::replaceTile(int tileLocation) {
-	int color = rand() % _numColors;
-	_tiles[tileLocation].setColor(color);
+//    _node->removeChild(_tiles[tileLocation]->getSprite());
+    _removedTiles.insert(_tiles[tileLocation]);
+    // New random color
+    int color = randomColor();
+//    int color = rand() % _numColors;
+    Rect bounds = calculateDrawBounds(xOfIndex(tileLocation), yOfIndex(tileLocation));
+    std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
+    _tiles[tileLocation] = tile;
+//    _node->addChild(tile->getSprite());
+    _addedTiles.insert(tile);
 }
 
 // Generates a new set of tiles for _tiles that verifies that the board does not have any matches existing
 void BoardModel::generateNewBoard() {
 	// Setup Tiles
+    _tiles.reserve(_width * _height);
     srand((int)time(NULL));
-	_tiles = new TileModel[_height*_width];
 	int color;
-	for (int i = 0; i < _height*_width; i++) {
-		color = rand() % _numColors;        // random number in range [0, _numColors-1]
-		_tiles[i].setColor(color);
-	}
+    for (int i = 0; i < _height*_width; i++) {
+        color = randomColor();
+//        color = rand() % _numColors;        // random number in range [0, _numColors-1]
+        Rect bounds = calculateDrawBounds(xOfIndex(i), yOfIndex(i));
+        std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
+//        _node->addChild(tile->getSprite());
+        _tiles.push_back(tile);
+        _addedTiles.insert(tile);
+    }
+    
+    // Replace any matches
+    while (checkForMatches());
 
-	// Replace any matches
-	while (checkForMatches());
+    // Setup Allies
+    int x;
+    int y;
+    for (int i = 0; i < _numAllies; i++) {
+        x = rand() % _width;
+        y = rand() % _height;
+        while (true) {
+            bool match = false;
+            for (int j = 0; j < i; j++) {
+                std::shared_ptr<PlayerPawnModel> temp = _allies[j];
+                if (temp->getX() == x && temp->getY() == y) {
+                    x = rand() % _width;
+                    y = rand() % _height;
+                    match = true;
+                }
+            }
+            if (!match) {
+                break;
+            }
+        }
+        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
+//        _node->addChild(ally->getSprite());
+        _allies.push_back(ally);
+        _addedAllies.insert(ally);
+    }
 
-	// Setup Allies
-	_allies = new PlayerPawnModel[_numAllies];
-	int x;
-	int y;
-	for (int i = 0; i < _numAllies; i++) {
-		x = rand() % _width;
-		y = rand() % _height;
-		if (i > 0) {
-			while (true) {
-				bool match = false;
-				for (int j = 0; j < i; j++) {
-					PlayerPawnModel temp = _allies[j];
-					if (temp.x == x && temp.y == y) {
-						x = rand() % _width;
-						y = rand() % _height;
-						match = true;
-					}
-				}
-				if (!match) {
-					break;
-				}
-			}
-		}
-		
-		_allies[i].x = x;
-		_allies[i].y = y;
-	}
+    //Setup Enemies
+    for (int i = 0; i < _numEnemies; i++) {
+        x = rand() % _width;
+        y = rand() % _height;
+        while (true) {
+            bool match = false;
+            for (int j = 0; j < _numAllies; j++) {
+                std::shared_ptr<PlayerPawnModel> temp = _allies[j];
+                if (temp->getX() == x && temp->getY() == y) {
+                    x = rand() % _width;
+                    y = rand() % _height;
+                    match = true;
+                }
+            }
+            if (i > 0) {
+                for (int j = 0; j < i; j++) {
+                    std::shared_ptr<EnemyPawnModel> temp = _enemies[j];
+                    if (temp->getX() == x && temp->getY() == y) {
+                        x = rand() % _width;
+                        y = rand() % _height;
+                        match = true;
+                    }
+                }
+            }
 
-	//Setup Enemies
-	_enemies = new PlayerPawnModel[_numEnemies];
-	for (int i = 0; i < _numEnemies; i++) {
-		x = rand() % _width;
-		y = rand() % _height;
-		while (true) {
-			bool match = false;
-			for (int j = 0; j < _numAllies; j++) {
-				PlayerPawnModel temp = _allies[j];
-				if (temp.x == x && temp.y == y) {
-					x = rand() % _width;
-					y = rand() % _height;
-					match = true;
-				}
-			}
-			if (i > 0) {
-				for (int j = 0; j < i; j++) {
-					PlayerPawnModel temp = _enemies[j];
-					if (temp.x == x && temp.y == y) {
-						x = rand() % _width;
-						y = rand() % _height;
-						match = true;
-					}
-				}
-			}
-
-			if (!match) {
-				break;
-			}
-		}
-
-		_enemies[i].x = x;
-		_enemies[i].y = y;
-        _enemies[i].randomDirection();
-	}
+            if (!match) {
+                break;
+            }
+        }
+        std::shared_ptr<EnemyPawnModel> enemy = EnemyPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
+        enemy->setRandomDirection();
+//        _node->addChild(enemy->getSprite());
+        _enemies.push_back(enemy);
+        _addedEnemies.insert(enemy);
+    }
 }
 
 // Slide pawns in row or column [k] by [offset]
 void BoardModel::slidePawns(bool row, int k, int offset) {
     // Slide Allies
     for (int i = 0; i < _numAllies; i++) {
-        PlayerPawnModel pawn = _allies[i];
-        if (pawn.x != -1 && pawn.y != -1) {
+        std::shared_ptr<PlayerPawnModel> pawn = _allies[i];
+        if (pawn->getX() != -1 && pawn->getY() != -1) {
             if (row) {
                 // Row
-                if (k == pawn.y) {
-                    float x = ((int)pawn.x + offset) % _width;
+                if (k == pawn->getY()) {
+                    float x = (pawn->getX() + offset) % _width;
                     while (x < 0) {
                         x += _width;
                     }
-                    _allies[i].x = x;
+                    _allies[i]->setX(x);
+//                    _allies[i]->setSpriteBounds(calculateDrawBounds(x, k));
                 }
             }
             else {
                 // Column
-                if (k == pawn.x) {
-                    float y = ((int)pawn.y + offset) % _height;
+                if (k == pawn->getX()) {
+                    float y = (pawn->getY() + offset) % _height;
                     while (y < 0) {
                         y += _height;
                     }
-                    _allies[i].y = y;
+                    _allies[i]->setY(y);
+//                    _allies[i]->setSpriteBounds(calculateDrawBounds(k, y));
                 }
             }
         }
@@ -402,26 +385,28 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
 
     // Slide Enemies
     for (int i = 0; i < _numEnemies; i++) {
-        PlayerPawnModel pawn = _enemies[i];
-        if (pawn.x != -1 && pawn.y != -1) {
+        std::shared_ptr<EnemyPawnModel> pawn = _enemies[i];
+        if (pawn->getX() != -1 && pawn->getY() != -1) {
             if (row) {
                 // Row
-                if (k == pawn.y) {
-                    float x = ((int)pawn.x + offset) % _width;
+                if (k == pawn->getY()) {
+                    float x = ((int)pawn->getX() + offset) % _width;
                     while (x < 0) {
                         x += _width;
                     }
-                    _enemies[i].x = x;
+                    _enemies[i]->setX(x);
+//                    _enemies[i]->setSpriteBounds(calculateDrawBounds(x, k));
                 }
             }
             else {
                 // Column
-                if (k == pawn.x) {
-                    float y = ((int)pawn.y + offset) % _height;
+                if (k == pawn->getX()) {
+                    float y = (pawn->getY() + offset) % _height;
                     while (y < 0) {
                         y += _height;
                     }
-                    _enemies[i].y = y;
+                    _enemies[i]->setY(y);
+//                    _enemies[i]->setSpriteBounds(calculateDrawBounds(k, y));
                 }
             }
         }
@@ -432,7 +417,7 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
 void BoardModel::slide(bool row, int k, int offset) {
 	// Copy
 	int sideSize = row ? _width : _height;
-	TileModel *line = new TileModel[sideSize];
+    std::shared_ptr<TileModel>* line = new std::shared_ptr<TileModel>[sideSize];
 	for (int i = 0; i < sideSize; i++) {
 		int x = row ? i : k;
 		int y = row ? k : i;
@@ -519,19 +504,54 @@ bool BoardModel::selectTileAtPosition(Vec2 position) {
     return true;
 }
 
+
+#pragma mark -
+#pragma mark Drawing/Animation
+
+/** Update nodes */
+void BoardModel::updateNodes(bool position, bool z) {
+    // Tiles
+    for (int x = 0; x < _width; x++) {
+        for (int y = 0; y < _height; y++) {
+            if (position)
+                _tiles[indexOfCoordinate(x, y)]->setSpriteBounds(calculateDrawBounds(x, y));
+            if (z)
+                _tiles[indexOfCoordinate(x, y)]->getSprite()->setZOrder(calculateDrawZ(x, y, true));
+        }
+    }
+    
+    // Allies
+    for (std::vector<std::shared_ptr<PlayerPawnModel>>::iterator it = _allies.begin(); it != _allies.end(); ++it) {
+        if (position)
+            (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
+        if (z)
+            (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+    }
+    
+    // Enemies
+    for (std::vector<std::shared_ptr<EnemyPawnModel>>::iterator it = _enemies.begin(); it != _enemies.end(); ++it) {
+        if (position)
+            (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
+        if (z)
+            (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+    }
+    
+    // Resort z order
+    _node->sortZOrder();
+}
+
 float BoardModel::getCellLength() {
-    float tileWidth = ((gameWidth - 2.0f*_boardPadding) / _width) - _tilePadding/2.0f;
-    float tileHeight = ((gameHeight - 2.0f*_boardPadding) / _height) - _tilePadding/2.0f;
-    float tileLength = tileWidth > tileHeight ? tileHeight : tileWidth;
-    return tileLength + _tilePadding;
+    float cellWidth = (gameWidth - 2.0f*_boardPadding) / _width;
+    float cellHeight = (gameHeight - 2.0f*_boardPadding) / _height;
+    return fmin(cellWidth, cellHeight);
 }
 
 // Convert grid (x, y) to screen coordinates
 cugl::Rect BoardModel::gridToScreen(int x, int y) {
     float cellLength = getCellLength();
     
-    float xPos = _boardPadding/2.0f + x*cellLength;
-    float yPos = _boardPadding/2.0f + y*cellLength;
+    float xPos = _boardPadding + x*cellLength;
+    float yPos = _boardPadding + y*cellLength;
     
     return Rect(xPos, yPos, cellLength, cellLength);
 }
@@ -552,186 +572,78 @@ int BoardModel::lengthToCells(float length) {
     return (int)round( length / cellLength );
 }
 
-// Draws all of the tiles and pawns(in that order) 
-void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
-//    float gameLength = (gameWidth > gameHeight) ? gameHeight : gameWidth;
-    Rect bounds;
-    batch->begin();
-	if (animationCounter >= 0) {
-		animationCounter++;
-	}
-	if (animationCounter == 60) {
-		triggerResets();
-	}
-	if (animationCounter > 120) {
-		totalReplaceTiles.clear();
-		animationCounter = -1;
-	}
-    for (int x = 0; x < _width; x++) {
-        for (int y = 0; y < _height; y++) {  //USE FUNCTIONS, 90% OF THIS CODE IS REPEATED 4x, EDITING IT IS A NIGHTMARE
-            // Offset
-            float xOffset = (offsetRow && y == yOfIndex(_selectedTile)) ? offset : 0.0f;
-            float yOffset = (offsetCol && x == xOfIndex(_selectedTile)) ? offset : 0.0f;
-            // Wrap
-            bounds = gridToScreen(x, y);
-            float xWrap = 0.0f;
-            float yWrap = 0.0f;
-            if (bounds.getMidX()+xOffset <= 0)
-                xWrap = getCellLength() * _width;
-            if (bounds.getMidX()+xOffset > getCellLength() * _width)
-                xWrap = -getCellLength() * _width;
-            if (bounds.getMidY()+yOffset <= 0)
-                yWrap = getCellLength() * _height;
-            if (bounds.getMidY()+yOffset > getCellLength() * _height)
-                yWrap = -getCellLength() * _height;
-            // Bounds
-            float xf = bounds.getMinX() + xOffset + _tilePadding/2.0f + xWrap;
-            float yf = bounds.getMinY() + yOffset + _tilePadding/2.0f + yWrap;
-            float width = bounds.size.width - _tilePadding;
-            float height = bounds.size.height - _tilePadding;
-			//Temporary for cool animation
-			if (animationCounter >= 0) {
-				int locat = indexOfCoordinate(x, y);
-				if (totalReplaceTiles.find(locat) != totalReplaceTiles.end() && animationCounter < 100) {
-					if (animationCounter < 60) { //Destroy
-						if (animationCounter < 30) {
-							bounds.set(xf + animationCounter * getCellLength() / 300, yf + animationCounter * getCellLength() / 300, width - animationCounter * getCellLength() / 150, height - animationCounter * getCellLength() / 150);
-						}
-						if (animationCounter < 54) {
-							bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
-						}
-						else {
-							bounds.set(xf + ((animationCounter-54) * getCellLength() / 42), yf + ((animationCounter - 54) * getCellLength() / 20), width - ((animationCounter - 54) * getCellLength() / 10), height - ((animationCounter - 54) * getCellLength() / 10));
-						}
-					}
-					else { //Regenerate
-						if (animationCounter > 66) {
-							bounds.set(xf + getCellLength() / 20, yf + getCellLength() / 20, width - getCellLength() / 10, height - getCellLength() / 10);
-						}
-						else {
-							bounds.set(xf + ((66 - animationCounter) * getCellLength() / 20), yf + ((66 - animationCounter) * getCellLength() / 20), width - ((66 - animationCounter) * getCellLength() / 10), height - ((66 - animationCounter) * getCellLength() / 10));
-						}
-					}
-					batch->draw(tileTexture, Color4(colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor())).scale(.85, false), bounds);
-				}
-				else {
-					bounds.set(xf, yf, width, height);
-					batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
-				}
-			}
-			else {
-				bounds.set(xf, yf, width, height);
-				batch->draw(tileTexture, colorLookup.at(_tiles[indexOfCoordinate(x, y)].getColor()), bounds);
-			}
-			//end of cool animation
-            //bounds.set(xf, yf, width, height);
-        }
-    }
-
-    // Draw Pawns
-    for (int i = 0; i < _numAllies; i++) {
-        PlayerPawnModel ally = _allies[i];
-        if (ally.x != -1 && ally.y != -1) {
-            // Offset
-            float xOffset = (offsetRow && ally.y == yOfIndex(_selectedTile)) ? offset : 0.0f;
-            float yOffset = (offsetCol && ally.x == xOfIndex(_selectedTile)) ? offset : 0.0f;
-            // Wrap
-            bounds = gridToScreen(ally.x, ally.y);
-            float xWrap = 0.0f;
-            float yWrap = 0.0f;
-			if (bounds.getMidX() + xOffset <= 0)
-				xWrap = getCellLength() * _width;
-			if (bounds.getMidX() + xOffset > getCellLength() * _width)
-				xWrap = -getCellLength() * _width;
-			if (bounds.getMidY() + yOffset <= 0)
-				yWrap = getCellLength() * _height;
-			if (bounds.getMidY() + yOffset > getCellLength() * _height)
-				yWrap = -getCellLength() * _height;
-            // Bounds
-            float xf = bounds.getMinX() + xOffset + 5.0f*_tilePadding + xWrap;
-            float yf = bounds.getMinY() + yOffset + 5.0f*_tilePadding + yWrap;
-            float width = bounds.size.width - 10.0f*_tilePadding;
-            float height = bounds.size.height - 10.0f*_tilePadding;
-            bounds.set(xf, yf, width, height);
-            batch->draw(tileTexture, Color4::GRAY, bounds);
-        }
-    }
+// Apply padding, offset, and wrap to return tile bounds
+Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
+    Rect bounds = gridToScreen(gridX, gridY);
     
-    // Draw Enemies
-    for (int i = 0; i < _numEnemies; i++) {
-         PlayerPawnModel enemy = _enemies[i];
-        if (enemy.x != -1 && enemy.y != -1) {
-            // Offset
-            float xOffset = (offsetRow && enemy.y == yOfIndex(_selectedTile)) ? offset : 0.0f;
-            float yOffset = (offsetCol && enemy.x == xOfIndex(_selectedTile)) ? offset : 0.0f;
-            // Wrap
-            bounds = gridToScreen(enemy.x, enemy.y);
-            float xWrap = 0.0f;
-            float yWrap = 0.0f;
-			if (bounds.getMidX() + xOffset <= 0)
-				xWrap = getCellLength() * _width;
-			if (bounds.getMidX() + xOffset > getCellLength() * _width)
-				xWrap = -getCellLength() * _width;
-			if (bounds.getMidY() + yOffset <= 0)
-				yWrap = getCellLength() * _height;
-			if (bounds.getMidY() + yOffset > getCellLength() * _height)
-				yWrap = -getCellLength() * _height;
-            // Bounds
-            float xf = bounds.getMinX() + xOffset + 5.0f*_tilePadding + xWrap;
-            float yf = bounds.getMinY() + yOffset + 5.0f*_tilePadding + yWrap;
-            float width = bounds.size.width - 10.0f*_tilePadding;
-            float height = bounds.size.height - 10.0f*_tilePadding;
-            bounds.set(xf, yf, width, height);
-            batch->draw(tileTexture, Color4::BLACK, bounds);
-            
-            // Direction Indicator
-            float padding = _tilePadding;
-            bounds = gridToScreen(enemy.x, enemy.y);
-            width = bounds.size.width/5.0f;
-            height = bounds.size.height/5.0f;
-            xf = bounds.getMidX() - width/2.0f;
-            yf = bounds.getMidY() - height/2.0f;
-            if (enemy.dx == 1)
-                xf = bounds.getMaxX() - width - 5.0f*_tilePadding - padding;
-            if (enemy.dx == -1)
-                xf = bounds.getMinX() + 5.0f*_tilePadding + padding;
-            if (enemy.dy == 1)
-                yf = bounds.getMaxY() - height - 5.0f*_tilePadding - padding;
-            if (enemy.dy == -1)
-                yf = bounds.getMinY() + 5.0f*_tilePadding + padding;
-            bounds.set(xf+xOffset+xWrap, yf+yOffset+yWrap, width, height);
-            batch->draw(tileTexture, Color4::RED, bounds);
+    // Apply Padding to Bounds
+//    float x = bounds.getMinX() + _tilePadding/2.0f;
+//    float y = bounds.getMinY() + _tilePadding/2.0f;
+//    float width = bounds.size.width - _tilePadding;
+//    float height = bounds.size.height - _tilePadding;
+    float x = bounds.getMinX() + _tilePaddingX/2.0f;
+    float y = bounds.getMinY() + _tilePaddingY/2.0f;
+    float width = bounds.size.width - _tilePaddingX;
+    float height = bounds.size.height - _tilePaddingY;
+    bounds.set(x, y, width, height);
+    
+    // Calculate Offset
+    float xOffset = (offsetRow && gridY == yOfIndex(_selectedTile)) ? offset : 0.0f;
+    float yOffset = (offsetCol && gridX == xOfIndex(_selectedTile)) ? offset : 0.0f;
+    
+    // Calculate Wrap (wrapping tiles around the board as they are moved)
+    float xWrap = 0.0f;
+    float yWrap = 0.0f;
+    float cellLength = getCellLength();
+    float boardWidth = _width*cellLength;
+    float boardHeight = _height*cellLength;
+    if (bounds.getMidX() + xOffset <= _boardPadding)
+        xWrap = boardWidth;
+    if (bounds.getMidX() + xOffset >= boardWidth + _boardPadding)
+        xWrap = -boardWidth;
+    if (bounds.getMidY() + yOffset <= _boardPadding)
+        yWrap = boardHeight;
+    if (bounds.getMidY() + yOffset >= boardHeight + _boardPadding)
+        yWrap = -boardHeight;
+    
+    // Calculate new bounds
+    bounds.set(
+               x + xOffset + xWrap,
+               y + yOffset + yWrap,
+               width,
+               height);
+    return bounds;
+}
+
+/**
+ * Calculate z-axis coordinate given (x,y) cell in grid.
+ *   Tiles at 10s
+ *   Pawns at  Tile number + 5
+ */
+int BoardModel::calculateDrawZ(int x, int y, bool tile) {
+    int row = y;
+    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
+        row = (row + lengthToCells(offset)) % _height;
+        while (row < 0) {
+            row += _height;
         }
     }
-    
-    // Draw over selected tile
-    if (_selectedTile != -1) {
-        int x = xOfIndex(_selectedTile);
-        int y = yOfIndex(_selectedTile);
-        // Offset
-        float xOffset = (offsetRow) ? offset : 0.0f;
-        float yOffset = (offsetCol) ? offset : 0.0f;
-        // Wrap
-        bounds = gridToScreen(x, y);
-        float xWrap = 0.0f;
-        float yWrap = 0.0f;
-		if (bounds.getMidX() + xOffset <= 0)
-			xWrap = getCellLength() * _width;
-		if (bounds.getMidX() + xOffset > getCellLength() * _width)
-			xWrap = -getCellLength() * _width;
-		if (bounds.getMidY() + yOffset <= 0)
-			yWrap = getCellLength() * _height;
-		if (bounds.getMidY() + yOffset > getCellLength() * _height)
-			yWrap = -getCellLength() * _height;
-        float xf = bounds.getMinX() + xOffset + xWrap;
-        float yf = bounds.getMinY() + yOffset + yWrap;
-        float width = bounds.size.width;
-        float height = bounds.size.height;
-        bounds.set(xf, yf, width, height);
-        batch->draw(tileTexture, Color4f(0.0f, 0.0f, 0.0f, 0.2f), bounds);
+    if (tile) {
+        // Start from 10 with increments of 10
+        return 10 + 10*(_height-row-1);
+    } else {
+        // Start from 10*height + 5 with increments of 10
+        return (10*_height + 5) + 10*(_height-row-1);
     }
-
-    batch->end();
+//    int row = y;
+//    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
+//        row = (row + lengthToCells(offset)) % _height;
+//        while (row < 0) {
+//            row += _height;
+//        }
+//    }
+//    int base = (_height-row) * 10;
+//    return tile ? base : base+5;
 }
 
 /**
@@ -741,25 +653,29 @@ void BoardModel::draw(const std::shared_ptr<SpriteBatch>& batch) {
 */
 std::string BoardModel::toString() const {
     std::stringstream ss;
-    for (int j = 0; j < _height; j++) {
+    for (int j = _height-1; j >= 0; j--) {
         for (int i = 0; i < _width; i++) {
             ss << " ";
-            ss << _tiles[indexOfCoordinate(i, j)].getColor();
+            ss << _tiles[indexOfCoordinate(i, j)]->getColor();
         }
         ss << "\n";
     }
-    ss << "allies: [";
-    for (int i = 0; i < _numAllies; i++) {
-        ss << "(" << _allies[i].x << ", " << _allies[i].y << ")";
-        ss << "   ";
+    if (!_allies.empty()) {
+        ss << "allies: [";
+        for (int i = 0; i < _numAllies; i++) {
+            ss << "(" << _allies[i]->getX() << ", " << _allies[i]->getY() << ")";
+            ss << "   ";
+        }
+        ss << "]";
     }
-    ss << "]";
-    ss << "\nenemies: [";
-    for (int i = 0; i < _numEnemies; i++) {
-        ss << "(" << _enemies[i].x << ", " << _enemies[i].y << ")";
-        ss << "   ";
+    if (!_enemies.empty()) {
+        ss << "\nenemies: [";
+        for (int i = 0; i < _numEnemies; i++) {
+            ss << "(" << _enemies[i]->getX() << ", " << _enemies[i]->getY() << ")";
+            ss << "   ";
+        }
+        ss << "]";
     }
-    ss << "]";
     return ss.str();
 }
 

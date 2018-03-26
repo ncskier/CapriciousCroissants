@@ -6,6 +6,8 @@
 //  Copyright © 2018 Game Design Initiative at Cornell. All rights reserved.
 //
 
+#include <sstream>
+#include <set>
 #include "PlayMode.h"
 
 using namespace cugl;
@@ -44,35 +46,7 @@ _debug(false)
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool PlayMode::init(const std::shared_ptr<AssetManager>& assets) {
-    // Initialize the scene to a locked width
-    Size dimen = Application::get()->getDisplaySize();
-    dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
-    if (assets == nullptr) {
-        return false;
-    } else if (!Scene::init(dimen)) {
-        return false;
-    }
-    
-    // Start up the input handler
-    _assets = assets;
-    _input.init(getCamera());
-    
-    // Create board
-    populate();
-    _state = State::PLAYER;
-    _active = true;
-    _complete = false;
-    setDebug(false);
-    
-    // Start up turn controllers
-    _playerController.init(_board, &_input);
-    _boardController.init(_board);
-    _enemyController.init(_board);
-    
-    // Set Background
-    Application::get()->setClearColor(Color4(229, 229, 229, 255));
-    
-    return true;
+    return init(assets, 5, 5, 5, 3, 5, false);
 }
 
 bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int height, int colors, int allies, int enemies, bool placePawn) {
@@ -81,34 +55,40 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
 	if (assets == nullptr) {
 		return false;
-	}
-	else if (!Scene::init(dimen)) {
+	} else if (!Scene::init(dimen)) {
 		return false;
 	}
 
-	// Start up the input handler
 	_assets = assets;
-	_input.init(getCamera());
+    _actions = ActionManager::alloc();
 
-	auto layer = assets->get<Node>("game");
-	layer->setContentSize(dimen);
-	layer->doLayout(); // This rearranges the children to fit the screen
-	addChild(layer);
+//    _worldNode = Node::allocWithBounds(dimen);
+    _worldNode = _assets->get<Node>("game");
+    _worldNode->setContentSize(dimen);
+    _worldNode->setAnchor(Vec2::ZERO);
+    _worldNode->doLayout(); // This rearranges the children to fit the screen
+	addChild(_worldNode);
 
+    // Setup win/lose text
 	_text = std::dynamic_pointer_cast<Label>(assets->get<Node>("game_labelend"));
 	_text->setVisible(false);
 
-	// Create board
-	populate(width, height, colors, allies, enemies, placePawn);
+    // Setup state
 	_state = State::PLAYER;
 	_active = true;
 	_complete = false;
 	setDebug(false);
+    
+    // Create board
+    populate(width, height, colors, allies, enemies, placePawn, dimen);
+    
+    // Setup Input handler
+    _input.init(getCamera());
 
 	// Start up turn controllers
-	_playerController.init(_board, &_input);
-	_boardController.init(_board);
-	_enemyController.init(_board);
+	_playerController.init(_actions, _board, &_input);
+	_boardController.init(_actions, _board);
+	_enemyController.init(_actions, _board);
 
 	// Set Background
 	Application::get()->setClearColor(Color4(229, 229, 229, 255));
@@ -141,8 +121,7 @@ void PlayMode::dispose() {
  */
 void PlayMode::reset() {
     setComplete(false);
-    populate();
-    CULog("populated board:\n%s", _board->toString().c_str());
+//    populate();
 }
 
 /**
@@ -151,28 +130,127 @@ void PlayMode::reset() {
  * This method is really, really long.  In practice, you would replace this
  * with your serialization loader, which would process a level file.
  */
-void PlayMode::populate() {
-    _board = BoardModel::alloc(5, 5);
-    _board->tileTexture = _assets->get<Texture>("100squareWhite");
-    Size dimen = Application::get()->getDisplaySize();
-    CULog("dimen: %s", dimen.toString().c_str());
-    dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
-    _board->gameWidth = dimen.width;
-    _board->gameHeight = dimen.height;
-    CULog("scale: %s", dimen.toString().c_str());
-}
+//void PlayMode::populate() {
+//    _board = BoardModel::alloc(5, 5);
+//    _board->tileTexture = _assets->get<Texture>("100squareWhite");
+//    _board->playerTexture = _assets->get<Texture>("player");
+//    Size dimen = Application::get()->getDisplaySize();
+//    CULog("dimen: %s", dimen.toString().c_str());
+//    dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
+//    _board->gameWidth = dimen.width;
+//    _board->gameHeight = dimen.height;
+//    CULog("scale: %s", dimen.toString().c_str());
+//}
 
-void PlayMode::populate(int height, int width, int colors, int allies, int enemies, bool place) {
-	_board = BoardModel::alloc(width, height, colors, allies, enemies, place);
-	_board->tileTexture = _assets->get<Texture>("100squareWhite");
-	Size dimen = Application::get()->getDisplaySize();
-	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
-	_board->gameWidth = dimen.width;
-	_board->gameHeight = dimen.height;
+void PlayMode::populate(int height, int width, int colors, int allies, int enemies, bool placePawn, Size dimen) {
+    // Create board
+    _board = BoardModel::alloc(width, height, colors, allies, enemies, placePawn, _assets, dimen);
+    _worldNode->addChild(_board->getNode());
+    
+    // Remove tiles
+    std::set<std::shared_ptr<TileModel>>::iterator tileIter;
+    for (tileIter = _board->getRemovedTiles().begin(); tileIter != _board->getRemovedTiles().end(); ++tileIter) {
+        _board->getAddedTiles().erase(*tileIter);
+    }
+    _board->clearRemovedTiles();
+    
+    // Add tiles
+    int i = 0;
+    for (tileIter = _board->getAddedTiles().begin(); tileIter != _board->getAddedTiles().end(); ++tileIter) {
+        _board->getNode()->addChild((*tileIter)->getSprite());
+        std::stringstream key;
+        key << "int_add_tile_" << i;
+        _actions->activate(key.str(), _board->tileAddAction, (*tileIter)->getSprite());
+        i++;
+    }
+    _board->clearAddedTiles();
+
+    // Add allies
+    i = 0;
+    std::set<std::shared_ptr<PlayerPawnModel>>::iterator allyIter;
+    for (allyIter = _board->getAddedAllies().begin(); allyIter != _board->getAddedAllies().end(); ++allyIter) {
+        _board->getNode()->addChild((*allyIter)->getSprite());
+        std::stringstream key;
+        key << "int_add_ally_" << i;
+        _actions->activate(key.str(), _board->allyAddAction, (*allyIter)->getSprite());
+        i++;
+    }
+    _board->clearAddedAllies();
+    
+    // Add enemies
+    i = 0;
+    std::set<std::shared_ptr<EnemyPawnModel>>::iterator enemyIter;
+    for (enemyIter = _board->getAddedEnemies().begin(); enemyIter != _board->getAddedEnemies().end(); ++enemyIter) {
+        _board->getNode()->addChild((*enemyIter)->getSprite());
+        std::stringstream key;
+        key << "int_add_enemy_" << i;
+        _actions->activate(key.str(), _board->enemyAddAction, (*enemyIter)->getSprite());
+        i++;
+    }
+    _board->clearAddedEnemies();
 }
 
 #pragma mark -
 #pragma mark Gameplay Handling
+
+/** Update for player turn */
+void PlayMode::updatePlayerTurn(float dt) {
+    _playerController.update(dt);
+    if (_playerController.isComplete()) {
+        _state = State::BOARD;
+        _playerController.reset();
+    }
+}
+
+/** Update for board turn */
+void PlayMode::updateBoardTurn(float dt) {
+    _boardController.update(dt);
+    if (_boardController.isComplete()) {
+        if (_boardController.win) {
+            done = true;
+            win = true;
+            
+            _text->setText("You win");
+            _text->setVisible(true);
+            _text->setZOrder(1000);
+            sortZOrder();
+        }
+        _state = State::ENEMY;
+        _boardController.reset();
+    }
+}
+
+
+/** Update for enemy turn */
+void PlayMode::updateEnemyTurn(float dt) {
+    _enemyController.update(dt);
+    if (_enemyController.isComplete()) {
+        if (_enemyController.lose) {
+            done = true;
+            win = false;
+            
+            _text->setText("You lose");
+            _text->setVisible(true);
+            _text->setZOrder(1000);
+            sortZOrder();
+        }
+        _state = State::PLAYER;
+        _enemyController.reset();
+    }
+}
+
+/** Update interrupting animations (action manager is already updated every iteration) */
+void PlayMode::updateInterruptingAnimations(std::set<const std::string>& interruptingActions) {
+    bool done = true;
+    for (std::set<const std::string>::iterator it = interruptingActions.begin(); it != interruptingActions.end(); ++it) {
+        if (_actions->isActive(*it)) {
+            done = false;
+        }
+    }
+    if (done) {
+        interruptingActions.clear();
+    }
+}
 
 /**
  * Executes the core gameplay loop of this world.
@@ -185,50 +263,35 @@ void PlayMode::populate(int height, int width, int colors, int allies, int enemi
  * @param  delta    Number of seconds since last animation frame
  */
 void PlayMode::update(float dt) {
+    // Update input controller
     _input.update(dt);
     
-    // Update
-	if (!done) {
-		//    CULog("PlayMode Update");
-		if (_state == State::PLAYER) {
-			// PLAYER turn
-			_playerController.update(dt);
-			if (_playerController.isComplete()) {
-				_state = State::BOARD;
-				_playerController.reset();
-			}
-		}
-		else if (_state == State::BOARD) {
-			// BOARD turn
-			_boardController.update(dt);
-			if (_boardController.isComplete()) {
-				if (_boardController.win) {
-					done = true;
-					win = true;
-
-					_text->setText("You win");
-					_text->setVisible(true);
-				}
-				_state = State::ENEMY;
-				_boardController.reset();
-			}
-		}
-		else {
-			// ENEMY turn
-			_enemyController.update(dt);
-			if (_enemyController.isComplete()) {
-				if (_enemyController.lose) {
-					done = true;
-					win = false;
-
-					_text->setText("You lose");
-					_text->setVisible(true);
-				}
-				_state = State::PLAYER;
-				_enemyController.reset();
-			}
-		}
-	}
+    // Update actions
+    _actions->update(dt);
+    
+    // Check for interrupting animations
+    if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && _enemyController.getInterruptingActions().empty()) {
+        // Update Gameplay
+        if (!done) {
+            //    CULog("PlayMode Update");
+            if (_state == State::PLAYER) {
+                // PLAYER turn
+                updatePlayerTurn(dt);
+            } else if (_state == State::BOARD) {
+                // BOARD turn
+                updateBoardTurn(dt);
+            } else {
+                // ENEMY turn
+                updateEnemyTurn(dt);
+            }
+        }
+    } else {
+        // Update Interrupting Animations
+        if (!_playerController.getInterruptingActions().empty()) { updateInterruptingAnimations(_playerController.getInterruptingActions()); }
+        if (!_boardController.getInterruptingActions().empty()) { updateInterruptingAnimations(_boardController.getInterruptingActions()); }
+        if (!_enemyController.getInterruptingActions().empty()) { updateInterruptingAnimations(_enemyController.getInterruptingActions()); }
+        _input.clear();
+    }
 }
 
 /**
@@ -238,8 +301,9 @@ void PlayMode::update(float dt) {
  */
 void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
     // Draw the Board
-    _board->draw(batch);
+//    _board->draw(batch);
 
-	// Render anything on the SceneGraph
-	render(batch);
+    // Render anything on the SceneGraph
+    render(batch);
 }
+

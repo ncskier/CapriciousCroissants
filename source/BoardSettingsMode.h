@@ -70,7 +70,7 @@ public:
 
 	int height = 5;
 	int width = 5;
-	int colors = 4;
+	int colors = 5;
 	int allies = 1;
 	int enemies = 5;
 

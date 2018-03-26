@@ -45,6 +45,12 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
 	std::shared_ptr<cugl::Label> _text;
     
+    /** The action manager for this game mode. */
+    std::shared_ptr<cugl::ActionManager> _actions;
+    
+    /** World node for scene graph */
+    std::shared_ptr<cugl::Node> _worldNode;
+    
     /** Game Board */
     std::shared_ptr<BoardModel> _board;
     
@@ -54,8 +60,6 @@ protected:
     PlayerController _playerController;
     BoardController _boardController;
     EnemyController _enemyController;
-    
-    // VIEW
     
     
     /** Current state of the game */
@@ -80,7 +84,7 @@ protected:
      */
     void populate();
 
-	void populate(int height, int width, int colors, int allies, int enemies, bool place);
+    void populate(int height, int width, int colors, int allies, int enemies, bool place, cugl::Size dimen);
     
     
 public:
@@ -177,7 +181,19 @@ public:
      *
      * @param timestep  The amount of time (in seconds) since the last frame
      */
-    void update(float timestep);
+    void update(float dt);
+    
+    /** Update for player turn */
+    void updatePlayerTurn(float dt);
+    
+    /** Update for board turn */
+    void updateBoardTurn(float dt);
+    
+    /** Update for enemy turn */
+    void updateEnemyTurn(float dt);
+    
+    /** Update interrupting animations (action manager is already updated every iteration) */
+    void updateInterruptingAnimations(std::set<const std::string>& interruptingActions);
     
     /**
      * Resets the status of the game so that we can play again.

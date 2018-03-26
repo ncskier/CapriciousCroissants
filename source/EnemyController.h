@@ -16,19 +16,39 @@
 
 
 class EnemyController {
+public:
+    /**
+     * Enum defining the different states of the gameplay loop
+     */
+    enum State : unsigned int {
+        // Move enemies
+        MOVE   = 0,
+        // Enemies attack
+        ATTACK = 1,
+        // Check for lose
+        CHECK  = 2,
+    };
 protected:
     // CONTROLLERS
     
     // MODEL
+    /** The action manager. */
+    std::shared_ptr<cugl::ActionManager> _actions;
+    /** Set of interrupting animations */
+    std::set<const std::string> _interruptingActions;
+    /** Game board */
     std::shared_ptr<BoardModel> _board;
     
-	PlayerPawnModel _enemies;
+	EnemyPawnModel _enemies;
 	PlayerPawnModel _allies;
 
     /** Whether we have completed the enemy turn */
     bool _complete;
     /** Whether or not debug mode is active */
     bool _debug;
+    
+    /** Internal state */
+    State _state;
     
     
 public:
@@ -67,7 +87,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<BoardModel>& board);
+    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board);
     
     
 #pragma mark -
@@ -106,10 +126,13 @@ public:
      */
     void setComplete(bool value) { _complete = value; }
     
+    /** Returns interrupting actions */
+    std::set<const std::string>& getInterruptingActions() { return _interruptingActions; }
+    
 
-	int playerDistance(PlayerPawnModel enemy, PlayerPawnModel player);
-	void enemyMove(PlayerPawnModel enemy, int enemyIdx);
-	void enemyAttack(PlayerPawnModel enemy, PlayerPawnModel* player);
+    int playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
+    void enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemyIdx);
+    void enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
     
 #pragma mark -
 #pragma mark Gameplay Handling

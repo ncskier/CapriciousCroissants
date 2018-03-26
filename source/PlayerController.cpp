@@ -36,7 +36,8 @@ _complete(false){
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool PlayerController::init(const std::shared_ptr<BoardModel>& board, InputController *input) {
+bool PlayerController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board, InputController *input) {
+    _actions = actions;
     _board = board;
     _input = input;
     
@@ -88,6 +89,7 @@ void PlayerController::update(float timestep) {
         if (moveEvent == InputController::MoveEvent::START) {
             // START
             Vec2 position = _input->getTouchPosition();
+            position = _board->getNode()->worldToNodeCoords(position);
             // Check if On Tile
             if (_board->selectTileAtPosition(position)) {
                 // Valid move start
@@ -98,7 +100,7 @@ void PlayerController::update(float timestep) {
             }
         } else if (moveEvent == InputController::MoveEvent::MOVING) {
             // MOVING
-            cugl::Vec2 inputOffset = _input->getMoveOffset();
+            cugl::Vec2 inputOffset = _board->getNode()->worldToNodeCoords(_input->getMoveOffset());
 //            float threshold = _board->getCellLength()/5.0f;
             bool row;
             float offsetValue;
@@ -115,7 +117,8 @@ void PlayerController::update(float timestep) {
         } else {
             // END
             // Calculate movement
-            cugl::Vec2 inputOffset = _input->getMoveOffset();
+            Vec2 inputOffset = _input->getMoveOffset();
+            inputOffset = _board->getNode()->worldToNodeCoords(inputOffset);
             bool row;
             float offsetValue;
             std::tie(row, offsetValue) = calculateOffset(inputOffset);
@@ -129,7 +132,10 @@ void PlayerController::update(float timestep) {
             _board->deselectTile();
             _input->clear();
         }
-    }
+	}
+    
+    // Update board node positions
+    _board->updateNodes();
 }
 
 /**

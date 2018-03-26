@@ -10,8 +10,10 @@
 #define __Player_Controller_H__
 
 #include <cugl/cugl.h>
+#include <set>
 #include "InputController.h"
 #include "BoardModel.h"
+#include "TileModel.h"
 
 
 class PlayerController {
@@ -21,6 +23,11 @@ protected:
     InputController *_input;
     
     // MODEL
+    /** The action manager. */
+    std::shared_ptr<cugl::ActionManager> _actions;
+    /** Set of interrupting animations */
+    std::set<const std::string> _interruptingActions;
+    /** Game board */
     std::shared_ptr<BoardModel> _board;
     
     /** Whether we have completed the player's turn */
@@ -65,7 +72,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<BoardModel>& board, InputController* input);
+    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board, InputController* input);
     
     
 #pragma mark -
@@ -103,6 +110,9 @@ public:
      * @param value whether the level is completed.
      */
     void setComplete(bool value) { _complete = value; }
+    
+    /** Returns interrupting actions */
+    std::set<const std::string>& getInterruptingActions() { return _interruptingActions; }
     
     
 #pragma mark -

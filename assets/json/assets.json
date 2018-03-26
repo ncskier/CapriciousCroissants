@@ -1,12 +1,5 @@
 {
 	"textures": {
-        "player": {
-            "file":     "textures/bernette.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
         "tile0_strip": {
             "file":     "textures/tile_strip0.png",
             "minfilter":"nearest",

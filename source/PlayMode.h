@@ -15,6 +15,8 @@
 #include "BoardController.h"
 #include "EnemyController.h"
 #include "BoardModel.h"
+#include "EntityManager.h"
+#include "MainSystems.h"
 
 /**
  * This class is the primary gameplay constroller for the demo.
@@ -65,6 +67,8 @@ protected:
     BoardController _boardController;
     EnemyController _enemyController;
     
+	//Entity Manager Instance
+	std::shared_ptr<EntityManager> _entityManager;
     
     /** Current state of the game */
     State _state;
@@ -73,6 +77,7 @@ protected:
     /** Whether or not debug mode is active */
     bool _debug;
     
+
     
 #pragma mark Internal Object Management
     /**
@@ -200,7 +205,7 @@ public:
     void updateEnemyTurn(float dt);
     
     /** Update interrupting animations (action manager is already updated every iteration) */
-    void updateInterruptingAnimations(std::set<const std::string>& interruptingActions);
+    void updateInterruptingAnimations(std::set<std::string>& interruptingActions);
     
     /**
      * Resets the status of the game so that we can play again.

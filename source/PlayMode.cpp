@@ -62,6 +62,11 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	_assets = assets;
     _actions = ActionManager::alloc();
 
+	_entityManager = std::make_shared<EntityManager>();
+
+	// Initialize all systems that are used for playin
+	_entityManager->addSystem(std::make_shared<MovementDumbSystem>(_entityManager), EntityManager::movement);
+
     // Add Background Node
     std::shared_ptr<PolygonNode> background = PolygonNode::allocWithTexture(assets->get<Texture>("background"));
     background->setContentSize(dimen);
@@ -100,9 +105,9 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
     _input.init(getCamera());
 
 	// Start up turn controllers
-	_playerController.init(_actions, _board, &_input);
-	_boardController.init(_actions, _board);
-	_enemyController.init(_actions, _board);
+	_playerController.init(_actions, _board, &_input, _entityManager);
+	_boardController.init(_actions, _board, _entityManager);
+	_enemyController.init(_actions, _board, _entityManager);
 
 	// Set Background
 	Application::get()->setClearColor(Color4(229, 229, 229, 255));
@@ -202,6 +207,29 @@ void PlayMode::populate(int height, int width, int colors, int allies, int enemi
         i++;
     }
     _board->clearAddedEnemies();
+
+	//Create entities and register them to manager
+	{ // EXAMPLE ENTITY 0
+		EntityId newEntity = _entityManager->createEntity();
+		LocationComponent loc;
+		loc.x = 5;
+		loc.y = 5;
+		DumbMovementComponent move;
+		move.movementDistance = 0;
+		_entityManager->addComponent<DumbMovementComponent>(newEntity, move);
+		_entityManager->addComponent<LocationComponent>(newEntity, loc);
+		 _entityManager->registerEntity(newEntity);
+	}
+	{ // EXAMPLE ENTITY 1
+		EntityId newEntity = _entityManager->createEntity();
+		LocationComponent loc;
+		loc.x = 3;
+		loc.y = 3;
+		_entityManager->addComponent<LocationComponent>(newEntity, loc);
+		_entityManager->registerEntity(newEntity);
+	}
+
+
 }
 
 
@@ -266,14 +294,22 @@ void PlayMode::updateEnemyTurn(float dt) {
             sortZOrder();
         }
         _state = State::PLAYER;
+
+		{	//EXAMPLE CODE FOR DUMB MOVEMENT SYSTEM TO SHOW UPDATING ONE ENTITY(HAS DUMBMOVEMENT) BUT NOT OTHER (DOESN'T HAVE DUMBMOVEMENT)
+			LocationComponent loc = _entityManager->getComponent<LocationComponent>(0);
+			CULog("Should change %d, %d", loc.x, loc.y);
+			loc = _entityManager->getComponent<LocationComponent>(1);
+			CULog("Shouldn't change %d, %d", loc.x, loc.y);
+		}
+
         _enemyController.reset();
     }
 }
 
 /** Update interrupting animations (action manager is already updated every iteration) */
-void PlayMode::updateInterruptingAnimations(std::set<const std::string>& interruptingActions) {
+void PlayMode::updateInterruptingAnimations(std::set<std::string>& interruptingActions) {
     bool done = true;
-    for (std::set<const std::string>::iterator it = interruptingActions.begin(); it != interruptingActions.end(); ++it) {
+    for (std::set<std::string>::iterator it = interruptingActions.begin(); it != interruptingActions.end(); ++it) {
         if (_actions->isActive(*it)) {
             done = false;
         }

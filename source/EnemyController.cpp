@@ -34,9 +34,10 @@ EnemyController::EnemyController() {
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool EnemyController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board) {
+bool EnemyController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<EntityManager>& manager) {
     _actions = actions;
     _board = board;
+	_entityManager = manager;
     
     _debug = false;
     _complete = false;
@@ -106,6 +107,9 @@ void EnemyController::update(float timestep) {
             }
         }
         
+		// CALL FOR MOVEMENT UPDATE ON ENTITIES
+		_entityManager->updateEntities(*_board, EntityManager::movement);
+
         // Update z positions
         _board->updateNodes(false);
         

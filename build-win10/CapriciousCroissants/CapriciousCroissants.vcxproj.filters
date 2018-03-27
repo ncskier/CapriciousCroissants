@@ -54,9 +54,6 @@
     <ClInclude Include="..\..\source\TileModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="EnemyPawnModel.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\BoardSettingsMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -79,6 +76,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\source\System.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\MainSystems.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\source\EnemyPawnModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -125,9 +128,6 @@
     <ClCompile Include="..\..\source\TileModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnemyPawnModel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\source\BoardSettingsMode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -135,6 +135,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\..\source\System.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\MainSystems.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\source\EnemyPawnModel.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

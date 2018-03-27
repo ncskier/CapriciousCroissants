@@ -9,6 +9,7 @@
 #include "ComponentType.h"
 #include "ComponentStore.h"
 #include "System.h"
+#include "BoardModel.h"
 
 #include <map>
 #include <unordered_map>
@@ -23,9 +24,23 @@ private:
 	long nextEntityId = 0;
 	std::unordered_map<EntityId, ComponentTypeSet> entityCache;
 	std::map<ComponentType, IComponentStore::Ptr> componentStores;
-	std::vector<EntitySystem::Ptr> systems;
+	typedef std::vector<EntitySystem::Ptr> systems;
+	systems movementSystems;
+	systems attackSystems;
+	systems damageSystems;
+	systems playerLimitSystems;
+	systems onTurnSystems;
+	systems allSystems;
 
 public:
+	enum SystemType {
+		movement,
+		attack,
+		damage,
+		playerLimit,
+		onTurn
+	};
+
 	EntityManager();
 	virtual ~EntityManager();
 
@@ -94,11 +109,11 @@ public:
 		return store.extractCopy(entityId);
 	}
 
-	void addSystem(const EntitySystem::Ptr& systemPtr);
+	void addSystem(const EntitySystem::Ptr& systemPtr, SystemType type);
 
 	size_t registerEntity(const EntityId entity);
 
 	size_t unregisterEntity(const EntityId entity);
 
-	size_t updateEntities();
+	size_t updateEntities(BoardModel board, SystemType type);
 };

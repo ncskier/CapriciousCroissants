@@ -1,6 +1,7 @@
 #pragma once
 #include "ComponentType.h"
 #include "Entity.h"
+#include "BoardModel.h"
 
 #include <memory>
 #include <set>
@@ -11,12 +12,14 @@ class EntitySystem {
 private:
 	ComponentTypeSet requiredComponents;
 	std::set<EntityId> entities;
-	EntityManager& manager;
+
+protected:
+	std::shared_ptr<EntityManager> manager;
 
 public:
 	typedef std::shared_ptr<EntitySystem> Ptr;
 
-	EntitySystem(EntityManager& manager);
+	EntitySystem(std::shared_ptr<EntityManager>& manager);
 
 	~EntitySystem();
 
@@ -40,7 +43,7 @@ public:
 		return entities.find(entity) != entities.end();
 	}
 
-	size_t updateEntities();
+	size_t updateEntities(BoardModel board);
 
-	virtual void updateEntity(EntityId entity) = 0;
+	virtual void updateEntity(EntityId entity, BoardModel board) = 0;
 };

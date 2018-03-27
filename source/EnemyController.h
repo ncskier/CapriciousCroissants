@@ -13,6 +13,7 @@
 #include "BoardModel.h"
 #include "PlayerPawnModel.h"
 #include "EnemyPawnModel.h"
+#include "EntityManager.h"
 
 
 class EnemyController {
@@ -35,10 +36,13 @@ protected:
     /** The action manager. */
     std::shared_ptr<cugl::ActionManager> _actions;
     /** Set of interrupting animations */
-    std::set<const std::string> _interruptingActions;
+    std::set<std::string> _interruptingActions;
     /** Game board */
     std::shared_ptr<BoardModel> _board;
-    
+	
+	/** Entity Manager */
+	std::shared_ptr<EntityManager> _entityManager;
+
 	EnemyPawnModel _enemies;
 	PlayerPawnModel _allies;
 
@@ -87,7 +91,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board);
+    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<EntityManager>& manager);
     
     
 #pragma mark -
@@ -127,7 +131,7 @@ public:
     void setComplete(bool value) { _complete = value; }
     
     /** Returns interrupting actions */
-    std::set<const std::string>& getInterruptingActions() { return _interruptingActions; }
+    std::set<std::string>& getInterruptingActions() { return _interruptingActions; }
     
 
     int playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);

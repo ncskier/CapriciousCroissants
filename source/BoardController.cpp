@@ -34,9 +34,10 @@ BoardController::BoardController() {
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool BoardController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board) {
+bool BoardController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<EntityManager>& manager) {
     _actions = actions;
     _board = board;
+	_entityManager = manager;
     
     _state = State::CHECK;
     _debug = false;

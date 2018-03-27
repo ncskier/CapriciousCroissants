@@ -14,6 +14,7 @@
 #include "InputController.h"
 #include "BoardModel.h"
 #include "TileModel.h"
+#include "EntityManager.h"
 
 
 class PlayerController {
@@ -26,9 +27,11 @@ protected:
     /** The action manager. */
     std::shared_ptr<cugl::ActionManager> _actions;
     /** Set of interrupting animations */
-    std::set<const std::string> _interruptingActions;
+    std::set<std::string> _interruptingActions;
     /** Game board */
     std::shared_ptr<BoardModel> _board;
+	/** Entity Manager */
+	std::shared_ptr<EntityManager> _entityManager;
     
     /** Whether we have completed the player's turn */
     bool _complete;
@@ -72,7 +75,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board, InputController* input);
+    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board, InputController* input, std::shared_ptr<EntityManager>& manager);
     
     
 #pragma mark -
@@ -112,7 +115,7 @@ public:
     void setComplete(bool value) { _complete = value; }
     
     /** Returns interrupting actions */
-    std::set<const std::string>& getInterruptingActions() { return _interruptingActions; }
+    std::set<std::string>& getInterruptingActions() { return _interruptingActions; }
     
     
 #pragma mark -

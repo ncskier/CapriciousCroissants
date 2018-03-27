@@ -35,22 +35,22 @@ EnemyController::EnemyController() {
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool EnemyController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<EntityManager>& manager) {
-    _actions = actions;
-    _board = board;
+	_actions = actions;
+	_board = board;
 	_entityManager = manager;
-    
-    _debug = false;
-    _complete = false;
-    _state = State::MOVE;
 
-    return true;
+	_debug = false;
+	_complete = false;
+	_state = State::MOVE;
+
+	return true;
 }
 
 /**
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void EnemyController::dispose() {
-    _board = nullptr;
+	_board = nullptr;
 }
 
 /*
@@ -63,13 +63,44 @@ int EnemyController::playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::
 	return (abs(enemy->getX() - player->getX()) + abs(enemy->getY() - player->getY()));
 }
 
+int EnemyController::playerDistanceX(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
+	return (enemy->getX() - player->getX());
+}
+
+int EnemyController::playerDistanceY(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
+	return (enemy->getY() - player->getY());
+}
+
 void EnemyController::enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemyIdx) {
-    enemy->move(_board->getWidth(), _board->getHeight());
+	enemy->move(_board->getWidth(), _board->getHeight());
 }
 
 void EnemyController::enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
 	//unsure how to implement without or player death
-    player->setXY(-1, -1);
+	player->setXY(-1, -1);
+}
+
+int EnemyController::createDirection(int dx, int dy) {
+	if ((dx == 0) && (dy = 1)) { return 0; }
+	if ((dx == 1) && (dy = 0)) { return 3; }
+	if ((dx == 0) && (dy = -1)) { return 1; }
+	if ((dx == -1) && (dy = 0)) { return 2; }
+}
+
+void EnemyController::enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
+	int moveX, moveY, distanceX, distanceY;
+	moveX = 1;
+	moveY = 0;
+	distanceX = playerDistanceX(enemy, player);
+	distanceY = playerDistanceX(enemy, player);
+	if (abs(distanceX) >= abs(distanceY)){
+		moveY = 1;
+		moveX = 0;
+}
+	moveX = copysign(moveX, distanceX);
+	moveY = copysign(moveY, distanceY);
+
+	enemy->setDirection(createDirection(moveX, moveY));
 }
 
 #pragma mark -
@@ -93,6 +124,9 @@ void EnemyController::update(float timestep) {
                 Rect oldBounds = _board->calculateDrawBounds(enemy->getX(), enemy->getY());
                 
                 // Move enemy
+				if (enemy->getAI() == 1) {
+					enemyMoveSmart(enemy, _board->getAlly(0));
+				}
                 enemy->move(_board->getWidth(), _board->getHeight());
                 
                 // Create animation

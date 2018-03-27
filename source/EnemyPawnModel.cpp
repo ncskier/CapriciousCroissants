@@ -19,6 +19,7 @@ bool EnemyPawnModel::init(int x, int y) {
     _x = x;
     _y = y;
     setRandomDirection();
+	setAI();
     return true;
 }
 
@@ -116,6 +117,16 @@ void EnemyPawnModel::setRandomDirection() {
     _direction = (Direction)(rand() % 4);
     updateSpriteDirection();
 }
+
+
+
+void EnemyPawnModel::setAI() {
+	_ai = 0;
+	if ((rand() % 2) == 1) {
+		_ai = 1;
+	}
+}
+
 
 
 #pragma mark -

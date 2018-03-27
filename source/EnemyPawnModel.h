@@ -56,7 +56,8 @@ protected:
     int _x;
     int _y;
     Direction _direction;
-    
+	int _ai;
+
     /** Reference to image in SceneGraph for animation */
     std::shared_ptr<cugl::AnimationNode> _sprite;
     
@@ -145,7 +146,8 @@ public:
     }
     
     /** Set direction */
-    void setDirection(Direction direction) { _direction = direction; }
+    void setDirection(int direction) { _direction = (Direction)(direction);
+	}
     
     /** Step one unit forward in the direction the enemy is facing */
     void step();
@@ -158,6 +160,11 @@ public:
     
     /** Set random direction */
     void setRandomDirection();
+
+	/**Set AI**/
+	void setAI();
+
+	int getAI() const { return _ai; }
     
     
 #pragma mark -

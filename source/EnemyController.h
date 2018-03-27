@@ -135,9 +135,15 @@ public:
     
 
     int playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
-    void enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemyIdx);
+	int playerDistanceX(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
+	int playerDistanceY(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
+	void enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemyIdx);
     void enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
-    
+	int createDirection(int dx, int dy);
+	void enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
+
+
+
 #pragma mark -
 #pragma mark Gameplay Handling
     /**

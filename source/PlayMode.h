@@ -51,6 +51,10 @@ protected:
     /** World node for scene graph */
     std::shared_ptr<cugl::Node> _worldNode;
     
+    /** Touch Node */
+    std::shared_ptr<cugl::AnimationNode> _touchNode;
+    std::shared_ptr<cugl::Animate> _touchAction;
+    
     /** Game Board */
     std::shared_ptr<BoardModel> _board;
     
@@ -174,6 +178,9 @@ public:
     
 #pragma mark -
 #pragma mark Gameplay Handling
+    /** Update touch node */
+    void updateTouchNode();
+    
     /**
      * The method called to update the game mode.
      *

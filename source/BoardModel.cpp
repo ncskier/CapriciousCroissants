@@ -31,7 +31,7 @@ _numAllies(1),
 _numEnemies(4),
 _selectedTile(-1),
 _placeAllies(false),
-_boardPadding(25.0f),
+_boardPadding(45.0f),
 _tilePadding(0.0f),
 _tilePaddingX(0.0f),
 _tilePaddingY(0.0f),
@@ -78,9 +78,7 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
     _node->setContentSize(gameLength, gameLength);
 //    _node->setContentSize(dimen);
     _node->setAnchor(Vec2::ANCHOR_CENTER);
-    _node->setPosition(dimen.width/2.0f, dimen.height/2.0f);
-//    _node->setAnchor(Vec2::ZERO);
-    
+    _node->setPosition(dimen.width*0.5f, dimen.height*0.46f);
 //    _node->setAnchor(Vec2::ZERO);
     
     // Initialize everything else
@@ -618,6 +616,18 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
                y + yOffset + yWrap,
                width,
                height);
+    
+    // Calculate selected tile
+    if (_selectedTile != -1 && gridX == xOfIndex(_selectedTile) && gridY == yOfIndex(_selectedTile)) {
+        float sizePadding = getCellLength()*0.05f;
+        Vec2 offset = Vec2(0.0f, -sizePadding);
+        bounds.set(
+                   bounds.getMinX() + sizePadding + offset.x,
+                   bounds.getMinY() + sizePadding + offset.y,
+                   bounds.size.width - 2.0f*sizePadding,
+                   bounds.size.height - 2.0f*sizePadding);
+    }
+    
     return bounds;
 }
 

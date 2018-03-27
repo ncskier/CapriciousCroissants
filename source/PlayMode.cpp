@@ -62,6 +62,11 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	_assets = assets;
     _actions = ActionManager::alloc();
 
+    // Add Background Node
+    std::shared_ptr<PolygonNode> background = PolygonNode::allocWithTexture(assets->get<Texture>("background"));
+    background->setContentSize(dimen);
+    addChild(background);
+    
 //    _worldNode = Node::allocWithBounds(dimen);
     _worldNode = _assets->get<Node>("game");
     _worldNode->setContentSize(dimen);
@@ -72,6 +77,15 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
     // Setup win/lose text
 	_text = std::dynamic_pointer_cast<Label>(assets->get<Node>("game_labelend"));
 	_text->setVisible(false);
+    
+    // Setup Touch Node
+    _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 3, 8, 24);
+    _touchNode->setFrame(0);
+    _touchNode->setZOrder(1000);
+    _touchNode->setVisible(false);
+    addChild(_touchNode);
+    sortZOrder();
+    _touchAction = Animate::alloc(0, 23, 0.5f);
 
     // Setup state
 	_state = State::PLAYER;
@@ -190,8 +204,25 @@ void PlayMode::populate(int height, int width, int colors, int allies, int enemi
     _board->clearAddedEnemies();
 }
 
+
 #pragma mark -
 #pragma mark Gameplay Handling
+
+/** Update touch node */
+void PlayMode::updateTouchNode() {
+    if (_input.getMoveEvent() != InputController::MoveEvent::NONE) {
+        // Activate action
+        if (!_actions->isActive("touchAction") && !_actions->isActive("touchFade")) {
+            _actions->activate("touchAction", _touchAction, _touchNode);
+        }
+        _touchNode->setPosition(_input.getTouchPosition());
+        _touchNode->setVisible(true);
+    } else {
+        if (!_actions->isActive("touchAction")) {
+            _touchNode->setVisible(false);
+        }
+    }
+}
 
 /** Update for player turn */
 void PlayMode::updatePlayerTurn(float dt) {
@@ -265,6 +296,9 @@ void PlayMode::updateInterruptingAnimations(std::set<const std::string>& interru
 void PlayMode::update(float dt) {
     // Update input controller
     _input.update(dt);
+    
+    // Update touch node
+    updateTouchNode();
     
     // Update actions
     _actions->update(dt);

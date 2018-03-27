@@ -252,6 +252,7 @@ bool BoardModel::checkForMatches() {
             for (int i = 0; i < _enemies.size(); i++) {
                 if (indexOfCoordinate(_enemies[i]->getX(), _enemies[i]->getY()) == *iter) {
                     removeEnemy(i);
+                    i--;
                 }
             }
         }

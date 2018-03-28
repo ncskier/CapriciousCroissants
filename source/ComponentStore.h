@@ -14,7 +14,7 @@ public:
 
 //Class for storing components of a certain type and the entities they belong to
 template<typename C>
-class ComponentStore : IComponentStore {
+class ComponentStore : public IComponentStore {
 	static_assert(std::is_base_of<Component, C>::value, "C must be derived from the Component struct");
 private:
 	std::unordered_map<EntityId, C> storage;

@@ -159,7 +159,8 @@ void ActionManager::update(float dt) {
         float future  = 1.0;
         if (action->getDuration() > 0) {
             current = (instance->elapsed) / action->getDuration();
-            future  = (instance->elapsed+dt)/ action->getDuration();
+//            future  = (instance->elapsed+dt)/ action->getDuration();
+            future = std::min(1.0f, (instance->elapsed + dt) / action->getDuration());
         } else {
             current = 0.0f;
         }

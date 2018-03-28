@@ -44,13 +44,19 @@ bool EnemyPawnModel::init(int x, int y, Direction direction, cugl::Rect tileBoun
     _x = x;
     _y = y;
     _direction = direction;
+    setAI();
+    
     // Create sprite
-    std::shared_ptr<Texture> texture = assets->get<Texture>(ENEMY_TEXTURE_KEY_0);
+    std::shared_ptr<Texture> texture;
+    if (_ai == 0) {
+        texture = assets->get<Texture>(ENEMY_TEXTURE_KEY_0);
+    } else {
+        texture = assets->get<Texture>(ENEMY_TEXTURE_KEY_1);
+    }
     _sprite = AnimationNode::alloc(texture, ENEMY_IMG_ROWS, ENEMY_IMG_COLS, ENEMY_IMG_SIZE);
     _sprite->setAnchor(Vec2::ZERO);
     setSpriteBounds(tileBounds);
     updateSpriteDirection();
-	setAI();
     return true;
 }
 

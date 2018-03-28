@@ -7,12 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2031AA13206C0BCF007274BE /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		2065439D2043AED3007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
 		2065439E2043AED3007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
 		206543A32043B1BD007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
 		206543A42043B1BE007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
 		206543A72043B1CD007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
 		206543A82043B1CE007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
+		208DC6AD206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
+		208DC6B1206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		20BD4E75206945E600424848 /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E70206945E500424848 /* System.cpp */; };
 		20BD4E76206945E600424848 /* Entity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E71206945E500424848 /* Entity.cpp */; };
 		20BD4E77206945E600424848 /* EntityManager.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E72206945E500424848 /* EntityManager.cpp */; };
@@ -158,6 +161,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2031AA0F206C0BCF007274BE /* MainSystems.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainSystems.cpp; sourceTree = "<group>"; };
+		2031AA14206C0BD5007274BE /* MainSystems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainSystems.h; sourceTree = "<group>"; };
 		206543982043AED3007D541E /* TileBoard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TileBoard.cpp; sourceTree = "<group>"; };
 		206543992043AED3007D541E /* TileBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileBoard.h; sourceTree = "<group>"; };
 		2065439A2043AED3007D541E /* BoardScreenApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoardScreenApp.cpp; sourceTree = "<group>"; };
@@ -425,6 +430,8 @@
 		EBBF18B11D749176008E2001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2031AA14206C0BD5007274BE /* MainSystems.h */,
+				2031AA0F206C0BCF007274BE /* MainSystems.cpp */,
 				20BD4E6E206945E500424848 /* Components.h */,
 				20BD4E6F206945E500424848 /* ComponentStore.h */,
 				20BD4E69206945E400424848 /* ComponentType.h */,
@@ -661,6 +668,7 @@
 				20BD4E79206945EA00424848 /* Entity.cpp in Sources */,
 				20F92DE62055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				20F92E152056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */,
+				208DC6B1206C0E77001A1259 /* MainSystems.cpp in Sources */,
 				206543A42043B1BE007D541E /* BoardScreenApp.cpp in Sources */,
 				20F92DF02055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				EB0FF61D2016F06000517030 /* main.cpp in Sources */,
@@ -689,6 +697,7 @@
 				20BD4E78206945EA00424848 /* Entity.cpp in Sources */,
 				20F92DE52055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				20F92E142056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */,
+				208DC6AD206C0E77001A1259 /* MainSystems.cpp in Sources */,
 				206543A32043B1BD007D541E /* BoardScreenApp.cpp in Sources */,
 				20F92DEF2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
@@ -717,6 +726,7 @@
 				20F92DE42055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				20F92E132056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */,
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
+				2031AA13206C0BCF007274BE /* MainSystems.cpp in Sources */,
 				20F92DEE2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				2065439D2043AED3007D541E /* TileBoard.cpp in Sources */,
 				20BD4E75206945E600424848 /* System.cpp in Sources */,

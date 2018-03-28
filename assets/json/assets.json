@@ -70,6 +70,13 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "enemy1_strip": {
+            "file":     "textures/enemy1_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
 		"claw": {
 			"file":     "textures/Claw.png",
 			"minfilter":"nearest",

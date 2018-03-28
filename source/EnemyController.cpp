@@ -100,20 +100,21 @@ int EnemyController::createDirection(int dx, int dy) {
 	if ((dx == 1) && (dy == 0)) { return 2; }
 	if ((dx == 0) && (dy == -1)) { return 1; }
 	if ((dx == -1) && (dy == 0)) { return 3; }
+    return 0;
 }
 
 int EnemyController::getDirectionXComponent(EnemyPawnModel::Direction direction) {
 	if (direction == EnemyPawnModel::Direction::NORTH || direction == EnemyPawnModel::Direction::SOUTH) { return 0; }
 	if (direction == EnemyPawnModel::Direction::WEST) { return -1; }
 	if (direction == EnemyPawnModel::Direction::EAST) { return 1; }
-
+    return 0;
 }
 
 int EnemyController::getDirectionYComponent(EnemyPawnModel::Direction direction) {
 	if (direction == EnemyPawnModel::Direction::WEST || direction == EnemyPawnModel::Direction::EAST) { return 0; }
 	if (direction == EnemyPawnModel::Direction::SOUTH) { return -1; }
 	if (direction == EnemyPawnModel::Direction::NORTH) { return 1; }
-
+    return 0;
 }
 
 bool EnemyController::checkPlaceFree(std::shared_ptr<EnemyPawnModel> enemy) {
@@ -121,7 +122,7 @@ bool EnemyController::checkPlaceFree(std::shared_ptr<EnemyPawnModel> enemy) {
 	int checkY = enemy->getY() + getDirectionYComponent(enemy->getDirection());
 	if ((checkX < 0) || (checkY < 0)) { return true; }
 	else if ((checkX >= _board->getWidth()) || (checkY >= _board->getHeight())) { return true; }
-	else return{ _board->getEnemy(checkX, checkY) == nullptr };
+    else { return (_board->getEnemy(checkX, checkY) == nullptr); }
 }
 
 void EnemyController::enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {

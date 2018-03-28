@@ -28,6 +28,7 @@
 
 /** Enemy Texture Key */
 #define ENEMY_TEXTURE_KEY_0 "enemy0_strip"
+#define ENEMY_TEXTURE_KEY_1 "enemy1_strip"
 
 
 #pragma mark -

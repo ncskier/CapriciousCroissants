@@ -146,7 +146,9 @@ public:
     }
     
     /** Set direction */
-    void setDirection(int direction) { _direction = (Direction)(direction);
+	void EnemyPawnModel::setDirection(int direction) {
+		_direction = (Direction)(direction);
+		updateSpriteDirection();
 	}
     
     /** Step one unit forward in the direction the enemy is facing */

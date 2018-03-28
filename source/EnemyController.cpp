@@ -64,11 +64,11 @@ int EnemyController::playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::
 }
 
 int EnemyController::playerDistanceX(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
-	return (enemy->getX() - player->getX());
+	return  (player->getX() - enemy->getX());
 }
 
 int EnemyController::playerDistanceY(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
-	return (enemy->getY() - player->getY());
+	return (player->getY() - enemy->getY());
 }
 
 void EnemyController::enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemyIdx) {
@@ -80,27 +80,66 @@ void EnemyController::enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::sh
 	player->setXY(-1, -1);
 }
 
+std::shared_ptr<PlayerPawnModel> EnemyController::getClosestAllytoEnemy(std::shared_ptr<EnemyPawnModel>enemy) {
+	std::shared_ptr<PlayerPawnModel> nearestPlayer = _board->getAlly(0);
+	int distance;
+	int minDistance;
+	minDistance = 999;
+	for (int i = 0; i < _board->getNumAllies(); i++) {
+		distance = playerDistance(enemy, _board->getAlly(i));
+		if (distance <= minDistance){
+			minDistance = distance;
+			nearestPlayer = _board->getAlly(i);
+		}
+	}
+	return nearestPlayer;
+}
+
 int EnemyController::createDirection(int dx, int dy) {
-	if ((dx == 0) && (dy = 1)) { return 0; }
-	if ((dx == 1) && (dy = 0)) { return 3; }
-	if ((dx == 0) && (dy = -1)) { return 1; }
-	if ((dx == -1) && (dy = 0)) { return 2; }
+	if ((dx == 0) && (dy == 1)) { return 0; }
+	if ((dx == 1) && (dy == 0)) { return 2; }
+	if ((dx == 0) && (dy == -1)) { return 1; }
+	if ((dx == -1) && (dy == 0)) { return 3; }
+}
+
+int EnemyController::getDirectionXComponent(EnemyPawnModel::Direction direction) {
+	if (direction == EnemyPawnModel::Direction::NORTH || direction == EnemyPawnModel::Direction::SOUTH) { return 0; }
+	if (direction == EnemyPawnModel::Direction::WEST) { return -1; }
+	if (direction == EnemyPawnModel::Direction::EAST) { return 1; }
+
+}
+
+int EnemyController::getDirectionYComponent(EnemyPawnModel::Direction direction) {
+	if (direction == EnemyPawnModel::Direction::WEST || direction == EnemyPawnModel::Direction::EAST) { return 0; }
+	if (direction == EnemyPawnModel::Direction::SOUTH) { return -1; }
+	if (direction == EnemyPawnModel::Direction::NORTH) { return 1; }
+
+}
+
+bool EnemyController::checkPlaceFree(std::shared_ptr<EnemyPawnModel> enemy) {
+	int checkX = enemy->getX() + getDirectionXComponent(enemy->getDirection());
+	int checkY = enemy->getY() + getDirectionYComponent(enemy->getDirection());
+	if ((checkX < 0) || (checkY < 0)) { return true; }
+	else if ((checkX >= _board->getWidth()) || (checkY >= _board->getHeight())) { return true; }
+	else return{ _board->getEnemy(checkX, checkY) == nullptr };
 }
 
 void EnemyController::enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
-	int moveX, moveY, distanceX, distanceY;
+	int moveX, moveY, distanceX, distanceY, dir;
 	moveX = 1;
 	moveY = 0;
 	distanceX = playerDistanceX(enemy, player);
-	distanceY = playerDistanceX(enemy, player);
-	if (abs(distanceX) >= abs(distanceY)){
+	distanceY = playerDistanceY(enemy, player);
+	if (abs(distanceY) >= abs(distanceX)){
 		moveY = 1;
 		moveX = 0;
-}
+	}
+
+	
 	moveX = copysign(moveX, distanceX);
 	moveY = copysign(moveY, distanceY);
-
-	enemy->setDirection(createDirection(moveX, moveY));
+	dir = createDirection(moveX, moveY);
+	enemy->setDirection(dir);
 }
 
 #pragma mark -
@@ -125,10 +164,11 @@ void EnemyController::update(float timestep) {
                 
                 // Move enemy
 				if (enemy->getAI() == 1) {
-					enemyMoveSmart(enemy, _board->getAlly(0));
+					enemyMoveSmart(enemy, getClosestAllytoEnemy(enemy));
 				}
-                enemy->move(_board->getWidth(), _board->getHeight());
-                
+				if (checkPlaceFree(enemy)) {
+					enemy->move(_board->getWidth(), _board->getHeight());
+				}
                 // Create animation
                 Rect newBounds = _board->calculateDrawBounds(enemy->getX(), enemy->getY());
                 Vec2 movement = newBounds.origin - oldBounds.origin;

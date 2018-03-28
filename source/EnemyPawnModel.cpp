@@ -19,6 +19,7 @@ bool EnemyPawnModel::init(int x, int y) {
     _x = x;
     _y = y;
     setRandomDirection();
+	setAI();
     return true;
 }
 
@@ -27,12 +28,15 @@ bool EnemyPawnModel::init(int x, int y, Direction direction) {
     _x = x;
     _y = y;
     _direction = direction;
+	setAI();
     return true;
 }
 
 /** Initialize a new player pawn at (x, y) tile with [tileBounds] facing NORTH */
 bool EnemyPawnModel::init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
-    return init(x, y, Direction::NORTH, tileBounds, assets);
+	setAI();
+	return init(x, y, Direction::NORTH, tileBounds, assets);
+	
 }
 
 /** Initialize a new player pawn at (x, y) tile with [tileBounds] facing [direction] */
@@ -46,6 +50,7 @@ bool EnemyPawnModel::init(int x, int y, Direction direction, cugl::Rect tileBoun
     _sprite->setAnchor(Vec2::ZERO);
     setSpriteBounds(tileBounds);
     updateSpriteDirection();
+	setAI();
     return true;
 }
 
@@ -116,6 +121,16 @@ void EnemyPawnModel::setRandomDirection() {
     _direction = (Direction)(rand() % 4);
     updateSpriteDirection();
 }
+
+
+
+void EnemyPawnModel::setAI() {
+	_ai = 0;
+	if ((rand() % 10) < 5) {
+		_ai = 1;
+	}
+}
+
 
 
 #pragma mark -

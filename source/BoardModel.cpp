@@ -63,6 +63,8 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
     // Set cell size
     float cellLength = getCellLength();
     _cellSize = Size(cellLength, cellLength*0.85f);
+    // Set tile padding
+    _tilePaddingX = -cellLength*0.04f;
     
     srand((int)time(NULL));
     generateNewBoard();

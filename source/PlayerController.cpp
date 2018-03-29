@@ -123,7 +123,7 @@ void PlayerController::update(float timestep) {
             bool row;
             float offsetValue;
             std::tie(row, offsetValue) = calculateOffset(inputOffset);
-            int cells = _board->lengthToCells(offsetValue);
+            int cells = _board->lengthToCells(offsetValue, _board->offsetRow);
             // Check if valid move
             if (abs(cells) > 0) {
                 // Update board

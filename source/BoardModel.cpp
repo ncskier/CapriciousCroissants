@@ -60,6 +60,12 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
     _numEnemies = enemies;
     _placeAllies = placePawn;
     
+    // Set cell size
+    float cellLength = getCellLength();
+    _cellSize = Size(cellLength, cellLength*0.85f);
+    // Set tile padding
+    _tilePaddingX = -cellLength*0.04f;
+    
     srand((int)time(NULL));
     generateNewBoard();
     while (checkForMatches());
@@ -78,7 +84,7 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
     _node->setContentSize(gameLength, gameLength);
 //    _node->setContentSize(dimen);
     _node->setAnchor(Vec2::ANCHOR_CENTER);
-    _node->setPosition(dimen.width*0.5f, dimen.height*0.46f);
+    _node->setPosition(dimen.width*0.5f, dimen.height*0.5f);
 //    _node->setAnchor(Vec2::ZERO);
     
     // Initialize everything else
@@ -498,6 +504,7 @@ void BoardModel::slide(int offset) {
 bool BoardModel::selectTileAtPosition(Vec2 position) {
     int x;
     int y;
+    position = position + Vec2(0.0f, -getCellLength()*0.15f*2.0f);
     std::tie(x, y) = screenToGrid(position);
     if (x < 0 || _width <= x) {
         return false;
@@ -553,27 +560,23 @@ float BoardModel::getCellLength() {
 
 // Convert grid (x, y) to screen coordinates
 cugl::Rect BoardModel::gridToScreen(int x, int y) {
-    float cellLength = getCellLength();
+    float xPos = _boardPadding + x*_cellSize.width;
+    float yPos = _boardPadding + y*_cellSize.height;
     
-    float xPos = _boardPadding + x*cellLength;
-    float yPos = _boardPadding + y*cellLength;
-    
-    return Rect(xPos, yPos, cellLength, cellLength);
+    return Rect(xPos, yPos, _cellSize.width, _cellSize.height);
 }
 
 // Convert screen coordinates to grid (x, y)
 std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
-    float cellLength = getCellLength();
-
-    int x = (int)floor( (position.x - _boardPadding/2.0f) / cellLength );
-    int y = (int)floor( (position.y - _boardPadding/2.0f) / cellLength );
-        
+    int x = (int)floor( (position.x - _boardPadding/2.0f) / _cellSize.width );
+    int y = (int)floor( (position.y - _boardPadding/2.0f) / _cellSize.height );
+    
     return {x, y};
 }
 
 // Convert screen length to grid length
-int BoardModel::lengthToCells(float length) {
-    float cellLength = getCellLength();
+int BoardModel::lengthToCells(float length, bool row) {
+    float cellLength = row ? _cellSize.width : _cellSize.height;
     return (int)round( length / cellLength );
 }
 
@@ -582,15 +585,12 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     Rect bounds = gridToScreen(gridX, gridY);
     
     // Apply Padding to Bounds
-//    float x = bounds.getMinX() + _tilePadding/2.0f;
-//    float y = bounds.getMinY() + _tilePadding/2.0f;
-//    float width = bounds.size.width - _tilePadding;
-//    float height = bounds.size.height - _tilePadding;
     float x = bounds.getMinX() + _tilePaddingX/2.0f;
     float y = bounds.getMinY() + _tilePaddingY/2.0f;
     float width = bounds.size.width - _tilePaddingX;
     float height = bounds.size.height - _tilePaddingY;
-    bounds.set(x, y, width, height);
+    float length = std::max(width, height);
+    bounds.set(x, y, length, length);
     
     // Calculate Offset
     float xOffset = (offsetRow && gridY == yOfIndex(_selectedTile)) ? offset : 0.0f;
@@ -599,9 +599,8 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     // Calculate Wrap (wrapping tiles around the board as they are moved)
     float xWrap = 0.0f;
     float yWrap = 0.0f;
-    float cellLength = getCellLength();
-    float boardWidth = _width*cellLength;
-    float boardHeight = _height*cellLength;
+    float boardWidth = _width*_cellSize.width;
+    float boardHeight = _height*_cellSize.height;
     if (bounds.getMidX() + xOffset <= _boardPadding)
         xWrap = boardWidth;
     if (bounds.getMidX() + xOffset >= boardWidth + _boardPadding)
@@ -615,18 +614,18 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     bounds.set(
                x + xOffset + xWrap,
                y + yOffset + yWrap,
-               width,
-               height);
+               bounds.size.width,
+               bounds.size.height);
     
     // Calculate selected tile
     if (_selectedTile != -1 && gridX == xOfIndex(_selectedTile) && gridY == yOfIndex(_selectedTile)) {
-        float sizePadding = getCellLength()*0.05f;
-        Vec2 offset = Vec2(0.0f, -sizePadding);
+        float padding = 0.01*_cellSize.width;
+        Vec2 offset = Vec2(0.0f, -0.07*getCellLength());
         bounds.set(
-                   bounds.getMinX() + sizePadding + offset.x,
-                   bounds.getMinY() + sizePadding + offset.y,
-                   bounds.size.width - 2.0f*sizePadding,
-                   bounds.size.height - 2.0f*sizePadding);
+                   bounds.getMinX() + offset.x,
+                   bounds.getMinY() + offset.y,
+                   bounds.size.width - padding,
+                   bounds.size.height - padding);
     }
     
     return bounds;
@@ -639,12 +638,13 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
  */
 int BoardModel::calculateDrawZ(int x, int y, bool tile) {
     int row = y;
-    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
-        row = (row + lengthToCells(offset)) % _height;
-        while (row < 0) {
-            row += _height;
-        }
-    }
+//    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
+//        row = (row + lengthToCells(offset)) % _height;
+//        while (row < 0) {
+//            row += _height;
+//        }
+//    }
+    row = std::get<1>( screenToGrid(calculateDrawBounds(x, y).origin) );
     if (tile) {
         // Start from 10 with increments of 10
         return 10 + 10*(_height-row-1);
@@ -652,15 +652,6 @@ int BoardModel::calculateDrawZ(int x, int y, bool tile) {
         // Start from 10*height + 5 with increments of 10
         return (10*_height + 5) + 10*(_height-row-1);
     }
-//    int row = y;
-//    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
-//        row = (row + lengthToCells(offset)) % _height;
-//        while (row < 0) {
-//            row += _height;
-//        }
-//    }
-//    int base = (_height-row) * 10;
-//    return tile ? base : base+5;
 }
 
 /**

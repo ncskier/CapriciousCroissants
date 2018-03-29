@@ -72,6 +72,9 @@ protected:
     float _tilePaddingX;
     float _tilePaddingY;
     
+    /** Cell size in the board */
+    cugl::Size _cellSize;
+    
     /** Size of vertical (column) side of the square board */
     int _height;
     
@@ -325,7 +328,7 @@ public:
     std::tuple<int, int> screenToGrid(cugl::Vec2 position);
     
     // Convert screen length to grid length
-    int lengthToCells(float length);
+    int lengthToCells(float length, bool row=false);
     
     // Apply padding, offset, and wrap to return tile bounds
     cugl::Rect calculateDrawBounds(int x, int y);

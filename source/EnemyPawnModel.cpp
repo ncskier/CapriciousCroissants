@@ -147,7 +147,7 @@ void EnemyPawnModel::setSpriteBounds(cugl::Rect tileBounds) {
     float width = tileBounds.size.width * 0.5f;
     float height = tileBounds.size.height * 0.5f;
     float positionX = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
-    float positionY = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f;
+    float positionY = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f + tileBounds.size.height*0.15f/2.0f;
     _sprite->setPosition(positionX, positionY);
     _sprite->setContentSize(width, height);
 }

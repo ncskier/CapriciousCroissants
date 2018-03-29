@@ -84,13 +84,13 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	_text->setVisible(false);
     
     // Setup Touch Node
-    _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 3, 8, 24);
+    _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 6, 8, 48);
     _touchNode->setFrame(0);
     _touchNode->setZOrder(1000);
     _touchNode->setVisible(false);
     addChild(_touchNode);
     sortZOrder();
-    _touchAction = Animate::alloc(0, 23, 0.5f);
+    _touchAction = Animate::alloc(0, 47, 1.2f);
 
     // Setup state
 	_state = State::PLAYER;

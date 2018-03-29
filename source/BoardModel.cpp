@@ -504,6 +504,7 @@ void BoardModel::slide(int offset) {
 bool BoardModel::selectTileAtPosition(Vec2 position) {
     int x;
     int y;
+    position = position + Vec2(0.0f, -getCellLength()*0.15f*2.0f);
     std::tie(x, y) = screenToGrid(position);
     if (x < 0 || _width <= x) {
         return false;

@@ -81,8 +81,14 @@ bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<As
     }
     
     // Setup Allies from json
+    if (!setupAlliesFromJson(json)) {
+        return false;
+    }
     
     // Setup Enemies from json
+    if (!setupEnemiesFromJson(json)) {
+        return false;
+    }
     
     return true;
 }
@@ -246,6 +252,78 @@ bool BoardModel::generateTiles(int seed) {
         _addedTiles.insert(tile);
     }
     while (checkForMatches(false));
+    
+    return true;
+}
+
+/** Setup allies from Json */
+bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
+    // Vars for creating allies
+    int x;
+    int y;
+    
+    // Setup Mika
+    std::shared_ptr<JsonValue> mikaJson = json->get("mika");
+    x = mikaJson->get("x")->asInt();
+    y = mikaJson->get("y")->asInt();
+    std::shared_ptr<PlayerPawnModel> mika = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
+    _allies.push_back(mika);
+    _addedAllies.insert(mika);
+    
+    // Setup Allies
+    std::shared_ptr<JsonValue> alliesJson = json->get("allies");
+    for (auto i = 0; i < alliesJson->size(); i++) {
+        std::shared_ptr<JsonValue> allyJson = alliesJson->get(i);
+        x = allyJson->get("x")->asInt();
+        y = allyJson->get("y")->asInt();
+        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
+        _allies.push_back(ally);
+        _addedAllies.insert(ally);
+    }
+    
+    // Set num allies
+    _numAllies = (int)_allies.size();
+    
+    return true;
+}
+
+/** Setup enemies from Json */
+bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
+    // Vars for creating allies
+    int x = 0;
+    int y = 0;
+    bool smart;
+    EnemyPawnModel::Direction direction = EnemyPawnModel::Direction::NORTH;
+    
+    // Setup Enemies
+    std::shared_ptr<JsonValue> enemiesJson = json->get("enemies");
+    for (auto i = 0; i < enemiesJson->size(); i++) {
+        std::shared_ptr<JsonValue> enemyJson = enemiesJson->get(i);
+        smart = (enemyJson->get("enemyType")->toString().find("dumb") == std::string::npos);
+        
+        // Parse Components
+        CULog("Components:");
+        std::shared_ptr<JsonValue> enemyComponentsJson = enemyJson->get("components");
+        for (auto j = 0; j < enemyComponentsJson->size(); j++) {
+            std::shared_ptr<JsonValue> componentJson = enemyComponentsJson->get(j);
+            CULog("%s", componentJson->toString().c_str());
+            CULog("%s", componentJson->key().c_str());
+            if ("location" == componentJson->key()) {
+                x = componentJson->get("x")->asInt();
+                y = componentJson->get("y")->asInt();
+            } else if ("direction" == componentJson->key()) {
+                direction = (EnemyPawnModel::Direction)componentJson->get("value")->asInt();
+            }
+        }
+        
+        // Create enemy
+        std::shared_ptr<EnemyPawnModel> enemy = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
+        _enemies.push_back(enemy);
+        _addedEnemies.insert(enemy);
+    }
+    
+    // Set num enemies
+    _numEnemies = (int)_enemies.size();
     
     return true;
 }

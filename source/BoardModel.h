@@ -117,10 +117,17 @@ protected:
     /** Setup board node & display properties */
     bool setupBoardNode(int width , int height, int colors, cugl::Size dimen);
     
-    /** Generate tiles
-     *  Assume board properties are already setup
+    /**
+     * Generate tiles
+     * Assume board properties are already setup
      */
     bool generateTiles(int seed);
+    
+    /** Setup allies from Json */
+    bool setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json);
+    
+    /** Setup enemies from Json */
+    bool setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json);
     
     
 #pragma mark -

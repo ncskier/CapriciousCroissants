@@ -150,6 +150,8 @@ public:
      */
     bool init(int width, int height);
     
+    bool init(int width, int height, int seed, int colors, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen);
+    
     bool init(int width, int height, int colors, int allies, int enemies, bool placePawn);
     
     bool init(int width, int height, int colors, int allies, int enemies, bool placePawn, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen);
@@ -160,6 +162,12 @@ public:
     static std::shared_ptr<BoardModel> alloc(int width, int height) {
         std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
         return (board->init(width, height) ? board : nullptr);
+    }
+    
+    /** Allocates board for a shared pointer */
+    static std::shared_ptr<BoardModel> alloc(int width, int height, int seed, int colors, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen) {
+        std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
+        return (board->init(width, height, seed, colors, assets, dimen) ? board : nullptr);
     }
 
     /** Allocates board for shared pointer */
@@ -268,7 +276,7 @@ public:
 #pragma mark -
 #pragma mark Logic
 	// Return true if a match is found (and replace those matches, damaging pawns on matches), otherwise false
-	bool checkForMatches();
+	bool checkForMatches(bool removeEnemies=true);
 
 	// Generates a new board into the _tiles variable
 	void generateNewBoard();

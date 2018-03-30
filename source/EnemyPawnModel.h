@@ -89,6 +89,9 @@ public:
     /** Initialize a new player pawn at (x, y) tile with [tileBounds] facing [direction] */
     virtual bool init(int x, int y, Direction direction, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets);
     
+    /** Initialize a new player pawn at (x, y) tile with [tileBounds] facing [direction] with [smart] AI */
+    virtual bool init(int x, int y, Direction direction, bool smart, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets);
+
     
 #pragma mark -
 #pragma mark Static Constructors
@@ -120,6 +123,12 @@ public:
     static std::shared_ptr<EnemyPawnModel> alloc(int x, int y, Direction direction, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
         std::shared_ptr<EnemyPawnModel> result = std::make_shared<EnemyPawnModel>();
         return (result->init(x, y, direction, tileBounds, assets) ? result : nullptr);
+    }
+    
+    /** Returns newly allocated player pawn at (x, y) tile with [tileBounds] facing [direction] with [smart] AI */
+    static std::shared_ptr<EnemyPawnModel> alloc(int x, int y, Direction direction, bool smart, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
+        std::shared_ptr<EnemyPawnModel> result = std::make_shared<EnemyPawnModel>();
+        return (result->init(x, y, direction, smart, tileBounds, assets) ? result : nullptr);
     }
     
     

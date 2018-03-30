@@ -98,8 +98,10 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	_complete = false;
 	setDebug(false);
     
-    // Create board
-    populate(width, height, colors, allies, enemies, placePawn, dimen);
+    // Create board from level file
+    setupLevelFromJson("json/levels/level1.json", dimen);
+//    // Create board
+//    populate(width, height, colors, allies, enemies, placePawn, dimen);
     
     // Setup Input handler
     _input.init(getCamera());
@@ -143,24 +145,94 @@ void PlayMode::reset() {
 //    populate();
 }
 
+/** Load level from json */
+void PlayMode::setupLevelFromJson(const std::string& filePath, Size dimen) {
+    // Load json
+    std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(filePath);
+    std::shared_ptr<JsonValue> json = reader->readJson();
+    if (json == nullptr) {
+        CUAssertLog(false, "Failed to load level file");
+        return;
+    }
+    
+    // Parse json board
+    int width = 5;
+    int height = 5;
+    // size
+    // generationAlgorithm
+//    bool random = true;
+    // seed
+    int seed = 17;
+    // colors
+    int colors = 5;
+    
+    // Initialize empty board with correct tiles
+    _board = BoardModel::alloc(width, height, seed, colors, _assets, dimen);
+    
+    // Parse json enemies
+    // add enemies
+    
+    // Parse json players
+    // add players
+    
+    // Add all sprites to scene graph
+    setupLevelSceneGraph();
+}
+
+/** Add level sprites to scene graph */
+void PlayMode::setupLevelSceneGraph() {
+    // Board
+    _worldNode->addChild(_board->getNode());
+    
+    // Remove tiles
+    std::set<std::shared_ptr<TileModel>>::iterator tileIter;
+    for (tileIter = _board->getRemovedTiles().begin(); tileIter != _board->getRemovedTiles().end(); ++tileIter) {
+        _board->getAddedTiles().erase(*tileIter);
+    }
+    _board->clearRemovedTiles();
+    
+    // Add tiles
+    int i = 0;
+    for (tileIter = _board->getAddedTiles().begin(); tileIter != _board->getAddedTiles().end(); ++tileIter) {
+        _board->getNode()->addChild((*tileIter)->getSprite());
+        std::stringstream key;
+        key << "int_add_tile_" << i;
+        _actions->activate(key.str(), _board->tileAddAction, (*tileIter)->getSprite());
+        i++;
+    }
+    _board->clearAddedTiles();
+    
+    // Add allies
+    i = 0;
+    std::set<std::shared_ptr<PlayerPawnModel>>::iterator allyIter;
+    for (allyIter = _board->getAddedAllies().begin(); allyIter != _board->getAddedAllies().end(); ++allyIter) {
+        _board->getNode()->addChild((*allyIter)->getSprite());
+        std::stringstream key;
+        key << "int_add_ally_" << i;
+        _actions->activate(key.str(), _board->allyAddAction, (*allyIter)->getSprite());
+        i++;
+    }
+    _board->clearAddedAllies();
+    
+    // Add enemies
+    i = 0;
+    std::set<std::shared_ptr<EnemyPawnModel>>::iterator enemyIter;
+    for (enemyIter = _board->getAddedEnemies().begin(); enemyIter != _board->getAddedEnemies().end(); ++enemyIter) {
+        _board->getNode()->addChild((*enemyIter)->getSprite());
+        std::stringstream key;
+        key << "int_add_enemy_" << i;
+        _actions->activate(key.str(), _board->enemyAddAction, (*enemyIter)->getSprite());
+        i++;
+    }
+    _board->clearAddedEnemies();
+}
+
 /**
  * Lays out the game geography.
  *
  * This method is really, really long.  In practice, you would replace this
  * with your serialization loader, which would process a level file.
  */
-//void PlayMode::populate() {
-//    _board = BoardModel::alloc(5, 5);
-//    _board->tileTexture = _assets->get<Texture>("100squareWhite");
-//    _board->playerTexture = _assets->get<Texture>("player");
-//    Size dimen = Application::get()->getDisplaySize();
-//    CULog("dimen: %s", dimen.toString().c_str());
-//    dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
-//    _board->gameWidth = dimen.width;
-//    _board->gameHeight = dimen.height;
-//    CULog("scale: %s", dimen.toString().c_str());
-//}
-
 void PlayMode::populate(int height, int width, int colors, int allies, int enemies, bool placePawn, Size dimen) {
     // Create board
     _board = BoardModel::alloc(width, height, colors, allies, enemies, placePawn, _assets, dimen);

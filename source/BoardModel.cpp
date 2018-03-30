@@ -61,9 +61,7 @@ bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<As
     // Get Board Node info (width, height, colors, seed)
     int width = json->get("size")->get("width")->asInt();
     int height = json->get("size")->get("height")->asInt();
-    CULog("(%d, %d)", width, height);
     int colors = json->get("colors")->asInt();
-    CULog("colors: %d", colors);
     
     // Setup Board Node
     if (!setupBoardNode(width, height, colors, dimen)) {
@@ -75,7 +73,6 @@ bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<As
     if (json->get("seed") != nullptr) {
         seed = json->get("seed")->asInt();
     }
-    CULog("seed: %d", seed);
     if (!generateTiles(seed)) {
         return false;
     }
@@ -302,12 +299,9 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
         smart = (enemyJson->get("enemyType")->toString().find("dumb") == std::string::npos);
         
         // Parse Components
-        CULog("Components:");
         std::shared_ptr<JsonValue> enemyComponentsJson = enemyJson->get("components");
         for (auto j = 0; j < enemyComponentsJson->size(); j++) {
             std::shared_ptr<JsonValue> componentJson = enemyComponentsJson->get(j);
-            CULog("%s", componentJson->toString().c_str());
-            CULog("%s", componentJson->key().c_str());
             if ("location" == componentJson->key()) {
                 x = componentJson->get("x")->asInt();
                 y = componentJson->get("y")->asInt();

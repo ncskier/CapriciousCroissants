@@ -176,6 +176,9 @@ void EnemyController::update(float timestep) {
 				if (checkPlaceFree(enemy)) {
 					enemy->move(_board->getWidth(), _board->getHeight());
 				}
+				else if (enemy->getAI() == 0) {
+					enemy->turnAround();
+				}
                 // Create animation
                 Rect newBounds = _board->calculateDrawBounds(enemy->getX(), enemy->getY());
                 Vec2 movement = newBounds.origin - oldBounds.origin;

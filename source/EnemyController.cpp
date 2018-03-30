@@ -96,33 +96,38 @@ std::shared_ptr<PlayerPawnModel> EnemyController::getClosestAllytoEnemy(std::sha
 }
 
 int EnemyController::createDirection(int dx, int dy) {
-	if ((dx == 0) && (dy == 1)) { return 0; }
-	if ((dx == 1) && (dy == 0)) { return 2; }
-	if ((dx == 0) && (dy == -1)) { return 1; }
-	if ((dx == -1) && (dy == 0)) { return 3; }
-    return 0;
+	int direction = 0;
+	if ((dx == 0) && (dy == 1)) { direction = 0; }
+	if ((dx == 1) && (dy == 0)) { direction = 2; }
+	if ((dx == 0) && (dy == -1)) { direction = 1; }
+	if ((dx == -1) && (dy == 0)) { direction = 3; }
+    return direction;
 }
 
 int EnemyController::getDirectionXComponent(EnemyPawnModel::Direction direction) {
-	if (direction == EnemyPawnModel::Direction::NORTH || direction == EnemyPawnModel::Direction::SOUTH) { return 0; }
-	if (direction == EnemyPawnModel::Direction::WEST) { return -1; }
-	if (direction == EnemyPawnModel::Direction::EAST) { return 1; }
-    return 0;
+	int component = 0;
+	//if (direction == EnemyPawnModel::Direction::NORTH || direction == EnemyPawnModel::Direction::SOUTH) { component = 0; }
+	if (direction == EnemyPawnModel::Direction::WEST) { component = -1; }
+	if (direction == EnemyPawnModel::Direction::EAST) { component = 1; }
+    return component;
 }
 
 int EnemyController::getDirectionYComponent(EnemyPawnModel::Direction direction) {
-	if (direction == EnemyPawnModel::Direction::WEST || direction == EnemyPawnModel::Direction::EAST) { return 0; }
-	if (direction == EnemyPawnModel::Direction::SOUTH) { return -1; }
-	if (direction == EnemyPawnModel::Direction::NORTH) { return 1; }
-    return 0;
+	int component = 0;
+	//if (direction == EnemyPawnModel::Direction::WEST || direction == EnemyPawnModel::Direction::EAST) { component = 0; }
+	if (direction == EnemyPawnModel::Direction::SOUTH) { component = -1; }
+	if (direction == EnemyPawnModel::Direction::NORTH) { component = 1; }
+    return component;
 }
 
 bool EnemyController::checkPlaceFree(std::shared_ptr<EnemyPawnModel> enemy) {
 	int checkX = enemy->getX() + getDirectionXComponent(enemy->getDirection());
 	int checkY = enemy->getY() + getDirectionYComponent(enemy->getDirection());
-	if ((checkX < 0) || (checkY < 0)) { return true; }
-	else if ((checkX >= _board->getWidth()) || (checkY >= _board->getHeight())) { return true; }
-    else { return (_board->getEnemy(checkX, checkY) == nullptr); }
+	if ( ((checkX < 0) || (checkY < 0)) || ((checkX >= _board->getWidth()) || (checkY >= _board->getHeight()))) { 
+		checkX = enemy->getX() - getDirectionXComponent(enemy->getDirection());
+		checkY = enemy->getY() - getDirectionYComponent(enemy->getDirection());
+	}
+    return (_board->getEnemy(checkX, checkY) == nullptr); 
 }
 
 void EnemyController::enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
@@ -136,11 +141,12 @@ void EnemyController::enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std:
 		moveX = 0;
 	}
 
-	
 	moveX = copysign(moveX, distanceX);
 	moveY = copysign(moveY, distanceY);
 	dir = createDirection(moveX, moveY);
 	enemy->setDirection(dir);
+	enemy->updateSpriteDirection();
+
 }
 
 #pragma mark -
@@ -170,6 +176,10 @@ void EnemyController::update(float timestep) {
 				if (checkPlaceFree(enemy)) {
 					enemy->move(_board->getWidth(), _board->getHeight());
 				}
+				else if (enemy->getAI() == 0) {
+					enemy->turnAround();
+				}
+				
                 // Create animation
                 Rect newBounds = _board->calculateDrawBounds(enemy->getX(), enemy->getY());
                 Vec2 movement = newBounds.origin - oldBounds.origin;
@@ -193,6 +203,9 @@ void EnemyController::update(float timestep) {
         // ATTACK
         for (int i = 0; i < _board->getNumEnemies(); i++) {
             std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
+			if (enemy->getAI() == 1) {
+				enemyMoveSmart(enemy, getClosestAllytoEnemy(enemy));
+			}
             if (enemy->getX() != -1) {
                 // Attack
                 for (int j = 0; j < _board->getNumAllies(); j++) {

@@ -132,7 +132,7 @@ void EnemyPawnModel::setRandomDirection() {
 
 void EnemyPawnModel::setAI() {
 	_ai = 0;
-	if ((rand() % 10) < 5) {
+	if ((rand() % 10) < 4) {
 		_ai = 1;
 	}
 }

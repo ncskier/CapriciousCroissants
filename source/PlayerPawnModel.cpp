@@ -28,6 +28,7 @@ bool PlayerPawnModel::init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<
     // Create sprite
     std::shared_ptr<Texture> texture = assets->get<Texture>(PLAYER_TEXTURE_KEY_0);
     _sprite = AnimationNode::alloc(texture, PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
+    _sprite->setFrame(PLAYER_IMG_NORMAL);
     _sprite->setAnchor(Vec2::ZERO);
     setSpriteBounds(tileBounds);
     return true;

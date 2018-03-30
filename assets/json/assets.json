@@ -56,6 +56,13 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "mika_spritesheet": {
+            "file":     "textures/mika_spritesheet.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "player0_strip": {
             "file":     "textures/player0_strip.png",
             "minfilter":"nearest",

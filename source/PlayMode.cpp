@@ -90,7 +90,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
     _touchNode->setVisible(false);
     addChild(_touchNode);
     sortZOrder();
-    _touchAction = Animate::alloc(0, 47, 1.2f);
+    _touchAction = Animate::alloc(0, 47, 1.0f);
 
     // Setup state
 	_state = State::PLAYER;
@@ -314,6 +314,15 @@ void PlayMode::populate(int height, int width, int colors, int allies, int enemi
 #pragma mark -
 #pragma mark Gameplay Handling
 
+// Update touch node
+void PlayMode::updateAnimations() {
+    // Update touch node
+    updateTouchNode();
+    
+    // Update Mika
+    updateMikaAnimations();
+}
+
 /** Update touch node */
 void PlayMode::updateTouchNode() {
     if (_input.getMoveEvent() != InputController::MoveEvent::NONE) {
@@ -326,6 +335,43 @@ void PlayMode::updateTouchNode() {
     } else {
         if (!_actions->isActive("touchAction")) {
             _touchNode->setVisible(false);
+        }
+    }
+}
+
+/** Update Mika animations */
+void PlayMode::updateMikaAnimations() {
+    // Update state
+    if (_state == PlayMode::ENEMY) {
+        _beginAttack = false;
+        _attacking = false;
+    }
+    if (_input.getMoveEvent() == InputController::MoveEvent::START) {
+        _beginAttack = !_attacking;
+        _attacking = true;
+    } else if (_input.getMoveEvent() == InputController::MoveEvent::END || _input.getMoveEvent() == InputController::MoveEvent::NONE) {
+        _beginAttack = false;
+        _attacking = false;
+    }
+    if (_beginAttack) {
+        if (!_actions->isActive("mikaBeginAttackAction")) {
+            if (!_board->getAllies().empty()) {
+//                _actions->pause("mikaIdleAction");
+                _actions->activate("mikaBeginAttackAction", _board->mikaBeginAttackAction, _board->getAllies()[0]->getSprite());
+            }
+        }
+        _beginAttack = false;
+    } else if (_attacking) {
+        if (!_actions->isActive("mikaBeginAttackAction") && !_actions->isActive("mikaAttackingAction")) {
+            if (!_board->getAllies().empty()) {
+                _actions->activate("mikaAttackingAction", _board->mikaAttackingAction, _board->getAllies()[0]->getSprite());
+            }
+        }
+    } else {
+        if (!_actions->isActive("mikaIdleAction")) {
+            if (!_board->getAllies().empty()) {
+                _actions->activate("mikaIdleAction", _board->mikaIdleAction, _board->getAllies()[0]->getSprite());
+            }
         }
     }
 }
@@ -411,8 +457,8 @@ void PlayMode::update(float dt) {
     // Update input controller
     _input.update(dt);
     
-    // Update touch node
-    updateTouchNode();
+    // Update animations
+    updateAnimations();
     
     // Update actions
     _actions->update(dt);

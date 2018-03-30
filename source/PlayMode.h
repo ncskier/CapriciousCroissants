@@ -57,6 +57,10 @@ protected:
     std::shared_ptr<cugl::AnimationNode> _touchNode;
     std::shared_ptr<cugl::Animate> _touchAction;
     
+    /** Mika animation state variables */
+    bool _beginAttack = false;
+    bool _attacking = false;
+    
     /** Game Board */
     std::shared_ptr<BoardModel> _board;
     
@@ -189,8 +193,14 @@ public:
     
 #pragma mark -
 #pragma mark Gameplay Handling
+    /** Update animations */
+    void updateAnimations();
+    
     /** Update touch node */
     void updateTouchNode();
+    
+    /** Update Mika animations */
+    void updateMikaAnimations();
     
     /**
      * The method called to update the game mode.

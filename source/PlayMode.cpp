@@ -283,6 +283,7 @@ void PlayMode::populate(int height, int width, int colors, int allies, int enemi
 	//Create entities and register them to manager
 	{ // EXAMPLE ENTITY 0
 		EntityId newEntity = _entityManager->createEntity();
+		CULog("ENITY %d", newEntity);
 		LocationComponent loc;
 		loc.x = 5;
 		loc.y = 5;
@@ -368,10 +369,10 @@ void PlayMode::updateEnemyTurn(float dt) {
         _state = State::PLAYER;
 
 		{	//EXAMPLE CODE FOR DUMB MOVEMENT SYSTEM TO SHOW UPDATING ONE ENTITY(HAS DUMBMOVEMENT) BUT NOT OTHER (DOESN'T HAVE DUMBMOVEMENT)
-			LocationComponent loc = _entityManager->getComponent<LocationComponent>(0);
-			CULog("Should change %d, %d", loc.x, loc.y);
-			loc = _entityManager->getComponent<LocationComponent>(1);
-			CULog("Shouldn't change %d, %d", loc.x, loc.y);
+			//LocationComponent loc = _entityManager->getComponent<LocationComponent>(0);
+			//CULog("Should change %d, %d", loc.x, loc.y);
+			//loc = _entityManager->getComponent<LocationComponent>(1);
+			//CULog("Shouldn't change %d, %d", loc.x, loc.y);
 		}
 
         _enemyController.reset();

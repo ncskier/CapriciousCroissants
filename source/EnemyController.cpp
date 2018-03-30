@@ -81,6 +81,9 @@ void EnemyController::enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::sh
 }
 
 std::shared_ptr<PlayerPawnModel> EnemyController::getClosestAllytoEnemy(std::shared_ptr<EnemyPawnModel>enemy) {
+	if (_board->getNumAllies() == 0) {
+		return nullptr;
+	}
 	std::shared_ptr<PlayerPawnModel> nearestPlayer = _board->getAlly(0);
 	int distance;
 	int minDistance;
@@ -126,6 +129,9 @@ bool EnemyController::checkPlaceFree(std::shared_ptr<EnemyPawnModel> enemy) {
 }
 
 void EnemyController::enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
+	if (player == nullptr) {
+		return;
+	}
 	int moveX, moveY, distanceX, distanceY, dir;
 	moveX = 1;
 	moveY = 0;

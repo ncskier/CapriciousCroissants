@@ -110,6 +110,9 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	_playerController.init(_actions, _board, &_input, _entityManager);
 	_boardController.init(_actions, _board, _entityManager);
 	_enemyController.init(_actions, _board, _entityManager);
+    
+    // Add all sprites to scene graph
+    setupLevelSceneGraph();
 
 	// Set Background
 	Application::get()->setClearColor(Color4(229, 229, 229, 255));
@@ -162,9 +165,9 @@ void PlayMode::setupLevelFromJson(const std::string& filePath, Size dimen) {
     // generationAlgorithm
 //    bool random = true;
     // seed
-    int seed = 17;
+    int seed = 13;
     // colors
-    int colors = 5;
+    int colors = 6;
     
     // Initialize empty board with correct tiles
     _board = BoardModel::alloc(width, height, seed, colors, _assets, dimen);
@@ -174,9 +177,6 @@ void PlayMode::setupLevelFromJson(const std::string& filePath, Size dimen) {
     
     // Parse json players
     // add players
-    
-    // Add all sprites to scene graph
-    setupLevelSceneGraph();
 }
 
 /** Add level sprites to scene graph */
@@ -223,6 +223,10 @@ void PlayMode::setupLevelSceneGraph() {
         key << "int_add_enemy_" << i;
         _actions->activate(key.str(), _board->enemyAddAction, (*enemyIter)->getSprite());
         i++;
+        // Update enemy direction
+        if ((*enemyIter)->getAI() == 1) {
+            _enemyController.enemyMoveSmart(*enemyIter, _enemyController.getClosestAllytoEnemy(*enemyIter));
+        }
     }
     _board->clearAddedEnemies();
 }

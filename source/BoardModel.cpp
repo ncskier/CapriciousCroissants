@@ -91,33 +91,58 @@ bool BoardModel::init(int width, int height, int seed, int colors, std::shared_p
     }
     while (checkForMatches(false));
     
-    // Add enemies
-    _numEnemies = 2;
+    // Add allies
+    _numAllies = 1;
     int x;
     int y;
+    x = 3;
+    y = 3;
+    std::shared_ptr<PlayerPawnModel> ally1 = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
+    _allies.push_back(ally1);
+    _addedAllies.insert(ally1);
+    
+    // Add enemies
+    _numEnemies = 5;
     bool smart;
-    // Dumb enemy (0,0)
+    EnemyPawnModel::Direction direction;
+    // Dumb enemy (0,0) NORTH
     x = 0;
     y = 0;
     smart = false;
-    std::shared_ptr<EnemyPawnModel> enemy1 = EnemyPawnModel::alloc(x, y, EnemyPawnModel::Direction::NORTH, smart, calculateDrawBounds(x, y), _assets);
+    direction = EnemyPawnModel::Direction::NORTH;
+    std::shared_ptr<EnemyPawnModel> enemy1 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
     _enemies.push_back(enemy1);
     _addedEnemies.insert(enemy1);
+    // Dumb enemy (1,0) EAST
+    x = 1;
+    y = 0;
+    smart = false;
+    direction = EnemyPawnModel::Direction::EAST;
+    std::shared_ptr<EnemyPawnModel> enemy2 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
+    _enemies.push_back(enemy2);
+    _addedEnemies.insert(enemy2);
+    // Smart enemy (0,4)
+    x = 0;
+    y = 4;
+    smart = true;
+    std::shared_ptr<EnemyPawnModel> enemy3 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
+    _enemies.push_back(enemy3);
+    _addedEnemies.insert(enemy3);
     // Smart enemy (2,1)
     x = 2;
     y = 1;
     smart = true;
-    std::shared_ptr<EnemyPawnModel> enemy2 = EnemyPawnModel::alloc(x, y, EnemyPawnModel::Direction::NORTH, smart, calculateDrawBounds(x, y), _assets);
-    _enemies.push_back(enemy2);
-    _addedEnemies.insert(enemy2);
-    
-    // Add allies
-    _numAllies = 1;
+    std::shared_ptr<EnemyPawnModel> enemy4 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
+    _enemies.push_back(enemy4);
+    _addedEnemies.insert(enemy4);
+    // Smart enemy (4,1)
     x = 4;
-    y = 4;
-    std::shared_ptr<PlayerPawnModel> ally1 = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
-    _allies.push_back(ally1);
-    _addedAllies.insert(ally1);
+    y = 1;
+    smart = true;
+    std::shared_ptr<EnemyPawnModel> enemy5 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
+    _enemies.push_back(enemy5);
+    _addedEnemies.insert(enemy5);
+    
     
     return true;
 }

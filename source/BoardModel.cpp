@@ -52,44 +52,55 @@ bool BoardModel::init(int width, int height) {
     return init(width, height, _numColors, _numAllies, _numEnemies, _placeAllies);
 }
 
-bool BoardModel::init(int width, int height, int seed, int colors, std::shared_ptr<cugl::AssetManager>& assets, Size dimen) {
+bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<AssetManager>& assets, Size dimen) {
+    CULog("Init JSON");
+    
+    // Set asset manager
+    _assets = assets;
+    
+    // Get Board Node info (width, height, colors, seed)
+    int width = json->get("size")->get("width")->asInt();
+    int height = json->get("size")->get("height")->asInt();
+    CULog("(%d, %d)", width, height);
+    int colors = json->get("colors")->asInt();
+    CULog("colors: %d", colors);
+    
+    // Setup Board Node
+    if (!setupBoardNode(width, height, colors, dimen)) {
+        return false;
+    }
+    
+    // Setup Tiles from json
+    int seed = (int)time(NULL);
+    if (json->get("seed") != nullptr) {
+        seed = json->get("seed")->asInt();
+    }
+    CULog("seed: %d", seed);
+    if (!generateTiles(seed)) {
+        return false;
+    }
+    
+    // Setup Allies from json
+    
+    // Setup Enemies from json
+    
+    return true;
+}
+
+bool BoardModel::init(int width, int height, int seed, int colors, std::shared_ptr<AssetManager>& assets, Size dimen) {
     CULog("New init");
     // Set asset manager
     _assets = assets;
     
-    // Setup Board properties
-    _height = height;
-    _width = width;
-    _numColors = colors;
-    
     // Setup Board Node
-    gameWidth = dimen.width;
-    gameHeight = dimen.height;
-    _node = Node::alloc();
-    float gameLength = (dimen.width > dimen.height) ? dimen.height : dimen.width;
-    _node->setContentSize(gameLength, gameLength);
-    _node->setAnchor(Vec2::ANCHOR_CENTER);
-    _node->setPosition(dimen.width*0.5f, dimen.height*0.5f);
-    
-    // Set cell size
-    float cellLength = getCellLength();
-    _cellSize = Size(cellLength, cellLength*0.85f);
-    // Set tile padding
-    _tilePaddingX = -cellLength*0.04f;
+    if (!setupBoardNode(width, height, colors, dimen)) {
+        return false;
+    }
     
     // Generate tiles
-    srand(seed);
-    // Setup Tiles
-    _tiles.reserve(_width * _height);
-    int color;
-    for (int i = 0; i < _height*_width; i++) {
-        color = randomColor();
-        Rect bounds = calculateDrawBounds(xOfIndex(i), yOfIndex(i));
-        std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
-        _tiles.push_back(tile);
-        _addedTiles.insert(tile);
+    if (!generateTiles(seed)) {
+        return false;
     }
-    while (checkForMatches(false));
     
     // Add allies
     _numAllies = 1;
@@ -189,6 +200,54 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
 
 // Destroy any values needed to be deleted for this class
 void BoardModel::dispose() {
+}
+
+
+#pragma mark -
+#pragma mark Initialization Helpers
+/** Setup board node & display properties */
+bool BoardModel::setupBoardNode(int height, int width, int colors, Size dimen) {
+    // Setup Board properties
+    _height = height;
+    _width = width;
+    _numColors = colors;
+    
+    // Setup Board Node
+    gameWidth = dimen.width;
+    gameHeight = dimen.height;
+    _node = Node::alloc();
+    float gameLength = (dimen.width > dimen.height) ? dimen.height : dimen.width;
+    _node->setContentSize(gameLength, gameLength);
+    _node->setAnchor(Vec2::ANCHOR_CENTER);
+    _node->setPosition(dimen.width*0.5f, dimen.height*0.5f);
+    
+    // Set cell size
+    float cellLength = getCellLength();
+    _cellSize = Size(cellLength, cellLength*0.85f);
+    // Set tile padding
+    _tilePaddingX = -cellLength*0.04f;
+    
+    return true;
+}
+
+/** Generate tiles
+ *  Assume board properties are already setup
+ */
+bool BoardModel::generateTiles(int seed) {
+    srand(seed);
+    // Setup Tiles
+    _tiles.reserve(_width * _height);
+    int color;
+    for (int i = 0; i < _height*_width; i++) {
+        color = randomColor();
+        Rect bounds = calculateDrawBounds(xOfIndex(i), yOfIndex(i));
+        std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
+        _tiles.push_back(tile);
+        _addedTiles.insert(tile);
+    }
+    while (checkForMatches(false));
+    
+    return true;
 }
 
 

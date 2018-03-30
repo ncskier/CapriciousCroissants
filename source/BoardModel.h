@@ -113,6 +113,17 @@ protected:
     
     
 #pragma mark -
+#pragma mark Initialization Helpers
+    /** Setup board node & display properties */
+    bool setupBoardNode(int width , int height, int colors, cugl::Size dimen);
+    
+    /** Generate tiles
+     *  Assume board properties are already setup
+     */
+    bool generateTiles(int seed);
+    
+    
+#pragma mark -
 #pragma mark Index Transformation Functions
     /**
      * Convert (x, y) coordinate to array index. (0, 0) is the bottom left corner
@@ -156,6 +167,8 @@ public:
     
     bool init(int width, int height, int colors, int allies, int enemies, bool placePawn, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen);
     
+    bool init(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen);
+    
 #pragma mark -
 #pragma mark Static Constructors
     /** Allocates board for a shared pointer */
@@ -180,6 +193,12 @@ public:
     static std::shared_ptr<BoardModel> alloc(int width, int height, int colors, int allies, int enemies, bool placePawn, std::shared_ptr<cugl::AssetManager> assets, cugl::Size dimen) {
         std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
         return (board->init(width, height, colors, allies, enemies, placePawn, assets, dimen) ? board : nullptr);
+    }
+    
+    /** Allocates board for shared pointer */
+    static std::shared_ptr<BoardModel> alloc(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen) {
+        std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
+        return (board->init(json, assets, dimen) ? board : nullptr);
     }
 
     

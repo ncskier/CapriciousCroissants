@@ -158,19 +158,21 @@ void PlayMode::setupLevelFromJson(const std::string& filePath, Size dimen) {
         return;
     }
     
-    // Parse json board
-    int width = 5;
-    int height = 5;
-    // size
-    // generationAlgorithm
-//    bool random = true;
-    // seed
-    int seed = 13;
-    // colors
-    int colors = 6;
+    _board = BoardModel::alloc(json, _assets, dimen);
     
-    // Initialize empty board with correct tiles
-    _board = BoardModel::alloc(width, height, seed, colors, _assets, dimen);
+//    // Parse json board
+//    int width = 5;
+//    int height = 5;
+//    // size
+//    // generationAlgorithm
+////    bool random = true;
+//    // seed
+//    int seed = 13;
+//    // colors
+//    int colors = 6;
+//
+//    // Initialize empty board with correct tiles
+//    _board = BoardModel::alloc(width, height, seed, colors, _assets, dimen);
     
     // Parse json enemies
     // add enemies

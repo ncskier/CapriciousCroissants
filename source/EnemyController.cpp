@@ -179,6 +179,7 @@ void EnemyController::update(float timestep) {
 				else if (enemy->getAI() == 0) {
 					enemy->turnAround();
 				}
+				
                 // Create animation
                 Rect newBounds = _board->calculateDrawBounds(enemy->getX(), enemy->getY());
                 Vec2 movement = newBounds.origin - oldBounds.origin;
@@ -202,6 +203,9 @@ void EnemyController::update(float timestep) {
         // ATTACK
         for (int i = 0; i < _board->getNumEnemies(); i++) {
             std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
+			if (enemy->getAI() == 1) {
+				enemyMoveSmart(enemy, getClosestAllytoEnemy(enemy));
+			}
             if (enemy->getX() != -1) {
                 // Attack
                 for (int j = 0; j < _board->getNumAllies(); j++) {

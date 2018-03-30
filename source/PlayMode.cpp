@@ -195,6 +195,7 @@ void PlayMode::setupLevelSceneGraph() {
     int i = 0;
     for (tileIter = _board->getAddedTiles().begin(); tileIter != _board->getAddedTiles().end(); ++tileIter) {
         _board->getNode()->addChild((*tileIter)->getSprite());
+        (*tileIter)->getSprite()->setFrame(TILE_IMG_APPEAR_START);
         std::stringstream key;
         key << "int_add_tile_" << i;
         _actions->activate(key.str(), _board->tileAddAction, (*tileIter)->getSprite());

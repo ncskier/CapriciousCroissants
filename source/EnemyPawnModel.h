@@ -13,10 +13,10 @@
 
 /** Tile Frame Sprite numbers */
 #define ENEMY_IMG_NORMAL 0
-#define ENEMY_IMG_NORTH 0
+#define ENEMY_IMG_NORTH 2
 #define ENEMY_IMG_SOUTH 1
-#define ENEMY_IMG_EAST  2
-#define ENEMY_IMG_WEST  3
+#define ENEMY_IMG_EAST  3
+#define ENEMY_IMG_WEST  0
 
 /** Number of rows and cols in film strip */
 #define ENEMY_IMG_ROWS 1

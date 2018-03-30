@@ -153,7 +153,7 @@ void EnemyPawnModel::setRandomDirection() {
 
 void EnemyPawnModel::setAI() {
 	_ai = 0;
-	if ((rand() % 10) < 5) {
+	if ((rand() % 10) < 4) {
 		_ai = 1;
 	}
 }
@@ -165,10 +165,18 @@ void EnemyPawnModel::setAI() {
 
 /** Set sprite bounds from tile [tileBounds] */
 void EnemyPawnModel::setSpriteBounds(cugl::Rect tileBounds) {
-    float width = tileBounds.size.width * 0.5f;
-    float height = tileBounds.size.height * 0.5f;
+//    float width = tileBounds.size.width * 0.5f;
+//    float height = tileBounds.size.height * 0.5f;
+    float width = tileBounds.size.width * 1.2f;
+    float height = tileBounds.size.height * 1.2f;
     float positionX = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
-    float positionY = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f + tileBounds.size.height*0.15f/2.0f;
+    float positionY = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f + tileBounds.size.height*0.15f/2.0f + tileBounds.size.height*0.4f;
+    if (_ai == 1) {
+        width = tileBounds.size.width * 0.9f;
+        height = tileBounds.size.height * 0.9f;
+        positionX = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
+        positionY = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f + tileBounds.size.height*0.15f/2.0f + tileBounds.size.height*0.2f;
+    }
     _sprite->setPosition(positionX, positionY);
     _sprite->setContentSize(width, height);
 }

@@ -52,7 +52,78 @@ bool BoardModel::init(int width, int height) {
     return init(width, height, _numColors, _numAllies, _numEnemies, _placeAllies);
 }
 
+bool BoardModel::init(int width, int height, int seed, int colors, std::shared_ptr<cugl::AssetManager>& assets, Size dimen) {
+    CULog("New init");
+    // Set asset manager
+    _assets = assets;
+    
+    // Setup Board properties
+    _height = height;
+    _width = width;
+    _numColors = colors;
+    
+    // Setup Board Node
+    gameWidth = dimen.width;
+    gameHeight = dimen.height;
+    _node = Node::alloc();
+    float gameLength = (dimen.width > dimen.height) ? dimen.height : dimen.width;
+    _node->setContentSize(gameLength, gameLength);
+    _node->setAnchor(Vec2::ANCHOR_CENTER);
+    _node->setPosition(dimen.width*0.5f, dimen.height*0.5f);
+    
+    // Set cell size
+    float cellLength = getCellLength();
+    _cellSize = Size(cellLength, cellLength*0.85f);
+    // Set tile padding
+    _tilePaddingX = -cellLength*0.04f;
+    
+    // Generate tiles
+    srand(seed);
+    // Setup Tiles
+    _tiles.reserve(_width * _height);
+    int color;
+    for (int i = 0; i < _height*_width; i++) {
+        color = randomColor();
+        Rect bounds = calculateDrawBounds(xOfIndex(i), yOfIndex(i));
+        std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
+        _tiles.push_back(tile);
+        _addedTiles.insert(tile);
+    }
+    while (checkForMatches(false));
+    
+    // Add enemies
+    _numEnemies = 2;
+    int x;
+    int y;
+    bool smart;
+    // Dumb enemy (0,0)
+    x = 0;
+    y = 0;
+    smart = false;
+    std::shared_ptr<EnemyPawnModel> enemy1 = EnemyPawnModel::alloc(x, y, EnemyPawnModel::Direction::NORTH, smart, calculateDrawBounds(x, y), _assets);
+    _enemies.push_back(enemy1);
+    _addedEnemies.insert(enemy1);
+    // Smart enemy (2,1)
+    x = 2;
+    y = 1;
+    smart = true;
+    std::shared_ptr<EnemyPawnModel> enemy2 = EnemyPawnModel::alloc(x, y, EnemyPawnModel::Direction::NORTH, smart, calculateDrawBounds(x, y), _assets);
+    _enemies.push_back(enemy2);
+    _addedEnemies.insert(enemy2);
+    
+    // Add allies
+    _numAllies = 1;
+    x = 4;
+    y = 4;
+    std::shared_ptr<PlayerPawnModel> ally1 = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
+    _allies.push_back(ally1);
+    _addedAllies.insert(ally1);
+    
+    return true;
+}
+
 bool BoardModel::init(int width, int height, int colors, int allies, int enemies, bool placePawn) {
+    CULog("Old init");
     _height = height;
     _width = width;
     _numColors = colors;
@@ -219,7 +290,7 @@ void BoardModel::removeEnemy(int i) {
 #pragma mark Logic
 
 // Check if any matches exist on the board, if so then remove them and check for pawn locations for damage/removal
-bool BoardModel::checkForMatches() {
+bool BoardModel::checkForMatches(bool removeEnemies) {
 	std::set<int> replaceTiles;
     
 	// Check for matches
@@ -254,7 +325,7 @@ bool BoardModel::checkForMatches() {
 		// Replace tile
 		replaceTile(*iter);
 		// Remove enemies
-        if (!_enemies.empty()) {
+        if (removeEnemies && !_enemies.empty()) {
             for (int i = 0; i < _enemies.size(); i++) {
                 if (indexOfCoordinate(_enemies[i]->getX(), _enemies[i]->getY()) == *iter) {
                     removeEnemy(i);

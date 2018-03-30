@@ -95,6 +95,12 @@ protected:
 
     void populate(int height, int width, int colors, int allies, int enemies, bool place, cugl::Size dimen);
     
+    /** Load level from json */
+    void setupLevelFromJson(const std::string& filePath, cugl::Size dimen);
+    
+    /** Add level sprites to scene graph */
+    void setupLevelSceneGraph();
+    
     
 public:
 #pragma mark -

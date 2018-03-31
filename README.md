@@ -1,30 +1,35 @@
-# Cornell University Game Library (CUGL)
+# Arcane Tectonics
+## Capricious Croissants
+Annie Hughey, Alejandro Devore-Oviedo, Brandon Walker, Joseph Ienna, Rowena Chen, Tyler Thompson
 
-This template provides a base for you to build off of.  You should add all of your
-files to sources and assets, as appropriate.  This will allow access to the Apple,
-Android, and Windows IDEs.
-
-You will need to make changes to the project to give it a different name and package
-identifier (to prevent your application from clashing with others).  See the course
-web page for instructions
-
-## Technical Prototype
+## Alpha Release
 ### Supported Platforms
 - Android
 - iOS
 - Mac
 - PC
 
-### Settings Menu
-The settings menu is for testing purposes; it will not be part of the game.
-At the moment, the "Place Player's Pawns?" checkbox does not do anything.
-
 ### Gameplay
-- The grey squares are your allies, who you want to protect.
-- The black squares with red dots are your enemies, the ones you want to destroy.
-- Make a match underneath an enemy to destroy it.
-- After you make a move, each enemy will step one square in the direction it is
-facing. Enemies face in the direction of their red dot.
-- If an enemy steps on an ally, the ally will be destroyed.
-- Destroy all the enemies to win.
-- If all your allies are destroyed, you lose.
+Mika is the girl character whom the player is controlling.
+
+#### Win Condition
+Player (Mika) destroys all the enemies on the board.
+
+#### Lose Condition
+Player (Mika) gets destroyed.
+
+#### Destroy Enemies
+Create a match of three or more tiles in a straight line to destroy them. Any enemies standing on a matched tile are destroyed.
+
+#### Game Loop
+Player (Mika) and enemies alternate turns.
+
+- Player can slide a row/column of tiles. Do NOT need to make a match with the slide.
+- Enemies can move and attack anything in range.
+
+#### Enemies
+All enemies only have melee attacks, so they attack Mika by moving onto the same tile as her.
+
+__Skeletons__ - smart enemies who always move toward Mika.
+
+__Plump Purple Cats__ - dumb enemies who move in the direction they're facing and turn around when they hit an obstacle.

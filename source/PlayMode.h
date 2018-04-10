@@ -142,7 +142,6 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets);
-	bool init(const std::shared_ptr<cugl::AssetManager>& assets, int width, int height, int colors, int allies, int enemies, bool placePawn);
     
     
 #pragma mark -

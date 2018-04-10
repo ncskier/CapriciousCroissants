@@ -47,6 +47,9 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
     }
     
     // TODO: initialize
+    CULog("Initialize Menu Mode");
+    _assets = assets;
+    
     
     return true;
 }

@@ -12,7 +12,7 @@
 #include <cugl/cugl.h>
 #include "PlayMode.h"
 #include "LoadingMode.h"
-#include "BoardSettingsMode.h"
+#include "MenuMode.h"
 
 /**
  * This class represents the application root for the game.
@@ -29,14 +29,12 @@ protected:
     PlayMode _gameplay;
     /** The controller for the loading screen */
     LoadingMode _loading;
-    
-	/** Settings mode for the board */
-	BoardSettingsMode _settings;
+    /** The controller for the menu screen */
+    MenuMode _menu;
 
     /** Whether or not we have finished loading all assets */
-    bool _loaded;
-	bool _inSettings;
-	bool _inGameplay;
+    bool _loadedMenu;
+    bool _loadedGameplay;
     
 public:
 #pragma mark Constructors
@@ -49,7 +47,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    BoxApp() : cugl::Application(), _loaded(false) {}
+    BoxApp() : cugl::Application(), _loadedMenu(false), _loadedGameplay(false) {}
     
     /**
      * Disposes of this application, releasing all resources.

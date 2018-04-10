@@ -46,10 +46,6 @@ _debug(false)
  * @return true if the controller is initialized properly, false otherwise.
  */
 bool PlayMode::init(const std::shared_ptr<AssetManager>& assets) {
-    return init(assets, 5, 5, 5, 3, 5, false);
-}
-
-bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int height, int colors, int allies, int enemies, bool placePawn) {
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -100,8 +96,6 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
     
     // Create board from level file
     setupLevelFromJson("json/levels/level1.json", dimen);
-//    // Create board
-//    populate(width, height, colors, allies, enemies, placePawn, dimen);
     
     // Setup Input handler
     _input.init(getCamera());

@@ -157,9 +157,9 @@ void BoxApp::update(float timestep) {
  * at all. The default implmentation does nothing.
  */
 void BoxApp::draw() {
-    if (_loading.isActive()) {
+    if (!_loadedMenu) {
         _loading.render(_batch);
-    } else if (_menu.isActive()) {
+    } else if (!_loadedGameplay) {
         _menu.render(_batch);
 	} else {
         _gameplay.render(_batch);

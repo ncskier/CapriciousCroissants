@@ -52,6 +52,7 @@ bool BoardController::init(std::shared_ptr<ActionManager>& actions, const std::s
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void BoardController::dispose() {
+    CULog("dispose BoardController");
     _board = nullptr;
 }
 

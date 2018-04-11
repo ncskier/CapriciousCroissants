@@ -57,6 +57,8 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
     _worldNode->setAnchor(Vec2::ANCHOR_CENTER);
     _worldNode->doLayout(); // This rearranges the children to fit the screen
     addChild(_worldNode);
+    // Background color
+    Application::get()->setClearColor(Color4(192,192,192,255));
     
     // Load levels
     loadLevelsFromJson("json/levelList.json");
@@ -68,6 +70,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void MenuMode::dispose() {
+    removeAllChildren();
     _assets = nullptr;
     _worldNode = nullptr;
     _levelsJson = nullptr;
@@ -91,7 +94,6 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     _levelsJson = json->get("levels");
     CULog("levels: %d", (int)_levelsJson->size());
     for (auto i = 0; i < _levelsJson->size(); i++) {
-        CULog("%s", _levelsJson->get(i)->asString().c_str());
         _worldNode->addChild(createLevelNode(i));
     }
     

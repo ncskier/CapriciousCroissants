@@ -203,6 +203,10 @@ bool BoardModel::init(int width, int height, int colors, int allies, int enemies
 
 // Destroy any values needed to be deleted for this class
 void BoardModel::dispose() {
+    CULog("dispose BoardModel");
+    _node->removeAllChildren();
+    _node = nullptr;
+    _assets = nullptr;
 }
 
 

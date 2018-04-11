@@ -17,8 +17,11 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     
     // TODO: VIEW
+    cugl::Size _dimen;
+    std::shared_ptr<cugl::Node> _worldNode;
     
     // TODO: MODEL
+    std::shared_ptr<cugl::JsonValue> _levelsJson;
     
 public:
 #pragma mark -
@@ -56,6 +59,16 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets);
+
+    
+#pragma mark -
+#pragma mark Helper Functions
+    /** Load levels from json */
+    void loadLevelsFromJson(const std::string& filePath);
+    
+    /** Create level node */
+    std::shared_ptr<cugl::Node> createLevelNode(int levelIdx);
+    
     
 #pragma mark -
 #pragma mark Input Handling

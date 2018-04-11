@@ -119,6 +119,8 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     float x = (levelIdx % levelsWidth) * (frameWidth / levelsWidth) - (frameWidth / 2.0f);
     float y = (levelsHeight - levelIdx / levelsWidth) * (frameHeight / levelsHeight) - (frameHeight / 2.0f);
     levelButton->setPosition(x, y);
+    levelButton->setContentSize(frameWidth/levelsWidth*5.0f/6.0f, frameHeight/levelsHeight*5.0f/6.0f);
+    levelLabel->setContentSize(frameWidth/levelsWidth*5.0f/6.0f, frameHeight/levelsHeight*5.0f/6.0f);
     
     // Set Button Callback
     levelButton->setListener([=](const std::string& name, bool down) {

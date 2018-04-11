@@ -22,6 +22,7 @@ protected:
     
     // TODO: MODEL
     std::shared_ptr<cugl::JsonValue> _levelsJson;
+    std::string _selectedLevelJson;
     
 public:
 #pragma mark -
@@ -78,6 +79,11 @@ public:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void update(float timestep);
+    
+
+#pragma mark -
+#pragma mark Accessors
+    std::string& getSelectedLevelJson() { return _selectedLevelJson; }
 };
 
 #endif /* __Menu_Mode_H__ */

@@ -68,8 +68,9 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void MenuMode::dispose() {
-    // Deactivate the button (platform dependent)
     _assets = nullptr;
+    _worldNode = nullptr;
+    _levelsJson = nullptr;
 }
 
 
@@ -120,12 +121,12 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     // Set Button Callback
     levelButton->setListener([=](const std::string& name, bool down) {
         if (!down) {
-            CULog("name: %s", name.c_str());
             int i = std::stoi(name);
-            CULog("level: %s", _levelsJson->get(i)->asString().c_str());
+            this->_selectedLevelJson = _levelsJson->get(i)->asString();
+            this->setActive(false);
         }
     });
-    levelButton->activate(levelIdx);
+    levelButton->activate(100+levelIdx);
     
     return levelButton;
 }

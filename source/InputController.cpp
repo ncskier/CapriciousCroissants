@@ -47,13 +47,13 @@ _moveEvent(MoveEvent::NONE) {
  * once it is reinitialized.
  */
 void InputController::dispose() {
+    CULog("dispose InputController");
     if (_active) {
 #ifndef CU_TOUCH_SCREEN
 		Mouse *touch = Input::get<Mouse>();
 		touch->removePressListener(LISTENER_KEY);
 		touch->removeReleaseListener(LISTENER_KEY);
 		touch->removeDragListener(LISTENER_KEY);
-        Input::deactivate<Mouse>();
 #else
         Touchscreen* touch = Input::get<Touchscreen>();
         touch->removeBeginListener(LISTENER_KEY);

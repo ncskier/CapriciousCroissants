@@ -27,7 +27,8 @@ using namespace cugl;
 PlayMode::PlayMode() : Scene(),
 _state(State::PLAYER),
 _complete(false),
-_debug(false)
+_debug(false),
+done(false)
 {
 }
 
@@ -45,11 +46,7 @@ _debug(false)
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool PlayMode::init(const std::shared_ptr<AssetManager>& assets) {
-    return init(assets, 5, 5, 5, 3, 5, false);
-}
-
-bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int height, int colors, int allies, int enemies, bool placePawn) {
+bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& levelJson) {
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -99,9 +96,8 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 	setDebug(false);
     
     // Create board from level file
-    setupLevelFromJson("json/levels/level1.json", dimen);
-//    // Create board
-//    populate(width, height, colors, allies, enemies, placePawn, dimen);
+    setupLevelFromJson(levelJson, dimen);
+//    setupLevelFromJson("json/levels/level1.json", dimen);
     
     // Setup Input handler
     _input.init(getCamera());
@@ -126,11 +122,27 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, int width, int 
 void PlayMode::dispose() {
     if (_active) {
         removeAllChildren();
+        _assets = nullptr;
+        _text = nullptr;
+        _actions = nullptr;
+        _worldNode = nullptr;
+        _touchNode = nullptr;
+        _touchAction = nullptr;
+        _entityManager = nullptr;
         _input.dispose();
         _active = false;
         _complete = false;
         _debug = false;
+        _playerController.dispose();
+        _boardController.dispose();
+        _enemyController.dispose();
+        _board = nullptr;
         _state = State::PLAYER;
+        done = false;
+        doneCtr = 30;
+        win = false;
+        _beginAttack = false;
+        _attacking = false;
     }
 }
 
@@ -145,7 +157,7 @@ void PlayMode::dispose() {
  */
 void PlayMode::reset() {
     setComplete(false);
-//    populate();
+    _board = nullptr;
 }
 
 /** Load level from json */
@@ -480,6 +492,13 @@ void PlayMode::update(float dt) {
                 // ENEMY turn
                 updateEnemyTurn(dt);
             }
+        } else {
+            if (doneCtr == 0) {
+                setComplete(true);
+                CULog("Level Complete");
+            } else {
+                doneCtr -= 1;
+            }
         }
     } else {
         // Update Interrupting Animations
@@ -488,18 +507,5 @@ void PlayMode::update(float dt) {
         if (!_enemyController.getInterruptingActions().empty()) { updateInterruptingAnimations(_enemyController.getInterruptingActions()); }
         _input.clear();
     }
-}
-
-/**
- * Draw the game
- *
- * @param batch     The SpriteBatch to draw with.
- */
-void PlayMode::draw(const std::shared_ptr<SpriteBatch>& batch) {
-    // Draw the Board
-//    _board->draw(batch);
-
-    // Render anything on the SceneGraph
-    render(batch);
 }
 

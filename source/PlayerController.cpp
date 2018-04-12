@@ -53,6 +53,7 @@ bool PlayerController::init(std::shared_ptr<ActionManager>& actions, const std::
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void PlayerController::dispose() {
+    CULog("dispose PlayerController");
     _board = nullptr;
     _input = nullptr;
 }

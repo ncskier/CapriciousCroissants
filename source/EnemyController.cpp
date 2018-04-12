@@ -50,6 +50,7 @@ bool EnemyController::init(std::shared_ptr<ActionManager>& actions, const std::s
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void EnemyController::dispose() {
+    CULog("dispose EnemyController");
 	_board = nullptr;
 }
 
@@ -199,7 +200,7 @@ void EnemyController::update(float timestep) {
         }
         
 		// CALL FOR MOVEMENT UPDATE ON ENTITIES
-		_entityManager->updateEntities(*_board, EntityManager::movement);
+//        _entityManager->updateEntities(*_board, EntityManager::movement);
 
         // Update z positions
         _board->updateNodes(false);

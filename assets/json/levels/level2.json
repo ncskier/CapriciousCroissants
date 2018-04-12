@@ -5,7 +5,7 @@
     },
     "generationAlgorithm": "random",
     "seed": 13,
-    "colors": 5,
+    "colors": 6,
     "tiles": [],
     "enemies": {
         "enemy1": {
@@ -64,5 +64,10 @@
         "x": 2,
         "y": 3
     },
-    "allies": {}
+    "allies": {
+        "ally1": {
+            "x": 0,
+            "y": 0
+        }
+    }
 }

@@ -17,8 +17,12 @@ protected:
     std::shared_ptr<cugl::AssetManager> _assets;
     
     // TODO: VIEW
+    cugl::Size _dimen;
+    std::shared_ptr<cugl::Node> _worldNode;
     
     // TODO: MODEL
+    std::shared_ptr<cugl::JsonValue> _levelsJson;
+    std::string _selectedLevelJson;
     
 public:
 #pragma mark -
@@ -56,6 +60,16 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets);
+
+    
+#pragma mark -
+#pragma mark Helper Functions
+    /** Load levels from json */
+    void loadLevelsFromJson(const std::string& filePath);
+    
+    /** Create level node */
+    std::shared_ptr<cugl::Node> createLevelNode(int levelIdx);
+    
     
 #pragma mark -
 #pragma mark Input Handling
@@ -65,6 +79,11 @@ public:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void update(float timestep);
+    
+
+#pragma mark -
+#pragma mark Accessors
+    std::string& getSelectedLevelJson() { return _selectedLevelJson; }
 };
 
 #endif /* __Menu_Mode_H__ */

@@ -50,7 +50,7 @@
             "wrapT":    "clamp"
         },
         "tileNULL_strip": {
-            "file":     "textures/null_tile.png",
+            "file":     "textures/tile_stripNULL.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",

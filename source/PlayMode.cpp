@@ -141,6 +141,8 @@ void PlayMode::dispose() {
         done = false;
         doneCtr = 30;
         win = false;
+        _beginAttack = false;
+        _attacking = false;
     }
 }
 

@@ -257,6 +257,16 @@ bool BoardModel::generateTiles(int seed) {
     return true;
 }
 
+/** Change (x,y) to NULL tile */
+void BoardModel::setNullTile(int x, int y) {
+    Rect bounds = calculateDrawBounds(x, y);
+    std::shared_ptr<TileModel> tile = TileModel::alloc(-1, bounds, _assets);
+    int index = indexOfCoordinate(x, y);
+    _removedTiles.insert(_tiles[index]);
+    _tiles[indexOfCoordinate(x, y)] = tile;
+    _addedTiles.insert(tile);
+}
+
 /** Setup allies from Json */
 bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
     // Vars for creating allies
@@ -270,6 +280,8 @@ bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
     std::shared_ptr<PlayerPawnModel> mika = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
     _allies.push_back(mika);
     _addedAllies.insert(mika);
+    // Set Mika's tile to NULL tile
+    setNullTile(x, y);
     
     // Setup Allies
     std::shared_ptr<JsonValue> alliesJson = json->get("allies");
@@ -280,6 +292,8 @@ bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
         std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
         _allies.push_back(ally);
         _addedAllies.insert(ally);
+        // Set ally's tile to NULL tile
+        setNullTile(x, y);
     }
     
     // Set num allies
@@ -431,7 +445,10 @@ void BoardModel::moveEnemy(int dx, int dy, int enemyIdx) {
 
 // Remove ally at index i
 void BoardModel::removeAlly(int i) {
-//    _node->removeChild(_allies[i]->getSprite());
+    // Replace NULL Tile
+    replaceTile(indexOfCoordinate(_allies[i]->getX(), _allies[i]->getY()));
+    
+    // Remove Ally
     _removedAllies.insert(_allies[i]);
     _allies.erase(_allies.begin() + i);
     _numAllies--;
@@ -458,20 +475,30 @@ bool BoardModel::checkForMatches(bool removeEnemies) {
 		for (int y = 0; y < _height; y++) {
 			// Check Row
 			if (x >= 2) {
-				if (_tiles[indexOfCoordinate(x,y)]->getColor() == _tiles[indexOfCoordinate(x - 1, y)]->getColor()
-					&& _tiles[indexOfCoordinate(x - 1, y)]->getColor() == _tiles[indexOfCoordinate(x - 2, y)]->getColor()) {
-					replaceTiles.insert(indexOfCoordinate(x, y));
-					replaceTiles.insert(indexOfCoordinate(x - 1, y));
-					replaceTiles.insert(indexOfCoordinate(x - 2, y));
+                int x0 = x;
+                int x1 = x-1;
+                int x2 = x-2;
+				if (_tiles[indexOfCoordinate(x0,y)]->getColor() == _tiles[indexOfCoordinate(x1, y)]->getColor()
+					&& _tiles[indexOfCoordinate(x1, y)]->getColor() == _tiles[indexOfCoordinate(x2, y)]->getColor()) {
+                    if (!_tiles[indexOfCoordinate(x0, y)]->isNull()) {
+                        replaceTiles.insert(indexOfCoordinate(x, y));
+                        replaceTiles.insert(indexOfCoordinate(x1, y));
+                        replaceTiles.insert(indexOfCoordinate(x2, y));
+                    }
 				}
 			}
 			// Check Column
 			if (y >= 2) {
-				if (_tiles[indexOfCoordinate(x, y)]->getColor() == _tiles[indexOfCoordinate(x, y - 1)]->getColor()
-					&& _tiles[indexOfCoordinate(x, y - 1)]->getColor() == _tiles[indexOfCoordinate(x, y - 2)]->getColor()) {
-					replaceTiles.insert(indexOfCoordinate(x, y));
-					replaceTiles.insert(indexOfCoordinate(x, y - 1));
-					replaceTiles.insert(indexOfCoordinate(x, y - 2));
+                int y0 = y;
+                int y1 = y-1;
+                int y2 = y-2;
+				if (_tiles[indexOfCoordinate(x, y0)]->getColor() == _tiles[indexOfCoordinate(x, y1)]->getColor()
+					&& _tiles[indexOfCoordinate(x, y1)]->getColor() == _tiles[indexOfCoordinate(x, y2)]->getColor()) {
+                    if (!_tiles[indexOfCoordinate(x, y0)]->isNull()) {
+                        replaceTiles.insert(indexOfCoordinate(x, y0));
+                        replaceTiles.insert(indexOfCoordinate(x, y1));
+                        replaceTiles.insert(indexOfCoordinate(x, y2));
+                    }
 				}
 			}
 		}
@@ -500,15 +527,12 @@ bool BoardModel::checkForMatches(bool removeEnemies) {
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void BoardModel::replaceTile(int tileLocation) {
-//    _node->removeChild(_tiles[tileLocation]->getSprite());
     _removedTiles.insert(_tiles[tileLocation]);
     // New random color
     int color = randomColor();
-//    int color = rand() % _numColors;
     Rect bounds = calculateDrawBounds(xOfIndex(tileLocation), yOfIndex(tileLocation));
     std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
     _tiles[tileLocation] = tile;
-//    _node->addChild(tile->getSprite());
     _addedTiles.insert(tile);
 }
 

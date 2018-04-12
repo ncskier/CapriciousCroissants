@@ -39,7 +39,7 @@ bool BoardController::init(std::shared_ptr<ActionManager>& actions, const std::s
     _board = board;
 	_entityManager = manager;
     
-    _state = State::CHECK;
+    _state = State::REMOVE;
     _debug = false;
     _complete = false;
 	_animating = false;
@@ -169,5 +169,5 @@ void BoardController::update(float timestep) {
 void BoardController::reset() {
     _complete = false;
 	_animating = false;
-    _state = State::CHECK;
+    _state = State::REMOVE;
 }

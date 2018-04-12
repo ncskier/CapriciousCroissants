@@ -395,7 +395,6 @@ void PlayMode::updatePlayerTurn(float dt) {
     _playerController.update(dt);
     if (_playerController.isComplete()) {
         _state = State::BOARD;
-        _playerController.reset();
     }
 }
 
@@ -412,7 +411,13 @@ void PlayMode::updateBoardTurn(float dt) {
             _text->setZOrder(1000);
             sortZOrder();
         }
-        _state = State::ENEMY;
+        if (!_enemyController.isComplete()) {
+             _state = State::ENEMY;
+        } else {
+            _playerController.reset();
+            _enemyController.reset();
+            _state = State::PLAYER;
+        }
         _boardController.reset();
     }
 }
@@ -431,7 +436,7 @@ void PlayMode::updateEnemyTurn(float dt) {
             _text->setZOrder(1000);
             sortZOrder();
         }
-        _state = State::PLAYER;
+        _state = State::BOARD;
 
 		{	//EXAMPLE CODE FOR DUMB MOVEMENT SYSTEM TO SHOW UPDATING ONE ENTITY(HAS DUMBMOVEMENT) BUT NOT OTHER (DOESN'T HAVE DUMBMOVEMENT)
 			//LocationComponent loc = _entityManager->getComponent<LocationComponent>(0);
@@ -439,8 +444,6 @@ void PlayMode::updateEnemyTurn(float dt) {
 			//loc = _entityManager->getComponent<LocationComponent>(1);
 			//CULog("Shouldn't change %d, %d", loc.x, loc.y);
 		}
-
-        _enemyController.reset();
     }
 }
 

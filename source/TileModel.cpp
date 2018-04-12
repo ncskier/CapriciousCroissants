@@ -40,7 +40,9 @@ void TileModel::setSprite(const Rect bounds, const std::shared_ptr<cugl::AssetMa
     // Get Texture
     std::shared_ptr<Texture> texture;
     Color4 color = Color4::WHITE;
-    if (_color == 0) {
+    if (_color == -1) {
+        texture = assets->get<Texture>(TILE_TEXTURE_KEY_NULL);
+    } else if (_color == 0) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_0);
     } else if (_color == 1) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_1);
@@ -70,7 +72,7 @@ void TileModel::setSprite(const Rect bounds, const std::shared_ptr<cugl::AssetMa
         color = Color4::ORANGE;
     }
     
-        // Create Animation Node
+    // Create Animation Node
     _sprite = AnimationNode::alloc(texture, TILE_IMG_ROWS, TILE_IMG_COLS, TILE_IMG_SIZE);
     _sprite->setFrame(TILE_IMG_NORMAL);
     _sprite->setColor(color);

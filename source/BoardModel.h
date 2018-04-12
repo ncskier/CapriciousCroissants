@@ -123,6 +123,9 @@ protected:
      */
     bool generateTiles(int seed);
     
+    /** Change (x,y) to NULL tile */
+    void setNullTile(int x, int y);
+    
     /** Setup allies from Json */
     bool setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json);
     

@@ -26,6 +26,7 @@
 #define TILE_IMG_SIZE 24
 
 /** Tile texture keys */
+#define TILE_TEXTURE_KEY_NULL "tileNULL_strip"
 #define TILE_TEXTURE_KEY_0 "tile0_strip"
 #define TILE_TEXTURE_KEY_1 "tile1_strip"
 #define TILE_TEXTURE_KEY_2 "tile2_strip"
@@ -103,6 +104,9 @@ public:
 #pragma mark Accessors/Mutators
     /** Return match information */
     int getColor() const { return _color; }
+    
+    /** Return whether tile is null tile */
+    bool isNull() const { return (_color == -1); }
     
     /** Set match information */
     void setColor(int color) { _color = color; }

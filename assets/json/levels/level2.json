@@ -4,8 +4,8 @@
         "height": 5
     },
     "generationAlgorithm": "random",
-    "seed": 13,
-    "colors": 6,
+    "seed": 2,
+    "colors": 5,
     "tiles": [],
     "enemies": {
         "enemy1": {
@@ -13,10 +13,10 @@
             "components": {
                 "location": {
                     "x": 1,
-                    "y": 4
+                    "y": 2
                 },
                 "direction": {
-                    "value": 1
+                    "value": 2
                 }
             }
         },
@@ -24,50 +24,18 @@
             "enemyType": "dumb-melee",
             "components": {
                 "location": {
-                    "x": 4,
-                    "y": 1
+                    "x": 3,
+                    "y": 2
                 },
                 "direction": {
                     "value": 3
-                }
-            }
-        },
-        "enemy3": {
-            "enemyType": "smart-melee",
-            "components": {
-                "location": {
-                    "x": 0,
-                    "y": 4
-                }
-            }
-        },
-        "enemy4": {
-            "enemyType": "smart-melee",
-            "components": {
-                "location": {
-                    "x": 3,
-                    "y": 4
-                }
-            }
-        },
-        "enemy5": {
-            "enemyType": "smart-melee",
-            "components": {
-                "location": {
-                    "x": 2,
-                    "y": 1
                 }
             }
         }
     },
     "mika": {
         "x": 2,
-        "y": 3
+        "y": 2
     },
-    "allies": {
-        "ally1": {
-            "x": 0,
-            "y": 0
-        }
-    }
+    "allies": {}
 }

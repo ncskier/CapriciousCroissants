@@ -4,26 +4,23 @@
         "height": 5
     },
     "generationAlgorithm": "random",
-    "seed": 1,
+    "seed": 4,
     "colors": 5,
     "tiles": [],
     "enemies": {
         "enemy1": {
-            "enemyType": "dumb-melee",
+            "enemyType": "smart-melee",
             "components": {
                 "location": {
-                    "x": 2,
-                    "y": 1
-                },
-                "direction": {
-                    "value": 1
+                    "x": 3,
+                    "y": 3
                 }
             }
         }
     },
     "mika": {
-        "x": 2,
-        "y": 3
+        "x": 1,
+        "y": 1
     },
     "allies": {}
 }

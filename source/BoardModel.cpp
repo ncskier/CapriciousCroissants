@@ -290,6 +290,7 @@ bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
         x = allyJson->get("x")->asInt();
         y = allyJson->get("y")->asInt();
         std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
+        ally->getSprite()->setColor(Color4::BLUE);
         _allies.push_back(ally);
         _addedAllies.insert(ally);
         // Set ally's tile to NULL tile

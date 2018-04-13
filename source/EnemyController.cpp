@@ -219,6 +219,8 @@ void EnemyController::update(float timestep) {
                     std::shared_ptr<PlayerPawnModel> ally = _board->getAlly(j);
                     if (playerDistance(enemy, ally) < 1) {
                         _board->removeAlly(j);
+                        // Lose when Mika is destroyed (Mika is index 0 ally)
+                        lose = (j == 0);
                         
                         // Create animation
                         std::stringstream key;
@@ -240,13 +242,13 @@ void EnemyController::update(float timestep) {
         
         setComplete(true);
         
-        lose = true;
-        for (int i = 0; i < _board->getNumAllies(); i++) {
-            std::shared_ptr<PlayerPawnModel> temp = _board->getAlly(i);
-            if (temp->getX() != -1) {
-                lose = false;
-            }
-        }
+//        lose = true;
+//        for (int i = 0; i < _board->getNumAllies(); i++) {
+//            std::shared_ptr<PlayerPawnModel> temp = _board->getAlly(i);
+//            if (temp->getX() != -1) {
+//                lose = false;
+//            }
+//        }
         
         // Update board node positions
         _board->updateNodes();

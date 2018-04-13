@@ -40,18 +40,7 @@ offsetCol(false),
 offset(0.0f) {
 }
 
-/**
- * Initializes the board
- *
- * @param width     The board width (num tiles)
- * @param height    The board height (num tiles)
- *
- * @return true if the controller is initialized properly, false otherwise.
- */
-bool BoardModel::init(int width, int height) {
-    return init(width, height, _numColors, _numAllies, _numEnemies, _placeAllies);
-}
-
+/** Initializes the board */
 bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<AssetManager>& assets, Size dimen) {
     CULog("Init JSON");
     
@@ -90,117 +79,6 @@ bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<As
     return true;
 }
 
-bool BoardModel::init(int width, int height, int seed, int colors, std::shared_ptr<AssetManager>& assets, Size dimen) {
-    CULog("New init");
-    // Set asset manager
-    _assets = assets;
-    
-    // Setup Board Node
-    if (!setupBoardNode(width, height, colors, dimen)) {
-        return false;
-    }
-    
-    // Generate tiles
-    if (!generateTiles(seed)) {
-        return false;
-    }
-    
-    // Add allies
-    _numAllies = 1;
-    int x;
-    int y;
-    x = 2;
-    y = 3;
-    std::shared_ptr<PlayerPawnModel> ally1 = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
-    _allies.push_back(ally1);
-    _addedAllies.insert(ally1);
-    
-    // Add enemies
-    _numEnemies = 5;
-    bool smart;
-    EnemyPawnModel::Direction direction;
-    // Dumb enemy (1,4) SOUTH
-    x = 1;
-    y = 4;
-    smart = false;
-    direction = EnemyPawnModel::Direction::SOUTH;
-    std::shared_ptr<EnemyPawnModel> enemy1 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
-    _enemies.push_back(enemy1);
-    _addedEnemies.insert(enemy1);
-    // Dumb enemy (4,1) WEST
-    x = 4;
-    y = 1;
-    smart = false;
-    direction = EnemyPawnModel::Direction::WEST;
-    std::shared_ptr<EnemyPawnModel> enemy2 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
-    _enemies.push_back(enemy2);
-    _addedEnemies.insert(enemy2);
-    // Smart enemy (0,4)
-    x = 0;
-    y = 4;
-    smart = true;
-    std::shared_ptr<EnemyPawnModel> enemy3 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
-    _enemies.push_back(enemy3);
-    _addedEnemies.insert(enemy3);
-    // Smart enemy (3,4)
-    x = 3;
-    y = 4;
-    smart = true;
-    std::shared_ptr<EnemyPawnModel> enemy4 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
-    _enemies.push_back(enemy4);
-    _addedEnemies.insert(enemy4);
-    // Smart enemy (2,1)
-    x = 2;
-    y = 1;
-    smart = true;
-    std::shared_ptr<EnemyPawnModel> enemy5 = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
-    _enemies.push_back(enemy5);
-    _addedEnemies.insert(enemy5);
-    
-    
-    return true;
-}
-
-bool BoardModel::init(int width, int height, int colors, int allies, int enemies, bool placePawn) {
-    CULog("Old init");
-    _height = height;
-    _width = width;
-    _numColors = colors;
-    _numAllies = allies;
-    _numEnemies = enemies;
-    _placeAllies = placePawn;
-    
-    // Set cell size
-    float cellLength = getCellLength();
-    _cellSize = Size(cellLength, cellLength*0.85f);
-    // Set tile padding
-    _tilePaddingX = -cellLength*0.04f;
-    
-    srand((int)time(NULL));
-    generateNewBoard();
-    while (checkForMatches());
-    srand((int)time(NULL));
-    return true;
-}
-
-bool BoardModel::init(int width, int height, int colors, int allies, int enemies, bool placePawn, std::shared_ptr<cugl::AssetManager>& assets, Size dimen) {
-    _assets = assets;
-    
-    // Setup Board Node
-    gameWidth = dimen.width;
-    gameHeight = dimen.height;
-    _node = Node::alloc();
-    float gameLength = (dimen.width > dimen.height) ? dimen.height : dimen.width;
-    _node->setContentSize(gameLength, gameLength);
-//    _node->setContentSize(dimen);
-    _node->setAnchor(Vec2::ANCHOR_CENTER);
-    _node->setPosition(dimen.width*0.5f, dimen.height*0.5f);
-//    _node->setAnchor(Vec2::ZERO);
-    
-    // Initialize everything else
-    return init(width, height, colors, allies, enemies, placePawn);
-}
-
 // Destroy any values needed to be deleted for this class
 void BoardModel::dispose() {
     CULog("dispose BoardModel");
@@ -213,23 +91,26 @@ void BoardModel::dispose() {
 #pragma mark -
 #pragma mark Initialization Helpers
 /** Setup board node & display properties */
-bool BoardModel::setupBoardNode(int height, int width, int colors, Size dimen) {
+bool BoardModel::setupBoardNode(int width, int height, int colors, Size dimen) {
     // Setup Board properties
-    _height = height;
     _width = width;
+    _height = height;
     _numColors = colors;
     
     // Setup Board Node
     gameWidth = dimen.width;
     gameHeight = dimen.height;
+    float cellLength = getCellLength();
+    float boardWidth = cellLength * _width;
+    float boardHeight = cellLength * _height;
     _node = Node::alloc();
-    float gameLength = (dimen.width > dimen.height) ? dimen.height : dimen.width;
-    _node->setContentSize(gameLength, gameLength);
+    _node->setContentSize(boardWidth, boardHeight);
     _node->setAnchor(Vec2::ANCHOR_CENTER);
     _node->setPosition(dimen.width*0.5f, dimen.height*0.5f);
+    CULog("board dimen: (%f, %f)", boardWidth, boardHeight);
+    CULog("game dimen: (%f, %f)", dimen.width, dimen.height);
     
     // Set cell size
-    float cellLength = getCellLength();
     _cellSize = Size(cellLength, cellLength*0.85f);
     // Set tile padding
     _tilePaddingX = -cellLength*0.04f;
@@ -816,8 +697,8 @@ float BoardModel::getCellLength() {
 
 // Convert grid (x, y) to screen coordinates
 cugl::Rect BoardModel::gridToScreen(int x, int y) {
-    float xPos = _boardPadding + x*_cellSize.width;
-    float yPos = _boardPadding + y*_cellSize.height;
+    float xPos = x * _cellSize.width;
+    float yPos = y * _cellSize.height;
     
     return Rect(xPos, yPos, _cellSize.width, _cellSize.height);
 }

@@ -161,50 +161,11 @@ public:
     
     void dispose();
     
-    /**
-     * Initializes the board
-     *
-     * @param width     The board width (num tiles)
-     * @param height    The board height (num tiles)
-     *
-     * @return true if the controller is initialized properly, false otherwise.
-     */
-    bool init(int width, int height);
-    
-    bool init(int width, int height, int seed, int colors, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen);
-    
-    bool init(int width, int height, int colors, int allies, int enemies, bool placePawn);
-    
-    bool init(int width, int height, int colors, int allies, int enemies, bool placePawn, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen);
-    
+    /** Initialized the board */
     bool init(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen);
     
 #pragma mark -
 #pragma mark Static Constructors
-    /** Allocates board for a shared pointer */
-    static std::shared_ptr<BoardModel> alloc(int width, int height) {
-        std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
-        return (board->init(width, height) ? board : nullptr);
-    }
-    
-    /** Allocates board for a shared pointer */
-    static std::shared_ptr<BoardModel> alloc(int width, int height, int seed, int colors, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen) {
-        std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
-        return (board->init(width, height, seed, colors, assets, dimen) ? board : nullptr);
-    }
-
-    /** Allocates board for shared pointer */
-	static std::shared_ptr<BoardModel> alloc(int width, int height, int colors, int allies, int enemies, bool placePawn) {
-		std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
-		return (board->init(width, height, colors, allies, enemies, placePawn) ? board : nullptr);
-	}
-    
-    /** Allocates board for shared pointer */
-    static std::shared_ptr<BoardModel> alloc(int width, int height, int colors, int allies, int enemies, bool placePawn, std::shared_ptr<cugl::AssetManager> assets, cugl::Size dimen) {
-        std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
-        return (board->init(width, height, colors, allies, enemies, placePawn, assets, dimen) ? board : nullptr);
-    }
-    
     /** Allocates board for shared pointer */
     static std::shared_ptr<BoardModel> alloc(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen) {
         std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();

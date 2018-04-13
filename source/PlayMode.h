@@ -87,21 +87,6 @@ protected:
 
     
 #pragma mark Internal Object Management
-    /**
-     * Lays out the game geography.
-     *
-     * Pay close attention to how we attach physics objects to a scene graph.
-     * The simplest way is to make a subclass, like we do for the rocket.  However,
-     * for simple objects you can just use a callback function to lightly couple
-     * them.  This is what we do with the crates.
-     *
-     * This method is really, really long.  In practice, you would replace this
-     * with your serialization loader, which would process a level file.
-     */
-    void populate();
-
-    void populate(int height, int width, int colors, int allies, int enemies, bool place, cugl::Size dimen);
-    
     /** Load level from json */
     void setupLevelFromJson(const std::string& filePath, cugl::Size dimen);
     

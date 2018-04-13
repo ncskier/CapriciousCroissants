@@ -62,6 +62,7 @@ bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<As
     if (json->get("seed") != nullptr) {
         seed = json->get("seed")->asInt();
     }
+    CULog("seed: %i", seed);
     if (!generateTiles(seed)) {
         return false;
     }

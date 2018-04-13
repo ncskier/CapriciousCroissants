@@ -1,0 +1,80 @@
+{
+    "size": {
+        "width": 5,
+        "height": 5
+    },
+    "generationAlgorithm": "random",
+    "seed": 1523649274,
+    "colors": 5,
+    "tiles": [],
+    "enemies": {
+        "enemy1": {
+            "enemyType": "smart-melee",
+            "components": {
+                "location": {
+                    "x": 1,
+                    "y": 3
+                }
+            }
+        },
+        "enemy2": {
+            "enemyType": "smart-melee",
+            "components": {
+                "location": {
+                    "x": 1,
+                    "y": 1
+                }
+            }
+        },
+        "enemy3": {
+            "enemyType": "smart-melee",
+            "components": {
+                "location": {
+                    "x": 2,
+                    "y": 2
+                }
+            }
+        },
+        "enemy4": {
+            "enemyType": "smart-melee",
+            "components": {
+                "location": {
+                    "x": 3,
+                    "y": 3
+                }
+            }
+        },
+        "enemy5": {
+            "enemyType": "smart-melee",
+            "components": {
+                "location": {
+                    "x": 3,
+                    "y": 1
+                }
+            }
+        },
+        "enemy5": {
+            "enemyType": "smart-melee",
+            "components": {
+                "location": {
+                    "x": 4,
+                    "y": 0
+                }
+            }
+        }
+    },
+    "mika": {
+        "x": 4,
+        "y": 4
+    },
+    "allies": {
+        "ally1": {
+            "x": 0,
+            "y": 4
+        },
+        "ally2": {
+            "x": 0,
+            "y": 0
+        }
+    }
+}

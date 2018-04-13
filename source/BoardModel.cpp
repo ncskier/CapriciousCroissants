@@ -585,6 +585,9 @@ void BoardModel::slide(bool row, int k, int offset) {
 
 	// Slide pawns
     slidePawns(row, k, offset);
+    
+    // Free memory allocated for line
+    delete[] line;
 }
 
 //Offset view of row (not model)

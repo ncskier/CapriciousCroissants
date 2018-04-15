@@ -192,9 +192,9 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
     
     // Setup Enemies
     std::shared_ptr<JsonValue> enemiesJson = json->get("enemies");
-	size_t enemyId = _entityManager->createEntity();
 
     for (auto i = 0; i < enemiesJson->size(); i++) {
+		size_t enemyId = _entityManager->createEntity();
         std::shared_ptr<JsonValue> enemyJson = enemiesJson->get(i);
         
         // Parse Components

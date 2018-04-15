@@ -9,27 +9,59 @@
     "tiles": [],
     "enemies": {
         "enemy1": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 1,
-                    "y": 2
+                    "y": 2,
+                    "direction" : 2
                 },
-                "direction": {
-                    "value": 2
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy2": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 3,
-                    "y": 2
+                    "y": 2,
+                    "direction" : 3
                 },
-                "direction": {
-                    "value": 3
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         }
     },

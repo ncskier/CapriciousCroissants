@@ -237,6 +237,10 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 
 
 				_entityManager->addComponent<IdleComponent>(enemyId, idle);
+			} else if ("attackMelee" == componentJson->key()) {
+				MeleeAttackComponent melee;
+
+				_entityManager->addComponent<MeleeAttackComponent>(enemyId, melee);
 			}
         }
 

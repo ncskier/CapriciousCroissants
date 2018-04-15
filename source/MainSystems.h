@@ -22,3 +22,14 @@ public:
 
 	virtual bool updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) override;
 };
+
+class AttackMeleeSystem : public EntitySystem {
+public:
+	explicit AttackMeleeSystem(std::shared_ptr<EntityManager>& manager) :
+		EntitySystem(manager) {
+		setRequiredComponents({ ecs::getComponentType<MeleeAttackComponent>() });
+	}
+
+	virtual bool updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) override;
+
+};

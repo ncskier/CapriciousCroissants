@@ -64,6 +64,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
 	// Initialize all systems that are used for playing
 	_entityManager->addSystem(std::make_shared<MovementDumbSystem>(_entityManager), EntityManager::movement);
 	_entityManager->addSystem(std::make_shared<MovementSmartSystem>(_entityManager), EntityManager::movement);
+	_entityManager->addSystem(std::make_shared<AttackMeleeSystem>(_entityManager), EntityManager::attack);
 
     // Add Background Node
     std::shared_ptr<PolygonNode> background = PolygonNode::allocWithTexture(assets->get<Texture>("background"));
@@ -327,7 +328,7 @@ void PlayMode::updateBoardTurn(float dt) {
 void PlayMode::updateEnemyTurn(float dt) {
     _enemyController.update(dt);
     if (_enemyController.isComplete()) {
-        if (_enemyController.lose) {
+        if (_board->lose) {
             done = true;
             win = false;
             

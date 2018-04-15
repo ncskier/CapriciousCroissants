@@ -98,7 +98,7 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 
 
 bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) {
-	//Can assume entity has a DumbMovementComponent(required)
+	//Can assume entity has a SmartMovementComponent(required)
 	if (manager->hasComponent<LocationComponent>(entity)) {
 		//        DumbMovementComponent move = manager->getComponent<DumbMovementComponent>(entity);
 		LocationComponent loc = manager->getComponent<LocationComponent>(entity);
@@ -108,6 +108,35 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 		loc.y++;
 
 		manager->addComponent<LocationComponent>(entity, loc);
+	}
+
+	return true;
+}
+
+
+bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) {
+	//Can assume entity has a AttackMeleeComponent(required)
+
+	if (manager->hasComponent<LocationComponent>(entity)) {
+		LocationComponent loc = manager->getComponent<LocationComponent>(entity);
+		IdleComponent idle = manager->getComponent<IdleComponent>(entity);
+
+		for (int i = 0; i < board->getNumAllies(); i++) {
+			std::shared_ptr<PlayerPawnModel> ally = board->getAlly(i);
+			if (ally->getX() == loc.x && ally->getY() == loc.y) {
+				board->removeAlly(i);
+				if (i == 0) {
+					board->lose = true;
+				}
+
+				std::stringstream key;
+				key << "int_ally_remove_" << i;
+				idle._actions->activate(key.str(), board->allyRemoveAction, ally->getSprite());
+				idle._interruptingActions.insert(key.str());
+			}
+		}
+
+		manager->addComponent<IdleComponent>(entity, idle);
 	}
 
 	return true;

@@ -186,6 +186,8 @@ public:
 	bool offsetCol;
     float offset;
 
+	bool lose = false;
+
 	bool requestedRow;
 
 	std::shared_ptr<cugl::Texture> tileTexture;

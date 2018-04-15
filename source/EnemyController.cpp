@@ -52,6 +52,11 @@ bool EnemyController::init(std::shared_ptr<ActionManager>& actions, const std::s
 void EnemyController::dispose() {
     CULog("dispose EnemyController");
 	_board = nullptr;
+    _actions = nullptr;
+    _entityManager = nullptr;
+    _complete = false;
+    _state = State::MOVE;
+    lose = false;
 }
 
 /*

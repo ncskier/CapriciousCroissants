@@ -9,14 +9,31 @@
     "tiles": [],
     "enemies": {
         "enemy1": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 2,
-                    "y": 1
+                    "y": 1,
+                    "direction" : 1
                 },
-                "direction": {
-                    "value": 1
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": [
+                        "enemy0_strip"
+                    ],
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ],
                 }
             }
         }

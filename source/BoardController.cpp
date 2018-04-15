@@ -104,20 +104,23 @@ void BoardController::update(float timestep) {
         
         // Enemy animations
         i = 0;
-        std::set<std::shared_ptr<EnemyPawnModel>>::iterator enemyIter;
+        std::set<size_t>::iterator enemyIter;
         for (enemyIter = _board->getRemovedEnemies().begin(); enemyIter != _board->getRemovedEnemies().end(); ++enemyIter) {
             std::stringstream key;
             key << "int_enemy_remove_" << i;
-            _actions->activate(key.str(), _board->enemyRemoveAction, (*enemyIter)->getSprite());
+            _actions->activate(key.str(), _board->enemyRemoveAction, _entityManager->getComponent<IdleComponent>((*enemyIter)).sprite);
             _interruptingActions.insert(key.str());
             i++;
         }
+
+		_entityManager->updateEntities(_board, EntityManager::damage);  //Check for any death effects of enemies
         
         // Check win condition
         win = true;
         for (int i = 0; i < _board->getNumEnemies(); i++) {
-            std::shared_ptr<EnemyPawnModel> temp = _board->getEnemy(i);
-            if (temp->getX() != -1) {
+            size_t temp = _board->getEnemy(i);
+			LocationComponent loc = _entityManager->getComponent<LocationComponent>(temp);
+			if (loc.x!= -1) {
                 win = false;
             }
         }
@@ -133,9 +136,10 @@ void BoardController::update(float timestep) {
         _board->clearRemovedTiles();
 
         // Remove removed enemies from board node
-        std::set<std::shared_ptr<EnemyPawnModel>>::iterator enemyIter;
+        std::set<size_t>::iterator enemyIter;
         for (enemyIter = _board->getRemovedEnemies().begin(); enemyIter != _board->getRemovedEnemies().end(); ++enemyIter) {
-            _board->getNode()->removeChild((*enemyIter)->getSprite());
+            _board->getNode()->removeChild(_entityManager->getComponent<IdleComponent>((*enemyIter)).sprite);
+			_entityManager->unregisterEntity((*enemyIter));
         }
         _board->clearRemovedEnemies();
         
@@ -144,9 +148,6 @@ void BoardController::update(float timestep) {
         for (it = _board->getAddedTiles().begin(); it != _board->getAddedTiles().end(); ++it) {
             _board->getNode()->addChild((*it)->getSprite());
             (*it)->getSprite()->setFrame(TILE_IMG_APPEAR_START);
-//            Color4 color = (*it)->getSprite()->getColor();
-//            color.a = 0.0f;
-//            (*it)->getSprite()->setColor(color);
             std::stringstream key;
             key << "int_tile_add_" << i;
             _actions->activate(key.str(), _board->tileAddAction, (*it)->getSprite());

@@ -136,7 +136,7 @@ bool EnemyController::checkPlaceFree(std::shared_ptr<EnemyPawnModel> enemy) {
 		checkX = enemy->getX() - getDirectionXComponent(enemy->getDirection());
 		checkY = enemy->getY() - getDirectionYComponent(enemy->getDirection());
 	}
-    return (_board->getEnemy(checkX, checkY) == nullptr); 
+    return (_board->getEnemy(checkX, checkY) == 0); 
 }
 
 void EnemyController::enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
@@ -175,7 +175,7 @@ void EnemyController::update(float timestep) {
 
     if (_state == State::MOVE) {
         // MOVE
-        for (int i = 0; i < _board->getNumEnemies(); i++) {
+        /*for (int i = 0; i < _board->getNumEnemies(); i++) {
             std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
             if (enemy->getX() != -1) {
                 // Store enemy location
@@ -202,10 +202,10 @@ void EnemyController::update(float timestep) {
                 _actions->activate(key.str(), moveAction, enemy->getSprite());
                 _interruptingActions.insert(key.str());
             }
-        }
+        }*/
         
 		// CALL FOR MOVEMENT UPDATE ON ENTITIES
-//        _entityManager->updateEntities(*_board, EntityManager::movement);
+        _entityManager->updateEntities(_board, EntityManager::movement);
 
         // Update z positions
         _board->updateNodes(false);
@@ -213,7 +213,7 @@ void EnemyController::update(float timestep) {
         _state = State::ATTACK;
     } else if (_state == State::ATTACK) {
         // ATTACK
-        for (int i = 0; i < _board->getNumEnemies(); i++) {
+        /*for (int i = 0; i < _board->getNumEnemies(); i++) {
             std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
 			if (enemy->getAI() == 1) {
 				enemyMoveSmart(enemy, getClosestAllytoEnemy(enemy));
@@ -234,8 +234,8 @@ void EnemyController::update(float timestep) {
                         _interruptingActions.insert(key.str());
                     }
                 }
-            }
-        }
+            }*/
+		_entityManager->updateEntities(_board, EntityManager::attack);
         _state = State::CHECK;
     } else {
         // CHECK

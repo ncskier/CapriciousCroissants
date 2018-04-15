@@ -33,10 +33,8 @@ protected:
     // CONTROLLERS
     
     // MODEL
-    /** The action manager. */
-    std::shared_ptr<cugl::ActionManager> _actions;
-    /** Set of interrupting animations */
-    std::set<std::string> _interruptingActions;
+    
+    
     /** Game board */
     std::shared_ptr<BoardModel> _board;
 	
@@ -56,6 +54,12 @@ protected:
     
     
 public:
+	/** The action manager. */
+	std::shared_ptr<cugl::ActionManager> _actions;
+	/** Set of interrupting animations */
+	std::set<std::string> _interruptingActions;
+
+
 	bool lose = false;
 #pragma mark -
 #pragma mark Constructors

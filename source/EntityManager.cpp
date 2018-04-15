@@ -79,7 +79,7 @@ size_t EntityManager::unregisterEntity(const EntityId entityId) {
 	return numSystems;
 }
 
-size_t EntityManager::updateEntities(BoardModel board, SystemType type) {
+size_t EntityManager::updateEntities(std::shared_ptr<BoardModel> board, SystemType type) {
 	size_t numUpdated = 0;
 	systems tempSystem;
 	switch (type) {
@@ -101,6 +101,33 @@ size_t EntityManager::updateEntities(BoardModel board, SystemType type) {
 	}
 	for (auto system = tempSystem.begin(); system != tempSystem.end(); ++system) {
 		numUpdated += (*system)->updateEntities(board);
+	}
+
+	return numUpdated;
+}
+
+size_t EntityManager::updateEntities(std::shared_ptr<BoardModel> board, SystemType type, std::shared_ptr<EnemyController> controller) {
+	size_t numUpdated = 0;
+	systems tempSystem;
+	switch (type) {
+	case attack:
+		tempSystem = attackSystems;
+		break;
+	case movement:
+		tempSystem = movementSystems;
+		break;
+	case damage:
+		tempSystem = damageSystems;
+		break;
+	case playerLimit:
+		tempSystem = playerLimitSystems;
+		break;
+	case onTurn:
+		tempSystem = onTurnSystems;
+		break;
+	}
+	for (auto system = tempSystem.begin(); system != tempSystem.end(); ++system) {
+		numUpdated += (*system)->updateEntities(board, controller);
 	}
 
 	return numUpdated;

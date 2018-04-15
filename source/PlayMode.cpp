@@ -379,8 +379,8 @@ void PlayMode::update(float dt) {
 	for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
 		if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
 			hasInterrupts = true;
+			break;
 		}
-		break;
 	}
     if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && !hasInterrupts) {
         // Update Gameplay

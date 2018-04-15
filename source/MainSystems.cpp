@@ -93,6 +93,7 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 						idle.sprite->setFrame(0);
 						break;
 				}
+				break;
 			}
 		}
 

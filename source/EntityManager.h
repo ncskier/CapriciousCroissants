@@ -8,7 +8,6 @@
 #include "ComponentType.h"
 #include "ComponentStore.h"
 #include "System.h"
-#include "BoardModel.h"
 
 #include <map>
 #include <unordered_map>
@@ -16,6 +15,8 @@
 #include <typeinfo>
 #include <cassert>
 #include <vector>
+
+class BoardModel;
 
 // Class of an entity manager that maintains the connections between entities and their components
 class EntityManager {

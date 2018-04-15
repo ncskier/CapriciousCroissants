@@ -2,12 +2,12 @@
 #include "ComponentType.h"
 #include "Entity.h"
 #include "cugl\cugl.h"
-#include "BoardModel.h"
 
 #include <memory>
 #include <set>
 
 class EntityManager;
+class BoardModel;
 
 class EntitySystem {
 private:

@@ -12,14 +12,14 @@
 #include <cugl/cugl.h>
 #include "TileModel.h"
 #include "PlayerPawnModel.h"
-#include "EnemyPawnModel.h"
-#include "EntityManager.h"
 #include <set>
 #include <vector>
+#include "EntityManager.h"
 
 
 #pragma mark -
 #pragma mark Board Model
+
 
 /** Class of the board model*/
 class BoardModel {

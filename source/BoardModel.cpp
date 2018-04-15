@@ -226,13 +226,12 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 			}
 			else if ("idle" == componentJson->key()) {
 				IdleComponent idle;
-
-				idle.textureKey = componentJson->get("textureKeys")->asStringArray();
+				idle.textureKey = componentJson->get("textureKeys")->asString();
 				idle.textureRows = componentJson->get("textureRows")->asIntArray();
 				idle.textureColumns = componentJson->get("textureColumns")->asIntArray();
 				idle.textureSize = componentJson->get("textureSize")->asIntArray();
 				idle.speed = componentJson->get("textureSpeed")->asIntArray();
-				idle.sprite = AnimationNode::alloc(_assets->get<Texture>(idle.textureKey[0]), idle.textureRows[0], idle.textureColumns[0], idle.textureSize[0]);
+				idle.sprite = AnimationNode::alloc(_assets->get<Texture>(idle.textureKey), idle.textureRows[0], idle.textureColumns[0], idle.textureSize[0]);
 				idle.sprite->setAnchor(Vec2::ZERO);
 				idle._actions = actions;
 
@@ -281,6 +280,7 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
         // Create enemy
         enemiesEntityIds.push_back(enemyId);
         _addedEnemies.insert(enemyId);
+		_entityManager->registerEntity(enemyId);
     }
     
     // Set num enemies

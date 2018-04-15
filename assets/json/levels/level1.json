@@ -19,9 +19,7 @@
                     "movementDistance" : 1
                 },
                 "idle": {
-                    "textureKeys": [
-                        "enemy0_strip"
-                    ],
+                    "textureKeys": "enemy0_strip",
                     "textureRows": [
                         1
                     ],
@@ -33,7 +31,7 @@
                     ],
                     "textureSpeed": [
                         2
-                    ],
+                    ]
                 }
             }
         }

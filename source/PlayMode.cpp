@@ -171,7 +171,7 @@ void PlayMode::setupLevelFromJson(const std::string& filePath, Size dimen) {
         return;
     }
     
-    _board = BoardModel::alloc(json, _assets, dimen, _entityManager);
+    _board = BoardModel::alloc(json, _assets, dimen, _entityManager, _actions);
 }
 
 /** Add level sprites to scene graph */
@@ -377,11 +377,12 @@ void PlayMode::update(float dt) {
 	bool hasInterrupts = false;
 	for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
 		if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
+			CULog("Has interrupts");
 			hasInterrupts = true;
 		}
 		break;
 	}
-    if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && _enemyController.getInterruptingActions().empty()) {
+    if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && !hasInterrupts) {
         // Update Gameplay
         if (!done) {
             //    CULog("PlayMode Update");

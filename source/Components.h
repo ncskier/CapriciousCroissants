@@ -2,6 +2,7 @@
 #include "cugl\cugl.h"
 #include <memory>
 #include <string>
+#include <set>
 
 //All structs are components and MUST extend Component struct
 struct Component {};
@@ -61,7 +62,7 @@ struct SizeComponent : Component {
 };
 
 struct IdleComponent : Component {
-	std::vector<std::string> textureKey;
+	std::string textureKey;
 	std::vector<std::tuple<int, int>> textureStartStopFrame;
 	std::vector<int> textureRows;
 	std::vector<int> textureColumns;

@@ -377,7 +377,6 @@ void PlayMode::update(float dt) {
 	bool hasInterrupts = false;
 	for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
 		if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
-			CULog("Has interrupts");
 			hasInterrupts = true;
 		}
 		break;
@@ -412,7 +411,9 @@ void PlayMode::update(float dt) {
 
 		for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
 			if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
-				updateInterruptingAnimations(_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions);
+				IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enem));
+				updateInterruptingAnimations(idle._interruptingActions);
+				_entityManager->addComponent<IdleComponent>((*enem), idle);
 			}
 		}
 

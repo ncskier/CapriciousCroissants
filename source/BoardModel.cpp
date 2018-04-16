@@ -681,19 +681,20 @@ void BoardModel::updateNodes(bool position, bool z) {
 		if (position) {
 			/**Bad, fix this*/
 			Rect tileBounds = calculateDrawBounds(loc.x, loc.y);
-
-			float width = tileBounds.size.width * 1.2f;
-			float height = tileBounds.size.height * 1.2f;
-			float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
-			float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.4f;
-			if (_entityManager->hasComponent<SmartMovementComponent>((*it))) {
-				width = tileBounds.size.width * 0.9f;
-				height = tileBounds.size.height * 0.9f;
-				positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
-				positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.2f;
-			}
-			idle.sprite->setPosition(positionX, positionY);
-			idle.sprite->setContentSize(width, height);
+//            idle.sprite->setPosition(tileBounds.origin);
+//            idle.sprite->setContentSize(tileBounds.size);
+//            float width = tileBounds.size.width * 1.2f;
+//            float height = tileBounds.size.height * 1.2f;
+//            float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
+//            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.4f;
+//            if (_entityManager->hasComponent<SmartMovementComponent>((*it))) {
+            float width = tileBounds.size.width * 0.7f;
+            float height = tileBounds.size.height * 0.7f;
+            float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
+            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.2f;
+//            }
+            idle.sprite->setPosition(positionX, positionY);
+            idle.sprite->setContentSize(width, height);
 		}
         if (z)
             idle.sprite->setZOrder(calculateDrawZ(loc.x, loc.y, false));

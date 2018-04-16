@@ -33,8 +33,8 @@ _selectedTile(-1),
 _placeAllies(false),
 _boardPadding(45.0f),
 _tilePadding(0.0f),
-_tilePaddingX(0.0f),
-_tilePaddingY(0.0f),
+_tilePaddingX(-95.0f),
+_tilePaddingY(-95.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
@@ -736,7 +736,7 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     Rect bounds = gridToScreen(gridX, gridY);
     
     // Apply Padding to Bounds
-    float x = bounds.getMinX() + _tilePaddingX/2.0f;
+    float x = bounds.getMinX() - _tilePaddingX/2.0f + _tilePaddingY/2.0f;
     float y = bounds.getMinY() + _tilePaddingY/2.0f;
     float width = bounds.size.width - _tilePaddingX;
     float height = bounds.size.height - _tilePaddingY;

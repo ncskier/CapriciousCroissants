@@ -1,8 +1,10 @@
 #pragma once
-#include "cugl\cugl.h"
+#include <cugl/cugl.h>
 #include <memory>
 #include <string>
 #include <set>
+#include <vector>
+#include <tuple>
 
 //All structs are components and MUST extend Component struct
 struct Component {};

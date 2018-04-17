@@ -1,7 +1,7 @@
 #pragma once
+#include <cugl/cugl.h>
 #include "ComponentType.h"
 #include "Entity.h"
-#include "cugl\cugl.h"
 
 #include <memory>
 #include <set>

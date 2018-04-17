@@ -29,7 +29,6 @@
 
 // Include your application class
 #include "BoxApp.h"
-#include "BoardScreenApp.h"
 
 // This keeps us from having to write cugl:: all the time
 using namespace cugl;

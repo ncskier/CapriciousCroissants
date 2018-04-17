@@ -59,108 +59,6 @@ void EnemyController::dispose() {
     lose = false;
 }
 
-/*
-int playerDistance(EnemyPawnModel enemy, PlayerPawnModel player);
-void enemyMovement(EnemyPawnModel enemy);
-void enemyAttack(EnemyPawnModel enemy, PlayerPawnModel player);
-*/
-
-int EnemyController::playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
-	return (abs(enemy->getX() - player->getX()) + abs(enemy->getY() - player->getY()));
-}
-
-int EnemyController::playerDistanceX(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
-	return  (player->getX() - enemy->getX());
-}
-
-int EnemyController::playerDistanceY(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
-	return (player->getY() - enemy->getY());
-}
-
-void EnemyController::enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemyIdx) {
-	enemy->move(_board->getWidth(), _board->getHeight());
-}
-
-void EnemyController::enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
-	//unsure how to implement without or player death
-	player->setXY(-1, -1);
-}
-
-std::shared_ptr<PlayerPawnModel> EnemyController::getClosestAllytoEnemy(std::shared_ptr<EnemyPawnModel>enemy) {
-	if (_board->getNumAllies() == 0) {
-		return nullptr;
-	}
-	std::shared_ptr<PlayerPawnModel> nearestPlayer = _board->getAlly(0);
-	int distance;
-	int minDistance;
-	minDistance = 999;
-	for (int i = 0; i < _board->getNumAllies(); i++) {
-		distance = playerDistance(enemy, _board->getAlly(i));
-		if (distance <= minDistance){
-			minDistance = distance;
-			nearestPlayer = _board->getAlly(i);
-		}
-	}
-	return nearestPlayer;
-}
-
-int EnemyController::createDirection(int dx, int dy) {
-	int direction = 0;
-	if ((dx == 0) && (dy == 1)) { direction = 0; }
-	if ((dx == 1) && (dy == 0)) { direction = 2; }
-	if ((dx == 0) && (dy == -1)) { direction = 1; }
-	if ((dx == -1) && (dy == 0)) { direction = 3; }
-    return direction;
-}
-
-int EnemyController::getDirectionXComponent(EnemyPawnModel::Direction direction) {
-	int component = 0;
-	//if (direction == EnemyPawnModel::Direction::NORTH || direction == EnemyPawnModel::Direction::SOUTH) { component = 0; }
-	if (direction == EnemyPawnModel::Direction::WEST) { component = -1; }
-	if (direction == EnemyPawnModel::Direction::EAST) { component = 1; }
-    return component;
-}
-
-int EnemyController::getDirectionYComponent(EnemyPawnModel::Direction direction) {
-	int component = 0;
-	//if (direction == EnemyPawnModel::Direction::WEST || direction == EnemyPawnModel::Direction::EAST) { component = 0; }
-	if (direction == EnemyPawnModel::Direction::SOUTH) { component = -1; }
-	if (direction == EnemyPawnModel::Direction::NORTH) { component = 1; }
-    return component;
-}
-
-bool EnemyController::checkPlaceFree(std::shared_ptr<EnemyPawnModel> enemy) {
-	int checkX = enemy->getX() + getDirectionXComponent(enemy->getDirection());
-	int checkY = enemy->getY() + getDirectionYComponent(enemy->getDirection());
-	if ( ((checkX < 0) || (checkY < 0)) || ((checkX >= _board->getWidth()) || (checkY >= _board->getHeight()))) { 
-		checkX = enemy->getX() - getDirectionXComponent(enemy->getDirection());
-		checkY = enemy->getY() - getDirectionYComponent(enemy->getDirection());
-	}
-    return (_board->getEnemy(checkX, checkY) == 0); 
-}
-
-void EnemyController::enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player) {
-	if (player == nullptr) {
-		return;
-	}
-	int moveX, moveY, distanceX, distanceY, dir;
-	moveX = 1;
-	moveY = 0;
-	distanceX = playerDistanceX(enemy, player);
-	distanceY = playerDistanceY(enemy, player);
-	if (abs(distanceY) >= abs(distanceX)){
-		moveY = 1;
-		moveX = 0;
-	}
-
-	moveX = copysign(moveX, distanceX);
-	moveY = copysign(moveY, distanceY);
-	dir = createDirection(moveX, moveY);
-	enemy->setDirection(dir);
-	enemy->updateSpriteDirection();
-
-}
-
 #pragma mark -
 #pragma mark Gameplay Handling
 /**
@@ -175,35 +73,6 @@ void EnemyController::update(float timestep) {
 
     if (_state == State::MOVE) {
         // MOVE
-        /*for (int i = 0; i < _board->getNumEnemies(); i++) {
-            std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
-            if (enemy->getX() != -1) {
-                // Store enemy location
-                Rect oldBounds = _board->calculateDrawBounds(enemy->getX(), enemy->getY());
-                
-                // Move enemy
-				if (enemy->getAI() == 1) {
-					enemyMoveSmart(enemy, getClosestAllytoEnemy(enemy));
-				}
-				if (checkPlaceFree(enemy)) {
-					enemy->move(_board->getWidth(), _board->getHeight());
-				}
-				else if (enemy->getAI() == 0) {
-					enemy->turnAround();
-				}
-				
-                // Create animation
-                Rect newBounds = _board->calculateDrawBounds(enemy->getX(), enemy->getY());
-                Vec2 movement = newBounds.origin - oldBounds.origin;
-                int tiles = _board->lengthToCells(movement.length());
-                std::stringstream key;
-                key << "int_enemy_move_" << i;
-                std::shared_ptr<MoveBy> moveAction = MoveBy::alloc(movement, ((float)tiles)/ENEMY_IMG_SPEED);
-                _actions->activate(key.str(), moveAction, enemy->getSprite());
-                _interruptingActions.insert(key.str());
-            }
-        }*/
-        
 		// CALL FOR MOVEMENT UPDATE ON ENTITIES
         _entityManager->updateEntities(_board, EntityManager::movement);
 
@@ -212,29 +81,6 @@ void EnemyController::update(float timestep) {
         
         _state = State::ATTACK;
     } else if (_state == State::ATTACK) {
-        // ATTACK
-        /*for (int i = 0; i < _board->getNumEnemies(); i++) {
-            std::shared_ptr<EnemyPawnModel> enemy = _board->getEnemy(i);
-			if (enemy->getAI() == 1) {
-				enemyMoveSmart(enemy, getClosestAllytoEnemy(enemy));
-			}
-            if (enemy->getX() != -1) {
-                // Attack
-                for (int j = 0; j < _board->getNumAllies(); j++) {
-                    std::shared_ptr<PlayerPawnModel> ally = _board->getAlly(j);
-                    if (playerDistance(enemy, ally) < 1) {
-                        _board->removeAlly(j);
-                        // Lose when Mika is destroyed (Mika is index 0 ally)
-                        lose = (j == 0);
-                        
-                        // Create animation
-                        std::stringstream key;
-                        key << "int_ally_remove_" << j;
-                        _actions->activate(key.str(), _board->allyRemoveAction, ally->getSprite());
-                        _interruptingActions.insert(key.str());
-                    }
-                }
-            }*/
 		_entityManager->updateEntities(_board, EntityManager::attack);
         _state = State::CHECK;
     } else {
@@ -246,15 +92,6 @@ void EnemyController::update(float timestep) {
         _board->clearRemovedAllies();
         
         setComplete(true);
-        
-//        lose = true;
-//        for (int i = 0; i < _board->getNumAllies(); i++) {
-//            std::shared_ptr<PlayerPawnModel> temp = _board->getAlly(i);
-//            if (temp->getX() != -1) {
-//                lose = false;
-//            }
-//        }
-        
         // Update board node positions
         _board->updateNodes();
     }

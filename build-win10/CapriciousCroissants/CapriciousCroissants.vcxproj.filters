@@ -54,9 +54,6 @@
     <ClInclude Include="..\..\source\EntityManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\source\EntityBuilder.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\source\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>

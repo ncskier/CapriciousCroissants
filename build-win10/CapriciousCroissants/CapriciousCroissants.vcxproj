@@ -194,7 +194,6 @@
     <ClInclude Include="..\..\source\ComponentType.h" />
     <ClInclude Include="..\..\source\EnemyController.h" />
     <ClInclude Include="..\..\source\Entity.h" />
-    <ClInclude Include="..\..\source\EntityBuilder.h" />
     <ClInclude Include="..\..\source\EntityManager.h" />
     <ClInclude Include="..\..\source\InputController.h" />
     <ClInclude Include="..\..\source\LoadingMode.h" />

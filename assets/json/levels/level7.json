@@ -1,7 +1,7 @@
 {
     "size": {
         "width": 5,
-        "height": 7
+        "height": 6
     },
     "generationAlgorithm": "random",
     "seed": 13,
@@ -21,17 +21,17 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
-                    ],
+                                    1
+                                    ],
                     "textureColumns": [
-                        4
-                    ],
+                                       4
+                                       ],
                     "textureSize": [
-                        4
-                    ],
+                                    4
+                                    ],
                     "textureSpeed": [
-                        2
-                    ]
+                                     2
+                                     ]
                 },
                 "attackMelee" : {}
             }
@@ -49,17 +49,17 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
-                    ],
+                                    1
+                                    ],
                     "textureColumns": [
-                        4
-                    ],
+                                       4
+                                       ],
                     "textureSize": [
-                        4
-                    ],
+                                    4
+                                    ],
                     "textureSpeed": [
-                        2
-                    ]
+                                     2
+                                     ]
                 },
                 "attackMelee" : {}
             }
@@ -77,17 +77,17 @@
                 "idle": {
                     "textureKeys": "enemy1_strip",
                     "textureRows": [
-                        1
-                    ],
+                                    1
+                                    ],
                     "textureColumns": [
-                        4
-                    ],
+                                       4
+                                       ],
                     "textureSize": [
-                        4
-                    ],
+                                    4
+                                    ],
                     "textureSpeed": [
-                        2
-                    ]
+                                     2
+                                     ]
                 },
                 "attackMelee" : {}
             }
@@ -105,17 +105,17 @@
                 "idle": {
                     "textureKeys": "enemy1_strip",
                     "textureRows": [
-                        1
-                    ],
+                                    1
+                                    ],
                     "textureColumns": [
-                        4
-                    ],
+                                       4
+                                       ],
                     "textureSize": [
-                        4
-                    ],
+                                    4
+                                    ],
                     "textureSpeed": [
-                        2
-                    ]
+                                     2
+                                     ]
                 },
                 "attackMelee" : {}
             }
@@ -133,17 +133,17 @@
                 "idle": {
                     "textureKeys": "enemy1_strip",
                     "textureRows": [
-                        1
-                    ],
+                                    1
+                                    ],
                     "textureColumns": [
-                        4
-                    ],
+                                       4
+                                       ],
                     "textureSize": [
-                        4
-                    ],
+                                    4
+                                    ],
                     "textureSpeed": [
-                        2
-                    ]
+                                     2
+                                     ]
                 },
                 "attackMelee" : {}
             }
@@ -159,7 +159,7 @@
             "y": 0
         },
         "ally2": {
-            "x": 3,
+            "x": 4,
             "y": 0
         }
     }

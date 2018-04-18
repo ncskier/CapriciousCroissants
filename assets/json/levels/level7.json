@@ -1,7 +1,7 @@
 {
     "size": {
         "width": 5,
-        "height": 7
+        "height": 6
     },
     "generationAlgorithm": "random",
     "seed": 13,
@@ -9,54 +9,143 @@
     "tiles": [],
     "enemies": {
         "enemy1": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 1,
-                    "y": 4
+                    "y": 4,
+                    "direction" : 1
                 },
-                "direction": {
-                    "value": 1
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                                    1
+                                    ],
+                    "textureColumns": [
+                                       4
+                                       ],
+                    "textureSize": [
+                                    4
+                                    ],
+                    "textureSpeed": [
+                                     2
+                                     ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy2": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 4,
-                    "y": 1
+                    "y": 1,
+                    "direction" : 3
                 },
-                "direction": {
-                    "value": 3
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                                    1
+                                    ],
+                    "textureColumns": [
+                                       4
+                                       ],
+                    "textureSize": [
+                                    4
+                                    ],
+                    "textureSpeed": [
+                                     2
+                                     ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy3": {
-            "enemyType": "smart-melee",
             "components": {
                 "location": {
                     "x": 0,
-                    "y": 4
-                }
+                    "y": 4,
+                    "direction" : 1
+                },
+                "smartMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy1_strip",
+                    "textureRows": [
+                                    1
+                                    ],
+                    "textureColumns": [
+                                       4
+                                       ],
+                    "textureSize": [
+                                    4
+                                    ],
+                    "textureSpeed": [
+                                     2
+                                     ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy4": {
-            "enemyType": "smart-melee",
             "components": {
                 "location": {
                     "x": 3,
-                    "y": 4
-                }
+                    "y": 4,
+                    "direction" : 1
+                },
+                "smartMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy1_strip",
+                    "textureRows": [
+                                    1
+                                    ],
+                    "textureColumns": [
+                                       4
+                                       ],
+                    "textureSize": [
+                                    4
+                                    ],
+                    "textureSpeed": [
+                                     2
+                                     ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy5": {
-            "enemyType": "smart-melee",
             "components": {
                 "location": {
                     "x": 2,
-                    "y": 1
-                }
+                    "y": 1,
+                    "direction" : 1
+                },
+                "smartMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy1_strip",
+                    "textureRows": [
+                                    1
+                                    ],
+                    "textureColumns": [
+                                       4
+                                       ],
+                    "textureSize": [
+                                    4
+                                    ],
+                    "textureSpeed": [
+                                     2
+                                     ]
+                },
+                "attackMelee" : {}
             }
         }
     },
@@ -70,7 +159,7 @@
             "y": 0
         },
         "ally2": {
-            "x": 3,
+            "x": 4,
             "y": 0
         }
     }

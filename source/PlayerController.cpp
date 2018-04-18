@@ -112,15 +112,18 @@ void PlayerController::update(float timestep) {
             bool row;
             float offsetValue;
             std::tie(row, offsetValue) = calculateOffset(inputOffset);
-            _board->offsetReset();
-            if (row) {
-                // Offset Row
-                _board->setOffsetRow(offsetValue);
-            } else {
-                // Offset Column
-                _board->setOffsetCol(offsetValue);
-            }
-            
+			_board->requestedRow = row;
+			if (_entityManager->updateEntities(_board, EntityManager::playerLimit) == 0) {
+				_board->offsetReset();
+				if (row) {
+					// Offset Row
+					_board->setOffsetRow(offsetValue);
+				}
+				else {
+					// Offset Column
+					_board->setOffsetCol(offsetValue);
+				}
+			}
         } else {
             // END
             // Calculate movement
@@ -128,7 +131,11 @@ void PlayerController::update(float timestep) {
             bool row;
             float offsetValue;
             std::tie(row, offsetValue) = calculateOffset(inputOffset);
-            int cells = _board->lengthToCells(offsetValue, _board->offsetRow);
+			int cells = 0;
+			_board->requestedRow = row;
+			if (_entityManager->updateEntities(_board, EntityManager::playerLimit) == 0) {
+				cells = _board->lengthToCells(offsetValue, _board->offsetRow);
+			}
             // Check if valid move
             if (abs(cells) > 0) {
                 // Update board

@@ -12,7 +12,6 @@
 #include <cugl/cugl.h>
 #include "BoardModel.h"
 #include "PlayerPawnModel.h"
-#include "EnemyPawnModel.h"
 #include "EntityManager.h"
 
 
@@ -33,18 +32,13 @@ protected:
     // CONTROLLERS
     
     // MODEL
-    /** The action manager. */
-    std::shared_ptr<cugl::ActionManager> _actions;
-    /** Set of interrupting animations */
-    std::set<std::string> _interruptingActions;
+    
+    
     /** Game board */
     std::shared_ptr<BoardModel> _board;
 	
 	/** Entity Manager */
 	std::shared_ptr<EntityManager> _entityManager;
-
-	EnemyPawnModel _enemies;
-	PlayerPawnModel _allies;
 
     /** Whether we have completed the enemy turn */
     bool _complete;
@@ -56,6 +50,12 @@ protected:
     
     
 public:
+	/** The action manager. */
+	std::shared_ptr<cugl::ActionManager> _actions;
+	/** Set of interrupting animations */
+	std::set<std::string> _interruptingActions;
+
+
 	bool lose = false;
 #pragma mark -
 #pragma mark Constructors
@@ -132,36 +132,6 @@ public:
     
     /** Returns interrupting actions */
     std::set<std::string>& getInterruptingActions() { return _interruptingActions; }
-    
-	/** Returns the absolute Manhattan distance between a specified enemy and ally **/
-    int playerDistance(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
-
-	/** Returns the x-offset between a specified enemy and ally **/
-	int playerDistanceX(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
-
-	/** Returns the y-offset between a specified enemy and ally **/
-	int playerDistanceY(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
-
-	void enemyMove(std::shared_ptr<EnemyPawnModel> enemy, int enemyIdx);
-    void enemyAttack(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
-
-	/** Translates (dx,dy) into a Direction type **/
-	int createDirection(int dx, int dy);
-
-	/** Sets an enemy's direction towards an specified ally **/
-	void enemyMoveSmart(std::shared_ptr<EnemyPawnModel> enemy, std::shared_ptr<PlayerPawnModel> player);
-
-	/** Returns the dx component of a Direction **/
-	int getDirectionXComponent(EnemyPawnModel::Direction direction);
-
-	/** Returns the dy component of a Direction **/
-	int getDirectionYComponent(EnemyPawnModel::Direction direction);
-
-	/** Returns true if there are no enemies at the locatoin that the specified enemy will go next turn **/
-	bool checkPlaceFree(std::shared_ptr<EnemyPawnModel> enemy);
-	std::shared_ptr<PlayerPawnModel> getClosestAllytoEnemy(std::shared_ptr<EnemyPawnModel> enemy);
-
-
 
 #pragma mark -
 #pragma mark Gameplay Handling

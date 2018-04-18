@@ -3,13 +3,11 @@
 // Header file for a manager of entitys and their components
 #pragma once
 
-
 #include "Components.h"
 #include "Entity.h"
 #include "ComponentType.h"
 #include "ComponentStore.h"
 #include "System.h"
-#include "BoardModel.h"
 
 #include <map>
 #include <unordered_map>
@@ -18,10 +16,12 @@
 #include <cassert>
 #include <vector>
 
+class BoardModel;
+
 // Class of an entity manager that maintains the connections between entities and their components
 class EntityManager {
 private:
-	long nextEntityId = 0;
+	long nextEntityId = 1;
 	std::unordered_map<EntityId, ComponentTypeSet> entityCache;
 	std::map<ComponentType, IComponentStore::Ptr> componentStores;
 	typedef std::vector<EntitySystem::Ptr> systems;
@@ -33,6 +33,8 @@ private:
 	systems allSystems;
 
 public:
+	//Bad to do this, but don't want to go through setup to fix it at this point
+
 	enum SystemType {
 		movement,
 		attack,
@@ -115,5 +117,5 @@ public:
 
 	size_t unregisterEntity(const EntityId entity);
 
-	size_t updateEntities(BoardModel board, SystemType type);
+	size_t updateEntities(std::shared_ptr<BoardModel> board, SystemType type);
 };

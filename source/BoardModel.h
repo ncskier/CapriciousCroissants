@@ -12,13 +12,14 @@
 #include <cugl/cugl.h>
 #include "TileModel.h"
 #include "PlayerPawnModel.h"
-#include "EnemyPawnModel.h"
 #include <set>
 #include <vector>
+#include "EntityManager.h"
 
 
 #pragma mark -
 #pragma mark Board Model
+
 
 /** Class of the board model*/
 class BoardModel {
@@ -65,6 +66,9 @@ protected:
     
     /** The asset manager for play mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
+
+	/** The entity manager for play mode. */
+	std::shared_ptr<EntityManager> _entityManager;
     
     /** Display settings */
     float _boardPadding;
@@ -91,7 +95,7 @@ protected:
     std::vector<std::shared_ptr<PlayerPawnModel>> _allies;
     
     /** Vector storing all enemies on the board */
-    std::vector<std::shared_ptr<EnemyPawnModel>> _enemies;
+	std::vector<size_t> enemiesEntityIds;
     
     /** Set storing all tiles added to the board (store for animation) */
     std::set<std::shared_ptr<TileModel>> _addedTiles;
@@ -100,7 +104,7 @@ protected:
     std::set<std::shared_ptr<PlayerPawnModel>> _addedAllies;
     
     /** Set storing all enemies added to the board (store for animation) */
-    std::set<std::shared_ptr<EnemyPawnModel>> _addedEnemies;
+    std::set<size_t> _addedEnemies;
     
     /** Set storing all tiles removed from the board (store for animation) */
     std::set<std::shared_ptr<TileModel>> _removedTiles;
@@ -109,7 +113,7 @@ protected:
     std::set<std::shared_ptr<PlayerPawnModel>> _removedAllies;
     
     /** Set storing all enemies removed from the board (store for animation) */
-    std::set<std::shared_ptr<EnemyPawnModel>> _removedEnemies;
+    std::set<size_t> _removedEnemies;
     
     
 #pragma mark -
@@ -130,7 +134,7 @@ protected:
     bool setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json);
     
     /** Setup enemies from Json */
-    bool setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json);
+    bool setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::ActionManager>& actions);
     
     
 #pragma mark -
@@ -162,14 +166,14 @@ public:
     void dispose();
     
     /** Initialized the board */
-    bool init(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen);
+    bool init(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen, std::shared_ptr<EntityManager>& entityManager, std::shared_ptr<cugl::ActionManager>& actions);
     
 #pragma mark -
 #pragma mark Static Constructors
     /** Allocates board for shared pointer */
-    static std::shared_ptr<BoardModel> alloc(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen) {
+    static std::shared_ptr<BoardModel> alloc(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen, std::shared_ptr<EntityManager>& entityManager, std::shared_ptr<cugl::ActionManager>& actions) {
         std::shared_ptr<BoardModel> board = std::make_shared<BoardModel>();
-        return (board->init(json, assets, dimen) ? board : nullptr);
+        return (board->init(json, assets, dimen, entityManager, actions) ? board : nullptr);
     }
 
     
@@ -181,6 +185,10 @@ public:
 	bool offsetRow;
 	bool offsetCol;
     float offset;
+
+	bool lose = false;
+
+	bool requestedRow;
 
 	std::shared_ptr<cugl::Texture> tileTexture;
     std::shared_ptr<cugl::Texture> playerTexture;
@@ -197,10 +205,10 @@ public:
     std::shared_ptr<PlayerPawnModel> getAlly(int x, int y);
 
 	// Returns the enemy pawn at index i of _enemies
-    std::shared_ptr<EnemyPawnModel> getEnemy(int i);
+    size_t getEnemy(int i);
     
-    // Returns the enemy pawn at (x, y) or nullptr
-    std::shared_ptr<EnemyPawnModel> getEnemy(int x, int y);
+    // Returns the enemy pawn at (x, y) or 0
+    size_t getEnemy(int x, int y);
 
     // Returns the tiles
     std::vector<std::shared_ptr<TileModel>>& getTiles() { return _tiles; }
@@ -209,15 +217,15 @@ public:
     std::vector<std::shared_ptr<PlayerPawnModel>>& getAllies() { return _allies; }
 
 	// Returns the enemies
-    std::vector<std::shared_ptr<EnemyPawnModel>>& getEnemies() { return _enemies; }
+    std::vector<size_t>& getEnemies() { return enemiesEntityIds; }
     
     /** Return added/removed sets */
     std::set<std::shared_ptr<TileModel>>& getAddedTiles() { return _addedTiles; }
     std::set<std::shared_ptr<PlayerPawnModel>>& getAddedAllies() { return _addedAllies; }
-    std::set<std::shared_ptr<EnemyPawnModel>>& getAddedEnemies() { return _addedEnemies; }
+    std::set<size_t>& getAddedEnemies() { return _addedEnemies; }
     std::set<std::shared_ptr<TileModel>>& getRemovedTiles() { return _removedTiles; }
     std::set<std::shared_ptr<PlayerPawnModel>>& getRemovedAllies() { return _removedAllies; }
-    std::set<std::shared_ptr<EnemyPawnModel>>& getRemovedEnemies() { return _removedEnemies; }
+    std::set<size_t>& getRemovedEnemies() { return _removedEnemies; }
     
     /** Clear added/removed sets */
     void clearAddedTiles() { _addedTiles.clear(); }
@@ -254,9 +262,6 @@ public:
 	// Place enemy at index i of _enemies on location (x, y)
 	void placeEnemy(int x, int y, int i);
 
-	// Moves an enemy e to a different location
-	void moveEnemy(int x, int y, int enemyIdx);
-
 	// Remove ally at index i
 	void removeAlly(int i);
 
@@ -267,9 +272,6 @@ public:
 #pragma mark Logic
 	// Return true if a match is found (and replace those matches, damaging pawns on matches), otherwise false
 	bool checkForMatches(bool removeEnemies=true);
-
-	// Generates a new board into the _tiles variable
-	void generateNewBoard();
 
 	// Offset view of row (not model)
 	void setOffsetRow(float value);

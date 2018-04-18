@@ -191,6 +191,9 @@ void PlayMode::setupLevelSceneGraph() {
     int i = 0;
     for (tileIter = _board->getAddedTiles().begin(); tileIter != _board->getAddedTiles().end(); ++tileIter) {
         _board->getNode()->addChild((*tileIter)->getSprite());
+        if ((*tileIter)->getDeathSprite()) {
+            _board->getNode()->addChild((*tileIter)->getDeathSprite());
+        }
         (*tileIter)->getSprite()->setFrame(TILE_IMG_APPEAR_START);
         std::stringstream key;
         key << "int_add_tile_" << i;

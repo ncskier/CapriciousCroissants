@@ -483,6 +483,8 @@ bool BoardModel::checkForMatches(bool removeEnemies) {
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void BoardModel::replaceTile(int tileLocation) {
+    _tiles[tileLocation]->x = xOfIndex(tileLocation);
+    _tiles[tileLocation]->y = yOfIndex(tileLocation);
     _removedTiles.insert(_tiles[tileLocation]);
     // New random color
     int color = randomColor();
@@ -660,8 +662,12 @@ void BoardModel::updateNodes(bool position, bool z) {
         for (int y = 0; y < _height; y++) {
             if (position)
                 _tiles[indexOfCoordinate(x, y)]->setSpriteBounds(calculateDrawBounds(x, y));
-            if (z)
+            if (z) {
                 _tiles[indexOfCoordinate(x, y)]->getSprite()->setZOrder(calculateDrawZ(x, y, true));
+                if (_tiles[indexOfCoordinate(x, y)]->getDeathSprite()) {
+                    _tiles[indexOfCoordinate(x, y)]->getDeathSprite()->setZOrder(calculateDrawZ(x, y, false) + 1);
+                }
+            }
         }
     }
     

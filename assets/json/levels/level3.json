@@ -9,99 +9,227 @@
     "tiles": [],
     "enemies": {
         "enemy1": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 0,
-                    "y": 3
+                    "y": 3,
+                    "direction" : 2
                 },
-                "direction": {
-                    "value": 2
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy2": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 1,
-                    "y": 2
+                    "y": 2,
+                    "direction" : 0
                 },
-                "direction": {
-                    "value": 0
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy3": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 2,
-                    "y": 3
+                    "y": 3,
+                    "direction" : 3
                 },
-                "direction": {
-                    "value": 3
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy4": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 2,
-                    "y": 2
+                    "y": 2,
+                    "direction" : 2
                 },
-                "direction": {
-                    "value": 2
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy5": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 2,
-                    "y": 1
+                    "y": 1,
+                    "direction" : 3
                 },
-                "direction": {
-                    "value": 3
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy6": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 3,
-                    "y": 4
+                    "y": 4,
+                    "direction" : 1
                 },
-                "direction": {
-                    "value": 1
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy7": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 3,
-                    "y": 0
+                    "y": 0,
+                    "direction" : 3
                 },
-                "direction": {
-                    "value": 3
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         },
         "enemy8": {
-            "enemyType": "dumb-melee",
             "components": {
                 "location": {
                     "x": 4,
-                    "y": 1
+                    "y": 1,
+                    "direction" : 3
                 },
-                "direction": {
-                    "value": 3
-                }
+                "dumbMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy0_strip",
+                    "textureRows": [
+                        1
+                    ],
+                    "textureColumns": [
+                        4
+                    ],
+                    "textureSize": [
+                        4
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
             }
         }
     },

@@ -1,12 +1,13 @@
 #pragma once
+#include <cugl/cugl.h>
 #include "ComponentType.h"
 #include "Entity.h"
-#include "BoardModel.h"
 
 #include <memory>
 #include <set>
 
 class EntityManager;
+class BoardModel;
 
 class EntitySystem {
 private:
@@ -43,7 +44,7 @@ public:
 		return entities.find(entity) != entities.end();
 	}
 
-	size_t updateEntities(BoardModel board);
+	size_t updateEntities(std::shared_ptr<BoardModel> board);
 
-	virtual void updateEntity(EntityId entity, BoardModel board) = 0;
+	virtual bool updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) = 0;
 };

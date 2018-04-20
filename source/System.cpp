@@ -8,12 +8,14 @@ EntitySystem::EntitySystem(std::shared_ptr<EntityManager>& manager) :
 EntitySystem::~EntitySystem() {
 }
 
-size_t EntitySystem::updateEntities(BoardModel board) {
+size_t EntitySystem::updateEntities(std::shared_ptr<BoardModel> board) {
 	size_t numEntitiesUpdated = 0;
 	for (auto entity = entities.begin(); entity != entities.end(); ++entity) {
-		updateEntity(*entity, board);
-		numEntitiesUpdated++;
+		if (updateEntity(*entity, board)) {
+			numEntitiesUpdated++;
+		}
 	}
 
 	return numEntitiesUpdated;
 }
+

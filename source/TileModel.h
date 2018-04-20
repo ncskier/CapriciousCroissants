@@ -32,7 +32,7 @@
 #define TILE_TEXTURE_KEY_2 "tile2_strip"
 #define TILE_TEXTURE_KEY_3 "tile3_strip"
 #define TILE_TEXTURE_KEY_4 "tile4_strip"
-#define TILE_TEXTURE_KEY_5 "tile0_strip"
+#define TILE_TEXTURE_KEY_5 "tile5_strip"
 #define TILE_TEXTURE_KEY_6 "tile0_strip"
 #define TILE_TEXTURE_KEY_7 "tile0_strip"
 #define TILE_TEXTURE_KEY_8 "tile0_strip"

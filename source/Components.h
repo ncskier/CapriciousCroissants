@@ -1,4 +1,10 @@
 #pragma once
+#include <cugl/cugl.h>
+#include <memory>
+#include <string>
+#include <set>
+#include <vector>
+#include <tuple>
 
 //All structs are components and MUST extend Component struct
 struct Component {};
@@ -42,8 +48,14 @@ struct TileMoveOnTurnComponent : Component {
 };
 
 struct LocationComponent : Component {
+	enum direction : unsigned int{
+		UP, DOWN, RIGHT, LEFT
+	};
+
 	int x;
 	int y;
+
+	direction dir;
 };
 
 struct SizeComponent : Component {
@@ -52,8 +64,16 @@ struct SizeComponent : Component {
 };
 
 struct IdleComponent : Component {
-	char* textureLocation;
-	int framesPerSecond;
+	std::string textureKey;
+	std::vector<std::tuple<int, int>> textureStartStopFrame;
+	std::vector<int> textureRows;
+	std::vector<int> textureColumns;
+	std::vector<int> textureSize;
+	std::vector<int> speed;
+
+	std::shared_ptr<cugl::AnimationNode> sprite;
+	std::shared_ptr<cugl::ActionManager> _actions;
+	std::set<std::string> _interruptingActions;
 };
 
 struct NonIdleComponent : Component {

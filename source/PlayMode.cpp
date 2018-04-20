@@ -63,8 +63,10 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
 
 	_entityManager = std::make_shared<EntityManager>();
 
-	// Initialize all systems that are used for playin
+	// Initialize all systems that are used for playing
 	_entityManager->addSystem(std::make_shared<MovementDumbSystem>(_entityManager), EntityManager::movement);
+	_entityManager->addSystem(std::make_shared<MovementSmartSystem>(_entityManager), EntityManager::movement);
+	_entityManager->addSystem(std::make_shared<AttackMeleeSystem>(_entityManager), EntityManager::attack);
 
     // Add Background Node
     std::shared_ptr<PolygonNode> background = PolygonNode::allocWithTexture(assets->get<Texture>("background"));
@@ -187,27 +189,7 @@ void PlayMode::setupLevelFromJson(const std::string& filePath, Size dimen) {
         return;
     }
     
-    _board = BoardModel::alloc(json, _assets, dimen);
-    
-//    // Parse json board
-//    int width = 5;
-//    int height = 5;
-//    // size
-//    // generationAlgorithm
-////    bool random = true;
-//    // seed
-//    int seed = 13;
-//    // colors
-//    int colors = 6;
-//
-//    // Initialize empty board with correct tiles
-//    _board = BoardModel::alloc(width, height, seed, colors, _assets, dimen);
-    
-    // Parse json enemies
-    // add enemies
-    
-    // Parse json players
-    // add players
+    _board = BoardModel::alloc(json, _assets, dimen, _entityManager, _actions);
 }
 
 /** Add level sprites to scene graph */
@@ -247,18 +229,15 @@ void PlayMode::setupLevelSceneGraph() {
     _board->clearAddedAllies();
     
     // Add enemies
+	
     i = 0;
-    std::set<std::shared_ptr<EnemyPawnModel>>::iterator enemyIter;
+    std::set<size_t>::iterator enemyIter;
     for (enemyIter = _board->getAddedEnemies().begin(); enemyIter != _board->getAddedEnemies().end(); ++enemyIter) {
-        _board->getNode()->addChild((*enemyIter)->getSprite());
+		_board->getNode()->addChild(_entityManager->getComponent<IdleComponent>((*enemyIter)).sprite);
         std::stringstream key;
         key << "int_add_enemy_" << i;
-        _actions->activate(key.str(), _board->enemyAddAction, (*enemyIter)->getSprite());
+        _actions->activate(key.str(), _board->enemyAddAction, _entityManager->getComponent<IdleComponent>((*enemyIter)).sprite);
         i++;
-        // Update enemy direction
-        if ((*enemyIter)->getAI() == 1) {
-            _enemyController.enemyMoveSmart(*enemyIter, _enemyController.getClosestAllytoEnemy(*enemyIter));
-        }
     }
     _board->clearAddedEnemies();
 }
@@ -371,7 +350,7 @@ void PlayMode::updateBoardTurn(float dt) {
 void PlayMode::updateEnemyTurn(float dt) {
     _enemyController.update(dt);
     if (_enemyController.isComplete()) {
-        if (_enemyController.lose) {
+        if (_board->lose) {
             done = true;
             win = false;
             
@@ -381,13 +360,6 @@ void PlayMode::updateEnemyTurn(float dt) {
             sortZOrder();
         }
         _state = State::BOARD;
-
-		{	//EXAMPLE CODE FOR DUMB MOVEMENT SYSTEM TO SHOW UPDATING ONE ENTITY(HAS DUMBMOVEMENT) BUT NOT OTHER (DOESN'T HAVE DUMBMOVEMENT)
-			//LocationComponent loc = _entityManager->getComponent<LocationComponent>(0);
-			//CULog("Should change %d, %d", loc.x, loc.y);
-			//loc = _entityManager->getComponent<LocationComponent>(1);
-			//CULog("Shouldn't change %d, %d", loc.x, loc.y);
-		}
     }
 }
 
@@ -425,7 +397,14 @@ void PlayMode::update(float dt) {
     _actions->update(dt);
     
     // Check for interrupting animations
-    if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && _enemyController.getInterruptingActions().empty()) {
+	bool hasInterrupts = false;
+	for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
+		if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
+			hasInterrupts = true;
+			break;
+		}
+	}
+    if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && !hasInterrupts) {
         // Update Gameplay
         if (!done) {
             //    CULog("PlayMode Update");
@@ -452,6 +431,15 @@ void PlayMode::update(float dt) {
         if (!_playerController.getInterruptingActions().empty()) { updateInterruptingAnimations(_playerController.getInterruptingActions()); }
         if (!_boardController.getInterruptingActions().empty()) { updateInterruptingAnimations(_boardController.getInterruptingActions()); }
         if (!_enemyController.getInterruptingActions().empty()) { updateInterruptingAnimations(_enemyController.getInterruptingActions()); }
+
+		for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
+			if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
+				IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enem));
+				updateInterruptingAnimations(idle._interruptingActions);
+				_entityManager->addComponent<IdleComponent>((*enem), idle);
+			}
+		}
+
         _input.clear();
     }
 }

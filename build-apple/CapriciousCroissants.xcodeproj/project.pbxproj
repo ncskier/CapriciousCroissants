@@ -8,12 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		2031AA13206C0BCF007274BE /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
-		2065439D2043AED3007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
-		2065439E2043AED3007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
-		206543A32043B1BD007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
-		206543A42043B1BE007D541E /* BoardScreenApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2065439A2043AED3007D541E /* BoardScreenApp.cpp */; };
-		206543A72043B1CD007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
-		206543A82043B1CE007D541E /* TileBoard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 206543982043AED3007D541E /* TileBoard.cpp */; };
 		208DC6AD206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		208DC6B1206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		20BD4E75206945E600424848 /* System.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20BD4E70206945E500424848 /* System.cpp */; };
@@ -61,15 +55,9 @@
 		20F92E0A2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E022056676100F4DCC3 /* BoardSettingsMode.cpp */; };
 		20F92E0B2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E022056676100F4DCC3 /* BoardSettingsMode.cpp */; };
 		20F92E0C2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E022056676100F4DCC3 /* BoardSettingsMode.cpp */; };
-		20F92E0D2056676800F4DCC3 /* xEnemyPawnModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E032056676200F4DCC3 /* xEnemyPawnModel.cpp */; };
-		20F92E0E2056676800F4DCC3 /* xEnemyPawnModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E032056676200F4DCC3 /* xEnemyPawnModel.cpp */; };
-		20F92E0F2056676800F4DCC3 /* xEnemyPawnModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E032056676200F4DCC3 /* xEnemyPawnModel.cpp */; };
 		20F92E102056676800F4DCC3 /* EnemyPawnEntity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E042056676300F4DCC3 /* EnemyPawnEntity.cpp */; };
 		20F92E112056676800F4DCC3 /* EnemyPawnEntity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E042056676300F4DCC3 /* EnemyPawnEntity.cpp */; };
 		20F92E122056676800F4DCC3 /* EnemyPawnEntity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E042056676300F4DCC3 /* EnemyPawnEntity.cpp */; };
-		20F92E132056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E092056676700F4DCC3 /* EnemyPawnModel.cpp */; };
-		20F92E142056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E092056676700F4DCC3 /* EnemyPawnModel.cpp */; };
-		20F92E152056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 20F92E092056676700F4DCC3 /* EnemyPawnModel.cpp */; };
 		EB0FF5092016E4A700517030 /* CoreFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5082016E4A700517030 /* CoreFoundation.framework */; };
 		EB0FF53F2016E83700517030 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5352016E83500517030 /* CoreGraphics.framework */; };
 		EB0FF5412016E83700517030 /* CoreMotion.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EB0FF5392016E83500517030 /* CoreMotion.framework */; };
@@ -163,10 +151,6 @@
 /* Begin PBXFileReference section */
 		2031AA0F206C0BCF007274BE /* MainSystems.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainSystems.cpp; sourceTree = "<group>"; };
 		2031AA14206C0BD5007274BE /* MainSystems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainSystems.h; sourceTree = "<group>"; };
-		206543982043AED3007D541E /* TileBoard.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TileBoard.cpp; sourceTree = "<group>"; };
-		206543992043AED3007D541E /* TileBoard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TileBoard.h; sourceTree = "<group>"; };
-		2065439A2043AED3007D541E /* BoardScreenApp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoardScreenApp.cpp; sourceTree = "<group>"; };
-		2065439B2043AED3007D541E /* BoardScreenApp.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoardScreenApp.h; sourceTree = "<group>"; };
 		20BD4E69206945E400424848 /* ComponentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentType.h; sourceTree = "<group>"; };
 		20BD4E6D206945E400424848 /* System.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = System.h; sourceTree = "<group>"; };
 		20BD4E6E206945E500424848 /* Components.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Components.h; sourceTree = "<group>"; };
@@ -199,13 +183,9 @@
 		20F92DF62055A8A600F4DCC3 /* PlayerPawnModel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = PlayerPawnModel.cpp; sourceTree = "<group>"; };
 		20F92DF72055A8A600F4DCC3 /* PlayerPawnModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PlayerPawnModel.h; sourceTree = "<group>"; };
 		20F92E022056676100F4DCC3 /* BoardSettingsMode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = BoardSettingsMode.cpp; sourceTree = "<group>"; };
-		20F92E032056676200F4DCC3 /* xEnemyPawnModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xEnemyPawnModel.cpp; sourceTree = "<group>"; };
 		20F92E042056676300F4DCC3 /* EnemyPawnEntity.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EnemyPawnEntity.cpp; sourceTree = "<group>"; };
 		20F92E052056676400F4DCC3 /* BoardSettingsMode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BoardSettingsMode.h; sourceTree = "<group>"; };
-		20F92E062056676400F4DCC3 /* xEnemyPawnModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xEnemyPawnModel.h; sourceTree = "<group>"; };
-		20F92E072056676500F4DCC3 /* EnemyPawnModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnemyPawnModel.h; sourceTree = "<group>"; };
 		20F92E082056676600F4DCC3 /* EnemyPawnEntity.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EnemyPawnEntity.h; sourceTree = "<group>"; };
-		20F92E092056676700F4DCC3 /* EnemyPawnModel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EnemyPawnModel.cpp; sourceTree = "<group>"; };
 		EB0FF5082016E4A700517030 /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		EB0FF5352016E83500517030 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CoreGraphics.framework; sourceTree = DEVELOPER_DIR; };
 		EB0FF5392016E83500517030 /* CoreMotion.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMotion.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS11.2.sdk/System/Library/Frameworks/CoreMotion.framework; sourceTree = DEVELOPER_DIR; };
@@ -445,10 +425,6 @@
 				20F92E022056676100F4DCC3 /* BoardSettingsMode.cpp */,
 				20F92E082056676600F4DCC3 /* EnemyPawnEntity.h */,
 				20F92E042056676300F4DCC3 /* EnemyPawnEntity.cpp */,
-				20F92E072056676500F4DCC3 /* EnemyPawnModel.h */,
-				20F92E092056676700F4DCC3 /* EnemyPawnModel.cpp */,
-				20F92E062056676400F4DCC3 /* xEnemyPawnModel.h */,
-				20F92E032056676200F4DCC3 /* xEnemyPawnModel.cpp */,
 				EB2BE9B41D74952A002FE78B /* main.cpp */,
 				20F92DBD20557DE000F4DCC3 /* BoxApp.h */,
 				20F92DBC20557DE000F4DCC3 /* BoxApp.cpp */,
@@ -472,10 +448,6 @@
 				20F92DF12055A85300F4DCC3 /* TileModel.cpp */,
 				20F92DF72055A8A600F4DCC3 /* PlayerPawnModel.h */,
 				20F92DF62055A8A600F4DCC3 /* PlayerPawnModel.cpp */,
-				2065439B2043AED3007D541E /* BoardScreenApp.h */,
-				2065439A2043AED3007D541E /* BoardScreenApp.cpp */,
-				206543992043AED3007D541E /* TileBoard.h */,
-				206543982043AED3007D541E /* TileBoard.cpp */,
 			);
 			name = Source;
 			path = ../source;
@@ -655,10 +627,8 @@
 			files = (
 				20BD4E7D206945FD00424848 /* System.cpp in Sources */,
 				20F92DC82055804500F4DCC3 /* PlayMode.cpp in Sources */,
-				20F92E0F2056676800F4DCC3 /* xEnemyPawnModel.cpp in Sources */,
 				20F92DE02055A4B300F4DCC3 /* PlayerController.cpp in Sources */,
 				20F92DCD2055811C00F4DCC3 /* LoadingMode.cpp in Sources */,
-				206543A82043B1CE007D541E /* TileBoard.cpp in Sources */,
 				20F92E122056676800F4DCC3 /* EnemyPawnEntity.cpp in Sources */,
 				20F92DF52055A85300F4DCC3 /* TileModel.cpp in Sources */,
 				20F92DD22055894000F4DCC3 /* InputController.cpp in Sources */,
@@ -667,9 +637,7 @@
 				20F92DC020557DE000F4DCC3 /* BoxApp.cpp in Sources */,
 				20BD4E79206945EA00424848 /* Entity.cpp in Sources */,
 				20F92DE62055A73900F4DCC3 /* BoardController.cpp in Sources */,
-				20F92E152056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */,
 				208DC6B1206C0E77001A1259 /* MainSystems.cpp in Sources */,
-				206543A42043B1BE007D541E /* BoardScreenApp.cpp in Sources */,
 				20F92DF02055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				EB0FF61D2016F06000517030 /* main.cpp in Sources */,
 				20F92DDB2055A30000F4DCC3 /* MenuMode.cpp in Sources */,
@@ -684,10 +652,8 @@
 			files = (
 				20BD4E7C206945FD00424848 /* System.cpp in Sources */,
 				20F92DC72055804500F4DCC3 /* PlayMode.cpp in Sources */,
-				20F92E0E2056676800F4DCC3 /* xEnemyPawnModel.cpp in Sources */,
 				20F92DDF2055A4B300F4DCC3 /* PlayerController.cpp in Sources */,
 				20F92DCC2055811C00F4DCC3 /* LoadingMode.cpp in Sources */,
-				206543A72043B1CD007D541E /* TileBoard.cpp in Sources */,
 				20F92E112056676800F4DCC3 /* EnemyPawnEntity.cpp in Sources */,
 				20F92DF42055A85300F4DCC3 /* TileModel.cpp in Sources */,
 				20F92DD12055894000F4DCC3 /* InputController.cpp in Sources */,
@@ -696,9 +662,7 @@
 				20F92DBF20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
 				20BD4E78206945EA00424848 /* Entity.cpp in Sources */,
 				20F92DE52055A73900F4DCC3 /* BoardController.cpp in Sources */,
-				20F92E142056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */,
 				208DC6AD206C0E77001A1259 /* MainSystems.cpp in Sources */,
-				206543A32043B1BD007D541E /* BoardScreenApp.cpp in Sources */,
 				20F92DEF2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
 				EB7454AE1D74D891002FBAE6 /* main.cpp in Sources */,
 				20F92DDA2055A30000F4DCC3 /* MenuMode.cpp in Sources */,
@@ -712,10 +676,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				20F92DC62055804500F4DCC3 /* PlayMode.cpp in Sources */,
-				20F92E0D2056676800F4DCC3 /* xEnemyPawnModel.cpp in Sources */,
 				20F92DDE2055A4B300F4DCC3 /* PlayerController.cpp in Sources */,
 				20F92DCB2055811C00F4DCC3 /* LoadingMode.cpp in Sources */,
-				2065439E2043AED3007D541E /* BoardScreenApp.cpp in Sources */,
 				20F92E102056676800F4DCC3 /* EnemyPawnEntity.cpp in Sources */,
 				20F92DF32055A85300F4DCC3 /* TileModel.cpp in Sources */,
 				20F92DD02055894000F4DCC3 /* InputController.cpp in Sources */,
@@ -724,11 +686,9 @@
 				20F92E0A2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */,
 				20F92DBE20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
 				20F92DE42055A73900F4DCC3 /* BoardController.cpp in Sources */,
-				20F92E132056676800F4DCC3 /* EnemyPawnModel.cpp in Sources */,
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
 				2031AA13206C0BCF007274BE /* MainSystems.cpp in Sources */,
 				20F92DEE2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
-				2065439D2043AED3007D541E /* TileBoard.cpp in Sources */,
 				20BD4E75206945E600424848 /* System.cpp in Sources */,
 				20F92DD92055A30000F4DCC3 /* MenuMode.cpp in Sources */,
 				20BD4E77206945E600424848 /* EntityManager.cpp in Sources */,

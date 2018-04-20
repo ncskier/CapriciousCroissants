@@ -79,7 +79,7 @@ size_t EntityManager::unregisterEntity(const EntityId entityId) {
 	return numSystems;
 }
 
-size_t EntityManager::updateEntities(BoardModel board, SystemType type) {
+size_t EntityManager::updateEntities(std::shared_ptr<BoardModel> board, SystemType type) {
 	size_t numUpdated = 0;
 	systems tempSystem;
 	switch (type) {

@@ -33,19 +33,20 @@ _selectedTile(-1),
 _placeAllies(false),
 _boardPadding(45.0f),
 _tilePadding(0.0f),
-_tilePaddingX(0.0f),
-_tilePaddingY(0.0f),
+_tilePaddingX(-95.0f),
+_tilePaddingY(-95.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
 }
 
 /** Initializes the board */
-bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<AssetManager>& assets, Size dimen) {
+bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<AssetManager>& assets, Size dimen, std::shared_ptr<EntityManager>& entityManager, std::shared_ptr<ActionManager>& actions) {
     CULog("Init JSON");
     
     // Set asset manager
     _assets = assets;
+	_entityManager = entityManager;
     
     // Get Board Node info (width, height, colors, seed)
     int width = json->get("size")->get("width")->asInt();
@@ -73,7 +74,7 @@ bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<As
     }
     
     // Setup Enemies from json
-    if (!setupEnemiesFromJson(json)) {
+    if (!setupEnemiesFromJson(json, actions)) {
         return false;
     }
     
@@ -86,6 +87,7 @@ void BoardModel::dispose() {
     _node->removeAllChildren();
     _node = nullptr;
     _assets = nullptr;
+	_entityManager = nullptr;
 }
 
 
@@ -186,39 +188,107 @@ bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
 }
 
 /** Setup enemies from Json */
-bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
-    // Vars for creating allies
-    int x = 0;
-    int y = 0;
-    bool smart;
-    EnemyPawnModel::Direction direction = EnemyPawnModel::Direction::NORTH;
+bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<ActionManager>& actions) {
     
     // Setup Enemies
     std::shared_ptr<JsonValue> enemiesJson = json->get("enemies");
+
     for (auto i = 0; i < enemiesJson->size(); i++) {
+		size_t enemyId = _entityManager->createEntity();
         std::shared_ptr<JsonValue> enemyJson = enemiesJson->get(i);
-        smart = (enemyJson->get("enemyType")->toString().find("dumb") == std::string::npos);
         
         // Parse Components
         std::shared_ptr<JsonValue> enemyComponentsJson = enemyJson->get("components");
         for (auto j = 0; j < enemyComponentsJson->size(); j++) {
             std::shared_ptr<JsonValue> componentJson = enemyComponentsJson->get(j);
             if ("location" == componentJson->key()) {
-                x = componentJson->get("x")->asInt();
-                y = componentJson->get("y")->asInt();
-            } else if ("direction" == componentJson->key()) {
-                direction = (EnemyPawnModel::Direction)componentJson->get("value")->asInt();
-            }
+				LocationComponent loc;
+
+				loc.x = componentJson->get("x")->asInt();
+				loc.y = componentJson->get("y")->asInt();
+				if (componentJson->has("direction")) {
+					loc.dir = (LocationComponent::direction)componentJson->get("direction")->asInt();
+				}
+
+				_entityManager->addComponent<LocationComponent>(enemyId, loc);
+			} else if ("dumbMovement" == componentJson->key()) {
+				DumbMovementComponent move;
+
+				move.movementDistance = componentJson->get("movementDistance")->asInt();
+
+				_entityManager->addComponent<DumbMovementComponent>(enemyId, move);
+			} else if ("smartMovement" == componentJson->key()) {
+				SmartMovementComponent move;
+
+				move.movementDistance = componentJson->get("movementDistance")->asInt();
+
+				_entityManager->addComponent<SmartMovementComponent>(enemyId, move);
+			}
+			else if ("idle" == componentJson->key()) {
+				IdleComponent idle;
+				idle.textureKey = componentJson->get("textureKeys")->asString();
+				idle.textureRows = componentJson->get("textureRows")->asIntArray();
+				idle.textureColumns = componentJson->get("textureColumns")->asIntArray();
+				idle.textureSize = componentJson->get("textureSize")->asIntArray();
+				idle.speed = componentJson->get("textureSpeed")->asIntArray();
+				idle.sprite = AnimationNode::alloc(_assets->get<Texture>(idle.textureKey), idle.textureRows[0], idle.textureColumns[0], idle.textureSize[0]);
+				idle.sprite->setAnchor(Vec2::ZERO);
+				idle._actions = actions;
+
+
+				_entityManager->addComponent<IdleComponent>(enemyId, idle);
+			} else if ("attackMelee" == componentJson->key()) {
+				MeleeAttackComponent melee;
+
+				_entityManager->addComponent<MeleeAttackComponent>(enemyId, melee);
+			}
         }
+
+		IdleComponent idle = _entityManager->getComponent<IdleComponent>(enemyId); //Now we know everything is setup so we can configure the sprite
+		LocationComponent loc = _entityManager->getComponent<LocationComponent>(enemyId);
+		Rect tileBounds = calculateDrawBounds(loc.x, loc.y);
+
+		//* setSpriteBounds from old enemyPawnModel, this really should change to be done better */
+		float width = tileBounds.size.width * 1.2f;
+		float height = tileBounds.size.height * 1.2f;
+		float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
+		float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.4f;
+		if (_entityManager->hasComponent<SmartMovementComponent>(enemyId)) {
+			width = tileBounds.size.width * 0.9f;
+			height = tileBounds.size.height * 0.9f;
+			positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
+			positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.2f;
+		}
+
+		idle.sprite->setPosition(positionX, positionY);
+		idle.sprite->setContentSize(width, height);
+		switch (loc.dir) {
+			case LocationComponent::UP:
+				idle.sprite->setFrame(2);
+				break;
+			case LocationComponent::DOWN:
+				idle.sprite->setFrame(1);
+				break;
+			case LocationComponent::LEFT:
+				idle.sprite->setFrame(0);
+				break;
+			case LocationComponent::RIGHT:
+				idle.sprite->setFrame(3);
+				break;
+		}
+		//Shouldn't need to save as sprite is a shared_ptr
+
+		//* FIX THE ABOVE TO A CORRECT WAY OF DOING THIS, THIS IS TERRIBLE */
+
         
         // Create enemy
-        std::shared_ptr<EnemyPawnModel> enemy = EnemyPawnModel::alloc(x, y, direction, smart, calculateDrawBounds(x, y), _assets);
-        _enemies.push_back(enemy);
-        _addedEnemies.insert(enemy);
+        enemiesEntityIds.push_back(enemyId);
+        _addedEnemies.insert(enemyId);
+		_entityManager->registerEntity(enemyId);
     }
     
     // Set num enemies
-    _numEnemies = (int)_enemies.size();
+    _numEnemies = (int)enemiesEntityIds.size();
     
     return true;
 }
@@ -292,19 +362,21 @@ std::shared_ptr<PlayerPawnModel> BoardModel::getAlly(int x, int y) {
 }
 
 // Returns the enemy pawn at index i of _enemies
-std::shared_ptr<EnemyPawnModel> BoardModel::getEnemy(int i) {
-	return _enemies[i];
+size_t BoardModel::getEnemy(int i) {
+	return enemiesEntityIds[i];
 }
 
 // Returns the enemy pawn at (x, y)
-std::shared_ptr<EnemyPawnModel> BoardModel::getEnemy(int x, int y) {
+size_t BoardModel::getEnemy(int x, int y) {
     for (int i = 0; i < _numEnemies; i++) {
-        std::shared_ptr<EnemyPawnModel>& enemy = _enemies[i];
-        if (enemy->getX() == x && enemy->getY() == y) {
+        size_t enemy = enemiesEntityIds[i];
+		LocationComponent loc = _entityManager->getComponent<LocationComponent>(enemy);
+
+        if (loc.x == x && loc.y == y) {
             return enemy;
         }
     }
-    return nullptr;
+    return 0;
 }
 
 // Set the value at the given (x, y) coordinate
@@ -319,11 +391,11 @@ void BoardModel::placeAlly(int x, int y, int i) {
 	
 // Place enemy at index i of _enemies on location (x, y)
 void BoardModel::placeEnemy(int x, int y, int i) {
-	_enemies[i]->setXY(x, y);
-}
-
-void BoardModel::moveEnemy(int dx, int dy, int enemyIdx) {
-    _enemies[enemyIdx]->step();
+	size_t enemy = enemiesEntityIds[i];
+	LocationComponent loc = _entityManager->getComponent<LocationComponent>(enemy);
+	loc.x = x;
+	loc.y = y;
+	_entityManager->addComponent<LocationComponent>(enemy, loc);
 }
 
 // Remove ally at index i
@@ -340,8 +412,8 @@ void BoardModel::removeAlly(int i) {
 // Remove enemy at index i
 void BoardModel::removeEnemy(int i) {
 //    _node->removeChild(_enemies[i]->getSprite());
-    _removedEnemies.insert(_enemies[i]);
-    _enemies.erase(_enemies.begin() + i);
+    _removedEnemies.insert(enemiesEntityIds[i]);
+    enemiesEntityIds.erase(enemiesEntityIds.begin() + i);
     _numEnemies--;
 }
 
@@ -395,9 +467,10 @@ bool BoardModel::checkForMatches(bool removeEnemies) {
 		// Replace tile
 		replaceTile(*iter);
 		// Remove enemies
-        if (removeEnemies && !_enemies.empty()) {
-            for (int i = 0; i < _enemies.size(); i++) {
-                if (indexOfCoordinate(_enemies[i]->getX(), _enemies[i]->getY()) == *iter) {
+        if (removeEnemies && !enemiesEntityIds.empty()) {
+            for (int i = 0; i < enemiesEntityIds.size(); i++) {
+				LocationComponent loc = _entityManager->getComponent<LocationComponent>(enemiesEntityIds[i]);
+                if (indexOfCoordinate(loc.x, loc.y) == *iter) {
                     removeEnemy(i);
                     i--;
                 }
@@ -417,88 +490,6 @@ void BoardModel::replaceTile(int tileLocation) {
     std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
     _tiles[tileLocation] = tile;
     _addedTiles.insert(tile);
-}
-
-// Generates a new set of tiles for _tiles that verifies that the board does not have any matches existing
-void BoardModel::generateNewBoard() {
-	// Setup Tiles
-    _tiles.reserve(_width * _height);
-    srand((int)time(NULL));
-	int color;
-    for (int i = 0; i < _height*_width; i++) {
-        color = randomColor();
-//        color = rand() % _numColors;        // random number in range [0, _numColors-1]
-        Rect bounds = calculateDrawBounds(xOfIndex(i), yOfIndex(i));
-        std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
-//        _node->addChild(tile->getSprite());
-        _tiles.push_back(tile);
-        _addedTiles.insert(tile);
-    }
-    
-    // Replace any matches
-    while (checkForMatches());
-
-    // Setup Allies
-    int x;
-    int y;
-    for (int i = 0; i < _numAllies; i++) {
-        x = rand() % _width;
-        y = rand() % _height;
-        while (true) {
-            bool match = false;
-            for (int j = 0; j < i; j++) {
-                std::shared_ptr<PlayerPawnModel> temp = _allies[j];
-                if (temp->getX() == x && temp->getY() == y) {
-                    x = rand() % _width;
-                    y = rand() % _height;
-                    match = true;
-                }
-            }
-            if (!match) {
-                break;
-            }
-        }
-        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
-//        _node->addChild(ally->getSprite());
-        _allies.push_back(ally);
-        _addedAllies.insert(ally);
-    }
-
-    //Setup Enemies
-    for (int i = 0; i < _numEnemies; i++) {
-        x = rand() % _width;
-        y = rand() % _height;
-        while (true) {
-            bool match = false;
-            for (int j = 0; j < _numAllies; j++) {
-                std::shared_ptr<PlayerPawnModel> temp = _allies[j];
-                if (temp->getX() == x && temp->getY() == y) {
-                    x = rand() % _width;
-                    y = rand() % _height;
-                    match = true;
-                }
-            }
-            if (i > 0) {
-                for (int j = 0; j < i; j++) {
-                    std::shared_ptr<EnemyPawnModel> temp = _enemies[j];
-                    if (temp->getX() == x && temp->getY() == y) {
-                        x = rand() % _width;
-                        y = rand() % _height;
-                        match = true;
-                    }
-                }
-            }
-
-            if (!match) {
-                break;
-            }
-        }
-        std::shared_ptr<EnemyPawnModel> enemy = EnemyPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets);
-        enemy->setRandomDirection();
-//        _node->addChild(enemy->getSprite());
-        _enemies.push_back(enemy);
-        _addedEnemies.insert(enemy);
-    }
 }
 
 // Slide pawns in row or column [k] by [offset]
@@ -534,30 +525,31 @@ void BoardModel::slidePawns(bool row, int k, int offset) {
 
     // Slide Enemies
     for (int i = 0; i < _numEnemies; i++) {
-        std::shared_ptr<EnemyPawnModel> pawn = _enemies[i];
-        if (pawn->getX() != -1 && pawn->getY() != -1) {
+        size_t enemyId = enemiesEntityIds[i];
+		LocationComponent loc = _entityManager->getComponent<LocationComponent>(enemyId);
+        if (loc.x != -1 && loc.y!= -1) {
             if (row) {
                 // Row
-                if (k == pawn->getY()) {
-                    float x = ((int)pawn->getX() + offset) % _width;
+                if (k == loc.y) {
+                    float x = ((int)loc.x + offset) % _width;
                     while (x < 0) {
                         x += _width;
                     }
-                    _enemies[i]->setX(x);
-//                    _enemies[i]->setSpriteBounds(calculateDrawBounds(x, k));
+					loc.x = x;
                 }
             }
             else {
                 // Column
-                if (k == pawn->getX()) {
-                    float y = (pawn->getY() + offset) % _height;
+                if (k == loc.x) {
+                    float y = (loc.y + offset) % _height;
                     while (y < 0) {
                         y += _height;
                     }
-                    _enemies[i]->setY(y);
-//                    _enemies[i]->setSpriteBounds(calculateDrawBounds(k, y));
+					loc.y = y;
                 }
             }
+
+			_entityManager->addComponent<LocationComponent>(enemyId, loc);
         }
     }
 }
@@ -682,11 +674,30 @@ void BoardModel::updateNodes(bool position, bool z) {
     }
     
     // Enemies
-    for (std::vector<std::shared_ptr<EnemyPawnModel>>::iterator it = _enemies.begin(); it != _enemies.end(); ++it) {
-        if (position)
-            (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
+    for (std::vector<size_t>::iterator it = enemiesEntityIds.begin(); it != enemiesEntityIds.end(); ++it) {
+		LocationComponent loc = _entityManager->getComponent<LocationComponent>((*it));
+		IdleComponent idle = _entityManager->getComponent<IdleComponent>((*it));
+
+		if (position) {
+			/**Bad, fix this*/
+			Rect tileBounds = calculateDrawBounds(loc.x, loc.y);
+//            idle.sprite->setPosition(tileBounds.origin);
+//            idle.sprite->setContentSize(tileBounds.size);
+//            float width = tileBounds.size.width * 1.2f;
+//            float height = tileBounds.size.height * 1.2f;
+//            float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
+//            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.4f;
+//            if (_entityManager->hasComponent<SmartMovementComponent>((*it))) {
+            float width = tileBounds.size.width * 0.7f;
+            float height = tileBounds.size.height * 0.7f;
+            float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
+            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.2f;
+//            }
+            idle.sprite->setPosition(positionX, positionY);
+            idle.sprite->setContentSize(width, height);
+		}
         if (z)
-            (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+            idle.sprite->setZOrder(calculateDrawZ(loc.x, loc.y, false));
     }
     
     // Resort z order
@@ -726,7 +737,7 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     Rect bounds = gridToScreen(gridX, gridY);
     
     // Apply Padding to Bounds
-    float x = bounds.getMinX() + _tilePaddingX/2.0f;
+    float x = bounds.getMinX() - _tilePaddingX/2.0f + _tilePaddingY/2.0f;
     float y = bounds.getMinY() + _tilePaddingY/2.0f;
     float width = bounds.size.width - _tilePaddingX;
     float height = bounds.size.height - _tilePaddingY;
@@ -817,10 +828,12 @@ std::string BoardModel::toString() const {
         }
         ss << "]";
     }
-    if (!_enemies.empty()) {
+    if (!enemiesEntityIds.empty()) {
         ss << "\nenemies: [";
         for (int i = 0; i < _numEnemies; i++) {
-            ss << "(" << _enemies[i]->getX() << ", " << _enemies[i]->getY() << ")";
+			LocationComponent loc = _entityManager->getComponent<LocationComponent>(enemiesEntityIds[i]);
+
+            ss << "(" << loc.x << ", " << loc.y << ")";
             ss << "   ";
         }
         ss << "]";

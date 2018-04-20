@@ -50,7 +50,7 @@
       "wrapT": "clamp"
     },
     "tile5_strip": {
-      "file": "textures/tile_strip4.png",
+      "file": "textures/tile_strip5.png",
       "minfilter": "nearest",
       "magfilter": "linear",
       "wrapS": "clamp",
@@ -107,20 +107,6 @@
     },
     "close-selected": {
       "file": "textures/CloseSelected.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "reset-normal": {
-      "file": "textures/reset1.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "reset-selected": {
-      "file": "textures/reset2.png",
       "minfilter": "nearest",
       "magfilter": "linear",
       "wrapS": "clamp",

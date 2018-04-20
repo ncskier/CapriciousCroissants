@@ -300,7 +300,7 @@ public:
     // Tile
     std::shared_ptr<cugl::Animate> tileAddAction = cugl::Animate::alloc(TILE_IMG_APPEAR_START, TILE_IMG_APPEAR_END, TILE_IMG_APPEAR_TIME);
 //    std::shared_ptr<cugl::Animate> tileRemoveAction = cugl::Animate::alloc(TILE_IMG_DISAPPEAR_START, TILE_IMG_DISAPPEAR_END, TILE_IMG_DISAPPEAR_TIME);
-    std::shared_ptr<cugl::Animate> tileRemoveAction = cugl::Animate::alloc({0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}, {0.035f,0.035f,0.035f,0.035f,0.035f,0.035f,0.7f,0.025f,0.025f,0.025f,0.025f,0.025f,0.025f,0.025f,0.025f,0.025f});
+    std::shared_ptr<cugl::Animate> tileRemoveAction = cugl::Animate::alloc({0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15}, {0.035f,0.035f,0.035f,0.035f,0.035f,0.035f,0.4f,0.025f,0.025f,0.025f,0.025f,0.025f,0.025f,0.025f,0.025f,0.025f});
     std::shared_ptr<cugl::Animate> tileDeathAction = cugl::Animate::alloc(TILE_DEATH_START, TILE_DEATH_END, TILE_DEATH_TIME);
     // Enemy
     std::shared_ptr<cugl::FadeIn> enemyAddAction = cugl::FadeIn::alloc(TILE_IMG_APPEAR_TIME);

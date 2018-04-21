@@ -412,3 +412,9 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 	
 	return true;
 }
+
+
+//bool MovementImmobileSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board)
+//{
+//	return false;
+//}

@@ -342,3 +342,8 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 
 	return true;
 }
+
+bool MovementImmobileSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board)
+{
+	return true;
+}

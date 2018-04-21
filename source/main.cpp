@@ -37,7 +37,7 @@ using namespace cugl;
 //#define GAME_WIDTH 1024
 //#define GAME_HEIGHT 576
 #define GAME_WIDTH  576
-#define GAME_HEIGHT 1024
+#define GAME_HEIGHT 800
 
 /**
  * The main entry point of any CUGL application.
@@ -56,7 +56,7 @@ int main(int argc, char * argv[]) {
     /// SET YOUR APPLICATION PROPERTIES
     
     // The unique application name
-    app.setName("CapriciousCroissants");
+    app.setName("Arcane Tectonics");
     
     // The name of your studio (for organizing save files)
     app.setOrganization("GDIAC");

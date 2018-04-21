@@ -23,6 +23,16 @@ public:
 	virtual bool updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) override;
 };
 
+class MovementImmobileSystem : public EntitySystem {
+public:
+	explicit MovementImmobileSystem(std::shared_ptr<EntityManager>& manager) :
+		EntitySystem(manager) {
+		setRequiredComponents({ ecs::getComponentType<ImmobileMovementComponent>() });
+	}
+
+	virtual bool updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) override;
+};
+
 class AttackMeleeSystem : public EntitySystem {
 public:
 	explicit AttackMeleeSystem(std::shared_ptr<EntityManager>& manager) :

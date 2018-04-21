@@ -84,8 +84,15 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
-        "enemy1_strip": {
-            "file":     "textures/enemy1_strip.png",
+      "enemy1_strip": {
+      "file": "textures/enemy1_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "enemy2_strip": {
+            "file":     "textures/enemy2_strip.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",

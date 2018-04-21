@@ -33,3 +33,14 @@ public:
 	virtual bool updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) override;
 
 };
+
+class AttackRangedSystem : public EntitySystem {
+public:
+	explicit AttackRangedSystem(std::shared_ptr<EntityManager>& manager) :
+		EntitySystem(manager) {
+		setRequiredComponents({ ecs::getComponentType<RangeOrthoAttackComponent>() });
+	}
+
+	virtual bool updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) override;
+
+};

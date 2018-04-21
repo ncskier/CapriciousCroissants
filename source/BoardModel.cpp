@@ -223,8 +223,7 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 				move.movementDistance = componentJson->get("movementDistance")->asInt();
 
 				_entityManager->addComponent<SmartMovementComponent>(enemyId, move);
-			}
-			else if ("idle" == componentJson->key()) {
+			} else if ("idle" == componentJson->key()) {
 				IdleComponent idle;
 				idle.textureKey = componentJson->get("textureKeys")->asString();
 				idle.textureRows = componentJson->get("textureRows")->asIntArray();
@@ -237,11 +236,22 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 
 
 				_entityManager->addComponent<IdleComponent>(enemyId, idle);
+
 			} else if ("attackMelee" == componentJson->key()) {
 				MeleeAttackComponent melee;
 
 				_entityManager->addComponent<MeleeAttackComponent>(enemyId, melee);
+
+			} else if ("attackRanged" == componentJson->key()) {
+				RangeOrthoAttackComponent ranged;
+				ranged.horizontal = true;
+				ranged.vertical = true;
+
+
+				_entityManager->addComponent<RangeOrthoAttackComponent>(enemyId, ranged);
+
 			}
+
         }
 
 		IdleComponent idle = _entityManager->getComponent<IdleComponent>(enemyId); //Now we know everything is setup so we can configure the sprite

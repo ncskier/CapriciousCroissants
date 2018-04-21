@@ -340,6 +340,45 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 					break;
 			}
 		}
+		
+		//There's probably a better way to do this
+		if (manager->hasComponent<SmartMovementComponent>(entity)) {
+			if (board->getNumAllies() > 0) {
+
+				std::shared_ptr<PlayerPawnModel> nearest = board->getAlly(0);
+				int minDist = (abs(loc.x - nearest->getX()) + abs(loc.y - nearest->getY()));
+				for (int i = 1; i < board->getNumAllies(); i++) {
+					std::shared_ptr<PlayerPawnModel> temp = board->getAlly(i);
+					int dist = (abs(loc.x - temp->getX()) + abs(loc.y - temp->getY()));
+					if (dist <= minDist) {
+						minDist = dist;
+						nearest = temp;
+					}
+				}
+
+				int dX = nearest->getX() - loc.x;
+				int dY = nearest->getY() - loc.y;
+
+
+				if (std::abs(dY) >= std::abs(dX)) {
+					if (dY >= 0) {
+						loc.dir = LocationComponent::UP;
+					}
+					else {
+						loc.dir = LocationComponent::DOWN;
+					}
+				}
+				else {
+					if (dX >= 0) {
+						loc.dir = LocationComponent::RIGHT;
+					}
+					else {
+						loc.dir = LocationComponent::LEFT;
+					}
+				}
+	
+			}
+		}
 
 		manager->addComponent<LocationComponent>(entity, loc);
 		manager->addComponent<IdleComponent>(entity, idle);

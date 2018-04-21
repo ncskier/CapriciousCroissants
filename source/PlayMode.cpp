@@ -316,7 +316,7 @@ void PlayMode::updatePlayerTurn(float dt) {
 
 		//Play push sound
 		auto source = _assets->get<Sound>("boop1");
-		bool didSound = AudioEngine::get()->playEffect("boop1", source, true, source->getVolume(), true);
+		bool didSound = AudioEngine::get()->playEffect("boop1", source, false, source->getVolume(), true);
 		CULog(didSound?"true":"false");
     }
 }

@@ -136,7 +136,7 @@ protected:
     /** Setup enemies from Json */
     bool setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::ActionManager>& actions);
     
-    
+public:    
 #pragma mark -
 #pragma mark Index Transformation Functions
     /**
@@ -218,6 +218,9 @@ public:
 
 	// Returns the enemies
     std::vector<size_t>& getEnemies() { return enemiesEntityIds; }
+
+	//Returns selected tile
+	int getSelectedTile() { return _selectedTile; }
     
     /** Return added/removed sets */
     std::set<std::shared_ptr<TileModel>>& getAddedTiles() { return _addedTiles; }

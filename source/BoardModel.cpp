@@ -252,6 +252,18 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 
 			}
 
+
+			else if ("rooting" == componentJson->key()) {
+				RootingComponent rooting;
+
+				_entityManager->addComponent<RootingComponent>(enemyId, rooting);
+			}
+			else if ("immobileMovement" == componentJson->key()) {
+				ImmobileMovementComponent move;
+
+				_entityManager->addComponent<ImmobileMovementComponent>(enemyId, move);
+			}
+
         }
 
 		IdleComponent idle = _entityManager->getComponent<IdleComponent>(enemyId); //Now we know everything is setup so we can configure the sprite

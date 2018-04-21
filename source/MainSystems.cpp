@@ -304,7 +304,6 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 					board->lose = true;
 				}
 
-
 				std::stringstream key;
 				key << "int_ally_remove_" << i;
 				idle._actions->activate(key.str(), board->allyRemoveAction, ally->getSprite());
@@ -387,6 +386,7 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 	return true;
 }
 
+
 bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) {
 
 	CULog("AttackRangedSystem");
@@ -453,7 +453,10 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 }
 
 
-//bool MovementImmobileSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board)
-//{
-//	return false;
-//}
+
+
+bool MovementImmobileSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board)
+{
+	return true;
+}
+

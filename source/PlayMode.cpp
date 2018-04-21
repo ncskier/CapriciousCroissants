@@ -15,6 +15,8 @@ using namespace cugl;
 /** This is adjusted by screen aspect ratio to get the height */
 #define SCENE_WIDTH 1024
 
+/** The key for push sounds */
+#define PUSH_SOUND "boop1"
 
 #pragma mark -
 #pragma mark Constructors
@@ -83,6 +85,17 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
     // Setup win/lose text
 	_text = std::dynamic_pointer_cast<Label>(assets->get<Node>("game_labelend"));
 	_text->setVisible(false);
+
+	// setup reset button
+	_resetButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("game_reset"));
+	_resetButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+			CULog("RESET");
+			win = false;
+			done = true;
+		}
+	});
+	_resetButton->activate(2);
     
     // Setup Touch Node
     _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 6, 8, 48);
@@ -147,6 +160,10 @@ void PlayMode::dispose() {
         win = false;
         _beginAttack = false;
         _attacking = false;
+		if (_resetButton) {
+			_resetButton->deactivate();
+		}
+		_resetButton = nullptr;
     }
 }
 
@@ -298,6 +315,11 @@ void PlayMode::updatePlayerTurn(float dt) {
     _playerController.update(dt);
     if (_playerController.isComplete()) {
         _state = State::BOARD;
+
+		//Play push sound
+		/*auto source = _assets->get<Sound>("boop1");
+		bool didSound = AudioEngine::get()->playEffect("boop1", source, false, source->getVolume(), true);
+		CULog(didSound?"true":"false");*/
     }
 }
 

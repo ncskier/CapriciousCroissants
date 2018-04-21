@@ -16,10 +16,14 @@
 #include <vector>
 #include "EntityManager.h"
 
+#define ENEMY_FRAME_LEFT  0
+#define ENEMY_FRAME_DOWN  16
+#define ENEMY_FRAME_UP    32
+#define ENEMY_FRAME_RIGHT 48
+
 
 #pragma mark -
 #pragma mark Board Model
-
 
 /** Class of the board model*/
 class BoardModel {

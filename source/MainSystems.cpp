@@ -24,7 +24,7 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 					loc.dir = LocationComponent::DOWN;
 					targetX = loc.x;
 					targetY = loc.y - 1;
-					idle.sprite->setFrame(1);
+					idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 				} else {
 					targetX = loc.x;
 					targetY = loc.y + 1;
@@ -35,7 +35,7 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 					loc.dir = LocationComponent::UP;
 					targetX = loc.x;
 					targetY = loc.y + 1;
-					idle.sprite->setFrame(2);
+					idle.sprite->setFrame(ENEMY_FRAME_UP);
 				}
 				else {
 					targetX = loc.x;
@@ -47,7 +47,7 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 					loc.dir = LocationComponent::RIGHT;
 					targetX = loc.x + 1;
 					targetY = loc.y;
-					idle.sprite->setFrame(3);
+					idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 				}
 				else {
 					targetX = loc.x - 1;
@@ -59,7 +59,7 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 					loc.dir = LocationComponent::LEFT;
 					targetX = loc.x - 1;
 					targetY = loc.y;
-					idle.sprite->setFrame(0);
+					idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 				}
 				else {
 					targetX = loc.x + 1;
@@ -78,19 +78,19 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 				switch (loc.dir) {
 					case LocationComponent::UP:
 						loc.dir = LocationComponent::DOWN;
-						idle.sprite->setFrame(1);
+						idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 						break;
 					case LocationComponent::DOWN:
 						loc.dir = LocationComponent::UP;
-						idle.sprite->setFrame(2);
+						idle.sprite->setFrame(ENEMY_FRAME_UP);
 						break;
 					case LocationComponent::LEFT:
 						loc.dir = LocationComponent::RIGHT;
-						idle.sprite->setFrame(3);
+						idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 						break;
 					case LocationComponent::RIGHT:
 						loc.dir = LocationComponent::LEFT;
-						idle.sprite->setFrame(0);
+						idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 						break;
 				}
 				break;
@@ -176,7 +176,7 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 				loc.dir = LocationComponent::DOWN;
 				targetX = loc.x;
 				targetY = loc.y - 1;
-				idle.sprite->setFrame(1);
+				idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 			}
 			else {
 				targetX = loc.x;
@@ -188,7 +188,7 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 				loc.dir = LocationComponent::UP;
 				targetX = loc.x;
 				targetY = loc.y + 1;
-				idle.sprite->setFrame(2);
+				idle.sprite->setFrame(ENEMY_FRAME_UP);
 			}
 			else {
 				targetX = loc.x;
@@ -200,7 +200,7 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 				loc.dir = LocationComponent::RIGHT;
 				targetX = loc.x + 1;
 				targetY = loc.y;
-				idle.sprite->setFrame(3);
+				idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 			}
 			else {
 				targetX = loc.x - 1;
@@ -212,7 +212,7 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 				loc.dir = LocationComponent::LEFT;
 				targetX = loc.x - 1;
 				targetY = loc.y;
-				idle.sprite->setFrame(0);
+				idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 			}
 			else {
 				targetX = loc.x + 1;
@@ -223,16 +223,16 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 
 		switch (loc.dir) {
 			case LocationComponent::UP:
-				idle.sprite->setFrame(2);
+				idle.sprite->setFrame(ENEMY_FRAME_UP);
 				break;
 			case LocationComponent::DOWN:
-				idle.sprite->setFrame(1);
+				idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 				break;
 			case LocationComponent::LEFT:
-				idle.sprite->setFrame(0);
+				idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 				break;
 			case LocationComponent::RIGHT:
-				idle.sprite->setFrame(3);
+				idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 				break;
 		}
 
@@ -244,19 +244,19 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 				switch (loc.dir) {
 				case LocationComponent::UP:
 					loc.dir = LocationComponent::DOWN;
-					idle.sprite->setFrame(1);
+					idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 					break;
 				case LocationComponent::DOWN:
 					loc.dir = LocationComponent::UP;
-					idle.sprite->setFrame(2);
+					idle.sprite->setFrame(ENEMY_FRAME_UP);
 					break;
 				case LocationComponent::LEFT:
 					loc.dir = LocationComponent::RIGHT;
-					idle.sprite->setFrame(3);
+					idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 					break;
 				case LocationComponent::RIGHT:
 					loc.dir = LocationComponent::LEFT;
-					idle.sprite->setFrame(0);
+					idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 					break;
 				}
 			}
@@ -312,25 +312,25 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 				case LocationComponent::UP:
 					if (loc.y == board->getHeight() - 1) {
 						loc.dir = LocationComponent::DOWN;
-						idle.sprite->setFrame(1);
+						idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 					}
 					break;
 				case LocationComponent::DOWN:
 					if (loc.y == 0) {
 						loc.dir = LocationComponent::UP;
-						idle.sprite->setFrame(2);
+						idle.sprite->setFrame(ENEMY_FRAME_UP);
 					}
 					break;
 				case LocationComponent::LEFT:
 					if (loc.x == 0) {
 						loc.dir = LocationComponent::RIGHT;
-						idle.sprite->setFrame(3);
+						idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 					}
 					break;
 				case LocationComponent::RIGHT:
 					if (loc.x == board->getWidth() - 1) {
 						loc.dir = LocationComponent::LEFT;
-						idle.sprite->setFrame(0);
+						idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 					}
 					break;
 			}

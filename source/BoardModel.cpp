@@ -264,16 +264,16 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 		idle.sprite->setContentSize(width, height);
 		switch (loc.dir) {
 			case LocationComponent::UP:
-				idle.sprite->setFrame(2);
+				idle.sprite->setFrame(ENEMY_FRAME_UP);
 				break;
 			case LocationComponent::DOWN:
-				idle.sprite->setFrame(1);
+				idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 				break;
 			case LocationComponent::LEFT:
-				idle.sprite->setFrame(0);
+				idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 				break;
 			case LocationComponent::RIGHT:
-				idle.sprite->setFrame(3);
+				idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 				break;
 		}
 		//Shouldn't need to save as sprite is a shared_ptr
@@ -685,20 +685,11 @@ void BoardModel::updateNodes(bool position, bool z) {
 		IdleComponent idle = _entityManager->getComponent<IdleComponent>((*it));
 
 		if (position) {
-			/**Bad, fix this*/
 			Rect tileBounds = calculateDrawBounds(loc.x, loc.y);
-//            idle.sprite->setPosition(tileBounds.origin);
-//            idle.sprite->setContentSize(tileBounds.size);
-//            float width = tileBounds.size.width * 1.2f;
-//            float height = tileBounds.size.height * 1.2f;
-//            float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
-//            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.4f;
-//            if (_entityManager->hasComponent<SmartMovementComponent>((*it))) {
             float width = tileBounds.size.width * 0.7f;
             float height = tileBounds.size.height * 0.7f;
             float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
             float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.2f;
-//            }
             idle.sprite->setPosition(positionX, positionY);
             idle.sprite->setContentSize(width, height);
 		}

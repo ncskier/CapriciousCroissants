@@ -21,18 +21,18 @@
 #define TILE_IMG_DISAPPEAR_TIME 0.6f
 /** Death animation */
 #define TILE_DEATH_START  0
-#define TILE_DEATH_END    23
+#define TILE_DEATH_END    27
 #define TILE_DEATH_NORMAL 0
-#define TILE_DEATH_TIME   1.0f
+#define TILE_DEATH_TIME   0.7f
 
 /** Number of rows and cols in film strip */
 #define TILE_IMG_ROWS 3
 #define TILE_IMG_COLS 8
 #define TILE_IMG_SIZE 24
 /** Death animation */
-#define TILE_DEATH_ROWS 3
-#define TILE_DEATH_COLS 8
-#define TILE_DEATH_SIZE 24
+#define TILE_DEATH_ROWS 4
+#define TILE_DEATH_COLS 7
+#define TILE_DEATH_SIZE 28
 
 /** Tile texture keys */
 #define TILE_TEXTURE_KEY_NULL "tileNULL_strip"

@@ -99,7 +99,7 @@ void PlayerController::update(float timestep) {
             // Check if On Tile
             if (_board->selectTileAtPosition(position)) {
                 // Valid move start
-                _input->recordMove();
+				_input->recordMove();
             } else {
                 // Invalid move start
                 _input->clear();
@@ -112,15 +112,43 @@ void PlayerController::update(float timestep) {
             float offsetValue;
             std::tie(row, offsetValue) = calculateOffset(inputOffset);
 			_board->requestedRow = row;
+
+			// Make sure no Rooting enemies
+			bool hasRooting = false;
+			int x = _board->xOfIndex(_board->getSelectedTile());
+			int y = _board->yOfIndex(_board->getSelectedTile());
+
 			if (_entityManager->updateEntities(_board, EntityManager::playerLimit) == 0) {
 				_board->offsetReset();
 				if (row) {
-					// Offset Row
-					_board->setOffsetRow(offsetValue);
+					// Check row
+					for (int r = 0; r < _board->getWidth(); r++) {
+						if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(r, y))) {
+							hasRooting = true;
+						}
+					}
+					if (!hasRooting) {
+						// Offset Row
+						_board->setOffsetRow(offsetValue);
+					}
+					else {
+						_board->setOffsetRow(0);
+					}
 				}
 				else {
-					// Offset Column
-					_board->setOffsetCol(offsetValue);
+					// Check column
+					for (int c = 0; c < _board->getHeight(); c++) {
+						if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(x, c))) {
+							hasRooting = true;
+						}
+					}
+					if (!hasRooting) {
+						// Offset Column
+						_board->setOffsetCol(offsetValue);
+					}
+					else {
+						_board->setOffsetCol(0);
+					}
 				}
 			}
         } else {

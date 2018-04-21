@@ -81,6 +81,9 @@ struct NonIdleComponent : Component {
 	int framesPerSecond;
 };
 
+struct RootingComponent : Component{
+};
+
 struct ExplodeOnDeathComponent : Component {
 	int radius;
 	bool affectTiles;

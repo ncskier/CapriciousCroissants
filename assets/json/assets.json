@@ -112,6 +112,20 @@
 			"wrapS":    "clamp",
 			"wrapT":    "clamp"
 		},
+        "reset-normal": {
+            "file": "textures/reset1.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "reset-selected": {
+            "file": "textures/reset2.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
         "checkImage": {
             "file":    "textures/check.png",
             "minfilter":"nearest",
@@ -130,27 +144,145 @@
             "size": 64
         }
 	},
+    "soundfx": {
+        "boop1": {
+            "file": "sounds/boop1.mp3",
+            "volume": 0.5
+        },
+        "boop2": {
+            "file": "sounds/boop2.mp3",
+            "volume": 0.5
+        },
+        "boop3": {
+            "file": "sounds/boop3.mp3",
+            "volume": 0.5
+        },
+        "boop4": {
+            "file": "sounds/boop4.mp3",
+            "volume": 0.5
+        },
+        "boop5": {
+            "file": "sounds/boop5.mp3",
+            "volume": 0.5
+        },
+        "boop6": {
+            "file": "sounds/boop6.mp3",
+            "volume": 0.5
+        }
+    },
     "scenes": {
         "game": {
             "comment": "The scene graph definition for the game",
             "type": "Node",
-            "format" : {
+            "format": {
                 "type": "Anchored"
             },
-            "children" : {
-                "labelend" : {
-                    "type"   : "Label",
-                    "data"   : {
-                        "font"       : "script",
-                        "text"       : "",
-                        "foreground" : [0,0,0,255],
-                        "anchor"     : [0.5, 0.5],
-                        "halign"     : "center",
-                        "valign"     : "middle"
+            "children": {
+                "labelend": {
+                    "type": "Label",
+                    "data": {
+                        "font": "script",
+                        "text": "",
+                        "foreground": [
+                                       0,
+                                       0,
+                                       0,
+                                       255
+                                       ],
+                        "anchor": [
+                                   0.5,
+                                   0.5
+                                   ],
+                        "halign": "center",
+                        "valign": "middle"
                     },
-                    "layout" : {
-                        "x_anchor" : "fill",
-                        "y_anchor" : "fill"
+                    "layout": {
+                        "x_anchor": "fill",
+                        "y_anchor": "fill"
+                    }
+                },
+                "reset": {
+                    "type": "Button",
+                    "format": {
+                        "type": "Absolute"
+                    },
+                    "data": {
+                        "anchor": [
+                                   0,
+                                   0
+                                   ],
+                        "up": {
+                            "type": "Node",
+                            "format": {
+                                "type": "Anchored"
+                            },
+                            "data": {
+                                "comment": "Without this size, the up button fills the screen (because that is default)",
+                                "size": [
+                                         67,
+                                         67
+                                         ]
+                            },
+                            "children": {
+                                "image": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "reset-normal",
+                                        "anchor": [
+                                                   0.5,
+                                                   0.5
+                                                   ]
+                                    },
+                                    "layout": {
+                                        "x_anchor": "fill",
+                                        "y_anchor": "fill"
+                                    }
+                                }
+                            },
+                            "layout": {
+                                "x_anchor": "fill",
+                                "y_anchor": "fill"
+                            }
+                        },
+                        "down": {
+                            "type": "Node",
+                            "format": {
+                                "type": "Anchored"
+                            },
+                            "data": {
+                                "comment": "Without this size, the up button fills the screen (because that is default)",
+                                "size": [
+                                         67,
+                                         67
+                                         ]
+                            },
+                            "children": {
+                                "image": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "reset-selected",
+                                        "anchor": [
+                                                   0.5,
+                                                   0.5
+                                                   ]
+                                    },
+                                    "layout": {
+                                        "x_anchor": "fill",
+                                        "y_anchor": "fill"
+                                    }
+                                }
+                            },
+                            "layout": {
+                                "x_anchor": "fill",
+                                "y_anchor": "fill"
+                            }
+                        }
+                    },
+                    "layout": {
+                        "x_anchor": "right",
+                        "y_anchor": "bottom",
+                        "x_offset": -0.1,
+                        "y_offset": 0
                     }
                 }
             }
@@ -158,23 +290,31 @@
         "menu": {
             "comment": "The scene graph definition for the menu",
             "type": "Node",
-            "format" : {
+            "format": {
                 "type": "Anchored"
             },
-            "children" : {
-                "labelend" : {
-                    "type"   : "Label",
-                    "data"   : {
-                        "font"       : "script",
-                        "text"       : "",
-                        "foreground" : [0,0,0,255],
-                        "anchor"     : [0.5, 0.5],
-                        "halign"     : "center",
-                        "valign"     : "middle"
+            "children": {
+                "labelend": {
+                    "type": "Label",
+                    "data": {
+                        "font": "script",
+                        "text": "",
+                        "foreground": [
+                                       0,
+                                       0,
+                                       0,
+                                       255
+                                       ],
+                        "anchor": [
+                                   0.5,
+                                   0.5
+                                   ],
+                        "halign": "center",
+                        "valign": "middle"
                     },
-                    "layout" : {
-                        "x_anchor" : "fill",
-                        "y_anchor" : "fill"
+                    "layout": {
+                        "x_anchor": "fill",
+                        "y_anchor": "fill"
                     }
                 }
             }

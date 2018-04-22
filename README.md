@@ -46,3 +46,5 @@ __Skeletons__ - smart enemies who always move toward Mika.
 
 ### Grade
 Please grade on Android.
+
+Icicle enemy death animations are placeholders for all the non-ice tiles. There will be different death animations when enemies die on the other tiles.

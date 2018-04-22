@@ -43,3 +43,6 @@ __Skeletons__ - smart enemies who always move toward Mika.
 5. Ally tutorial
 6. Same as level 5, but more tile colors
 7. Medium/Hard smart enemy level
+
+### Grade
+Please grade on Android.

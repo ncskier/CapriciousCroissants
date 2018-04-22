@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2003DF34208C189C00D44A0C /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 2003DF30208C189C00D44A0C /* sounds */; };
+		2003DF35208C189C00D44A0C /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 2003DF30208C189C00D44A0C /* sounds */; };
+		2003DF36208C189C00D44A0C /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 2003DF30208C189C00D44A0C /* sounds */; };
 		2031AA13206C0BCF007274BE /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		208DC6AD206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		208DC6B1206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
@@ -149,6 +152,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2003DF30208C189C00D44A0C /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		2031AA0F206C0BCF007274BE /* MainSystems.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainSystems.cpp; sourceTree = "<group>"; };
 		2031AA14206C0BD5007274BE /* MainSystems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainSystems.h; sourceTree = "<group>"; };
 		20BD4E69206945E400424848 /* ComponentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentType.h; sourceTree = "<group>"; };
@@ -303,6 +307,7 @@
 		EB2BE9B71D749870002FE78B /* Assets */ = {
 			isa = PBXGroup;
 			children = (
+				2003DF30208C189C00D44A0C /* sounds */,
 				EBFE7C041E19B496001007C2 /* json */,
 				EB2BE9BA1D7498D2002FE78B /* textures */,
 				EB2BE9B81D7498C9002FE78B /* fonts */,
@@ -587,6 +592,7 @@
 			files = (
 				EB0FF61A2016EFC500517030 /* json in Resources */,
 				EB0FF61B2016EFC500517030 /* textures in Resources */,
+				2003DF36208C189C00D44A0C /* sounds in Resources */,
 				EB0FF61C2016EFC500517030 /* fonts in Resources */,
 				EB0FF6172016EFB200517030 /* iOS.xcassets in Resources */,
 				EB0FF6182016EFB200517030 /* Landscape.storyboard in Resources */,
@@ -600,6 +606,7 @@
 			files = (
 				EB7454D01D750623002FBAE6 /* textures in Resources */,
 				EB7454D11D750623002FBAE6 /* fonts in Resources */,
+				2003DF35208C189C00D44A0C /* sounds in Resources */,
 				EB7454AB1D74D846002FBAE6 /* iOS.xcassets in Resources */,
 				EB7454AC1D74D846002FBAE6 /* Landscape.storyboard in Resources */,
 				EBFE7C051E19B496001007C2 /* json in Resources */,
@@ -611,6 +618,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2003DF34208C189C00D44A0C /* sounds in Resources */,
 				EBFE7C091E19B4AC001007C2 /* json in Resources */,
 				EB2BE9BB1D7498D2002FE78B /* textures in Resources */,
 				EB2BE9B91D7498C9002FE78B /* fonts in Resources */,

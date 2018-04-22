@@ -98,13 +98,13 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
 	_resetButton->activate(2);
     
     // Setup Touch Node
-    _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 6, 8, 48);
+    _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 4, 8, 32);
     _touchNode->setFrame(0);
     _touchNode->setZOrder(1000);
     _touchNode->setVisible(false);
     addChild(_touchNode);
     sortZOrder();
-    _touchAction = Animate::alloc(0, 47, 1.0f);
+    _touchAction = Animate::alloc(0, 31, 1.0f);
 
     // Setup state
 	_state = State::PLAYER;

@@ -33,8 +33,8 @@ _selectedTile(-1),
 _placeAllies(false),
 _boardPadding(45.0f),
 _tilePadding(0.0f),
-_tilePaddingX(-95.0f),
-_tilePaddingY(-95.0f),
+_tilePaddingX(0.0f),
+_tilePaddingY(0.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
@@ -708,10 +708,10 @@ void BoardModel::updateNodes(bool position, bool z) {
 
 		if (position) {
 			Rect tileBounds = calculateDrawBounds(loc.x, loc.y);
-            float width = tileBounds.size.width * 0.7f;
-            float height = tileBounds.size.height * 0.7f;
+            float width = tileBounds.size.width;
+            float height = tileBounds.size.height;
             float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
-            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.2f;
+            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.3f;
             idle.sprite->setPosition(positionX, positionY);
             idle.sprite->setContentSize(width, height);
 		}
@@ -756,7 +756,8 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     Rect bounds = gridToScreen(gridX, gridY);
     
     // Apply Padding to Bounds
-    float x = bounds.getMinX() - _tilePaddingX/2.0f + _tilePaddingY/2.0f;
+//    float x = bounds.getMinX() - _tilePaddingX/2.0f + _tilePaddingY/2.0f;
+    float x = bounds.getMinX() + _tilePaddingX/2.0f;
     float y = bounds.getMinY() + _tilePaddingY/2.0f;
     float width = bounds.size.width - _tilePaddingX;
     float height = bounds.size.height - _tilePaddingY;

@@ -773,13 +773,13 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     float yWrap = 0.0f;
     float boardWidth = _width*_cellSize.width;
     float boardHeight = _height*_cellSize.height;
-    if (bounds.getMidX() + xOffset <= _boardPadding)
+    if (bounds.getMidX() + xOffset <= 0)
         xWrap = boardWidth;
-    if (bounds.getMidX() + xOffset >= boardWidth + _boardPadding)
+    if (bounds.getMidX() + xOffset >= boardWidth)
         xWrap = -boardWidth;
-    if (bounds.getMidY() + yOffset <= _boardPadding)
+    if (bounds.getMidY() + yOffset <= _boardPadding*0.4f)
         yWrap = boardHeight;
-    if (bounds.getMidY() + yOffset >= boardHeight + _boardPadding)
+    if (bounds.getMidY() + yOffset >= boardHeight + _boardPadding*0.4f)
         yWrap = -boardHeight;
     
     // Calculate new bounds

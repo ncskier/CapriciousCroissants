@@ -98,13 +98,13 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
 	_resetButton->activate(2);
     
     // Setup Touch Node
-    _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 6, 8, 48);
+    _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 4, 8, 32);
     _touchNode->setFrame(0);
     _touchNode->setZOrder(1000);
     _touchNode->setVisible(false);
     addChild(_touchNode);
     sortZOrder();
-    _touchAction = Animate::alloc(0, 47, 1.0f);
+    _touchAction = Animate::alloc(0, 31, 1.0f);
 
     // Setup state
 	_state = State::PLAYER;
@@ -210,6 +210,9 @@ void PlayMode::setupLevelSceneGraph() {
     int i = 0;
     for (tileIter = _board->getAddedTiles().begin(); tileIter != _board->getAddedTiles().end(); ++tileIter) {
         _board->getNode()->addChild((*tileIter)->getSprite());
+        if ((*tileIter)->getDeathSprite()) {
+            _board->getNode()->addChild((*tileIter)->getDeathSprite());
+        }
         (*tileIter)->getSprite()->setFrame(TILE_IMG_APPEAR_START);
         std::stringstream key;
         key << "int_add_tile_" << i;

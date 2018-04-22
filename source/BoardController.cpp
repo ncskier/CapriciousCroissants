@@ -106,6 +106,24 @@ void BoardController::update(float timestep) {
         i = 0;
         std::set<size_t>::iterator enemyIter;
         for (enemyIter = _board->getRemovedEnemies().begin(); enemyIter != _board->getRemovedEnemies().end(); ++enemyIter) {
+            // Tile Death Animation
+            LocationComponent location = _entityManager->getComponent<LocationComponent>((*enemyIter));
+            std::shared_ptr<TileModel> tile;
+            std::set<std::shared_ptr<TileModel>>::iterator it;
+            for (it = _board->getRemovedTiles().begin(); it != _board->getRemovedTiles().end(); ++it) {
+                if (location.x == (*it)->x && location.y == (*it)->y) {
+                    tile = *it;
+                }
+            }
+            if (tile) {
+                tile->getDeathSprite()->setVisible(true);
+                std::stringstream tileDeathKey;
+                tileDeathKey << "int_tile_death_enemy_" << i;
+                _actions->activate(tileDeathKey.str(), _board->tileDeathAction, tile->getDeathSprite());
+                _interruptingActions.insert(tileDeathKey.str());
+            }
+            
+            // Enemy Death Animation
             std::stringstream key;
             key << "int_enemy_remove_" << i;
             _actions->activate(key.str(), _board->enemyRemoveAction, _entityManager->getComponent<IdleComponent>((*enemyIter)).sprite);
@@ -132,6 +150,9 @@ void BoardController::update(float timestep) {
         std::set<std::shared_ptr<TileModel>>::iterator it;
         for (it = _board->getRemovedTiles().begin(); it != _board->getRemovedTiles().end(); ++it) {
             _board->getNode()->removeChild((*it)->getSprite());
+            if ((*it)->getDeathSprite()) {
+                _board->getNode()->removeChild((*it)->getDeathSprite());
+            }
         }
         _board->clearRemovedTiles();
 
@@ -147,6 +168,9 @@ void BoardController::update(float timestep) {
         int i = 0;
         for (it = _board->getAddedTiles().begin(); it != _board->getAddedTiles().end(); ++it) {
             _board->getNode()->addChild((*it)->getSprite());
+            if ((*it)->getDeathSprite()) {
+                _board->getNode()->addChild((*it)->getDeathSprite());
+            }
             (*it)->getSprite()->setFrame(TILE_IMG_APPEAR_START);
             std::stringstream key;
             key << "int_tile_add_" << i;

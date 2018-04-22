@@ -1,907 +1,323 @@
 {
-
-  "textures": {
-    "touch": {
-      "file": "textures/touch.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "background": {
-      "file": "textures/background.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "tile0_strip": {
-      "file": "textures/tile_strip0.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "tile1_strip": {
-      "file": "textures/tile_strip1.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "tile2_strip": {
-      "file": "textures/tile_strip2.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "tile3_strip": {
-      "file": "textures/tile_strip3.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "tile4_strip": {
-      "file": "textures/tile_strip4.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "tile5_strip": {
-      "file": "textures/tile_strip5.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "tileNULL_strip": {
-      "file": "textures/tile_stripNULL.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "mika_spritesheet": {
-      "file": "textures/mika_spritesheet.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "player0_strip": {
-      "file": "textures/player0_strip.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "enemy0_strip": {
-      "file": "textures/enemy0_strip.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "enemy1_strip": {
-      "file": "textures/enemy1_strip.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "claw": {
-      "file": "textures/Claw.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "close-normal": {
-      "file": "textures/CloseNormal.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "close-selected": {
-      "file": "textures/CloseSelected.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "reset-normal": {
-      "file": "textures/reset1.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "reset-selected": {
-      "file": "textures/reset2.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "settingsBG": {
-      "file": "textures/tempSettings.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "checkImage": {
-      "file": "textures/check.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    }
-  },
-  "fonts": {
-    "charlemagne": {
-      "file": "fonts/Charlemagne.ttf",
-      "size": 64
-    },
-    "script": {
-      "file": "fonts/SCRIPTBL.TTF",
-      "size": 64
-    }
-  },
-  "soundfx": {
-    "boop1": {
-      "file": "sounds/boop1.mp3",
-      "volume": 0.5
-    },
-    "boop2": {
-      "file": "sounds/boop2.mp3",
-      "volume": 0.5
-    },
-    "boop3": {
-      "file": "sounds/boop3.mp3",
-      "volume": 0.5
-    },
-    "boop4": {
-      "file": "sounds/boop4.mp3",
-      "volume": 0.5
-    },
-    "boop5": {
-      "file": "sounds/boop5.mp3",
-      "volume": 0.5
-    },
-    "boop6": {
-      "file": "sounds/boop6.mp3",
-      "volume": 0.5
-    }
-  },
-  "scenes": {
-    "settings": {
-      "comment": "The scene graph definition for the board settings",
-      "type": "Node",
-      "format": {
-        "type": "Absolute"
-      },
-      "children": {
-        "bg": {
-          "type": "Image",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "texture": "settingsBG"
-          },
-          "children": {},
-          "layout": {
-            "x_anchor": "fill",
-            "y_anchor": "fill"
-          }
+	"textures": {
+        "touch": {
+            "file":     "textures/touch.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "upheight": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 734,
-            "y_offset": 93
-          }
+        "background": {
+            "file":     "textures/background.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "downheight": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.7178,
-            "y_offset": -0.215
-          }
+        "tile0_strip": {
+            "file":     "textures/tile0_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "upwidth": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.7178,
-            "y_offset": -0.292
-          }
+        "tile1_strip": {
+            "file":     "textures/tile1_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "downwidth": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.7178,
-            "y_offset": -0.347
-          }
+        "tile2_strip": {
+            "file":     "textures/tile2_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "upcolors": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.7178,
-            "y_offset": -0.495
-          }
+        "tile3_strip": {
+            "file":     "textures/tile3_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "downcolors": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.7178,
-            "y_offset": -0.549
-          }
+        "tile4_strip": {
+            "file":     "textures/tile4_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "upallies": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.7178,
-            "y_offset": -0.622
-          }
+        "tile5_strip": {
+            "file":     "textures/tile5_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "downallies": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.7178,
-            "y_offset": -0.677
-          }
+        "tileNULL_strip": {
+            "file":     "textures/tileNULL_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "placepawns": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  65,
-                  65
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.576,
-            "y_offset": -0.888
-          }
+        "tile2_death_strip": {
+            "file":     "textures/tile2_death_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "labelheight": {
-          "type": "Label",
-          "data": {
-            "font": "script",
-            "text": "0",
-            "foreground": [
-              0,
-              0,
-              0,
-              255
-            ],
-            "anchor": [
-              0.5,
-              0.5
-            ],
-            "halign": "top",
-            "valign": "middle"
-          },
-          "layout": {
-            "x_anchor": "top",
-            "y_anchor": "left",
-            "x_offset": 0.611,
-            "y_offset": 0.832
-          }
+        "mika_spritesheet": {
+            "file":     "textures/mika_spritesheet.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "labelwidth": {
-          "type": "Label",
-          "data": {
-            "font": "script",
-            "text": "0",
-            "foreground": [
-              0,
-              0,
-              0,
-              255
-            ],
-            "anchor": [
-              0.5,
-              0.5
-            ],
-            "halign": "top",
-            "valign": "middle"
-          },
-          "layout": {
-            "x_anchor": "top",
-            "y_anchor": "left",
-            "x_offset": 0.611,
-            "y_offset": 0.707
-          }
+        "enemy0_strip": {
+            "file":     "textures/enemy0_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "labelcolors": {
-          "type": "Label",
-          "data": {
-            "font": "script",
-            "text": "0",
-            "foreground": [
-              0,
-              0,
-              0,
-              255
-            ],
-            "anchor": [
-              0.5,
-              0.5
-            ],
-            "halign": "top",
-            "valign": "middle"
-          },
-          "layout": {
-            "x_anchor": "top",
-            "y_anchor": "left",
-            "x_offset": 0.611,
-            "y_offset": 0.5
-          }
+        "enemy1_strip": {
+            "file":     "textures/enemy1_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
-        "labelallies": {
-          "type": "Label",
-          "data": {
-            "font": "script",
-            "text": "0",
-            "foreground": [
-              0,
-              0,
-              0,
-              255
-            ],
-            "anchor": [
-              0.5,
-              0.5
-            ],
-            "halign": "top",
-            "valign": "middle"
-          },
-          "layout": {
-            "x_anchor": "top",
-            "y_anchor": "left",
-            "x_offset": 0.611,
-            "y_offset": 0.375
-          }
+		"claw": {
+			"file":     "textures/Claw.png",
+			"minfilter":"nearest",
+			"magfilter":"linear",
+			"wrapS":    "clamp",
+			"wrapT":    "clamp"
+		},
+		"close-normal": {
+			"file":     "textures/CloseNormal.png",
+			"minfilter":"nearest",
+			"magfilter":"linear",
+			"wrapS":    "clamp",
+			"wrapT":    "clamp"
+		},
+		"close-selected": {
+			"file":     "textures/CloseSelected.png",
+			"minfilter":"nearest",
+			"magfilter":"linear",
+			"wrapS":    "clamp",
+			"wrapT":    "clamp"
+		},
+        "reset-normal": {
+            "file": "textures/reset1.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
         },
-        "check": {
-          "type": "Image",
-          "data": {
-            "texture": "checkImage"
-          },
-          "layout": {
-            "x_anchor": "top",
-            "y_anchor": "left"
-          }
+        "reset-selected": {
+            "file": "textures/reset2.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
         },
-        "done": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  180,
-                  67
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.576,
-            "y_offset": -0.888
-          }
-        },
-        "labelenemies": {
-          "type": "Label",
-          "data": {
-            "font": "script",
-            "text": "0",
-            "foreground": [
-              0,
-              0,
-              0,
-              255
-            ],
-            "anchor": [
-              0.5,
-              0.5
-            ],
-            "halign": "top",
-            "valign": "middle"
-          },
-          "layout": {
-            "x_anchor": "top",
-            "y_anchor": "left",
-            "x_offset": 0.611,
-            "y_offset": 0.832
-          }
-        },
-        "upenemies": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          },
-          "layout": {
-            "x_anchor": "left",
-            "y_anchor": "top",
-            "x_offset": 0.7178,
-            "y_offset": -0.622
-          }
-        },
-        "downenemies": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  27,
-                  27
-                ]
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
-            }
-          }
+        "checkImage": {
+            "file":    "textures/check.png",
+            "minfilter":"nearest",
+			"magfilter":"linear",
+			"wrapS":    "clamp",
+			"wrapT":    "clamp"
         }
-      }
-    },
-    "game": {
-      "comment": "The scene graph definition for the game",
-      "type": "Node",
-      "format": {
-        "type": "Anchored"
-      },
-      "children": {
-        "labelend": {
-          "type": "Label",
-          "data": {
-            "font": "script",
-            "text": "",
-            "foreground": [
-              0,
-              0,
-              0,
-              255
-            ],
-            "anchor": [
-              0.5,
-              0.5
-            ],
-            "halign": "center",
-            "valign": "middle"
-          },
-          "layout": {
-            "x_anchor": "fill",
-            "y_anchor": "fill"
-          }
+	},
+	"fonts": {
+		"charlemagne": {
+			"file":     "fonts/Charlemagne.ttf",
+			"size":     64
+		},
+        "script": {
+            "file": "fonts/SCRIPTBL.TTF",
+            "size": 64
+        }
+	},
+    "soundfx": {
+        "boop1": {
+            "file": "sounds/boop1.mp3",
+            "volume": 0.5
         },
-        "reset": {
-          "type": "Button",
-          "format": {
-            "type": "Absolute"
-          },
-          "data": {
-            "anchor": [
-              0,
-              0
-            ],
-            "up": {
-              "type": "Node",
-              "format": {
+        "boop2": {
+            "file": "sounds/boop2.mp3",
+            "volume": 0.5
+        },
+        "boop3": {
+            "file": "sounds/boop3.mp3",
+            "volume": 0.5
+        },
+        "boop4": {
+            "file": "sounds/boop4.mp3",
+            "volume": 0.5
+        },
+        "boop5": {
+            "file": "sounds/boop5.mp3",
+            "volume": 0.5
+        },
+        "boop6": {
+            "file": "sounds/boop6.mp3",
+            "volume": 0.5
+        }
+    },
+    "scenes": {
+        "game": {
+            "comment": "The scene graph definition for the game",
+            "type": "Node",
+            "format": {
                 "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  67,
-                  67
-                ]
-              },
-              "children": {
-                "image": {
-                  "type": "Image",
-                  "data": {
-                    "texture": "reset-normal",
-                    "anchor": [
-                      0.5,
-                      0.5
-                    ]
-                  },
-                  "layout": {
-                    "x_anchor": "fill",
-                    "y_anchor": "fill"
-                  }
-                }
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
             },
-            "down": {
-              "type": "Node",
-              "format": {
-                "type": "Anchored"
-              },
-              "data": {
-                "comment": "Without this size, the up button fills the screen (because that is default)",
-                "size": [
-                  67,
-                  67
-                ]
-              },
-              "children": {
-                "image": {
-                  "type": "Image",
-                  "data": {
-                    "texture": "reset-selected",
-                    "anchor": [
-                      0.5,
-                      0.5
-                    ]
-                  },
-                  "layout": {
-                    "x_anchor": "fill",
-                    "y_anchor": "fill"
-                  }
+            "children": {
+                "labelend": {
+                    "type": "Label",
+                    "data": {
+                        "font": "script",
+                        "text": "",
+                        "foreground": [
+                                       0,
+                                       0,
+                                       0,
+                                       255
+                                       ],
+                        "anchor": [
+                                   0.5,
+                                   0.5
+                                   ],
+                        "halign": "center",
+                        "valign": "middle"
+                    },
+                    "layout": {
+                        "x_anchor": "fill",
+                        "y_anchor": "fill"
+                    }
+                },
+                "reset": {
+                    "type": "Button",
+                    "format": {
+                        "type": "Absolute"
+                    },
+                    "data": {
+                        "anchor": [
+                                   0,
+                                   0
+                                   ],
+                        "up": {
+                            "type": "Node",
+                            "format": {
+                                "type": "Anchored"
+                            },
+                            "data": {
+                                "comment": "Without this size, the up button fills the screen (because that is default)",
+                                "size": [
+                                         67,
+                                         67
+                                         ]
+                            },
+                            "children": {
+                                "image": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "reset-normal",
+                                        "anchor": [
+                                                   0.5,
+                                                   0.5
+                                                   ]
+                                    },
+                                    "layout": {
+                                        "x_anchor": "fill",
+                                        "y_anchor": "fill"
+                                    }
+                                }
+                            },
+                            "layout": {
+                                "x_anchor": "fill",
+                                "y_anchor": "fill"
+                            }
+                        },
+                        "down": {
+                            "type": "Node",
+                            "format": {
+                                "type": "Anchored"
+                            },
+                            "data": {
+                                "comment": "Without this size, the up button fills the screen (because that is default)",
+                                "size": [
+                                         67,
+                                         67
+                                         ]
+                            },
+                            "children": {
+                                "image": {
+                                    "type": "Image",
+                                    "data": {
+                                        "texture": "reset-selected",
+                                        "anchor": [
+                                                   0.5,
+                                                   0.5
+                                                   ]
+                                    },
+                                    "layout": {
+                                        "x_anchor": "fill",
+                                        "y_anchor": "fill"
+                                    }
+                                }
+                            },
+                            "layout": {
+                                "x_anchor": "fill",
+                                "y_anchor": "fill"
+                            }
+                        }
+                    },
+                    "layout": {
+                        "x_anchor": "right",
+                        "y_anchor": "bottom",
+                        "x_offset": -0.1,
+                        "y_offset": 0
+                    }
                 }
-              },
-              "layout": {
-                "x_anchor": "fill",
-                "y_anchor": "fill"
-              }
             }
-          },
-          "layout": {
-            "x_anchor": "right",
-            "y_anchor": "bottom",
-            "x_offset": -0.1,
-            "y_offset": 0
-          }
+        },
+        "menu": {
+            "comment": "The scene graph definition for the menu",
+            "type": "Node",
+            "format": {
+                "type": "Anchored"
+            },
+            "children": {
+                "labelend": {
+                    "type": "Label",
+                    "data": {
+                        "font": "script",
+                        "text": "",
+                        "foreground": [
+                                       0,
+                                       0,
+                                       0,
+                                       255
+                                       ],
+                        "anchor": [
+                                   0.5,
+                                   0.5
+                                   ],
+                        "halign": "center",
+                        "valign": "middle"
+                    },
+                    "layout": {
+                        "x_anchor": "fill",
+                        "y_anchor": "fill"
+                    }
+                }
+            }
         }
-      }
-    },
-    "menu": {
-      "comment": "The scene graph definition for the menu",
-      "type": "Node",
-      "format": {
-        "type": "Anchored"
-      },
-      "children": {
-        "labelend": {
-          "type": "Label",
-          "data": {
-            "font": "script",
-            "text": "",
-            "foreground": [
-              0,
-              0,
-              0,
-              255
-            ],
-            "anchor": [
-              0.5,
-              0.5
-            ],
-            "halign": "center",
-            "valign": "middle"
-          },
-          "layout": {
-            "x_anchor": "fill",
-            "y_anchor": "fill"
-          }
-        }
-      }
-    }
-  }
+    }    
 }

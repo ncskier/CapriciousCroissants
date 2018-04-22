@@ -19,11 +19,20 @@
 #define TILE_IMG_DISAPPEAR_END   15
 #define TILE_IMG_APPEAR_TIME    0.3f
 #define TILE_IMG_DISAPPEAR_TIME 0.6f
+/** Death animation */
+#define TILE_DEATH_START  0
+#define TILE_DEATH_END    27
+#define TILE_DEATH_NORMAL 0
+#define TILE_DEATH_TIME   0.7f
 
 /** Number of rows and cols in film strip */
 #define TILE_IMG_ROWS 3
 #define TILE_IMG_COLS 8
 #define TILE_IMG_SIZE 24
+/** Death animation */
+#define TILE_DEATH_ROWS 4
+#define TILE_DEATH_COLS 7
+#define TILE_DEATH_SIZE 28
 
 /** Tile texture keys */
 #define TILE_TEXTURE_KEY_NULL "tileNULL_strip"
@@ -37,6 +46,18 @@
 #define TILE_TEXTURE_KEY_7 "tile0_strip"
 #define TILE_TEXTURE_KEY_8 "tile0_strip"
 #define TILE_TEXTURE_KEY_9 "tile0_strip"
+/** Death animation */
+#define TILE_TEXTURE_KEY_DEATH_0 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_1 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_2 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_3 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_4 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_5 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_6 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_7 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_8 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_9 "tile2_death_strip"
+
 
 
 #pragma mark -
@@ -54,6 +75,9 @@ protected:
     
     /** Reference to image in SceneGraph for animation */
     std::shared_ptr<cugl::AnimationNode> _sprite;
+    
+    /** Reference to image in SceneGraph for death animation */
+    std::shared_ptr<cugl::AnimationNode> _deathSprite;
     
     /** Sets the film strip with [bounds] */
     void setSprite(const cugl::Rect bounds, const std::shared_ptr<cugl::AssetManager>& assets);
@@ -113,6 +137,10 @@ public:
     
 #pragma mark -
 #pragma mark Animation
+    /** WARNING: These (x,y) are only set after the tile has been removed from the board */
+    int x;
+    int y;
+    
     /** Returns a reference to the film strip */
     std::shared_ptr<cugl::AnimationNode>& getSprite() { return _sprite; }
     
@@ -122,6 +150,8 @@ public:
     /** Sets the film strip */
     void setSprite(const std::shared_ptr<cugl::AnimationNode>& sprite) { _sprite = sprite; }
 
+    /** Returns a reference to the death film strip */
+    std::shared_ptr<cugl::AnimationNode>& getDeathSprite() { return _deathSprite; }
 };
 
 #endif /* __TILE_MODEL_H__ */

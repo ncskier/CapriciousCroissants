@@ -21,13 +21,13 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
+                        8
                     ],
                     "textureColumns": [
-                        4
+                        16
                     ],
                     "textureSize": [
-                        4
+                        128
                     ],
                     "textureSpeed": [
                         2
@@ -49,13 +49,13 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
+                        8
                     ],
                     "textureColumns": [
-                        4
+                        16
                     ],
                     "textureSize": [
-                        4
+                        128
                     ],
                     "textureSpeed": [
                         2
@@ -77,13 +77,13 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
+                        8
                     ],
                     "textureColumns": [
-                        4
+                        16
                     ],
                     "textureSize": [
-                        4
+                        128
                     ],
                     "textureSpeed": [
                         2
@@ -105,13 +105,13 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
+                        8
                     ],
                     "textureColumns": [
-                        4
+                        16
                     ],
                     "textureSize": [
-                        4
+                        128
                     ],
                     "textureSpeed": [
                         2
@@ -133,13 +133,13 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
+                        8
                     ],
                     "textureColumns": [
-                        4
+                        16
                     ],
                     "textureSize": [
-                        4
+                        128
                     ],
                     "textureSpeed": [
                         2
@@ -161,13 +161,13 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
+                        8
                     ],
                     "textureColumns": [
-                        4
+                        16
                     ],
                     "textureSize": [
-                        4
+                        128
                     ],
                     "textureSpeed": [
                         2
@@ -189,13 +189,13 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
+                        8
                     ],
                     "textureColumns": [
-                        4
+                        16
                     ],
                     "textureSize": [
-                        4
+                        128
                     ],
                     "textureSpeed": [
                         2
@@ -217,13 +217,13 @@
                 "idle": {
                     "textureKeys": "enemy0_strip",
                     "textureRows": [
-                        1
+                        8
                     ],
                     "textureColumns": [
-                        4
+                        16
                     ],
                     "textureSize": [
-                        4
+                        128
                     ],
                     "textureSpeed": [
                         2

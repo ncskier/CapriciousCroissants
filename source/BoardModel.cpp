@@ -33,8 +33,8 @@ _selectedTile(-1),
 _placeAllies(false),
 _boardPadding(45.0f),
 _tilePadding(0.0f),
-_tilePaddingX(-95.0f),
-_tilePaddingY(-95.0f),
+_tilePaddingX(0.0f),
+_tilePaddingY(0.0f),
 offsetRow(false),
 offsetCol(false),
 offset(0.0f) {
@@ -286,16 +286,16 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 		idle.sprite->setContentSize(width, height);
 		switch (loc.dir) {
 			case LocationComponent::UP:
-				idle.sprite->setFrame(2);
+				idle.sprite->setFrame(ENEMY_FRAME_UP);
 				break;
 			case LocationComponent::DOWN:
-				idle.sprite->setFrame(1);
+				idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 				break;
 			case LocationComponent::LEFT:
-				idle.sprite->setFrame(0);
+				idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 				break;
 			case LocationComponent::RIGHT:
-				idle.sprite->setFrame(3);
+				idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 				break;
 		}
 		//Shouldn't need to save as sprite is a shared_ptr
@@ -505,6 +505,8 @@ bool BoardModel::checkForMatches(bool removeEnemies) {
 
 // Private function that allows for a tile to be replaced based on it's array index value in _tiles
 void BoardModel::replaceTile(int tileLocation) {
+    _tiles[tileLocation]->x = xOfIndex(tileLocation);
+    _tiles[tileLocation]->y = yOfIndex(tileLocation);
     _removedTiles.insert(_tiles[tileLocation]);
     // New random color
     int color = randomColor();
@@ -682,8 +684,12 @@ void BoardModel::updateNodes(bool position, bool z) {
         for (int y = 0; y < _height; y++) {
             if (position)
                 _tiles[indexOfCoordinate(x, y)]->setSpriteBounds(calculateDrawBounds(x, y));
-            if (z)
+            if (z) {
                 _tiles[indexOfCoordinate(x, y)]->getSprite()->setZOrder(calculateDrawZ(x, y, true));
+                if (_tiles[indexOfCoordinate(x, y)]->getDeathSprite()) {
+                    _tiles[indexOfCoordinate(x, y)]->getDeathSprite()->setZOrder(calculateDrawZ(x, y, false) + 1);
+                }
+            }
         }
     }
     
@@ -701,20 +707,11 @@ void BoardModel::updateNodes(bool position, bool z) {
 		IdleComponent idle = _entityManager->getComponent<IdleComponent>((*it));
 
 		if (position) {
-			/**Bad, fix this*/
 			Rect tileBounds = calculateDrawBounds(loc.x, loc.y);
-//            idle.sprite->setPosition(tileBounds.origin);
-//            idle.sprite->setContentSize(tileBounds.size);
-//            float width = tileBounds.size.width * 1.2f;
-//            float height = tileBounds.size.height * 1.2f;
-//            float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
-//            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.4f;
-//            if (_entityManager->hasComponent<SmartMovementComponent>((*it))) {
-            float width = tileBounds.size.width * 0.7f;
-            float height = tileBounds.size.height * 0.7f;
+            float width = tileBounds.size.width;
+            float height = tileBounds.size.height;
             float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
-            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.2f;
-//            }
+            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.3f;
             idle.sprite->setPosition(positionX, positionY);
             idle.sprite->setContentSize(width, height);
 		}
@@ -759,7 +756,8 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     Rect bounds = gridToScreen(gridX, gridY);
     
     // Apply Padding to Bounds
-    float x = bounds.getMinX() - _tilePaddingX/2.0f + _tilePaddingY/2.0f;
+//    float x = bounds.getMinX() - _tilePaddingX/2.0f + _tilePaddingY/2.0f;
+    float x = bounds.getMinX() + _tilePaddingX/2.0f;
     float y = bounds.getMinY() + _tilePaddingY/2.0f;
     float width = bounds.size.width - _tilePaddingX;
     float height = bounds.size.height - _tilePaddingY;
@@ -775,13 +773,13 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
     float yWrap = 0.0f;
     float boardWidth = _width*_cellSize.width;
     float boardHeight = _height*_cellSize.height;
-    if (bounds.getMidX() + xOffset <= _boardPadding)
+    if (bounds.getMidX() + xOffset <= 0)
         xWrap = boardWidth;
-    if (bounds.getMidX() + xOffset >= boardWidth + _boardPadding)
+    if (bounds.getMidX() + xOffset >= boardWidth)
         xWrap = -boardWidth;
-    if (bounds.getMidY() + yOffset <= _boardPadding)
+    if (bounds.getMidY() + yOffset <= _boardPadding*0.4f)
         yWrap = boardHeight;
-    if (bounds.getMidY() + yOffset >= boardHeight + _boardPadding)
+    if (bounds.getMidY() + yOffset >= boardHeight + _boardPadding*0.4f)
         yWrap = -boardHeight;
     
     // Calculate new bounds

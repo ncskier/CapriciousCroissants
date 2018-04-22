@@ -48,8 +48,6 @@ void PlayerPawnModel::setSpriteBounds(cugl::Rect tileBounds) {
     Size nodeSize = _sprite->cugl::Node::getSize();
     float width = nodeSize.width / nodeSize.height * tileBounds.size.height;
     float height = tileBounds.size.height;
-    width *= 0.7f;
-    height *= 0.7f;
     float positionX = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
     float positionY = tileBounds.getMinY() + tileBounds.size.height*0.3f;
     _sprite->setPosition(positionX, positionY);

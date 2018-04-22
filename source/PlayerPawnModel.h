@@ -16,15 +16,15 @@
 /** Idle loop */
 #define PLAYER_IMG_IDLE_START    0
 #define PLAYER_IMG_IDLE_END      15
-#define PLAYER_IMG_IDLE_TIME     0.7f
+#define PLAYER_IMG_IDLE_TIME     0.5f
 /** Begin Attack (Transition to Attack) */
 #define PLAYER_IMG_BEGIN_ATTACK_START 16
 #define PLAYER_IMG_BEGIN_ATTACK_END   31
-#define PLAYER_IMG_BEGIN_ATTACK_TIME  0.7f
+#define PLAYER_IMG_BEGIN_ATTACK_TIME  0.5f
 /** Attacking loop */
 #define PLAYER_IMG_ATTACKING_START 32
 #define PLAYER_IMG_ATTACKING_END   47
-#define PLAYER_IMG_ATTACKING_TIME  0.7f
+#define PLAYER_IMG_ATTACKING_TIME  0.5f
 
 /** Number of rows and cols in film strip */
 #define PLAYER_IMG_ROWS 3

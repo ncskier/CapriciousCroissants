@@ -71,6 +71,10 @@ protected:
     PlayerController _playerController;
     BoardController _boardController;
     EnemyController _enemyController;
+
+	//VIEW
+	//Buttons
+	std::shared_ptr<cugl::Button> _resetButton;
     
 	//Entity Manager Instance
 	std::shared_ptr<EntityManager> _entityManager;

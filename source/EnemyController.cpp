@@ -42,6 +42,8 @@ bool EnemyController::init(std::shared_ptr<ActionManager>& actions, const std::s
 	_debug = false;
 	_complete = false;
 	_state = State::MOVE;
+	//_arrowSprite = assets;
+	//deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_7);
 
 	return true;
 }

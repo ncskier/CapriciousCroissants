@@ -246,8 +246,7 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 				RangeOrthoAttackComponent ranged;
 				ranged.horizontal = true;
 				ranged.vertical = true;
-				//std::vector<Vec2> bounds = Vec2.ZERO;
-				ranged.projectile = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow"));
+				ranged.projectile = PolygonNode::allocWithTexture(_assets->get<Texture>("enemy1_strip"));
 					//_deathSprite = AnimationNode::alloc(deathTexture, TILE_DEATH_ROWS, TILE_DEATH_COLS, TILE_DEATH_SIZE);
 
 				_entityManager->addComponent<RangeOrthoAttackComponent>(enemyId, ranged);

@@ -30,6 +30,9 @@ struct MeleeAttackComponent : Component {
 struct RangeOrthoAttackComponent : Component {
 	bool horizontal;
 	bool vertical;
+	std::shared_ptr<cugl::PolygonNode> projectile;
+	//std::shared_ptr<cugl::AnimationNode> _deathSprite;
+
 };
 
 struct RangeDiagAttackComponent : Component {

@@ -320,6 +320,11 @@ public:
     std::shared_ptr<cugl::Animate> mikaBeginAttackAction = cugl::Animate::alloc(PLAYER_IMG_BEGIN_ATTACK_START, PLAYER_IMG_BEGIN_ATTACK_END, PLAYER_IMG_BEGIN_ATTACK_TIME);
     std::shared_ptr<cugl::Animate> mikaAttackingAction = cugl::Animate::alloc(PLAYER_IMG_ATTACKING_START, PLAYER_IMG_ATTACKING_END, PLAYER_IMG_ATTACKING_TIME);
     
+	//Projectile
+	std::shared_ptr<cugl::Animate> projectileAction = cugl::Animate::alloc(0, 10, 0.5);
+
+
+
     /** Get board node */
     std::shared_ptr<cugl::Node>& getNode() { return _node; }
     

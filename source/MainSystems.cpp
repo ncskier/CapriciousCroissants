@@ -418,6 +418,8 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 				for (int i = 0; i < board->getNumAllies(); i++) {
 					std::shared_ptr<PlayerPawnModel> ally = board->getAlly(i);
 					if (ally->getX() == closestAlignedAlly->getX() && ally->getY() == closestAlignedAlly->getY()) {
+						board->insertAttackingEnemy(entity);
+
 						board->removeAlly(i);
 						if (i == 0) {
 							board->lose = true;
@@ -440,13 +442,13 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 							loc.dir = LocationComponent::DOWN;
 							idle.sprite->setFrame(1);
 						}
-
+						/*
 						std::stringstream key;
 						key << "int_enemy_shoot_" << i;
 						idle._actions->activate(key.str(), board->allyRemoveAction, ranged.projectile);
 						idle._interruptingActions.insert(key.str());
-
-						//std::stringstream key;
+						*/
+						std::stringstream key;
 						key << "int_ally_remove_" << i;
 						idle._actions->activate(key.str(), board->allyRemoveAction, ally->getSprite());
 						idle._interruptingActions.insert(key.str());

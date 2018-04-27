@@ -84,10 +84,35 @@ void EnemyController::update(float timestep) {
         _state = State::ATTACK;
     } else if (_state == State::ATTACK) {
 		_entityManager->updateEntities(_board, EntityManager::attack);
+		std::set<size_t>::iterator enemyIter;
+
+		for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {
+			if (_entityManager->hasComponent<RangeOrthoAttackComponent>(*enemyIter)) {
+				LocationComponent loc = _entityManager->getComponent<LocationComponent>((*enemyIter));
+				//for (int i = 0; i < 10; i++) {
+					_entityManager->getComponent<RangeOrthoAttackComponent>((*enemyIter)).projectile->setPosition(_board->gridToScreenV(loc.x, loc.y));
+				//}
+					_board->getNode()->addChild(_entityManager->getComponent<RangeOrthoAttackComponent>((*enemyIter)).projectile, 1000);
+				_board->getNode()->sortZOrder();
+			}
+		}
+		
         _state = State::CHECK;
     } else {
         // CHECK
-        std::set<std::shared_ptr<PlayerPawnModel>>::iterator it;
+		std::set<size_t>::iterator enemyIter;
+		for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {
+			if (_entityManager->hasComponent<RangeOrthoAttackComponent>(*enemyIter)) {
+				LocationComponent loc = _entityManager->getComponent<LocationComponent>((*enemyIter));
+				_board->getNode()->removeChild(_entityManager->getComponent<RangeOrthoAttackComponent>((*enemyIter)).projectile);
+			}
+		}
+
+		_board->clearAttackingEnemies();
+
+
+
+		std::set<std::shared_ptr<PlayerPawnModel>>::iterator it;
         for (it = _board->getRemovedAllies().begin(); it != _board->getRemovedAllies().end(); ++it) {
             _board->getNode()->removeChild((*it)->getSprite());
         }

@@ -112,7 +112,8 @@ public:
      * keyboad and accelerometer.
      *
      * This method also gathers the delta difference in the touches. Depending on
-     * the OS, we may see multiple updates of the same touch in a single animation
+     * the OS, we may see multiple updates of the same touch in a single 
+
      * frame, so we need to accumulate all of the data together.
      */
     void  update(float dt);

@@ -441,6 +441,10 @@ void BoardModel::removeEnemy(int i) {
     _numEnemies--;
 }
 
+void BoardModel::insertAttackingEnemy(EntityId entity) {
+	_attackingEnemies.insert(entity);
+}
+
 
 #pragma mark -
 #pragma mark Logic
@@ -739,6 +743,15 @@ cugl::Rect BoardModel::gridToScreen(int x, int y) {
     return Rect(xPos, yPos, _cellSize.width, _cellSize.height);
 }
 
+cugl::Vec2 BoardModel::gridToScreenV(int x, int y) {
+	float xPos = (x+0.5) * _cellSize.width;
+	float yPos = (y+0.5) * _cellSize.height;
+	cugl::Vec2 pos = Vec2(xPos, yPos);
+
+	return pos;
+}
+
+
 // Convert screen coordinates to grid (x, y)
 std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
     int x = (int)floor( (position.x - _boardPadding/2.0f) / _cellSize.width );
@@ -746,6 +759,16 @@ std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
     
     return {x, y};
 }
+
+// Convert screen coordinates to grid (x, y)
+cugl::Vec2  BoardModel::screenToGridV(Vec2 position) {
+	int x = (int)floor((position.x - _boardPadding / 2.0f) / _cellSize.width);
+	int y = (int)floor((position.y - _boardPadding / 2.0f) / _cellSize.height);
+	cugl::Vec2 pos = Vec2(x, y);
+
+	return pos ;
+}
+
 
 // Convert screen length to grid length
 int BoardModel::lengthToCells(float length, bool row) {

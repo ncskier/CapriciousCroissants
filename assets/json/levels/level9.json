@@ -12,7 +12,7 @@
             "components": {
                 "location": {
                     "x": 1,
-                    "y": 3,
+                    "y": 4,
                     "direction" : 1
                 },
                 "smartMovement": {
@@ -34,34 +34,6 @@
                     ]
                 },
                 "attackRanged" : {}
-            }
-        },
-        "enemy2": {
-            "components": {
-                "location": {
-                    "x": 1,
-                    "y": 1,
-                    "direction" : 1
-                },
-                "smartMovement": {
-                    "movementDistance" : 1
-                },
-                "idle": {
-                    "textureKeys": "enemy1_strip",
-                    "textureRows": [
-                        8
-                    ],
-                    "textureColumns": [
-                        16
-                    ],
-                    "textureSize": [
-                        128
-                    ],
-                    "textureSpeed": [
-                        2
-                    ]
-                },
-                "attackMelee" : {}
             }
         },
         "enemy3": {
@@ -89,7 +61,7 @@
                         2
                     ]
                 },
-                "attackMelee" : {}
+                "attackRanged" : {}
             }
         },
         "enemy4": {

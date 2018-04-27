@@ -5,6 +5,7 @@
 #include <set>
 #include <vector>
 #include <tuple>
+#include <PlayerPawnModel.h>
 
 //All structs are components and MUST extend Component struct
 struct Component {};
@@ -31,6 +32,8 @@ struct RangeOrthoAttackComponent : Component {
 	bool horizontal;
 	bool vertical;
 	std::shared_ptr<cugl::PolygonNode> projectile;
+	int targetX;
+	int targetY;
 	//std::shared_ptr<cugl::AnimationNode> _deathSprite;
 
 };

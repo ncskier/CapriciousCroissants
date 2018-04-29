@@ -7,6 +7,27 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "menu_tile0": {
+            "file":     "textures/menu_tile0.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "menu_tile1": {
+            "file":     "textures/menu_tile1.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "menu_tile2": {
+            "file":     "textures/menu_tile2.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "background": {
             "file":     "textures/background.png",
             "minfilter":"nearest",

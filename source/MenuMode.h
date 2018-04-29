@@ -10,6 +10,12 @@
 #define __Menu_Mode_H__
 
 #include <cugl/cugl.h>
+#include <vector>
+
+#define MENU_TILE_KEY_0 "menu_tile0"
+#define MENU_TILE_KEY_1 "menu_tile1"
+#define MENU_TILE_KEY_2 "menu_tile2"
+
 
 class MenuMode : public cugl::Scene {
 protected:
@@ -19,6 +25,7 @@ protected:
     // TODO: VIEW
     cugl::Size _dimen;
     std::shared_ptr<cugl::Node> _worldNode;
+    std::vector<std::shared_ptr<cugl::PolygonNode>> _menuTiles;
     
     // TODO: MODEL
     std::shared_ptr<cugl::JsonValue> _levelsJson;

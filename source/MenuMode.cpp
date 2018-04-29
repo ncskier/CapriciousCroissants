@@ -54,14 +54,27 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
     
     // Initialize View
     _worldNode = Node::allocWithBounds(_dimen);
-    _worldNode->setAnchor(Vec2::ANCHOR_CENTER);
+    _worldNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _worldNode->setPosition(Vec2::ZERO);
     _worldNode->doLayout(); // This rearranges the children to fit the screen
     addChild(_worldNode);
     // Background color
     Application::get()->setClearColor(Color4(192,192,192,255));
     
     // Load levels
-    loadLevelsFromJson("json/levelList.json");
+//    loadLevelsFromJson("json/levelList.json");
+    
+    // Initialize nodes
+    std::shared_ptr<PolygonNode> menuTile0 = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_TILE_KEY_0));
+    float width = _dimen.width;
+    // TODO: Change the height when placeholder art is changed
+    float height = (menuTile0->getSize().height / menuTile0->getSize().width) * width * 0.5f;
+//    float height = (menuTile0->getSize().height / menuTile0->getSize().width) * width;
+    menuTile0->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    menuTile0->setContentSize(width, height);
+    menuTile0->setPosition(Vec2::ZERO);
+    _worldNode->addChild(menuTile0);
+    _menuTiles.push_back(menuTile0);
     
     return true;
 }

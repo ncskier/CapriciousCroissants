@@ -70,6 +70,13 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "tile3_death_strip": {
+            "file":     "textures/tile3_death_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "mika_spritesheet": {
             "file":     "textures/mika_spritesheet.png",
             "minfilter":"nearest",

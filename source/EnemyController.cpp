@@ -92,25 +92,18 @@ void EnemyController::update(float timestep) {
 				RangeOrthoAttackComponent ranged = _entityManager->getComponent<RangeOrthoAttackComponent>((*enemyIter));
 				IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enemyIter));
 
-
-				//for (int i = 0; i < 10; i++) {
-					ranged.projectile->setPosition(_board->gridToScreenV(loc.x, loc.y));
-				//}
-					_board->getNode()->addChild(ranged.projectile, 1000);
+				ranged.projectile->setPosition(_board->gridToScreenV(loc.x, loc.y));
+				_board->getNode()->addChild(ranged.projectile, 1000);
 				_board->getNode()->sortZOrder();
-				//CULog("target:%d", ranged.target->getSprite);
-				//CULog("x:%d", ranged.target->getX());
-				//CULog("y:%d", ranged.target->getY());
-
-				//cugl::Rect oldBounds = _board->calculateDrawBounds(loc.x, loc.y);
-				//cugl::Rect newBounds = _board->calculateDrawBounds(ranged.targetX, ranged.targetY);
 				
-				cugl::Vec2 movement = cugl::Vec2(loc.x - ranged.targetX, loc.y - ranged.targetY);
-				CULog("movement: %d", movement.y);
+				cugl::Rect oldBounds = _board->calculateDrawBounds(loc.x, loc.y);
+				cugl::Rect newBounds = _board->calculateDrawBounds(ranged.targetX, ranged.targetY);
+				cugl::Vec2 movement = newBounds.origin - oldBounds.origin;
+
 				int tiles = _board->lengthToCells(movement.length());
 				std::stringstream key;
 				key << "int_enemy_shoot_" << *enemyIter;
-				std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / idle.speed[0]);
+				std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / 10*idle.speed[0]);
 				idle._actions->activate(key.str(), moveAction, ranged.projectile);
 				idle._interruptingActions.insert(key.str());
 			}

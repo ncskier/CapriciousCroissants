@@ -149,7 +149,7 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 		int dY = nearest->getY() - loc.y;
 
 
-		if (std::abs(dY) >  0 && std::abs(dY) < std::abs(dX)) {
+		if (std::abs(dY) >= std::abs(dX)) {
 			if (dY >= 0) {
 				loc.dir = LocationComponent::UP;
 			}
@@ -157,7 +157,7 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 				loc.dir = LocationComponent::DOWN;
 			}
 		}
-		else if (std::abs(dX) > 0 && std::abs(dY) > std::abs(dX)) {
+		else if (std::abs(dY) <= std::abs(dX)) {
 			if (dX >= 0) {
 				loc.dir = LocationComponent::RIGHT;
 			}
@@ -394,7 +394,7 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 
 bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) {
 
-	CULog("AttackRangedSystem");
+	//CULog("AttackRangedSystem");
 	if (manager->hasComponent<LocationComponent>(entity)) {
 		LocationComponent loc = manager->getComponent<LocationComponent>(entity);
 		IdleComponent idle = manager->getComponent<IdleComponent>(entity);
@@ -415,12 +415,21 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 		}
 
 			if (closestAlignedAlly != nullptr) {
+				//std::set<size_t>::iterator enemyIter;
+				//std::set<size_t>::iterator enemyIter;
+
+				//for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {
+
+
+				
+				//std::vector<std::shared_ptr<PlayerPawnModel>>::iterator
 				for (int i = 0; i < board->getNumAllies(); i++) {
 					std::shared_ptr<PlayerPawnModel> ally = board->getAlly(i);
 					if (ally->getX() == closestAlignedAlly->getX() && ally->getY() == closestAlignedAlly->getY()) {
 						board->insertAttackingEnemy(entity);
-						ranged.targetX = ally->getX();
-						ranged.targetY = ally->getY();
+						ranged.targetX = ((float) ally->getX());
+						ranged.targetY = ((float) ally->getY());
+					;
 						board->removeAlly(i);
 						if (i == 0) {
 							board->lose = true;
@@ -443,12 +452,7 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 							loc.dir = LocationComponent::DOWN;
 							idle.sprite->setFrame(1);
 						}
-						/*
-						std::stringstream key;
-						key << "int_enemy_shoot_" << i;
-						idle._actions->activate(key.str(), board->allyRemoveAction, ranged.`);
-						idle._interruptingActions.insert(key.str());
-						*/
+					
 						std::stringstream key;
 						key << "int_ally_remove_" << i;
 						idle._actions->activate(key.str(), board->allyRemoveAction, ally->getSprite());
@@ -456,11 +460,12 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 					}
 
 				}
-				//if (ally->getX() == loc.x && ally->getY() == loc.y) {
 
 			}
 			manager->addComponent<LocationComponent>(entity, loc);
 			manager->addComponent<IdleComponent>(entity, idle);
+			manager->addComponent<RangeOrthoAttackComponent>(entity, ranged);
+
 		}
 	
 	return true;

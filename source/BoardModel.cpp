@@ -751,6 +751,15 @@ cugl::Vec2 BoardModel::gridToScreenV(int x, int y) {
 	return pos;
 }
 
+int BoardModel::screenToGridI(int i) {
+	return (int)floor((i - _boardPadding / 2.0f) / _cellSize.width);
+};
+
+int BoardModel::gridToScreenI(int i) {
+	return (i + 0.5) * _cellSize.width;
+};
+
+
 
 // Convert screen coordinates to grid (x, y)
 std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {

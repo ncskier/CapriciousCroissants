@@ -32,8 +32,9 @@ struct RangeOrthoAttackComponent : Component {
 	bool horizontal;
 	bool vertical;
 	std::shared_ptr<cugl::PolygonNode> projectile;
-	int targetX;
-	int targetY;
+	float targetX;
+	float targetY;
+	//cugl::Vec2 target;
 	//std::shared_ptr<cugl::AnimationNode> _deathSprite;
 
 };

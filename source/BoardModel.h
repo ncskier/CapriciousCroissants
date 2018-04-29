@@ -356,12 +356,17 @@ public:
 	//     Convert grid (x, y) to screen coordinates
 	cugl::Vec2 gridToScreenV(int x, int y);
     
+
     // Convert screen coordinates to grid (x, y)
     std::tuple<int, int> screenToGrid(cugl::Vec2 position);
 
 	// Convert screen coordinates to grid (x, y)
 	cugl::Vec2 screenToGridV(cugl::Vec2 position);
     
+	int screenToGridI(int i);
+
+	int gridToScreenI(int i);
+
     // Convert screen length to grid length
     int lengthToCells(float length, bool row=false);
     

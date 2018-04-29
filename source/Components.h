@@ -5,7 +5,7 @@
 #include <set>
 #include <vector>
 #include <tuple>
-#include <PlayerPawnModel.h>
+#include "PlayerPawnModel.h"
 
 //All structs are components and MUST extend Component struct
 struct Component {};

@@ -181,9 +181,15 @@ float MenuMode::applyOffsetCapFunction(float diff) {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void MenuMode::update(float timestep) {
+    // Handle Input
     InputController::MoveEvent moveEvent = _input.getMoveEvent();
     if (moveEvent != InputController::MoveEvent::NONE) {
+        // Calculate Menu Tile offsets
         Vec2 moveOffset = _input.getMoveOffset();
+        if (moveEvent == InputController::MoveEvent::START) {
+            _hardOffset = _softOffset;
+            _input.recordMove();
+        }
         if (moveEvent != InputController::MoveEvent::END) {
             _softOffset = _hardOffset - moveOffset.y;
             // Check drag bounds (top & bottom)
@@ -199,12 +205,24 @@ void MenuMode::update(float timestep) {
             // Check draw bounds (top & bottom)
             if (_hardOffset > _maxOffset) { _hardOffset = _maxOffset; }
             if (_hardOffset < _minOffset) { _hardOffset = _minOffset; }
-            _softOffset = _hardOffset;
             _input.clear();
         }
-        // Move Menu Tiles
-        for (auto i = 0; i < _menuTiles.size(); i++) {
-            _menuTiles[i]->setPosition(menuTilePosition(i));
+    } else {
+        if (_softOffset != _hardOffset) {
+            float diff = std::abs(_softOffset - _hardOffset);
+            float velocity = diff*10.0f;
+            float dx = velocity * timestep;
+            if (_softOffset < _hardOffset) {
+                _softOffset = _softOffset + dx;
+                if (_softOffset > _hardOffset) { _softOffset = _hardOffset; }
+            } else {
+                _softOffset = _softOffset - dx;
+                if (_softOffset < _hardOffset) { _softOffset = _hardOffset; }
+            }
         }
+    }
+    // Move Menu Tiles
+    for (auto i = 0; i < _menuTiles.size(); i++) {
+        _menuTiles[i]->setPosition(menuTilePosition(i));
     }
 }

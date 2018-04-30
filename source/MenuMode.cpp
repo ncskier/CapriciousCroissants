@@ -52,6 +52,9 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
     _assets = assets;
     _dimen = dimen;
     
+    // Initialize Input Handler
+    _input.init(getCamera());
+    
     // Initialize View
     _worldNode = Node::allocWithBounds(_dimen);
     _worldNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
@@ -62,19 +65,13 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
     Application::get()->setClearColor(Color4(192,192,192,255));
     
     // Load levels
-//    loadLevelsFromJson("json/levelList.json");
-    
-    // Initialize nodes
-    std::shared_ptr<PolygonNode> menuTile0 = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_TILE_KEY_0));
+    Size tileSize = _assets->get<Texture>(MENU_TILE_KEY_1)->getSize();
     float width = _dimen.width;
     // TODO: Change the height when placeholder art is changed
-    float height = (menuTile0->getSize().height / menuTile0->getSize().width) * width * 0.5f;
-//    float height = (menuTile0->getSize().height / menuTile0->getSize().width) * width;
-    menuTile0->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    menuTile0->setContentSize(width, height);
-    menuTile0->setPosition(Vec2::ZERO);
-    _worldNode->addChild(menuTile0);
-    _menuTiles.push_back(menuTile0);
+    float height = (tileSize.height / tileSize.width) * width * 0.5f;
+//    float height = (tileSize.height / tileSize.width) * width;
+    _menuTileSize = Size(width, height);
+    loadLevelsFromJson("json/levelList.json");
     
     return true;
 }
@@ -87,6 +84,7 @@ void MenuMode::dispose() {
     _assets = nullptr;
     _worldNode = nullptr;
     _levelsJson = nullptr;
+    _input.dispose();
 }
 
 
@@ -107,45 +105,63 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     _levelsJson = json->get("levels");
     CULog("levels: %d", (int)_levelsJson->size());
     for (auto i = 0; i < _levelsJson->size(); i++) {
-        _worldNode->addChild(createLevelNode(i));
+        std::shared_ptr<Node> menuTile = createLevelNode(i);
+        _worldNode->addChild(menuTile);
+        _menuTiles.push_back(menuTile);
     }
     
 }
 
 /** Create level node */
 std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
-    // Initialize Nodes
+    // Initialize Node
     std::stringstream ss;
     ss << levelIdx;
-    std::shared_ptr<Font> font = _assets->get<Font>("script");
-    std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
-    levelLabel->setBackground(Color4::BLACK);
-    levelLabel->setForeground(Color4::WHITE);
-    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
-    levelButton->setName(ss.str());
+//    std::shared_ptr<Font> font = _assets->get<Font>("script");
+//    std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
+//    levelLabel->setBackground(Color4::BLACK);
+//    levelLabel->setForeground(Color4::WHITE);
+//    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
+//    levelButton->setName(ss.str());
     
-    // Set Button Position
-    int levelsWidth = 5;
-    int levelsHeight = 10;
-    float frameWidth = _dimen.width * 5.0f/6.0f;
-    float frameHeight = _dimen.height * 5.0f/6.0f;
-    float x = (levelIdx % levelsWidth) * (frameWidth / levelsWidth) - (frameWidth / 2.0f);
-    float y = (levelsHeight - levelIdx / levelsWidth) * (frameHeight / levelsHeight) - (frameHeight / 2.0f);
-    levelButton->setPosition(x, y);
-    levelButton->setContentSize(frameWidth/levelsWidth*5.0f/6.0f, frameHeight/levelsHeight*5.0f/6.0f);
-    levelLabel->setContentSize(frameWidth/levelsWidth*5.0f/6.0f, frameHeight/levelsHeight*5.0f/6.0f);
+    // Initialize node
+    std::shared_ptr<PolygonNode> menuTile = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_TILE_KEY_0));
+    menuTile->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    menuTile->setContentSize(_menuTileSize);
+    menuTile->setPosition(menuTilePosition(levelIdx));
+    menuTile->setName(ss.str());
+    return menuTile;
     
-    // Set Button Callback
-    levelButton->setListener([=](const std::string& name, bool down) {
-        if (!down) {
-            int i = std::stoi(name);
-            this->_selectedLevelJson = _levelsJson->get(i)->asString();
-            this->setActive(false);
-        }
-    });
-    levelButton->activate(100+levelIdx);
+//    // Set Button Position
+//    int levelsWidth = 5;
+//    int levelsHeight = 10;
+//    float frameWidth = _dimen.width * 5.0f/6.0f;
+//    float frameHeight = _dimen.height * 5.0f/6.0f;
+//    float x = (levelIdx % levelsWidth) * (frameWidth / levelsWidth) - (frameWidth / 2.0f);
+//    float y = (levelsHeight - levelIdx / levelsWidth) * (frameHeight / levelsHeight) - (frameHeight / 2.0f);
+//    levelButton->setPosition(x, y);
+//    levelButton->setContentSize(frameWidth/levelsWidth*5.0f/6.0f, frameHeight/levelsHeight*5.0f/6.0f);
+//    levelLabel->setContentSize(frameWidth/levelsWidth*5.0f/6.0f, frameHeight/levelsHeight*5.0f/6.0f);
+//
+//    // Set Button Callback
+//    levelButton->setListener([=](const std::string& name, bool down) {
+//        if (!down) {
+//            int i = std::stoi(name);
+//            this->_selectedLevelJson = _levelsJson->get(i)->asString();
+//            this->setActive(false);
+//        }
+//    });
+//    levelButton->activate(100+levelIdx);
+//
+//    return levelButton;
+}
+
+/** Calculate menu tile position given the level index */
+cugl::Vec2 MenuMode::menuTilePosition(int levelIdx) {
+    float originY = _dimen.height*0.1f;
+    float positionY = originY + _menuTileSize.height*levelIdx - _softOffset;
     
-    return levelButton;
+    return Vec2(0.0f, positionY);
 }
 
 
@@ -157,4 +173,19 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void MenuMode::update(float timestep) {
+    InputController::MoveEvent moveEvent = _input.getMoveEvent();
+    if (moveEvent != InputController::MoveEvent::NONE) {
+        Vec2 moveOffset = _input.getMoveOffset();
+        if (moveEvent != InputController::MoveEvent::END) {
+            _softOffset = _hardOffset - moveOffset.y;
+        } else {
+            _hardOffset -= moveOffset.y;
+            _softOffset = _hardOffset;
+            _input.clear();
+        }
+        // Move Menu Tiles
+        for (auto i = 0; i < _menuTiles.size(); i++) {
+            _menuTiles[i]->setPosition(menuTilePosition(i));
+        }
+    }
 }

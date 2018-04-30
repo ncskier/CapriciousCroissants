@@ -11,6 +11,7 @@
 
 #include <cugl/cugl.h>
 #include <vector>
+#include "InputController.h"
 
 #define MENU_TILE_KEY_0 "menu_tile0"
 #define MENU_TILE_KEY_1 "menu_tile1"
@@ -25,11 +26,16 @@ protected:
     // TODO: VIEW
     cugl::Size _dimen;
     std::shared_ptr<cugl::Node> _worldNode;
-    std::vector<std::shared_ptr<cugl::PolygonNode>> _menuTiles;
+    std::vector<std::shared_ptr<cugl::Node>> _menuTiles;
+    cugl::Size _menuTileSize;
     
     // TODO: MODEL
     std::shared_ptr<cugl::JsonValue> _levelsJson;
     std::string _selectedLevelJson;
+    int _selectedLevel = 0;
+    float _softOffset = 0.0f;
+    float _hardOffset = 0.0f;
+    InputController _input;
     
 public:
 #pragma mark -
@@ -76,6 +82,9 @@ public:
     
     /** Create level node */
     std::shared_ptr<cugl::Node> createLevelNode(int levelIdx);
+    
+    /** Calculate menu tile position given the level index */
+    cugl::Vec2 menuTilePosition(int levelIdx);
     
     
 #pragma mark -

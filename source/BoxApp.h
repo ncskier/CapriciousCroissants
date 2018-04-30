@@ -13,6 +13,7 @@
 #include "PlayMode.h"
 #include "LoadingMode.h"
 #include "MenuMode.h"
+#include "InputController.h"
 
 /**
  * This class represents the application root for the game.
@@ -31,6 +32,9 @@ protected:
     LoadingMode _loading;
     /** The controller for the menu screen */
     MenuMode _menu;
+    
+    // Input Controller
+    std::shared_ptr<InputController> _input;
 
     /** Whether or not we have finished loading all assets */
     bool _loadedMenu;

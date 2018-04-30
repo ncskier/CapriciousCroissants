@@ -36,7 +36,7 @@ _complete(false){
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool PlayerController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board, InputController *input, std::shared_ptr<EntityManager>& manager) {
+bool PlayerController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<InputController>& input, std::shared_ptr<EntityManager>& manager) {
     _actions = actions;
     _board = board;
     _input = input;

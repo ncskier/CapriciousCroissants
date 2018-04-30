@@ -37,7 +37,7 @@ MenuMode::MenuMode() : Scene() {
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
+bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputController>& input) {
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
@@ -53,7 +53,9 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
     _dimen = dimen;
     
     // Initialize Input Handler
-    _input.init(getCamera());
+    _input = input;
+    _input->init(getCamera());
+    _input->clear();
     
     // Initialize View
     _worldNode = Node::allocWithBounds(_dimen);
@@ -65,6 +67,9 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets) {
     Application::get()->setClearColor(Color4(192,192,192,255));
     
     // Load levels
+    _selectedLevel = 0;
+    _softOffset = 0.0f;
+    _hardOffset = 0.0f;
     Size tileSize = _assets->get<Texture>(MENU_TILE_KEY_1)->getSize();
     float width = _dimen.width;
     // TODO: Change the height when placeholder art is changed
@@ -84,7 +89,7 @@ void MenuMode::dispose() {
     _assets = nullptr;
     _worldNode = nullptr;
     _levelsJson = nullptr;
-    _input.dispose();
+    _input = nullptr;
 }
 
 
@@ -119,12 +124,13 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     // Initialize Node
     std::stringstream ss;
     ss << levelIdx;
-//    std::shared_ptr<Font> font = _assets->get<Font>("script");
-//    std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
-//    levelLabel->setBackground(Color4::BLACK);
-//    levelLabel->setForeground(Color4::WHITE);
-//    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
-//    levelButton->setName(ss.str());
+    std::shared_ptr<Font> font = _assets->get<Font>("script");
+    std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
+    levelLabel->setBackground(Color4::BLACK);
+    levelLabel->setForeground(Color4::WHITE);
+    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
+    levelButton->setAnchor(Vec2::ANCHOR_CENTER);
+    levelButton->setName(ss.str());
     
     // Initialize node
     std::shared_ptr<PolygonNode> menuTile = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_TILE_KEY_0));
@@ -132,30 +138,25 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     menuTile->setContentSize(_menuTileSize);
     menuTile->setPosition(menuTilePosition(levelIdx));
     menuTile->setName(ss.str());
-    return menuTile;
     
-//    // Set Button Position
-//    int levelsWidth = 5;
-//    int levelsHeight = 10;
-//    float frameWidth = _dimen.width * 5.0f/6.0f;
-//    float frameHeight = _dimen.height * 5.0f/6.0f;
-//    float x = (levelIdx % levelsWidth) * (frameWidth / levelsWidth) - (frameWidth / 2.0f);
-//    float y = (levelsHeight - levelIdx / levelsWidth) * (frameHeight / levelsHeight) - (frameHeight / 2.0f);
-//    levelButton->setPosition(x, y);
-//    levelButton->setContentSize(frameWidth/levelsWidth*5.0f/6.0f, frameHeight/levelsHeight*5.0f/6.0f);
-//    levelLabel->setContentSize(frameWidth/levelsWidth*5.0f/6.0f, frameHeight/levelsHeight*5.0f/6.0f);
-//
-//    // Set Button Callback
-//    levelButton->setListener([=](const std::string& name, bool down) {
-//        if (!down) {
-//            int i = std::stoi(name);
-//            this->_selectedLevelJson = _levelsJson->get(i)->asString();
-//            this->setActive(false);
-//        }
-//    });
-//    levelButton->activate(100+levelIdx);
-//
-//    return levelButton;
+    // Set Button Position
+    float frameLength = _menuTileSize.height*0.5f;
+    levelButton->setPosition(_menuTileSize.width*0.5f, _menuTileSize.height*0.5f);
+    levelButton->setContentSize(frameLength, frameLength);
+    levelLabel->setContentSize(frameLength, frameLength);
+
+    // Set Button Callback
+    levelButton->setListener([=](const std::string& name, bool down) {
+        if (!down) {
+            int i = std::stoi(name);
+            this->_selectedLevelJson = _levelsJson->get(i)->asString();
+            this->setActive(false);
+        }
+    });
+    levelButton->activate(100+levelIdx);
+    menuTile->addChild(levelButton);
+    
+    return menuTile;
 }
 
 /** Calculate menu tile position given the level index */
@@ -182,15 +183,14 @@ float MenuMode::applyOffsetCapFunction(float diff) {
  */
 void MenuMode::update(float timestep) {
     // Handle Input
-    InputController::MoveEvent moveEvent = _input.getMoveEvent();
+    InputController::MoveEvent moveEvent = _input->getMoveEvent();
     if (moveEvent != InputController::MoveEvent::NONE) {
         // Calculate Menu Tile offsets
-        Vec2 moveOffset = _input.getMoveOffset();
+        Vec2 moveOffset = _input->getMoveOffset();
         if (moveEvent == InputController::MoveEvent::START) {
             _hardOffset = _softOffset;
-            _input.recordMove();
-        }
-        if (moveEvent != InputController::MoveEvent::END) {
+            _input->recordMove();
+        } else if (moveEvent != InputController::MoveEvent::END) {
             _softOffset = _hardOffset - moveOffset.y;
             // Check drag bounds (top & bottom)
             if (_softOffset > _maxOffset) {
@@ -205,7 +205,7 @@ void MenuMode::update(float timestep) {
             // Check draw bounds (top & bottom)
             if (_hardOffset > _maxOffset) { _hardOffset = _maxOffset; }
             if (_hardOffset < _minOffset) { _hardOffset = _minOffset; }
-            _input.clear();
+            _input->clear();
         }
     } else {
         if (_softOffset != _hardOffset) {

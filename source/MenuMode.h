@@ -38,7 +38,7 @@ protected:
     float _minOffset = 0.0f;
     float _maxOffset = 0.0f;
     float _originY = 0.0f;
-    InputController _input;
+    std::shared_ptr<InputController> _input;
     
 public:
 #pragma mark -
@@ -75,7 +75,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<InputController>& input);
 
     
 #pragma mark -

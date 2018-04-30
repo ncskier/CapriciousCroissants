@@ -48,7 +48,7 @@ done(false)
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& levelJson) {
+bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputController>& input, std::string& levelJson) {
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -117,10 +117,12 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
 //    setupLevelFromJson("json/levels/level1.json", dimen);
     
     // Setup Input handler
-    _input.init(getCamera());
+    _input = input;
+    _input->init(getCamera());
+    _input->clear();
 
 	// Start up turn controllers
-	_playerController.init(_actions, _board, &_input, _entityManager);
+	_playerController.init(_actions, _board, _input, _entityManager);
 	_boardController.init(_actions, _board, _entityManager);
 	_enemyController.init(_actions, _board, _entityManager);
     
@@ -146,7 +148,7 @@ void PlayMode::dispose() {
         _touchNode = nullptr;
         _touchAction = nullptr;
         _entityManager = nullptr;
-        _input.dispose();
+        _input = nullptr;
         _active = false;
         _complete = false;
         _debug = false;
@@ -262,12 +264,12 @@ void PlayMode::updateAnimations() {
 
 /** Update touch node */
 void PlayMode::updateTouchNode() {
-    if (_input.getMoveEvent() != InputController::MoveEvent::NONE) {
+    if (_input->getMoveEvent() != InputController::MoveEvent::NONE) {
         // Activate action
         if (!_actions->isActive("touchAction") && !_actions->isActive("touchFade")) {
             _actions->activate("touchAction", _touchAction, _touchNode);
         }
-        _touchNode->setPosition(_input.getTouchPosition());
+        _touchNode->setPosition(_input->getTouchPosition());
         _touchNode->setVisible(true);
     } else {
         if (!_actions->isActive("touchAction")) {
@@ -283,10 +285,10 @@ void PlayMode::updateMikaAnimations() {
         _beginAttack = false;
         _attacking = false;
     }
-    if (_input.getMoveEvent() == InputController::MoveEvent::START) {
+    if (_input->getMoveEvent() == InputController::MoveEvent::START) {
         _beginAttack = !_attacking;
         _attacking = true;
-    } else if (_input.getMoveEvent() == InputController::MoveEvent::END || _input.getMoveEvent() == InputController::MoveEvent::NONE) {
+    } else if (_input->getMoveEvent() == InputController::MoveEvent::END || _input->getMoveEvent() == InputController::MoveEvent::NONE) {
         _beginAttack = false;
         _attacking = false;
     }
@@ -393,7 +395,7 @@ void PlayMode::updateInterruptingAnimations(std::set<std::string>& interruptingA
  */
 void PlayMode::update(float dt) {
     // Update input controller
-    _input.update(dt);
+    _input->update(dt);
     
     // Update animations
     updateAnimations();
@@ -445,7 +447,7 @@ void PlayMode::update(float dt) {
 			}
 		}
 
-        _input.clear();
+        _input->clear();
     }
 }
 

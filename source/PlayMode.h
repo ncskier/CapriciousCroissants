@@ -67,7 +67,7 @@ protected:
     
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
-    InputController _input;
+    std::shared_ptr<InputController> _input;
     PlayerController _playerController;
     BoardController _boardController;
     EnemyController _enemyController;
@@ -133,7 +133,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::string& levelJson);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<InputController>& input, std::string& levelJson);
     
     
 #pragma mark -

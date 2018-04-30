@@ -19,7 +19,7 @@
                     "movementDistance" : 1
                 },
                 "idle": {
-                    "textureKeys": "enemy1_strip",
+                    "textureKeys": "enemy3_strip",
                     "textureRows": [
                         8
                     ],

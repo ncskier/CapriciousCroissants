@@ -104,6 +104,8 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     // Load levels
     _levelsJson = json->get("levels");
     CULog("levels: %d", (int)_levelsJson->size());
+    _originY = _dimen.height*0.1f;
+    _maxOffset = 2.0f*_originY - _dimen.height + _menuTileSize.height*_levelsJson->size();
     for (auto i = 0; i < _levelsJson->size(); i++) {
         std::shared_ptr<Node> menuTile = createLevelNode(i);
         _worldNode->addChild(menuTile);
@@ -158,10 +160,16 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
 
 /** Calculate menu tile position given the level index */
 cugl::Vec2 MenuMode::menuTilePosition(int levelIdx) {
-    float originY = _dimen.height*0.1f;
-    float positionY = originY + _menuTileSize.height*levelIdx - _softOffset;
-    
+    float positionY = _originY + _menuTileSize.height*levelIdx - _softOffset;
     return Vec2(0.0f, positionY);
+}
+
+/** Apply offset cap function to difference between offset min/max and movement offset */
+float MenuMode::applyOffsetCapFunction(float diff) {
+    float converter = _menuTileSize.height*0.1f;        // Lower value means cap will converge faster
+    float x = diff / converter;
+    float y = std::log(std::pow(x+1, 2));               // Lower power will converge faster
+    return y * converter;
 }
 
 
@@ -178,8 +186,19 @@ void MenuMode::update(float timestep) {
         Vec2 moveOffset = _input.getMoveOffset();
         if (moveEvent != InputController::MoveEvent::END) {
             _softOffset = _hardOffset - moveOffset.y;
+            // Check drag bounds (top & bottom)
+            if (_softOffset > _maxOffset) {
+                float diff = std::abs(_softOffset-_maxOffset);
+                _softOffset = _maxOffset + applyOffsetCapFunction(diff);
+            } else if (_softOffset < _minOffset) {
+                float diff = std::abs(_softOffset-_minOffset);
+                _softOffset = _minOffset - applyOffsetCapFunction(diff);
+            }
         } else {
             _hardOffset -= moveOffset.y;
+            // Check draw bounds (top & bottom)
+            if (_hardOffset > _maxOffset) { _hardOffset = _maxOffset; }
+            if (_hardOffset < _minOffset) { _hardOffset = _minOffset; }
             _softOffset = _hardOffset;
             _input.clear();
         }

@@ -35,6 +35,9 @@ protected:
     int _selectedLevel = 0;
     float _softOffset = 0.0f;
     float _hardOffset = 0.0f;
+    float _minOffset = 0.0f;
+    float _maxOffset = 0.0f;
+    float _originY = 0.0f;
     InputController _input;
     
 public:
@@ -85,6 +88,9 @@ public:
     
     /** Calculate menu tile position given the level index */
     cugl::Vec2 menuTilePosition(int levelIdx);
+    
+    /** Apply offset cap function to difference between offset min/max and movement offset */
+    float applyOffsetCapFunction(float diff);
     
     
 #pragma mark -

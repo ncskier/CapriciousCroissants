@@ -53,12 +53,13 @@ bool PlayerController::init(std::shared_ptr<ActionManager>& actions, const std::
  */
 void PlayerController::dispose() {
     CULog("dispose PlayerController");
-    _board = nullptr;
     _input = nullptr;
+    _board = nullptr;
     _actions = nullptr;
     _entityManager = nullptr;
     _complete = false;
     _debug = false;
+    _interruptingActions.clear();
 }
 
 

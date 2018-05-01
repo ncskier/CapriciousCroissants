@@ -88,6 +88,15 @@ void BoardModel::dispose() {
     _node = nullptr;
     _assets = nullptr;
 	_entityManager = nullptr;
+    _tiles.clear();
+    _allies.clear();
+    enemiesEntityIds.clear();
+    _addedTiles.clear();
+    _addedAllies.clear();
+    _addedEnemies.clear();
+    _removedTiles.clear();
+    _removedAllies.clear();
+    _removedEnemies.clear();
 }
 
 

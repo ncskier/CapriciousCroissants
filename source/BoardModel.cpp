@@ -246,9 +246,7 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 				RangeOrthoAttackComponent ranged;
 				ranged.horizontal = true;
 				ranged.vertical = true;
-				//std::vector<Vec2> bounds = Vec2.ZERO;
 				ranged.projectile = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow"));
-					//_deathSprite = AnimationNode::alloc(deathTexture, TILE_DEATH_ROWS, TILE_DEATH_COLS, TILE_DEATH_SIZE);
 
 				_entityManager->addComponent<RangeOrthoAttackComponent>(enemyId, ranged);
 
@@ -751,14 +749,6 @@ cugl::Vec2 BoardModel::gridToScreenV(int x, int y) {
 	return pos;
 }
 
-int BoardModel::screenToGridI(int i) {
-	return (int)floor((i - _boardPadding / 2.0f) / _cellSize.width);
-};
-
-int BoardModel::gridToScreenI(int i) {
-	return (i + 0.5) * _cellSize.width;
-};
-
 
 
 // Convert screen coordinates to grid (x, y)
@@ -769,14 +759,7 @@ std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
     return {x, y};
 }
 
-// Convert screen coordinates to grid (x, y)
-cugl::Vec2  BoardModel::screenToGridV(Vec2 position) {
-	int x = (int)floor((position.x - _boardPadding / 2.0f) / _cellSize.width);
-	int y = (int)floor((position.y - _boardPadding / 2.0f) / _cellSize.height);
-	cugl::Vec2 pos = Vec2(x, y);
 
-	return pos ;
-}
 
 
 // Convert screen length to grid length

@@ -427,8 +427,7 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 					std::shared_ptr<PlayerPawnModel> ally = board->getAlly(i);
 					if (ally->getX() == closestAlignedAlly->getX() && ally->getY() == closestAlignedAlly->getY()) {
 						board->insertAttackingEnemy(entity);
-						ranged.targetX = ((float) ally->getX());
-						ranged.targetY = ((float) ally->getY());
+						ranged.target = ally;
 					;
 						board->removeAlly(i);
 						if (i == 0) {

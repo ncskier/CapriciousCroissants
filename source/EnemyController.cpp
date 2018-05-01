@@ -97,7 +97,7 @@ void EnemyController::update(float timestep) {
 				_board->getNode()->sortZOrder();
 				
 				cugl::Rect oldBounds = _board->calculateDrawBounds(loc.x, loc.y);
-				cugl::Rect newBounds = _board->calculateDrawBounds(ranged.targetX, ranged.targetY);
+				cugl::Rect newBounds = _board->calculateDrawBounds(ranged.target->getX(), ranged.target->getY());
 				cugl::Vec2 movement = newBounds.origin - oldBounds.origin;
 
 				int tiles = _board->lengthToCells(movement.length());
@@ -106,6 +106,7 @@ void EnemyController::update(float timestep) {
 				std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / 10*idle.speed[0]);
 				idle._actions->activate(key.str(), moveAction, ranged.projectile);
 				idle._interruptingActions.insert(key.str());
+				
 			}
 		}
 

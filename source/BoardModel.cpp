@@ -720,7 +720,8 @@ void BoardModel::updateNodes(bool position, bool z) {
     }
     
     // Resort z order
-    _node->sortZOrder();
+    if (z)
+        _node->sortZOrder();
 }
 
 float BoardModel::getCellLength() {
@@ -810,19 +811,12 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
  */
 int BoardModel::calculateDrawZ(int x, int y, bool tile) {
     int row = y;
-//    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
-//        row = (row + lengthToCells(offset)) % _height;
-//        while (row < 0) {
-//            row += _height;
-//        }
-//    }
     row = std::get<1>( screenToGrid(calculateDrawBounds(x, y).origin) );
+    int base = 10 + 10*(_height-row-1);
     if (tile) {
-        // Start from 10 with increments of 10
-        return 10 + 10*(_height-row-1);
+        return base;
     } else {
-        // Start from 10*height + 5 with increments of 10
-        return (10*_height + 5) + 10*(_height-row-1);
+        return base + 5;
     }
 }
 

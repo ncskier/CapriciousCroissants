@@ -98,6 +98,10 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 		}
 
 		if (isFree) {
+            if (targetY < loc.y) {
+                idle.sprite->setZOrder(board->calculateDrawZ(targetX, targetY, false));
+                board->getNode()->sortZOrder();
+            }
 			loc.x = targetX;
 			loc.y = targetY;
 
@@ -266,6 +270,10 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 		}
 
 		if (isFree) {
+            if (targetY < loc.y) {
+                idle.sprite->setZOrder(board->calculateDrawZ(targetX, targetY, false));
+                board->getNode()->sortZOrder();
+            }
 			loc.x = targetX;
 			loc.y = targetY;
 

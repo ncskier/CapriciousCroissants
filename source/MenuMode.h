@@ -13,9 +13,14 @@
 #include <vector>
 #include "InputController.h"
 
-#define MENU_TILE_KEY_0 "menu_tile0"
-#define MENU_TILE_KEY_1 "menu_tile1"
-#define MENU_TILE_KEY_2 "menu_tile2"
+#define MENU_TILE_KEY_0 "menu_tile0_strip"
+//#define MENU_TILE_KEY_1 "menu_tile1"
+//#define MENU_TILE_KEY_2 "menu_tile2"
+#define MENU_DOT_KEY "menu_dot"
+
+#define MENU_TILE_ROWS 6
+#define MENU_TILE_COLS 1
+#define MENU_TILE_SIZE 6
 
 
 class MenuMode : public cugl::Scene {
@@ -90,8 +95,17 @@ public:
     /** Calculate menu tile position given the level index */
     cugl::Vec2 menuTilePosition(int levelIdx);
     
+    /** Set menu tile size */
+    void setMenuTileSize();
+    
     /** Apply offset cap function to difference between offset min/max and movement offset */
     float applyOffsetCapFunction(float diff);
+    
+    /** Return level spritesheet frame given the level index [levelIdx] */
+    int menuTileFrame(int levelIdx);
+    
+    /** Return horizontal position of level dot as fraction of level width */
+    float levelFractionX(int levelIdx);
     
     
 #pragma mark -

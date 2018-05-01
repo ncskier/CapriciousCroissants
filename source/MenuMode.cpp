@@ -69,12 +69,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     _selectedLevel = 0;
     _softOffset = 0.0f;
     _hardOffset = 0.0f;
-    Size tileSize = _assets->get<Texture>(MENU_TILE_KEY_1)->getSize();
-    float width = _dimen.width;
-    // TODO: Change the height when placeholder art is changed
-    float height = (tileSize.height / tileSize.width) * width * 0.5f;
-//    float height = (tileSize.height / tileSize.width) * width;
-    _menuTileSize = Size(width, height);
+    setMenuTileSize();
     loadLevelsFromJson("json/levelList.json");
     
     return true;
@@ -131,9 +126,19 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
 
 /** Create level node */
 std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
-    // Initialize Node
+    // Get level string
     std::stringstream ss;
     ss << levelIdx;
+
+    // Initialize node
+    std::shared_ptr<AnimationNode> menuTile = AnimationNode::alloc(_assets->get<Texture>(MENU_TILE_KEY_0), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
+    menuTile->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    menuTile->setContentSize(_menuTileSize);
+    menuTile->setPosition(menuTilePosition(levelIdx));
+    menuTile->setName(ss.str());
+    menuTile->setFrame(menuTileFrame(levelIdx));
+    
+    // Initialize Level Button Node
     std::shared_ptr<Font> font = _assets->get<Font>("script");
     std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
     levelLabel->setBackground(Color4::BLACK);
@@ -141,13 +146,6 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
     levelButton->setAnchor(Vec2::ANCHOR_CENTER);
     levelButton->setName(ss.str());
-    
-    // Initialize node
-    std::shared_ptr<PolygonNode> menuTile = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_TILE_KEY_0));
-    menuTile->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    menuTile->setContentSize(_menuTileSize);
-    menuTile->setPosition(menuTilePosition(levelIdx));
-    menuTile->setName(ss.str());
     
     // Set Button Position
     float frameLength = _menuTileSize.height*0.5f;
@@ -167,6 +165,15 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     menuTile->addChild(levelButton);
     _menuButtons.push_back(levelButton);
     
+    // Initialize Level Dot
+    std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
+    levelDot->setAnchor(Vec2::ANCHOR_CENTER);
+    float height = _menuTileSize.height*0.5f;
+    float width = levelDot->getContentSize().width/levelDot->getContentSize().height * height;
+    levelDot->setContentSize(width, height);
+    levelDot->setPosition(_menuTileSize.width*levelFractionX(levelIdx), _menuTileSize.height*0.5f);
+    menuTile->addChild(levelDot);
+    
     return menuTile;
 }
 
@@ -182,6 +189,34 @@ float MenuMode::applyOffsetCapFunction(float diff) {
     float x = diff / converter;
     float y = std::log(std::pow(x+1, 2));               // Lower power will converge faster
     return y * converter;
+}
+
+/** Calculate level spritesheet frame given the level index [levelIdx] */
+int MenuMode::menuTileFrame(int levelIdx) {
+    return MENU_TILE_SIZE - (levelIdx % MENU_TILE_SIZE) - 1;
+}
+
+/** Return horizontal position of level dot as fraction of level width */
+float MenuMode::levelFractionX(int levelIdx) {
+    // In reverse order than on screen
+    float xFractions[MENU_TILE_SIZE];
+    xFractions[0] = 0.5f;
+    xFractions[1] = 0.4f;
+    xFractions[2] = 0.59f;
+    xFractions[3] = 0.31f;
+    xFractions[4] = 0.39f;
+    xFractions[5] = 0.75f;
+    return xFractions[menuTileFrame(levelIdx)];
+}
+
+/** Set menu tile size */
+void MenuMode::setMenuTileSize() {
+    std::shared_ptr<AnimationNode> tileNode = AnimationNode::alloc(_assets->get<Texture>(MENU_TILE_KEY_0), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
+    Size tileSize = tileNode->getContentSize();
+    CULog("tileSize: %s", tileNode->getContentSize().toString().c_str());
+    float width = _dimen.width;
+    float height = (tileSize.height / tileSize.width) * width;
+    _menuTileSize = Size(width, height);
 }
 
 

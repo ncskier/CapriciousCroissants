@@ -27,6 +27,7 @@ protected:
     cugl::Size _dimen;
     std::shared_ptr<cugl::Node> _worldNode;
     std::vector<std::shared_ptr<cugl::Node>> _menuTiles;
+    std::vector<std::shared_ptr<cugl::Button>> _menuButtons;
     cugl::Size _menuTileSize;
     
     // TODO: MODEL

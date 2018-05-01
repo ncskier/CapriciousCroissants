@@ -69,6 +69,7 @@ void BoxApp::onShutdown() {
     _gameplay.dispose();
     _assets = nullptr;
     _batch = nullptr;
+    _input = nullptr;
     
     // Shutdown input
 #ifdef CU_TOUCH_SCREEN

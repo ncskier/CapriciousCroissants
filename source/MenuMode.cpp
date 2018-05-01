@@ -48,7 +48,6 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     }
     
     // Initialize
-    CULog("Initialize Menu Mode");
     _assets = assets;
     _dimen = dimen;
     
@@ -85,11 +84,23 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void MenuMode::dispose() {
+    for (auto i = 0; i < _menuButtons.size(); i++) {
+        _menuButtons[i]->deactivate();
+    }
     removeAllChildren();
     _assets = nullptr;
     _worldNode = nullptr;
     _levelsJson = nullptr;
     _input = nullptr;
+    _active = false;
+    _menuTiles.clear();
+    _menuButtons.clear();
+    _selectedLevel = 0;
+    _softOffset = 0.0f;
+    _hardOffset = 0.0f;
+    _minOffset = 0.0f;
+    _maxOffset = 0.0f;
+    _originY = 0.0f;
 }
 
 
@@ -108,7 +119,6 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     
     // Load levels
     _levelsJson = json->get("levels");
-    CULog("levels: %d", (int)_levelsJson->size());
     _originY = _dimen.height*0.1f;
     _maxOffset = 2.0f*_originY - _dimen.height + _menuTileSize.height*_levelsJson->size();
     for (auto i = 0; i < _levelsJson->size(); i++) {
@@ -155,6 +165,7 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     });
     levelButton->activate(100+levelIdx);
     menuTile->addChild(levelButton);
+    _menuButtons.push_back(levelButton);
     
     return menuTile;
 }

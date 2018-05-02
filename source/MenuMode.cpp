@@ -135,7 +135,7 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
 std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     // Get level string
     std::stringstream ss;
-    ss << levelIdx;
+    ss << (levelIdx+1);
 
     // Initialize node
     std::shared_ptr<AnimationNode> menuTile = AnimationNode::alloc(_assets->get<Texture>(MENU_TILE_KEY_0), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
@@ -145,9 +145,21 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     menuTile->setName(ss.str());
     menuTile->setFrame(menuTileFrame(levelIdx));
     
+    // Initialize Level Dot
+    std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
+    levelDot->setAnchor(Vec2::ANCHOR_CENTER);
+    float height = _menuTileSize.height*0.5f;
+    float width = levelDot->getContentSize().width/levelDot->getContentSize().height * height;
+    levelDot->setContentSize(width, height);
+    levelDot->setPosition(_menuTileSize.width*levelFractionX(levelIdx), _menuTileSize.height*0.5f);
+    menuTile->addChild(levelDot);
+    
 //    // Initialize Level Button Node
-//    std::shared_ptr<Font> font = _assets->get<Font>("script");
-//    std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
+    std::shared_ptr<Font> font = _assets->get<Font>("script");
+    std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
+    levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
+    levelLabel->setPosition(levelDot->getContentSize().width*0.5f, levelDot->getContentSize().height*0.5f);
+    levelDot->addChild(levelLabel);
 //    levelLabel->setBackground(Color4::BLACK);
 //    levelLabel->setForeground(Color4::WHITE);
 //    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
@@ -171,15 +183,6 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
 //    levelButton->activate(100+levelIdx);
 //    menuTile->addChild(levelButton);
 //    _menuButtons.push_back(levelButton);
-    
-    // Initialize Level Dot
-    std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
-    levelDot->setAnchor(Vec2::ANCHOR_CENTER);
-    float height = _menuTileSize.height*0.5f;
-    float width = levelDot->getContentSize().width/levelDot->getContentSize().height * height;
-    levelDot->setContentSize(width, height);
-    levelDot->setPosition(_menuTileSize.width*levelFractionX(levelIdx), _menuTileSize.height*0.5f);
-    menuTile->addChild(levelDot);
     
     return menuTile;
 }

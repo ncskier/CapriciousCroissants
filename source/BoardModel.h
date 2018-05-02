@@ -28,11 +28,6 @@
 /** Class of the board model*/
 class BoardModel {
 protected:
-    //Temp variables for cool animation
-    std::set<int>::iterator totalIter;
-    std::set<int> totalReplaceTiles;
-    int animationCounter = -1;
-
 	// Number of allies
 	int _numAllies;
 

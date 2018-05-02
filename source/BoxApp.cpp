@@ -26,6 +26,7 @@ using namespace cugl;
 void BoxApp::onStartup() {
     _assets = AssetManager::alloc();
     _batch  = SpriteBatch::alloc();
+    _input = std::make_shared<InputController>();
     
     // Start-up basic input
 #ifdef CU_TOUCH_SCREEN
@@ -68,6 +69,7 @@ void BoxApp::onShutdown() {
     _gameplay.dispose();
     _assets = nullptr;
     _batch = nullptr;
+    _input = nullptr;
     
     // Shutdown input
 #ifdef CU_TOUCH_SCREEN
@@ -131,7 +133,7 @@ void BoxApp::update(float timestep) {
     } else if (!_loadedMenu) {
         // Load Menu
         _loading.dispose();
-        _menu.init(_assets);
+        _menu.init(_assets, _input);
         _loadedMenu = true;
     } else if (!_loadedGameplay && _menu.isActive()) {
         // Update Menu
@@ -141,7 +143,7 @@ void BoxApp::update(float timestep) {
         std::string& levelJson = _menu.getSelectedLevelJson();
         _menu.dispose();
         CULog("Init Gameplay");
-        _gameplay.init(_assets, levelJson);
+        _gameplay.init(_assets, _input, levelJson);
         _loadedGameplay = true;
 	} else if (!_gameplay.isComplete()) {
         // Update Gameplay
@@ -149,7 +151,7 @@ void BoxApp::update(float timestep) {
     } else {
         // Go back to Menu
         _gameplay.dispose();
-        _menu.init(_assets);
+        _menu.init(_assets, _input);
         _loadedGameplay = false;
     }
 }

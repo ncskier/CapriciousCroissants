@@ -21,7 +21,7 @@ class PlayerController {
 protected:
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
-    InputController *_input;
+    std::shared_ptr<InputController> _input;
     
     // MODEL
     /** The action manager. */
@@ -75,7 +75,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board, InputController* input, std::shared_ptr<EntityManager>& manager);
+    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<InputController>& input, std::shared_ptr<EntityManager>& manager);
     
     
 #pragma mark -

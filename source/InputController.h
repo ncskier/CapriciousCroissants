@@ -160,6 +160,9 @@ public:
      */
     void setMoveEvent(MoveEvent moveEvent) { _moveEvent = moveEvent; }
     
+    /** Set _camera */
+    void setCamera(std::shared_ptr<cugl::Camera> camera) { _camera = camera; }
+    
     
 #pragma mark -
 #pragma mark Touch Callbacks

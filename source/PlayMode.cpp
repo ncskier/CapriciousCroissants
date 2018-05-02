@@ -48,7 +48,7 @@ done(false)
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& levelJson) {
+bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputController>& input, std::string& levelJson) {
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -57,6 +57,8 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
 	} else if (!Scene::init(dimen)) {
 		return false;
 	}
+    _dimen = dimen;
+    _levelJson = levelJson;
 
 	_assets = assets;
     _actions = ActionManager::alloc();
@@ -87,16 +89,18 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
 	_text = std::dynamic_pointer_cast<Label>(assets->get<Node>("game_labelend"));
 	_text->setVisible(false);
 
-	// setup reset button
-	_resetButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("game_reset"));
-	_resetButton->setListener([=](const std::string& name, bool down) {
-		if (down) {
-			CULog("RESET");
-			win = false;
-			done = true;
-		}
-	});
-	_resetButton->activate(2);
+//    // setup reset button
+//    _resetButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("game_reset"));
+//    _resetButton->setListener([=](const std::string& name, bool down) {
+//        if (down) {
+//            CULog("RESET");
+//            win = false;
+//            done = true;
+//        }
+//    });
+//    _resetButton->activate(2);
+    initMenu();
+    _worldNode->addChild(_menuNode, 100);
     
     // Setup Touch Node
     _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 4, 8, 32);
@@ -118,10 +122,12 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
 //    setupLevelFromJson("json/levels/level1.json", dimen);
     
     // Setup Input handler
-    _input.init(getCamera());
+    _input = input;
+    _input->init(getCamera());
+    _input->clear();
 
 	// Start up turn controllers
-	_playerController.init(_actions, _board, &_input, _entityManager);
+	_playerController.init(_actions, _board, _input, _entityManager);
 	_boardController.init(_actions, _board, _entityManager);
 	_enemyController.init(_actions, _board, _entityManager);
     
@@ -139,6 +145,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::string& le
  */
 void PlayMode::dispose() {
     if (_active) {
+        CULog("dispose PlayMode");
         removeAllChildren();
         _assets = nullptr;
         _text = nullptr;
@@ -147,7 +154,7 @@ void PlayMode::dispose() {
         _touchNode = nullptr;
         _touchAction = nullptr;
         _entityManager = nullptr;
-        _input.dispose();
+        _input = nullptr;
         _active = false;
         _complete = false;
         _debug = false;
@@ -164,7 +171,11 @@ void PlayMode::dispose() {
 		if (_resetButton) {
 			_resetButton->deactivate();
 		}
+        _menuNode = nullptr;
 		_resetButton = nullptr;
+        _soundButton = nullptr;
+        _soundOnNode = nullptr;
+        _soundOffNode = nullptr;
     }
 }
 
@@ -172,15 +183,50 @@ void PlayMode::dispose() {
 #pragma mark -
 #pragma mark Level Layout
 
-/**
- * Resets the status of the game so that we can play again.
- *
- * This method disposes of the world and creates a new one.
- */
+/** Reset level/PlayMode */
 void PlayMode::reset() {
-    setComplete(false);
+    // Remove/reset
+    _input->clear();
+    _worldNode->removeChild(_board->getNode());
     _board = nullptr;
+    _playerController.dispose();
+    _boardController.dispose();
+    _enemyController.dispose();
+    _state = State::PLAYER;
+    _complete = false;
+    done = false;
+    doneCtr = 30;
+    win = false;
+    _beginAttack = false;
+    _attacking = false;
+    _entityManager = nullptr;
+    
+    // Re initialize
+    _entityManager = std::make_shared<EntityManager>();
+    _entityManager->addSystem(std::make_shared<MovementDumbSystem>(_entityManager), EntityManager::movement);
+    _entityManager->addSystem(std::make_shared<MovementSmartSystem>(_entityManager), EntityManager::movement);
+    _entityManager->addSystem(std::make_shared<AttackMeleeSystem>(_entityManager), EntityManager::attack);
+    _entityManager->addSystem(std::make_shared<AttackRangedSystem>(_entityManager), EntityManager::attack);
+    _entityManager->addSystem(std::make_shared<SmartMovementFacingSystem>(_entityManager), EntityManager::onPlayerMove);
+    setupLevelFromJson(_levelJson, _dimen);
+    _playerController.init(_actions, _board, _input, _entityManager);
+    _boardController.init(_actions, _board, _entityManager);
+    _enemyController.init(_actions, _board, _entityManager);
+    setupLevelSceneGraph();
 }
+
+/** Exits the game */
+void PlayMode::exit() {
+    setComplete(true);
+}
+
+/** Toggle sound */
+void PlayMode::toggleSound() {
+//    if (_soundButton->getChild(0) == _soundOnNode) {
+//        _soundButton->getChild(0) = _soundOffNode;
+//    }
+}
+
 
 /** Load level from json */
 void PlayMode::setupLevelFromJson(const std::string& filePath, Size dimen) {
@@ -250,6 +296,90 @@ void PlayMode::setupLevelSceneGraph() {
 
 
 #pragma mark -
+#pragma mark Helper Functions
+/** Initialize in-game menu */
+void PlayMode::initMenu() {
+//    _resetButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("game_reset"));
+//    _resetButton->setListener([=](const std::string& name, bool down) {
+//        if (down) {
+//            CULog("RESET");
+//            win = false;
+//            done = true;
+//        }
+//    });
+//    _resetButton->activate(2);
+    float unit = _dimen.height*0.075f;
+    float padding = unit*0.25f;
+    float height = unit - padding;
+    
+    // Background
+    _menuNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_BACKGROUND));
+    _menuNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    _menuNode->setContentSize(unit*3.0f, unit);
+    _menuNode->setPosition(padding, padding);
+    float y = _menuNode->getContentSize().height*0.5f;
+    int i;
+    
+    // Sound On
+    i = 0;
+    _soundOnNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_SOUND_ON));
+    _soundOffNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_SOUND_OFF));
+    _soundButton = Button::alloc(_soundOnNode);
+    _soundButton->setAnchor(Vec2::ANCHOR_CENTER);
+    float soundOnWidth = _soundButton->getContentSize().width/_soundButton->getContentSize().height * height;
+    _soundOnNode->setContentSize(soundOnWidth, height);
+    _soundOffNode->setContentSize(soundOnWidth, height);
+    _soundButton->setContentSize(soundOnWidth, height);
+    _soundButton->setPosition(unit*0.5f + i*unit, y);
+    _soundButton->setListener([=](const std::string& name, bool down) {
+        if (down) {
+            CULog("Sound on");
+            this->toggleSound();
+        }
+    });
+    _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
+    _menuNode->addChild(_soundButton);
+
+    
+    // Restart
+    i = 1;
+    std::shared_ptr<PolygonNode> restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_RESTART));
+    std::shared_ptr<Button> restartButton = Button::alloc(restartNode);
+    restartButton->setAnchor(Vec2::ANCHOR_CENTER);
+    float restartWidth = restartButton->getContentSize().width/restartButton->getContentSize().height * height;
+    restartNode->setContentSize(restartWidth, height);
+    restartButton->setContentSize(restartWidth, height);
+    restartButton->setPosition(unit*0.5f + i*unit, y);
+    restartButton->setListener([=](const std::string& name, bool down) {
+        if (down) {
+            CULog("Restart");
+            this->reset();
+        }
+    });
+    restartButton->activate(PLAY_MENU_LISTENER_RESTART);
+    _menuNode->addChildWithName(restartButton, PLAY_MENU_KEY_RESTART);
+    
+    // Exit
+    i = 2;
+    std::shared_ptr<PolygonNode> exitNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_EXIT));
+    std::shared_ptr<Button> exitButton = Button::alloc(exitNode);
+    exitButton->setAnchor(Vec2::ANCHOR_CENTER);
+    float exitWidth = exitButton->getContentSize().width/exitButton->getContentSize().height * height;
+    exitNode->setContentSize(exitWidth, height);
+    exitButton->setContentSize(exitWidth, height);
+    exitButton->setPosition(unit*0.5f + i*unit, y);
+    exitButton->setListener([=](const std::string& name, bool down) {
+        if (down) {
+            CULog("Exit");
+            this->exit();
+        }
+    });
+    exitButton->activate(PLAY_MENU_LISTENER_EXIT);
+    _menuNode->addChildWithName(exitButton, PLAY_MENU_KEY_EXIT);
+}
+
+
+#pragma mark -
 #pragma mark Gameplay Handling
 
 // Update touch node
@@ -263,12 +393,12 @@ void PlayMode::updateAnimations() {
 
 /** Update touch node */
 void PlayMode::updateTouchNode() {
-    if (_input.getMoveEvent() != InputController::MoveEvent::NONE) {
+    if (_input->getMoveEvent() != InputController::MoveEvent::NONE) {
         // Activate action
         if (!_actions->isActive("touchAction") && !_actions->isActive("touchFade")) {
             _actions->activate("touchAction", _touchAction, _touchNode);
         }
-        _touchNode->setPosition(_input.getTouchPosition());
+        _touchNode->setPosition(_input->getTouchPosition());
         _touchNode->setVisible(true);
     } else {
         if (!_actions->isActive("touchAction")) {
@@ -284,10 +414,10 @@ void PlayMode::updateMikaAnimations() {
         _beginAttack = false;
         _attacking = false;
     }
-    if (_input.getMoveEvent() == InputController::MoveEvent::START) {
+    if (_input->getMoveEvent() == InputController::MoveEvent::START) {
         _beginAttack = !_attacking;
         _attacking = true;
-    } else if (_input.getMoveEvent() == InputController::MoveEvent::END || _input.getMoveEvent() == InputController::MoveEvent::NONE) {
+    } else if (_input->getMoveEvent() == InputController::MoveEvent::END || _input->getMoveEvent() == InputController::MoveEvent::NONE) {
         _beginAttack = false;
         _attacking = false;
     }
@@ -394,7 +524,7 @@ void PlayMode::updateInterruptingAnimations(std::set<std::string>& interruptingA
  */
 void PlayMode::update(float dt) {
     // Update input controller
-    _input.update(dt);
+    _input->update(dt);
     
     // Update animations
     updateAnimations();
@@ -446,7 +576,7 @@ void PlayMode::update(float dt) {
 			}
 		}
 
-        _input.clear();
+        _input->clear();
     }
 }
 

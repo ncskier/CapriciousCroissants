@@ -53,8 +53,8 @@ bool BoardController::init(std::shared_ptr<ActionManager>& actions, const std::s
  */
 void BoardController::dispose() {
     CULog("dispose BoardController");
-    _board = nullptr;
     _actions = nullptr;
+    _board = nullptr;
     _entityManager = nullptr;
     _state = State::REMOVE;
     _debug = false;
@@ -62,6 +62,8 @@ void BoardController::dispose() {
     _animating = false;
     win = false;
     counter = 0;
+    _interruptingActions.clear();
+    resetVal = false;
 }
 
 

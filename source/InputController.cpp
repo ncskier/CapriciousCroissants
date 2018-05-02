@@ -50,15 +50,17 @@ void InputController::dispose() {
     CULog("dispose InputController");
     if (_active) {
 #ifndef CU_TOUCH_SCREEN
-		Mouse *touch = Input::get<Mouse>();
-		touch->removePressListener(LISTENER_KEY);
-		touch->removeReleaseListener(LISTENER_KEY);
-		touch->removeDragListener(LISTENER_KEY);
+        Mouse *touch = Input::get<Mouse>();
+        touch->removePressListener(LISTENER_KEY);
+        touch->removeReleaseListener(LISTENER_KEY);
+        touch->removeDragListener(LISTENER_KEY);
 #else
         Touchscreen* touch = Input::get<Touchscreen>();
         touch->removeBeginListener(LISTENER_KEY);
         touch->removeEndListener(LISTENER_KEY);
 #endif
+        clear();
+        _camera = nullptr;
         _active = false;
     }
 }

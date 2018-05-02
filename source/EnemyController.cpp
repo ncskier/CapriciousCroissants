@@ -79,7 +79,7 @@ void EnemyController::update(float timestep) {
         _entityManager->updateEntities(_board, EntityManager::movement);
 
         // Update z positions
-        _board->updateNodes(false);
+//        _board->updateNodes(false);
         
         _state = State::ATTACK;
     } else if (_state == State::ATTACK) {

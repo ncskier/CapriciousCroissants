@@ -13,6 +13,7 @@ using namespace cugl;
 
 /** This is adjusted by screen aspect ratio to get the height */
 #define SCENE_WIDTH 1024
+#define MENU_MIKA_NAME "mika"
 
 
 #pragma mark -
@@ -92,6 +93,7 @@ void MenuMode::dispose() {
     _worldNode = nullptr;
     _levelsJson = nullptr;
     _input = nullptr;
+    _mikaNode = nullptr;
     _active = false;
     _menuTiles.clear();
     _menuButtons.clear();
@@ -203,7 +205,7 @@ std::shared_ptr<Node> MenuMode::createMikaNode() {
     mikaSprite->setPosition(x, y);
     
     // Combine and return
-    nullTileSprite->addChild(mikaSprite);
+    nullTileSprite->addChildWithName(mikaSprite, MENU_MIKA_NAME);
     return nullTileSprite;
 }
 
@@ -266,6 +268,13 @@ void MenuMode::updateSelectedLevel() {
     _selectedLevel = (int)std::round(_softOffset / _menuTileSize.height);
 }
 
+/** Return true if touch selected the level */
+bool MenuMode::touchSelectedLevel(cugl::Vec2 touchPosition) {
+    bool inNullTile = _mikaNode->getBoundingBox().contains(touchPosition);
+    bool inMikaSprite = _mikaNode->getChildByName(MENU_MIKA_NAME)->getBoundingBox().contains(touchPosition);
+    return inNullTile || inMikaSprite;
+}
+
 
 #pragma mark -
 #pragma mark Input Handling
@@ -281,6 +290,13 @@ void MenuMode::update(float timestep) {
         // Calculate Menu Tile offsets
         Vec2 moveOffset = _input->getMoveOffset();
         if (moveEvent == InputController::MoveEvent::START) {
+            // Check if player tapped on Mika
+            Vec2 touchPosition = _input->getTouchPosition();
+            if (touchSelectedLevel(touchPosition)) {
+                // Select level and exit Level Select Menu
+                this->_selectedLevelJson = _levelsJson->get(_selectedLevel)->asString();
+                this->setActive(false);
+            }
             _hardOffset = _softOffset;
             _input->recordMove();
         } else if (moveEvent != InputController::MoveEvent::END) {

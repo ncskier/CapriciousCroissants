@@ -119,6 +119,9 @@ public:
     /** Return horizontal position of level dot as fraction of level width */
     float levelFractionX(int levelIdx);
     
+    /** Return true if touch selected the level */
+    bool touchSelectedLevel(cugl::Vec2 touchPosition);
+    
     
 #pragma mark -
 #pragma mark Input Handling

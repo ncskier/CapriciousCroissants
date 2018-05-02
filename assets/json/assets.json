@@ -97,6 +97,27 @@
             "magfilter":"linear",
             "wrapS":    "clamp",
             "wrapT":    "clamp"
+          ,
+        "enemy2_strip": {
+            "file": "textures/enemy2_strip.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "enemy3_strip": {
+            "file": "textures/enemy3_strip.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "arrow": {
+            "file":     "textures/arrow.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         },
 		"claw": {
 			"file":     "textures/Claw.png",

@@ -42,6 +42,8 @@ bool EnemyController::init(std::shared_ptr<ActionManager>& actions, const std::s
 	_debug = false;
 	_complete = false;
 	_state = State::MOVE;
+	//_arrowSprite = assets;
+	//deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_7);
 
 	return true;
 }
@@ -82,10 +84,50 @@ void EnemyController::update(float timestep) {
         _state = State::ATTACK;
     } else if (_state == State::ATTACK) {
 		_entityManager->updateEntities(_board, EntityManager::attack);
+		std::set<size_t>::iterator enemyIter;
+
+		for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {
+			if (_entityManager->hasComponent<RangeOrthoAttackComponent>(*enemyIter)) {
+				LocationComponent loc = _entityManager->getComponent<LocationComponent>((*enemyIter));
+				RangeOrthoAttackComponent ranged = _entityManager->getComponent<RangeOrthoAttackComponent>((*enemyIter));
+				IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enemyIter));
+
+				ranged.projectile->setPosition(_board->gridToScreenV(loc.x, loc.y));
+				_board->getNode()->addChild(ranged.projectile, 1000);
+				_board->getNode()->sortZOrder();
+				
+				cugl::Rect oldBounds = _board->calculateDrawBounds(loc.x, loc.y);
+				cugl::Rect newBounds = _board->calculateDrawBounds(ranged.target->getX(), ranged.target->getY());
+				cugl::Vec2 movement = newBounds.origin - oldBounds.origin;
+
+				int tiles = _board->lengthToCells(movement.length());
+				std::stringstream key;
+				key << "int_enemy_shoot_" << *enemyIter;
+				std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / 10*idle.speed[0]);
+				idle._actions->activate(key.str(), moveAction, ranged.projectile);
+				idle._interruptingActions.insert(key.str());
+				
+			}
+		}
+
+	
+		
         _state = State::CHECK;
     } else {
         // CHECK
-        std::set<std::shared_ptr<PlayerPawnModel>>::iterator it;
+		std::set<size_t>::iterator enemyIter;
+		for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {
+			if (_entityManager->hasComponent<RangeOrthoAttackComponent>(*enemyIter)) {
+				LocationComponent loc = _entityManager->getComponent<LocationComponent>((*enemyIter));
+				_board->getNode()->removeChild(_entityManager->getComponent<RangeOrthoAttackComponent>((*enemyIter)).projectile);
+			}
+		}
+
+		_board->clearAttackingEnemies();
+
+
+
+		std::set<std::shared_ptr<PlayerPawnModel>>::iterator it;
         for (it = _board->getRemovedAllies().begin(); it != _board->getRemovedAllies().end(); ++it) {
             _board->getNode()->removeChild((*it)->getSprite());
         }

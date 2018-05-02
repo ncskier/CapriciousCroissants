@@ -1,0 +1,111 @@
+{
+    "size": {
+        "width": 5,
+        "height": 5
+    },
+    "generationAlgorithm": "random",
+    "seed": 0,
+    "colors": 6,
+    "tiles": [],
+    "enemies": {
+        "enemy1": {
+            "components": {
+                "location": {
+                    "x": 0,
+                    "y": 0,
+                    "direction" : 3
+                },
+                "smartMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy3_strip",
+                    "textureRows": [
+                        8
+                    ],
+                    "textureColumns": [
+                        16
+                    ],
+                    "textureSize": [
+                        128
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackRanged" : {}
+            }
+        },
+        "enemy2": {
+            "components": {
+                "location": {
+                    "x": 2,
+                    "y": 0,
+                    "direction" : 3
+                },
+              "smartMovement": {
+                  "movementDistance" : 1
+              },
+                "idle": {
+                    "textureKeys": "enemy3_strip",
+                    "textureRows": [
+                        8
+                    ],
+                    "textureColumns": [
+                        16
+                    ],
+                    "textureSize": [
+                        128
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackRanged" : {}
+            }
+        },
+        "enemy3": {
+            "components": {
+                "location": {
+                    "x": 4,
+                    "y": 0,
+                    "direction" : 1
+                },
+                "smartMovement": {
+                    "movementDistance" : 1
+                },
+                "idle": {
+                    "textureKeys": "enemy1_strip",
+                    "textureRows": [
+                        8
+                    ],
+                    "textureColumns": [
+                        16
+                    ],
+                    "textureSize": [
+                        128
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
+            }
+        }
+     
+    },
+    "mika": {
+        "x": 4,
+        "y": 4
+    },
+    "allies": {
+        "ally1": {
+            "x": 2,
+            "y": 4
+        },
+        "ally2": {
+            "x": 0,
+            "y": 4
+        }
+    }
+}

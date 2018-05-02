@@ -13,7 +13,7 @@
 #include "BoardModel.h"
 #include "PlayerPawnModel.h"
 #include "EntityManager.h"
-
+#include "Components.h"
 
 class EnemyController {
 public:

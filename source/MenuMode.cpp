@@ -72,6 +72,11 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     setMenuTileSize();
     loadLevelsFromJson("json/levelList.json");
     
+    // Create Mika Node
+    _mikaNode = createMikaNode();
+    _worldNode->addChild(_mikaNode);
+    updateMikaNode();
+    
     return true;
 }
 
@@ -138,32 +143,32 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     menuTile->setName(ss.str());
     menuTile->setFrame(menuTileFrame(levelIdx));
     
-    // Initialize Level Button Node
-    std::shared_ptr<Font> font = _assets->get<Font>("script");
-    std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
-    levelLabel->setBackground(Color4::BLACK);
-    levelLabel->setForeground(Color4::WHITE);
-    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
-    levelButton->setAnchor(Vec2::ANCHOR_CENTER);
-    levelButton->setName(ss.str());
-    
-    // Set Button Position
-    float frameLength = _menuTileSize.height*0.5f;
-    levelButton->setPosition(_menuTileSize.width*0.5f, _menuTileSize.height*0.5f);
-    levelButton->setContentSize(frameLength, frameLength);
-    levelLabel->setContentSize(frameLength, frameLength);
-
-    // Set Button Callback
-    levelButton->setListener([=](const std::string& name, bool down) {
-        if (!down) {
-            int i = std::stoi(name);
-            this->_selectedLevelJson = _levelsJson->get(i)->asString();
-            this->setActive(false);
-        }
-    });
-    levelButton->activate(100+levelIdx);
-    menuTile->addChild(levelButton);
-    _menuButtons.push_back(levelButton);
+//    // Initialize Level Button Node
+//    std::shared_ptr<Font> font = _assets->get<Font>("script");
+//    std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
+//    levelLabel->setBackground(Color4::BLACK);
+//    levelLabel->setForeground(Color4::WHITE);
+//    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
+//    levelButton->setAnchor(Vec2::ANCHOR_CENTER);
+//    levelButton->setName(ss.str());
+//
+//    // Set Button Position
+//    float frameLength = _menuTileSize.height*0.5f;
+//    levelButton->setPosition(_menuTileSize.width*0.5f, _menuTileSize.height*0.5f);
+//    levelButton->setContentSize(frameLength, frameLength);
+//    levelLabel->setContentSize(frameLength, frameLength);
+//
+//    // Set Button Callback
+//    levelButton->setListener([=](const std::string& name, bool down) {
+//        if (!down) {
+//            int i = std::stoi(name);
+//            this->_selectedLevelJson = _levelsJson->get(i)->asString();
+//            this->setActive(false);
+//        }
+//    });
+//    levelButton->activate(100+levelIdx);
+//    menuTile->addChild(levelButton);
+//    _menuButtons.push_back(levelButton);
     
     // Initialize Level Dot
     std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
@@ -175,6 +180,31 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     menuTile->addChild(levelDot);
     
     return menuTile;
+}
+
+/** Create mika node */
+std::shared_ptr<Node> MenuMode::createMikaNode() {
+    // Null Tile Sprite
+    std::shared_ptr<AnimationNode> nullTileSprite = AnimationNode::alloc(_assets->get<Texture>(TILE_TEXTURE_KEY_NULL), TILE_IMG_ROWS, TILE_IMG_COLS, TILE_IMG_SIZE);
+    nullTileSprite->setAnchor(Vec2::ANCHOR_CENTER);
+    nullTileSprite->setFrame(TILE_IMG_NORMAL);
+    float length = _menuTileSize.height*0.6f;
+    nullTileSprite->setContentSize(length, length);
+    
+    // Mika Sprite
+    std::shared_ptr<AnimationNode> mikaSprite = AnimationNode::alloc(_assets->get<Texture>(PLAYER_TEXTURE_KEY_0), PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
+    mikaSprite->setAnchor(Vec2::ANCHOR_CENTER);
+    mikaSprite->setFrame(PLAYER_IMG_NORMAL);
+    float height = nullTileSprite->getContentSize().height*1.3f;
+    float width = mikaSprite->getContentSize().width/mikaSprite->getContentSize().height * height;
+    mikaSprite->setContentSize(width, height);
+    float x = nullTileSprite->getContentSize().width*0.5f;
+    float y = nullTileSprite->getContentSize().height*0.9f;
+    mikaSprite->setPosition(x, y);
+    
+    // Combine and return
+    nullTileSprite->addChild(mikaSprite);
+    return nullTileSprite;
 }
 
 /** Calculate menu tile position given the level index */
@@ -217,6 +247,23 @@ void MenuMode::setMenuTileSize() {
     float width = _dimen.width;
     float height = (tileSize.height / tileSize.width) * width;
     _menuTileSize = Size(width, height);
+}
+
+/** Update mika node */
+void MenuMode::updateMikaNode() {
+    // Update position
+    float dragY = _softOffset / _menuTileSize.height;
+    float fraction = dragY - std::round(dragY);
+    int closestLevelIdx = (fraction < 0) ? _selectedLevel-1 : _selectedLevel+1;
+    fraction = std::abs(fraction);
+    float x = ((1.0f-fraction)*levelFractionX(_selectedLevel) + fraction*levelFractionX(closestLevelIdx)) * _menuTileSize.width;
+    float y = _originY + _menuTileSize.height*0.5f;     // Menu Tiles are anchored in bottom left
+    _mikaNode->setPosition(x, y);
+}
+
+/** Update selected level */
+void MenuMode::updateSelectedLevel() {
+    _selectedLevel = (int)std::round(_softOffset / _menuTileSize.height);
 }
 
 
@@ -267,6 +314,11 @@ void MenuMode::update(float timestep) {
             }
         }
     }
+    
+    // Update
+    updateSelectedLevel();
+    updateMikaNode();
+    
     // Move Menu Tiles
     for (auto i = 0; i < _menuTiles.size(); i++) {
         _menuTiles[i]->setPosition(menuTilePosition(i));

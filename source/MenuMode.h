@@ -12,6 +12,8 @@
 #include <cugl/cugl.h>
 #include <vector>
 #include "InputController.h"
+#include "PlayerPawnModel.h"
+#include "TileModel.h"
 
 #define MENU_TILE_KEY_0 "menu_tile0_strip"
 //#define MENU_TILE_KEY_1 "menu_tile1"
@@ -34,6 +36,7 @@ protected:
     std::vector<std::shared_ptr<cugl::Node>> _menuTiles;
     std::vector<std::shared_ptr<cugl::Button>> _menuButtons;
     cugl::Size _menuTileSize;
+    std::shared_ptr<cugl::Node> _mikaNode;
     
     // TODO: MODEL
     std::shared_ptr<cugl::JsonValue> _levelsJson;
@@ -91,6 +94,15 @@ public:
     
     /** Create level node */
     std::shared_ptr<cugl::Node> createLevelNode(int levelIdx);
+    
+    /** Create mika node */
+    std::shared_ptr<cugl::Node> createMikaNode();
+    
+    /** Update mika node */
+    void updateMikaNode();
+    
+    /** Update selected level */
+    void updateSelectedLevel();
     
     /** Calculate menu tile position given the level index */
     cugl::Vec2 menuTilePosition(int levelIdx);

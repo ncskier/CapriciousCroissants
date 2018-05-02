@@ -147,6 +147,55 @@
             "wrapS": "clamp",
             "wrapT": "clamp"
         },
+        "play_menu_background": {
+            "file": "textures/play_menu_background.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "play_menu_restart": {
+            "file": "textures/play_menu_restart.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "play_menu_sound_off": {
+            "file": "textures/play_menu_sound_off.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "play_menu_sound_on": {
+            "file": "textures/play_menu_sound_on.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "play_menu_toggle_out": {
+            "file": "textures/play_menu_toggle_out.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "play_menu_toggle_in": {
+            "file": "textures/play_menu_toggle_in.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "play_menu_exit": {
+            "file": "textures/play_menu_exit.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
         "checkImage": {
             "file":    "textures/check.png",
             "minfilter":"nearest",

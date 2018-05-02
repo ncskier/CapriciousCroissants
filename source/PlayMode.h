@@ -18,6 +18,19 @@
 #include "EntityManager.h"
 #include "MainSystems.h"
 
+#define PLAY_MENU_KEY_TOGGLE_OUT "play_menu_toggle_out"
+#define PLAY_MENU_KEY_TOGGLE_IN  "play_menu_toggle_in"
+#define PLAY_MENU_KEY_SOUND_ON   "play_menu_sound_on"
+#define PLAY_MENU_KEY_SOUND_OFF  "play_menu_sound_off"
+#define PLAY_MENU_KEY_RESTART    "play_menu_restart"
+#define PLAY_MENU_KEY_EXIT       "play_menu_exit"
+#define PLAY_MENU_KEY_BACKGROUND "play_menu_background"
+#define PLAY_MENU_LISTENER_TOGGLE_OUT 50
+#define PLAY_MENU_LISTENER_TOGGLE_IN  51
+#define PLAY_MENU_LISTENER_SOUND      52
+#define PLAY_MENU_LISTENER_RESTART    53
+#define PLAY_MENU_LISTENER_EXIT       54
+
 /**
  * This class is the primary gameplay constroller for the demo.
  *
@@ -65,6 +78,9 @@ protected:
     /** Game Board */
     std::shared_ptr<BoardModel> _board;
     
+    /** Level json */
+    std::string _levelJson;
+    
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
     std::shared_ptr<InputController> _input;
@@ -75,6 +91,11 @@ protected:
 	//VIEW
 	//Buttons
 	std::shared_ptr<cugl::Button> _resetButton;
+    std::shared_ptr<cugl::Button> _soundButton;
+    std::shared_ptr<cugl::PolygonNode> _soundOnNode;
+    std::shared_ptr<cugl::PolygonNode> _soundOffNode;
+    std::shared_ptr<cugl::PolygonNode> _menuNode;
+    cugl::Size _dimen;
     
 	//Entity Manager Instance
 	std::shared_ptr<EntityManager> _entityManager;
@@ -180,6 +201,12 @@ public:
      * @param value whether the level is completed.
      */
     void setComplete(bool value) { _complete = value; }
+
+    
+#pragma mark -
+#pragma mark Helper Functions
+    /** Initialize in-game menu */
+    void initMenu();
     
     
 #pragma mark -
@@ -214,10 +241,14 @@ public:
     /** Update interrupting animations (action manager is already updated every iteration) */
     void updateInterruptingAnimations(std::set<std::string>& interruptingActions);
     
-    /**
-     * Resets the status of the game so that we can play again.
-     */
+    /** Reset level/PlayMode */
     void reset();
+    
+    /** Exits the game */
+    void exit();
+    
+    /** Toggle sound */
+    void toggleSound();
 };
 
 #endif /* __Play_Mode_H__ */

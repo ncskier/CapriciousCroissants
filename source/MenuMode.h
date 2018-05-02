@@ -113,6 +113,9 @@ public:
     /** Apply offset cap function to difference between offset min/max and movement offset */
     float applyOffsetCapFunction(float diff);
     
+    /** Return offset for level at [levelIdx] */
+    float offsetForLevel(int levelIdx);
+    
     /** Return level spritesheet frame given the level index [levelIdx] */
     int menuTileFrame(int levelIdx);
     

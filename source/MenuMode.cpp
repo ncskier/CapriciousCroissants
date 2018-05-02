@@ -67,9 +67,8 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     Application::get()->setClearColor(Color4(192,192,192,255));
     
     // Load levels
-    _selectedLevel = 0;
-    _softOffset = 0.0f;
-    _hardOffset = 0.0f;
+    _softOffset = offsetForLevel(_selectedLevel);
+    _hardOffset = offsetForLevel(_selectedLevel);
     setMenuTileSize();
     loadLevelsFromJson("json/levelList.json");
     
@@ -97,7 +96,6 @@ void MenuMode::dispose() {
     _active = false;
     _menuTiles.clear();
     _menuButtons.clear();
-    _selectedLevel = 0;
     _softOffset = 0.0f;
     _hardOffset = 0.0f;
     _minOffset = 0.0f;
@@ -122,7 +120,7 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     // Load levels
     _levelsJson = json->get("levels");
     _originY = _dimen.height*0.1f;
-    _maxOffset = 2.0f*_originY - _dimen.height + _menuTileSize.height*_levelsJson->size();
+    _maxOffset = _menuTileSize.height * (_levelsJson->size() - 1);
     for (auto i = 0; i < _levelsJson->size(); i++) {
         std::shared_ptr<Node> menuTile = createLevelNode(i);
         _worldNode->addChild(menuTile);
@@ -228,6 +226,11 @@ int MenuMode::menuTileFrame(int levelIdx) {
     return MENU_TILE_SIZE - (levelIdx % MENU_TILE_SIZE) - 1;
 }
 
+/** Return offset for level at [levelIdx] */
+float MenuMode::offsetForLevel(int levelIdx) {
+    return _menuTileSize.height*levelIdx;
+}
+
 /** Return horizontal position of level dot as fraction of level width */
 float MenuMode::levelFractionX(int levelIdx) {
     // In reverse order than on screen
@@ -245,7 +248,6 @@ float MenuMode::levelFractionX(int levelIdx) {
 void MenuMode::setMenuTileSize() {
     std::shared_ptr<AnimationNode> tileNode = AnimationNode::alloc(_assets->get<Texture>(MENU_TILE_KEY_0), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
     Size tileSize = tileNode->getContentSize();
-    CULog("tileSize: %s", tileNode->getContentSize().toString().c_str());
     float width = _dimen.width;
     float height = (tileSize.height / tileSize.width) * width;
     _menuTileSize = Size(width, height);
@@ -260,12 +262,24 @@ void MenuMode::updateMikaNode() {
     fraction = std::abs(fraction);
     float x = ((1.0f-fraction)*levelFractionX(_selectedLevel) + fraction*levelFractionX(closestLevelIdx)) * _menuTileSize.width;
     float y = _originY + _menuTileSize.height*0.5f;     // Menu Tiles are anchored in bottom left
+    // Check for caps
+    bool dragLowCap = dragY < 0.0f;
+    bool dragHighCap = dragY > (double)(_levelsJson->size()-1.0f);
+    if (dragLowCap || dragHighCap) {
+        // Interpolate towards center
+        fraction = dragLowCap ? std::ceil(dragY) - dragY : dragY - std::floor(dragY);
+        x = ((1.0f-fraction)*levelFractionX(_selectedLevel) + fraction*0.5f) * _menuTileSize.width;
+        if (fraction > 1.0f) { x = 0.5f * _menuTileSize.width; }
+    }
     _mikaNode->setPosition(x, y);
 }
 
 /** Update selected level */
 void MenuMode::updateSelectedLevel() {
     _selectedLevel = (int)std::round(_softOffset / _menuTileSize.height);
+    // Check for caps
+    if (_selectedLevel < 0) { _selectedLevel = 0; }
+    if (_selectedLevel > _levelsJson->size()-1) { _selectedLevel = (int)(_levelsJson->size()-1); }
 }
 
 /** Return true if touch selected the level */
@@ -310,13 +324,19 @@ void MenuMode::update(float timestep) {
                 _softOffset = _minOffset - applyOffsetCapFunction(diff);
             }
         } else {
-            _hardOffset -= moveOffset.y;
-            // Check draw bounds (top & bottom)
-            if (_hardOffset > _maxOffset) { _hardOffset = _maxOffset; }
-            if (_hardOffset < _minOffset) { _hardOffset = _minOffset; }
             _input->clear();
         }
-    } else {
+    }
+    
+    // Update
+    updateSelectedLevel();
+    updateMikaNode();
+    
+    // Relax back to selected level
+    if (moveEvent == InputController::MoveEvent::END) {
+        _hardOffset = offsetForLevel(_selectedLevel);
+    }
+    if (moveEvent == InputController::MoveEvent::NONE || moveEvent == InputController::MoveEvent::END) {
         if (_softOffset != _hardOffset) {
             float diff = std::abs(_softOffset - _hardOffset);
             float velocity = diff*10.0f;
@@ -330,10 +350,6 @@ void MenuMode::update(float timestep) {
             }
         }
     }
-    
-    // Update
-    updateSelectedLevel();
-    updateMikaNode();
     
     // Move Menu Tiles
     for (auto i = 0; i < _menuTiles.size(); i++) {

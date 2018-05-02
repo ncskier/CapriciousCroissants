@@ -10,7 +10,8 @@ EntityManager::EntityManager() :
 	damageSystems(), 
 	playerLimitSystems(), 
 	onTurnSystems(),
-	allSystems() {
+	allSystems(),
+	onPlayerMoveSystems() {
 
 }
 
@@ -36,6 +37,9 @@ void EntityManager::addSystem(const EntitySystem::Ptr& systemPtr, SystemType typ
 		break;
 	case onTurn:
 		onTurnSystems.push_back(systemPtr);
+		break;
+	case onPlayerMove:
+		onPlayerMoveSystems.push_back(systemPtr);
 		break;
 	}
 
@@ -97,6 +101,9 @@ size_t EntityManager::updateEntities(std::shared_ptr<BoardModel> board, SystemTy
 		break;
 	case onTurn:
 		tempSystem = onTurnSystems;
+		break;
+	case onPlayerMove:
+		tempSystem = onPlayerMoveSystems;
 		break;
 	}
 	for (auto system = tempSystem.begin(); system != tempSystem.end(); ++system) {

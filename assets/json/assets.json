@@ -70,6 +70,13 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "tile3_death_strip": {
+            "file":     "textures/tile3_death_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "mika_spritesheet": {
             "file":     "textures/mika_spritesheet.png",
             "minfilter":"nearest",
@@ -85,12 +92,12 @@
             "wrapT":    "clamp"
         },
         "enemy1_strip": {
-          "file": "textures/enemy1_strip.png",
-          "minfilter": "nearest",
-          "magfilter": "linear",
-          "wrapS": "clamp",
-          "wrapT": "clamp"
-        },
+            "file":     "textures/enemy1_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+          ,
         "enemy2_strip": {
             "file": "textures/enemy2_strip.png",
             "minfilter": "nearest",

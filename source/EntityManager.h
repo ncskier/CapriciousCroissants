@@ -25,6 +25,7 @@ private:
 	std::unordered_map<EntityId, ComponentTypeSet> entityCache;
 	std::map<ComponentType, IComponentStore::Ptr> componentStores;
 	typedef std::vector<EntitySystem::Ptr> systems;
+	systems onPlayerMoveSystems;
 	systems movementSystems;
 	systems attackSystems;
 	systems damageSystems;
@@ -40,7 +41,8 @@ public:
 		attack,
 		damage,
 		playerLimit,
-		onTurn
+		onTurn,
+		onPlayerMove
 	};
 
 	EntityManager();

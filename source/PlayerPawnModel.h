@@ -20,7 +20,7 @@
 /** Begin Attack (Transition to Attack) */
 #define PLAYER_IMG_BEGIN_ATTACK_START 16
 #define PLAYER_IMG_BEGIN_ATTACK_END   31
-#define PLAYER_IMG_BEGIN_ATTACK_TIME  0.5f
+#define PLAYER_IMG_BEGIN_ATTACK_TIME  0.25f
 /** Attacking loop */
 #define PLAYER_IMG_ATTACKING_START 32
 #define PLAYER_IMG_ATTACKING_END   47

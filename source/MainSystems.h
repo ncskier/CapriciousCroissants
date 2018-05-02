@@ -54,3 +54,13 @@ public:
 	virtual bool updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) override;
 
 };
+
+class SmartMovementFacingSystem : public EntitySystem {
+public:
+	explicit SmartMovementFacingSystem(std::shared_ptr<EntityManager>& manager) :
+		EntitySystem(manager) {
+		setRequiredComponents({ ecs::getComponentType<SmartMovementComponent>() });
+	}
+
+	virtual bool updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) override;
+};

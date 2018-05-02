@@ -50,7 +50,7 @@
 #define TILE_TEXTURE_KEY_DEATH_0 "tile2_death_strip"
 #define TILE_TEXTURE_KEY_DEATH_1 "tile2_death_strip"
 #define TILE_TEXTURE_KEY_DEATH_2 "tile2_death_strip"
-#define TILE_TEXTURE_KEY_DEATH_3 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_3 "tile3_death_strip"
 #define TILE_TEXTURE_KEY_DEATH_4 "tile2_death_strip"
 #define TILE_TEXTURE_KEY_DEATH_5 "tile2_death_strip"
 #define TILE_TEXTURE_KEY_DEATH_6 "tile2_death_strip"

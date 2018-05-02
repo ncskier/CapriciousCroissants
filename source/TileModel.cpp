@@ -113,9 +113,11 @@ void TileModel::setSpriteBounds(cugl::Rect bounds) {
     
     // Death Sprite
     if (_deathSprite) {
-        float width = _sprite->getWidth() * 0.8f;
+//        float width = _sprite->getWidth() * 0.8f;
+        float width = _sprite->getWidth() * 0.9f;
         float height = _deathSprite->getHeight() * width / _deathSprite->getWidth();
         _deathSprite->setContentSize(width, height);
-        _deathSprite->setPosition(bounds.getMidX(), bounds.getMinY() + bounds.size.height*0.3f);
+//        _deathSprite->setPosition(bounds.getMidX(), bounds.getMinY() + bounds.size.height*0.3f);
+        _deathSprite->setPosition(bounds.getMidX(), bounds.getMinY());
     }
 }

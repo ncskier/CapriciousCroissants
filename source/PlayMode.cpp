@@ -70,6 +70,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
 	_entityManager->addSystem(std::make_shared<MovementSmartSystem>(_entityManager), EntityManager::movement);
 	_entityManager->addSystem(std::make_shared<AttackMeleeSystem>(_entityManager), EntityManager::attack);
 	_entityManager->addSystem(std::make_shared<AttackRangedSystem>(_entityManager), EntityManager::attack);
+	_entityManager->addSystem(std::make_shared<SmartMovementFacingSystem>(_entityManager), EntityManager::onPlayerMove);
 
 
     // Add Background Node
@@ -198,8 +199,15 @@ void PlayMode::reset() {
     win = false;
     _beginAttack = false;
     _attacking = false;
+    _entityManager = nullptr;
     
     // Re initialize
+    _entityManager = std::make_shared<EntityManager>();
+    _entityManager->addSystem(std::make_shared<MovementDumbSystem>(_entityManager), EntityManager::movement);
+    _entityManager->addSystem(std::make_shared<MovementSmartSystem>(_entityManager), EntityManager::movement);
+    _entityManager->addSystem(std::make_shared<AttackMeleeSystem>(_entityManager), EntityManager::attack);
+    _entityManager->addSystem(std::make_shared<AttackRangedSystem>(_entityManager), EntityManager::attack);
+    _entityManager->addSystem(std::make_shared<SmartMovementFacingSystem>(_entityManager), EntityManager::onPlayerMove);
     setupLevelFromJson(_levelJson, _dimen);
     _playerController.init(_actions, _board, _input, _entityManager);
     _boardController.init(_actions, _board, _entityManager);
@@ -209,7 +217,7 @@ void PlayMode::reset() {
 
 /** Exits the game */
 void PlayMode::exit() {
-    
+    setComplete(true);
 }
 
 /** Toggle sound */
@@ -363,8 +371,7 @@ void PlayMode::initMenu() {
     exitButton->setListener([=](const std::string& name, bool down) {
         if (down) {
             CULog("Exit");
-            win = false;
-            done = true;
+            this->exit();
         }
     });
     exitButton->activate(PLAY_MENU_LISTENER_EXIT);

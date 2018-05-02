@@ -112,6 +112,27 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "enemy2_strip": {
+            "file": "textures/enemy2_strip.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "enemy3_strip": {
+            "file": "textures/enemy3_strip.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "arrow": {
+            "file":     "textures/arrow.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
 		"claw": {
 			"file":     "textures/Claw.png",
 			"minfilter":"nearest",
@@ -269,90 +290,6 @@
                     "layout": {
                         "x_anchor": "fill",
                         "y_anchor": "fill"
-                    }
-                },
-                "reset": {
-                    "type": "Button",
-                    "format": {
-                        "type": "Absolute"
-                    },
-                    "data": {
-                        "anchor": [
-                                   0,
-                                   0
-                                   ],
-                        "up": {
-                            "type": "Node",
-                            "format": {
-                                "type": "Anchored"
-                            },
-                            "data": {
-                                "comment": "Without this size, the up button fills the screen (because that is default)",
-                                "size": [
-                                         67,
-                                         67
-                                         ]
-                            },
-                            "children": {
-                                "image": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture": "reset-normal",
-                                        "anchor": [
-                                                   0.5,
-                                                   0.5
-                                                   ]
-                                    },
-                                    "layout": {
-                                        "x_anchor": "fill",
-                                        "y_anchor": "fill"
-                                    }
-                                }
-                            },
-                            "layout": {
-                                "x_anchor": "fill",
-                                "y_anchor": "fill"
-                            }
-                        },
-                        "down": {
-                            "type": "Node",
-                            "format": {
-                                "type": "Anchored"
-                            },
-                            "data": {
-                                "comment": "Without this size, the up button fills the screen (because that is default)",
-                                "size": [
-                                         67,
-                                         67
-                                         ]
-                            },
-                            "children": {
-                                "image": {
-                                    "type": "Image",
-                                    "data": {
-                                        "texture": "reset-selected",
-                                        "anchor": [
-                                                   0.5,
-                                                   0.5
-                                                   ]
-                                    },
-                                    "layout": {
-                                        "x_anchor": "fill",
-                                        "y_anchor": "fill"
-                                    }
-                                }
-                            },
-                            "layout": {
-                                "x_anchor": "fill",
-                                "y_anchor": "fill"
-                            }
-                        }
-                    },
-                    "layout": {
-                        "x_anchor": "right",
-                        "y_anchor": "bottom",
-                        "x_offset": -0.1,
-                        "y_offset": 0
                     }
                 }
             }

@@ -114,6 +114,9 @@ protected:
     /** Set storing all enemies removed from the board (store for animation) */
     std::set<size_t> _removedEnemies;
     
+	/** Set storing all attacking enemies attacking on the board (store for animation) */
+	std::set<size_t> _attackingEnemies;
+
     
 #pragma mark -
 #pragma mark Initialization Helpers
@@ -228,6 +231,8 @@ public:
     std::set<std::shared_ptr<TileModel>>& getRemovedTiles() { return _removedTiles; }
     std::set<std::shared_ptr<PlayerPawnModel>>& getRemovedAllies() { return _removedAllies; }
     std::set<size_t>& getRemovedEnemies() { return _removedEnemies; }
+	std::set<size_t>& getAttackingEnemies() { return _attackingEnemies; }
+
     
     /** Clear added/removed sets */
     void clearAddedTiles() { _addedTiles.clear(); }
@@ -236,6 +241,7 @@ public:
     void clearRemovedTiles() { _removedTiles.clear(); }
     void clearRemovedAllies() { _removedAllies.clear(); }
     void clearRemovedEnemies() { _removedEnemies.clear(); }
+	void clearAttackingEnemies() { _attackingEnemies.clear(); }
 
 	// Set the tile at the given (x, y) coordinate
     void setTile(int x, int y, std::shared_ptr<TileModel> t);
@@ -269,6 +275,10 @@ public:
 
 	// Remove enemy at index i
 	void removeEnemy(int i);
+
+
+	// Add attacking enemy at index i
+	void insertAttackingEnemy(EntityId entity);
 
 #pragma mark -
 #pragma mark Logic
@@ -315,6 +325,11 @@ public:
     std::shared_ptr<cugl::Animate> mikaBeginAttackAction = cugl::Animate::alloc(PLAYER_IMG_BEGIN_ATTACK_START, PLAYER_IMG_BEGIN_ATTACK_END, PLAYER_IMG_BEGIN_ATTACK_TIME);
     std::shared_ptr<cugl::Animate> mikaAttackingAction = cugl::Animate::alloc(PLAYER_IMG_ATTACKING_START, PLAYER_IMG_ATTACKING_END, PLAYER_IMG_ATTACKING_TIME);
     
+	//Projectile
+	std::shared_ptr<cugl::Animate> projectileAction = cugl::Animate::alloc(0, 10, 0.5);
+
+
+
     /** Get board node */
     std::shared_ptr<cugl::Node>& getNode() { return _node; }
     
@@ -332,10 +347,15 @@ public:
     
 //     Convert grid (x, y) to screen coordinates
     cugl::Rect gridToScreen(int x, int y);
+
+	//     Convert grid (x, y) to screen coordinates
+	cugl::Vec2 gridToScreenV(int x, int y);
     
+
     // Convert screen coordinates to grid (x, y)
     std::tuple<int, int> screenToGrid(cugl::Vec2 position);
-    
+
+
     // Convert screen length to grid length
     int lengthToCells(float length, bool row=false);
     

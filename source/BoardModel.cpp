@@ -255,7 +255,7 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 				RangeOrthoAttackComponent ranged;
 				ranged.horizontal = true;
 				ranged.vertical = true;
-
+				ranged.projectile = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow"));
 
 				_entityManager->addComponent<RangeOrthoAttackComponent>(enemyId, ranged);
 
@@ -446,6 +446,10 @@ void BoardModel::removeEnemy(int i) {
     _removedEnemies.insert(enemiesEntityIds[i]);
     enemiesEntityIds.erase(enemiesEntityIds.begin() + i);
     _numEnemies--;
+}
+
+void BoardModel::insertAttackingEnemy(EntityId entity) {
+	_attackingEnemies.insert(entity);
 }
 
 
@@ -729,7 +733,8 @@ void BoardModel::updateNodes(bool position, bool z) {
     }
     
     // Resort z order
-    _node->sortZOrder();
+    if (z)
+        _node->sortZOrder();
 }
 
 float BoardModel::getCellLength() {
@@ -746,6 +751,16 @@ cugl::Rect BoardModel::gridToScreen(int x, int y) {
     return Rect(xPos, yPos, _cellSize.width, _cellSize.height);
 }
 
+cugl::Vec2 BoardModel::gridToScreenV(int x, int y) {
+	float xPos = (x+0.5) * _cellSize.width;
+	float yPos = (y+0.5) * _cellSize.height;
+	cugl::Vec2 pos = Vec2(xPos, yPos);
+
+	return pos;
+}
+
+
+
 // Convert screen coordinates to grid (x, y)
 std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
     int x = (int)floor( (position.x - _boardPadding/2.0f) / _cellSize.width );
@@ -753,6 +768,9 @@ std::tuple<int, int> BoardModel::screenToGrid(Vec2 position) {
     
     return {x, y};
 }
+
+
+
 
 // Convert screen length to grid length
 int BoardModel::lengthToCells(float length, bool row) {
@@ -819,19 +837,12 @@ Rect BoardModel::calculateDrawBounds(int gridX, int gridY) {
  */
 int BoardModel::calculateDrawZ(int x, int y, bool tile) {
     int row = y;
-//    if (offsetCol && _selectedTile != -1 && x == xOfIndex(_selectedTile)) {
-//        row = (row + lengthToCells(offset)) % _height;
-//        while (row < 0) {
-//            row += _height;
-//        }
-//    }
     row = std::get<1>( screenToGrid(calculateDrawBounds(x, y).origin) );
+    int base = 10 + 10*(_height-row-1);
     if (tile) {
-        // Start from 10 with increments of 10
-        return 10 + 10*(_height-row-1);
+        return base;
     } else {
-        // Start from 10*height + 5 with increments of 10
-        return (10*_height + 5) + 10*(_height-row-1);
+        return base + 5;
     }
 }
 

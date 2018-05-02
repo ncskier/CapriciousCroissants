@@ -98,6 +98,10 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 		}
 
 		if (isFree) {
+            if (targetY < loc.y) {
+                idle.sprite->setZOrder(board->calculateDrawZ(targetX, targetY, false));
+                board->getNode()->sortZOrder();
+            }
 			loc.x = targetX;
 			loc.y = targetY;
 
@@ -132,6 +136,8 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 		if (board->getNumAllies() == 0) {
 			return true;
 		}
+
+		LocationComponent::direction lastFace = loc.dir;
 		std::shared_ptr<PlayerPawnModel> nearest = board->getAlly(0);
 		int minDist = (abs(loc.x - nearest->getX()) + abs(loc.y - nearest->getY()));
 		for (int i = 1; i < board->getNumAllies(); i++) {
@@ -155,13 +161,16 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 				loc.dir = LocationComponent::DOWN;
 			}
 		}
-		else {
+		else if (std::abs(dY) <= std::abs(dX)) {
 			if (dX >= 0) {
 				loc.dir = LocationComponent::RIGHT;
 			}
 			else {
 				loc.dir = LocationComponent::LEFT;
 			}
+		}
+		else {
+			loc.dir = lastFace;
 		}
 
 		
@@ -266,6 +275,10 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 		}
 
 		if (isFree) {
+            if (targetY < loc.y) {
+                idle.sprite->setZOrder(board->calculateDrawZ(targetX, targetY, false));
+                board->getNode()->sortZOrder();
+            }
 			loc.x = targetX;
 			loc.y = targetY;
 
@@ -389,10 +402,11 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 
 bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) {
 
-	CULog("AttackRangedSystem");
+	//CULog("AttackRangedSystem");
 	if (manager->hasComponent<LocationComponent>(entity)) {
 		LocationComponent loc = manager->getComponent<LocationComponent>(entity);
 		IdleComponent idle = manager->getComponent<IdleComponent>(entity);
+		RangeOrthoAttackComponent ranged = manager->getComponent<RangeOrthoAttackComponent>(entity);
 
 		//find closest ally who is on x or y
 		//turn to x or y
@@ -409,9 +423,20 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 		}
 
 			if (closestAlignedAlly != nullptr) {
+				//std::set<size_t>::iterator enemyIter;
+				//std::set<size_t>::iterator enemyIter;
+
+				//for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {
+
+
+				
+				//std::vector<std::shared_ptr<PlayerPawnModel>>::iterator
 				for (int i = 0; i < board->getNumAllies(); i++) {
 					std::shared_ptr<PlayerPawnModel> ally = board->getAlly(i);
 					if (ally->getX() == closestAlignedAlly->getX() && ally->getY() == closestAlignedAlly->getY()) {
+						board->insertAttackingEnemy(entity);
+						ranged.target = ally;
+					;
 						board->removeAlly(i);
 						if (i == 0) {
 							board->lose = true;
@@ -434,7 +459,7 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 							loc.dir = LocationComponent::DOWN;
 							idle.sprite->setFrame(1);
 						}
-
+					
 						std::stringstream key;
 						key << "int_ally_remove_" << i;
 						idle._actions->activate(key.str(), board->allyRemoveAction, ally->getSprite());
@@ -442,11 +467,12 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 					}
 
 				}
-				//if (ally->getX() == loc.x && ally->getY() == loc.y) {
 
 			}
 			manager->addComponent<LocationComponent>(entity, loc);
 			manager->addComponent<IdleComponent>(entity, idle);
+			manager->addComponent<RangeOrthoAttackComponent>(entity, ranged);
+
 		}
 	
 	return true;
@@ -460,3 +486,121 @@ bool MovementImmobileSystem::updateEntity(EntityId entity, std::shared_ptr<Board
 	return true;
 }
 
+
+bool SmartMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) {
+	//Can assume entity has a SmartMovementComponent(required)
+
+	if (manager->hasComponent<LocationComponent>(entity)) {
+		//        DumbMovementComponent move = manager->getComponent<DumbMovementComponent>(entity);
+		LocationComponent loc = manager->getComponent<LocationComponent>(entity);
+		IdleComponent idle = manager->getComponent<IdleComponent>(entity);
+		int movementDistance = manager->getComponent<SmartMovementComponent>(entity).movementDistance;
+
+		cugl::Vec2 tile = cugl::Vec2(board->xOfIndex(board->getSelectedTile()), board->yOfIndex(board->getSelectedTile()));
+		bool isOffset = board->offset != 0.0f;
+		bool isRow = board->offsetRow;
+
+		int offsetAmount = board->lengthToCells(board->offset, board->offsetRow);
+
+		int ownX = loc.x;
+		int ownY = loc.y;
+
+		if (isOffset) {
+			if (tile.y == loc.y && isRow) {
+				ownX += offsetAmount;
+				ownX = ownX % board->getWidth() + (ownX % board->getWidth() < 0 ? board->getWidth() : 0);
+			}
+			else if (tile.x == loc.x && !isRow) {
+				ownY += offsetAmount;
+				ownY = ownY % board->getHeight() + (ownX % board->getHeight() < 0 ? board->getHeight() : 0);
+			}
+		}
+
+
+		if (board->getNumAllies() == 0) {
+			return true;
+		}
+		std::shared_ptr<PlayerPawnModel> nearest = board->getAlly(0);
+		int nearestX = nearest->getX();
+		int nearestY = nearest->getY();
+		if (isOffset) {
+			if (tile.y == nearestY && isRow) {
+				nearestX += offsetAmount;
+				nearestX = nearestX % board->getWidth() + (nearestX % board->getWidth() < 0 ? board->getWidth() : 0);
+			}
+			else if (tile.x == nearestX && !isRow) {
+				nearestY += offsetAmount;
+				nearestY = nearestY % board->getHeight() + (nearestY % board->getHeight() < 0 ? board->getHeight() : 0);
+			}
+		}
+
+		int minDist = (abs(ownX- nearestX) + abs(ownY- nearestY));
+		int targetInt = 0;
+		for (int i = 1; i < board->getNumAllies(); i++) {
+			std::shared_ptr<PlayerPawnModel> temp = board->getAlly(i);
+			int allyX = temp->getX();
+			int allyY = temp->getY();
+			if (isOffset) {
+				if (tile.y == allyY && isRow) {
+					allyX += offsetAmount;
+					allyX = allyX % board->getWidth() + (allyX % board->getWidth() < 0 ? board->getWidth() : 0);
+				}
+				else if (tile.x == allyX && !isRow) {
+					allyY += offsetAmount;
+					allyY = allyY % board->getHeight() + (allyY % board->getHeight() < 0 ? board->getHeight() : 0);
+				}
+			}
+			int dist = abs(ownX - allyX) + abs(ownY - allyY);
+			if (dist <= minDist) {
+				minDist = dist;
+				nearestX = allyX;
+				nearestY = allyY;
+				targetInt = i;
+			}
+		}
+
+		int dX = nearestX - ownX;
+		int dY = nearestY - ownY;
+
+
+		if (std::abs(dY) >= std::abs(dX)) {
+			if (dY >= 0) {
+				loc.dir = LocationComponent::UP;
+			}
+			else {
+				loc.dir = LocationComponent::DOWN;
+			}
+		}
+		else {
+			if (dX >= 0) {
+				loc.dir = LocationComponent::RIGHT;
+			}
+			else {
+				loc.dir = LocationComponent::LEFT;
+			}
+		}
+
+
+
+		//TODO Update the comp based on board/direction of entity
+
+		switch (loc.dir) {
+		case LocationComponent::UP:
+			idle.sprite->setFrame(ENEMY_FRAME_UP);
+			break;
+		case LocationComponent::DOWN:
+			idle.sprite->setFrame(ENEMY_FRAME_DOWN);
+			break;
+		case LocationComponent::LEFT:
+			idle.sprite->setFrame(ENEMY_FRAME_LEFT);
+			break;
+		case LocationComponent::RIGHT:
+			idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
+			break;
+		}
+		manager->addComponent<LocationComponent>(entity, loc);
+		manager->addComponent<IdleComponent>(entity, idle);
+	}
+
+	return true;
+}

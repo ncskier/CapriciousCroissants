@@ -177,6 +177,9 @@ void PlayerController::update(float timestep) {
     
     // Update board node positions
     _board->updateNodes();
+
+	 //Update board for passing to facing
+	_entityManager->updateEntities(_board, EntityManager::onPlayerMove);
 }
 
 /**

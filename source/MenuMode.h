@@ -48,6 +48,7 @@ protected:
     float _maxOffset = 0.0f;
     float _originY = 0.0f;
     std::shared_ptr<InputController> _input;
+    bool _introScroll = true;
     
 public:
 #pragma mark -

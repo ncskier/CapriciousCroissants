@@ -67,15 +67,16 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     Application::get()->setClearColor(Color4(192,192,192,255));
     
     // Load levels
-    _softOffset = offsetForLevel(_selectedLevel);
+    _introScroll = true;
+    _softOffset = 0.0f;
     _hardOffset = offsetForLevel(_selectedLevel);
     setMenuTileSize();
     loadLevelsFromJson("json/levelList.json");
     
     // Create Mika Node
     _mikaNode = createMikaNode();
-    _worldNode->addChild(_mikaNode);
     updateMikaNode();
+    _worldNode->addChild(_mikaNode);
     
     return true;
 }
@@ -101,6 +102,7 @@ void MenuMode::dispose() {
     _minOffset = 0.0f;
     _maxOffset = 0.0f;
     _originY = 0.0f;
+    _introScroll = true;
 }
 
 
@@ -300,44 +302,47 @@ bool MenuMode::touchSelectedLevel(cugl::Vec2 touchPosition) {
 void MenuMode::update(float timestep) {
     // Handle Input
     InputController::MoveEvent moveEvent = _input->getMoveEvent();
-    if (moveEvent != InputController::MoveEvent::NONE) {
-        // Calculate Menu Tile offsets
-        Vec2 moveOffset = _input->getMoveOffset();
-        if (moveEvent == InputController::MoveEvent::START) {
-            // Check if player tapped on Mika
-            Vec2 touchPosition = _input->getTouchPosition();
-            if (touchSelectedLevel(touchPosition)) {
-                // Select level and exit Level Select Menu
-                this->_selectedLevelJson = _levelsJson->get(_selectedLevel)->asString();
-                this->setActive(false);
+    if (!_introScroll) {
+        if (moveEvent != InputController::MoveEvent::NONE) {
+            // Calculate Menu Tile offsets
+            Vec2 moveOffset = _input->getMoveOffset();
+            if (moveEvent == InputController::MoveEvent::START) {
+                // Check if player tapped on Mika
+                Vec2 touchPosition = _input->getTouchPosition();
+                if (touchSelectedLevel(touchPosition)) {
+                    // Select level and exit Level Select Menu
+                    this->_selectedLevelJson = _levelsJson->get(_selectedLevel)->asString();
+                    this->setActive(false);
+                }
+                _hardOffset = _softOffset;
+                _input->recordMove();
+            } else if (moveEvent != InputController::MoveEvent::END) {
+                _softOffset = _hardOffset - moveOffset.y;
+                // Check drag bounds (top & bottom)
+                if (_softOffset > _maxOffset) {
+                    float diff = std::abs(_softOffset-_maxOffset);
+                    _softOffset = _maxOffset + applyOffsetCapFunction(diff);
+                } else if (_softOffset < _minOffset) {
+                    float diff = std::abs(_softOffset-_minOffset);
+                    _softOffset = _minOffset - applyOffsetCapFunction(diff);
+                }
+            } else {
+                _input->clear();
             }
-            _hardOffset = _softOffset;
-            _input->recordMove();
-        } else if (moveEvent != InputController::MoveEvent::END) {
-            _softOffset = _hardOffset - moveOffset.y;
-            // Check drag bounds (top & bottom)
-            if (_softOffset > _maxOffset) {
-                float diff = std::abs(_softOffset-_maxOffset);
-                _softOffset = _maxOffset + applyOffsetCapFunction(diff);
-            } else if (_softOffset < _minOffset) {
-                float diff = std::abs(_softOffset-_minOffset);
-                _softOffset = _minOffset - applyOffsetCapFunction(diff);
-            }
-        } else {
-            _input->clear();
         }
+        
+        // Update
+        updateSelectedLevel();
+        updateMikaNode();
     }
-    
-    // Update
-    updateSelectedLevel();
-    updateMikaNode();
     
     // Relax back to selected level
     if (moveEvent == InputController::MoveEvent::END) {
         _hardOffset = offsetForLevel(_selectedLevel);
     }
     if (moveEvent == InputController::MoveEvent::NONE || moveEvent == InputController::MoveEvent::END) {
-        if (_softOffset != _hardOffset) {
+        float epsilon = 0.1f;
+        if (std::abs(_softOffset - _hardOffset) > epsilon) {
             float diff = std::abs(_softOffset - _hardOffset);
             float velocity = diff*10.0f;
             float dx = velocity * timestep;
@@ -348,6 +353,8 @@ void MenuMode::update(float timestep) {
                 _softOffset = _softOffset - dx;
                 if (_softOffset < _hardOffset) { _softOffset = _hardOffset; }
             }
+        } else if (_introScroll) {
+            _introScroll = false;
         }
     }
     

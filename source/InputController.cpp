@@ -149,7 +149,7 @@ void InputController::recordMove() {
 
 #pragma mark -
 #pragma mark Input Results
-/** Returns touch down time */
+/** Returns if touch event was a tap by time standards */
 bool InputController::isTapTime() {
     float maxTapTime = 0.15f;
     return (_touchDownTime < maxTapTime);

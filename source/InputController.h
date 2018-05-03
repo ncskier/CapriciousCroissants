@@ -58,13 +58,13 @@ private:
     cugl::TouchID _touchID;
     /** Move event type */
     MoveEvent _moveEvent;
-    /** Time touch is down */
-    float _touchDownTime;
     
 protected:
     // INPUT RESULTS
     /** The current touch location. */
     cugl::Vec2 _touchPosition;
+    /** Time touch is down */
+    float _touchDownTime;
     
 public:
 #pragma mark -
@@ -150,8 +150,11 @@ public:
         return (_camera->screenToWorldCoords(_touchPosition)-_camera->screenToWorldCoords(_initTouch));
     }
     
-    /** Returns touch down time */
+    /** Returns if touch event was a tap by time standards */
     bool isTapTime();
+    
+    /** Returns touch down time */
+    float getTouchDownTime() const { return _touchDownTime; }
     
     /**
      * Returns _moveEvent

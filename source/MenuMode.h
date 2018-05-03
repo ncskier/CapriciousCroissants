@@ -50,6 +50,7 @@ protected:
     std::shared_ptr<InputController> _input;
     bool _introScroll = true;
     bool _scroll = false;
+    float _velocity = 0.0f;
     
 public:
 #pragma mark -

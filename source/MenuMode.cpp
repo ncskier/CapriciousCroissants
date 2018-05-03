@@ -282,7 +282,7 @@ void MenuMode::updateMikaNode() {
         if (dragHighCap) {
             x = ((1.0f-fraction)*0.5f + fraction*levelFractionX(closestLevelUp)) * _menuTileSize.width;
         }
-//        if (dragY < -1.0f || (double)_levelsJson->size() < dragY) { x = 0.5f * _menuTileSize.width; }
+        if (dragY < -1.0f || (double)_levelsJson->size() < dragY) { x = 0.5f * _menuTileSize.width; }
     }
     _mikaNode->setPosition(x, y);
 }
@@ -333,6 +333,7 @@ void MenuMode::update(float timestep) {
             Vec2 moveOffset = _input->getMoveOffset();
             if (moveEvent == InputController::MoveEvent::START) {
                 // Check if player tapped on Mika
+                _velocity = 0.0f;
                 Vec2 touchPosition = _input->getTouchPosition();
                 if (touchSelectedLevel(touchPosition)) {
                     // Select level and exit Level Select Menu
@@ -359,8 +360,14 @@ void MenuMode::update(float timestep) {
                         _hardOffset = offsetForLevel(_selectedLevel);
                         _scroll = true;
                     }
+                } else {
+                    float time = _input->getTouchDownTime();
+                    float distance = _input->getMoveOffset().y;
+                    _velocity = -distance / time;
+                    CULog("init_velocity: %f", _velocity);
                 }
                 _input->clear();
+                _hardOffset = offsetForLevel(_selectedLevel);
             }
         }
     }
@@ -374,25 +381,48 @@ void MenuMode::update(float timestep) {
     }
     
     // Relax back to selected level
-    if (moveEvent == InputController::MoveEvent::END) {
-        _hardOffset = offsetForLevel(_selectedLevel);
-    }
     if (moveEvent == InputController::MoveEvent::NONE || moveEvent == InputController::MoveEvent::END) {
         float epsilon = 0.1f;
-        if (std::abs(_softOffset - _hardOffset) > epsilon) {
-            float diff = std::abs(_softOffset - _hardOffset);
-            float velocity = diff*10.0f;
-            float dx = velocity * timestep;
-            if (_softOffset < _hardOffset) {
-                _softOffset = _softOffset + dx;
-                if (_softOffset > _hardOffset) { _softOffset = _hardOffset; }
-            } else {
-                _softOffset = _softOffset - dx;
-                if (_softOffset < _hardOffset) { _softOffset = _hardOffset; }
+        float velocityThreshold = _menuTileSize.height*0.1f;
+        // Inertia
+        if (std::abs(_velocity) > velocityThreshold) {
+            // Apply inertia
+            float dy = _velocity * timestep;
+            _softOffset += dy;
+            // Update velocity
+            float drag = _menuTileSize.height*20.0f;
+            if (_softOffset < _minOffset || _maxOffset < _softOffset) {
+                drag *= std::pow(1.0f + std::min(std::abs(_softOffset-_minOffset), std::abs(_softOffset-_maxOffset))/_menuTileSize.height, 2);
             }
-        } else if (_introScroll || _scroll) {
-            _introScroll = false;
-            _scroll = false;
+            float dv = drag * timestep;
+            if (std::abs(dv) > std::abs(_velocity)) {
+                _velocity = 0.0f;
+            } else {
+                _velocity = (_velocity > 0) ? _velocity-dv : _velocity+dv;
+            }
+            updateSelectedLevel();
+            _hardOffset = offsetForLevel(_selectedLevel);
+        } else {
+            _velocity = 0.0f;
+        }
+        // Relax to level & check bounds
+        if ((_softOffset < _minOffset || _maxOffset < _softOffset) || std::abs(_velocity) <= velocityThreshold) {
+            if (std::abs(_softOffset - _hardOffset) > epsilon) {
+                float diff = std::abs(_softOffset - _hardOffset);
+                float velocity = diff*10.0f;
+                float dy = velocity * timestep;
+                if (_softOffset < _hardOffset) {
+                    _softOffset = _softOffset + dy;
+                    if (_softOffset > _hardOffset) { _softOffset = _hardOffset; }
+                } else {
+                    _softOffset = _softOffset - dy;
+                    if (_softOffset < _hardOffset) { _softOffset = _hardOffset; }
+                }
+            } else if (_introScroll || _scroll) {
+                _softOffset = _hardOffset;
+                _introScroll = false;
+                _scroll = false;
+            }
         }
     }
     

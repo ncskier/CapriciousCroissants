@@ -67,17 +67,20 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     Application::get()->setClearColor(Color4(192,192,192,255));
     
     // Load levels
-    _introScroll = true;
-    _scroll = false;
-    _softOffset = 0.0f;
-    _hardOffset = offsetForLevel(_selectedLevel);
     setMenuTileSize();
     loadLevelsFromJson("json/levelList.json");
     
     // Create Mika Node
     _mikaNode = createMikaNode();
-    updateMikaNode();
     _worldNode->addChild(_mikaNode);
+    
+    // Begin intro scroll
+    _introScroll = true;
+    _scroll = false;
+    _hardOffset = offsetForLevel(_selectedLevel);
+    _softOffset = _hardOffset;
+    updateMikaNode();
+    _softOffset = 0.0f;
     
     return true;
 }

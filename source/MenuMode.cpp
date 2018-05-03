@@ -360,11 +360,13 @@ void MenuMode::update(float timestep) {
                         _hardOffset = offsetForLevel(_selectedLevel);
                         _scroll = true;
                     }
-                } else {
-                    float time = _input->getTouchDownTime();
-                    float distance = _input->getMoveOffset().y;
+                } else if (_input->isSwipe()) {
+                    float time = _input->getSwipeTime();
+                    float distance = _input->getSwipeVector().y;
                     _velocity = -distance / time;
-                    CULog("init_velocity: %f", _velocity);
+//                    CULog("time: %f", time);
+//                    CULog("distance: %f", distance);
+//                    CULog("init_velocity: %f", _velocity);
                 }
                 _input->clear();
                 _hardOffset = offsetForLevel(_selectedLevel);

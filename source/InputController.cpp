@@ -124,6 +124,9 @@ void InputController::update(float dt) {
     // TODO: Could have this clear itself when a move is done
     //       just need to make sure the PlayMode controller gets it
     //       before the information is cleared.
+    if (_moveEvent != MoveEvent::NONE && _moveEvent != MoveEvent::END) {
+        _touchDownTime += dt;
+    }
 }
 
 /**
@@ -134,6 +137,7 @@ void InputController::clear() {
     _touchPosition = Vec2::ZERO;
     _initTouch = Vec2::ZERO;
     _moveEvent = MoveEvent::NONE;
+    _touchDownTime = 0.0f;
 }
 
 /**
@@ -141,6 +145,14 @@ void InputController::clear() {
  */
 void InputController::recordMove() {
     _moveEvent = MoveEvent::MOVING;
+}
+
+#pragma mark -
+#pragma mark Input Results
+/** Returns touch down time */
+bool InputController::isTapTime() {
+    float maxTapTime = 0.15f;
+    return (_touchDownTime < maxTapTime);
 }
 
 #pragma mark -

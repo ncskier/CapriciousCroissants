@@ -68,6 +68,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     
     // Load levels
     _introScroll = true;
+    _scroll = false;
     _softOffset = 0.0f;
     _hardOffset = offsetForLevel(_selectedLevel);
     setMenuTileSize();
@@ -85,9 +86,6 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
  * Disposes of all (non-static) resources allocated to this mode.
  */
 void MenuMode::dispose() {
-    for (auto i = 0; i < _menuButtons.size(); i++) {
-        _menuButtons[i]->deactivate();
-    }
     removeAllChildren();
     _assets = nullptr;
     _worldNode = nullptr;
@@ -96,7 +94,7 @@ void MenuMode::dispose() {
     _mikaNode = nullptr;
     _active = false;
     _menuTiles.clear();
-    _menuButtons.clear();
+    _menuDots.clear();
     _softOffset = 0.0f;
     _hardOffset = 0.0f;
     _minOffset = 0.0f;
@@ -160,6 +158,7 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
     levelLabel->setPosition(levelDot->getContentSize().width*0.5f, levelDot->getContentSize().height*0.5f);
     levelDot->addChild(levelLabel);
+    _menuDots.push_back(levelDot);
 //    levelLabel->setBackground(Color4::BLACK);
 //    levelLabel->setForeground(Color4::WHITE);
 //    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
@@ -262,19 +261,25 @@ void MenuMode::setMenuTileSize() {
 void MenuMode::updateMikaNode() {
     // Update position
     float dragY = _softOffset / _menuTileSize.height;
-    float fraction = dragY - std::round(dragY);
-    int closestLevelIdx = (fraction < 0) ? _selectedLevel-1 : _selectedLevel+1;
+    int closestLevelUp = (int)std::floor(dragY);
+    int closestLevelDown = (int)std::ceil(dragY);
+    float fraction = dragY - (float)closestLevelDown;
+//    int closestLevelIdx = (fraction < 0) ? _selectedLevel-1 : _selectedLevel+1;
     fraction = std::abs(fraction);
-    float x = ((1.0f-fraction)*levelFractionX(_selectedLevel) + fraction*levelFractionX(closestLevelIdx)) * _menuTileSize.width;
+    float x = ((1.0f-fraction)*levelFractionX(closestLevelDown) + fraction*levelFractionX(closestLevelUp)) * _menuTileSize.width;
     float y = _originY + _menuTileSize.height*0.5f;     // Menu Tiles are anchored in bottom left
     // Check for caps
     bool dragLowCap = dragY < 0.0f;
-    bool dragHighCap = dragY > (double)(_levelsJson->size()-1.0f);
+    bool dragHighCap = dragY > (double)(_levelsJson->size()-1);
     if (dragLowCap || dragHighCap) {
         // Interpolate towards center
-        fraction = dragLowCap ? std::ceil(dragY) - dragY : dragY - std::floor(dragY);
-        x = ((1.0f-fraction)*levelFractionX(_selectedLevel) + fraction*0.5f) * _menuTileSize.width;
-        if (fraction > 1.0f) { x = 0.5f * _menuTileSize.width; }
+        if (dragLowCap) {
+            x = ((1.0f-fraction)*levelFractionX(closestLevelDown) + fraction*0.5f) * _menuTileSize.width;
+        }
+        if (dragHighCap) {
+            x = ((1.0f-fraction)*0.5f + fraction*levelFractionX(closestLevelUp)) * _menuTileSize.width;
+        }
+//        if (dragY < -1.0f || (double)_levelsJson->size() < dragY) { x = 0.5f * _menuTileSize.width; }
     }
     _mikaNode->setPosition(x, y);
 }
@@ -290,8 +295,21 @@ void MenuMode::updateSelectedLevel() {
 /** Return true if touch selected the level */
 bool MenuMode::touchSelectedLevel(cugl::Vec2 touchPosition) {
     bool inNullTile = _mikaNode->getBoundingBox().contains(touchPosition);
-    bool inMikaSprite = _mikaNode->getChildByName(MENU_MIKA_NAME)->getBoundingBox().contains(touchPosition);
+    Vec2 touchPositionNodeCoords = _mikaNode->worldToNodeCoords(touchPosition);
+    bool inMikaSprite = _mikaNode->getChildByName(MENU_MIKA_NAME)->getBoundingBox().contains(touchPositionNodeCoords);
     return inNullTile || inMikaSprite;
+}
+
+/** Returns tapped level and -1 if no level tapped */
+int MenuMode::tappedLevel(cugl::Vec2 touchPosition) {
+    for (int i = 0; i < _menuDots.size(); i++) {
+        std::shared_ptr<Node> menuTile = _menuTiles[i];
+        Vec2 touchPositionNodeCoords = menuTile->worldToNodeCoords(touchPosition);
+        if (_menuDots[i]->getBoundingBox().contains(touchPositionNodeCoords)) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 
@@ -304,8 +322,9 @@ bool MenuMode::touchSelectedLevel(cugl::Vec2 touchPosition) {
  */
 void MenuMode::update(float timestep) {
     // Handle Input
+    _input->update(timestep);
     InputController::MoveEvent moveEvent = _input->getMoveEvent();
-    if (!_introScroll) {
+    if (!_introScroll && !_scroll) {
         if (moveEvent != InputController::MoveEvent::NONE) {
             // Calculate Menu Tile offsets
             Vec2 moveOffset = _input->getMoveOffset();
@@ -330,12 +349,24 @@ void MenuMode::update(float timestep) {
                     _softOffset = _minOffset - applyOffsetCapFunction(diff);
                 }
             } else {
+                if (_input->isTapTime()) {
+                    int level = tappedLevel(_input->getTouchPosition());
+                    if (level != -1) {
+                        _selectedLevel = level;
+                        _hardOffset = offsetForLevel(_selectedLevel);
+                        _scroll = true;
+                    }
+                }
                 _input->clear();
             }
         }
-        
-        // Update
+    }
+    
+    // Update
+    if (!_introScroll && !_scroll) {
         updateSelectedLevel();
+    }
+    if (!_introScroll) {
         updateMikaNode();
     }
     
@@ -356,8 +387,9 @@ void MenuMode::update(float timestep) {
                 _softOffset = _softOffset - dx;
                 if (_softOffset < _hardOffset) { _softOffset = _hardOffset; }
             }
-        } else if (_introScroll) {
+        } else if (_introScroll || _scroll) {
             _introScroll = false;
+            _scroll = false;
         }
     }
     

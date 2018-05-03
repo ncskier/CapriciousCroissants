@@ -58,6 +58,8 @@ private:
     cugl::TouchID _touchID;
     /** Move event type */
     MoveEvent _moveEvent;
+    /** Time touch is down */
+    float _touchDownTime;
     
 protected:
     // INPUT RESULTS
@@ -147,6 +149,9 @@ public:
     cugl::Vec2 getMoveOffset() const {
         return (_camera->screenToWorldCoords(_touchPosition)-_camera->screenToWorldCoords(_initTouch));
     }
+    
+    /** Returns touch down time */
+    bool isTapTime();
     
     /**
      * Returns _moveEvent

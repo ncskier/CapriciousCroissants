@@ -34,7 +34,7 @@ protected:
     cugl::Size _dimen;
     std::shared_ptr<cugl::Node> _worldNode;
     std::vector<std::shared_ptr<cugl::Node>> _menuTiles;
-    std::vector<std::shared_ptr<cugl::Button>> _menuButtons;
+    std::vector<std::shared_ptr<cugl::Node>> _menuDots;
     cugl::Size _menuTileSize;
     std::shared_ptr<cugl::Node> _mikaNode;
     
@@ -49,6 +49,7 @@ protected:
     float _originY = 0.0f;
     std::shared_ptr<InputController> _input;
     bool _introScroll = true;
+    bool _scroll = false;
     
 public:
 #pragma mark -
@@ -125,6 +126,9 @@ public:
     
     /** Return true if touch selected the level */
     bool touchSelectedLevel(cugl::Vec2 touchPosition);
+    
+    /** Returns tapped level and -1 if no level tapped */
+    int tappedLevel(cugl::Vec2 touchPosition);
     
     
 #pragma mark -

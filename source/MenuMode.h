@@ -131,6 +131,9 @@ public:
     /** Returns tapped level and -1 if no level tapped */
     int tappedLevel(cugl::Vec2 touchPosition);
     
+    /** Returns if menu tile at index [i] is on the screen (shouldn't or should hidden) */
+    bool menuTileOnScreen(int i);
+    
     
 #pragma mark -
 #pragma mark Input Handling

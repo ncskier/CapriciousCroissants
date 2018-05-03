@@ -315,6 +315,13 @@ int MenuMode::tappedLevel(cugl::Vec2 touchPosition) {
     return -1;
 }
 
+/** Returns if menu tile at index [i] should be hidden (if it's off the screen) */
+bool MenuMode::menuTileOnScreen(int i) {
+    float minY = menuTilePosition(i).y;
+    float maxY = minY + _menuTileSize.height;
+    return ((minY > 0.0f && minY < _dimen.height) || (maxY > 0.0f && maxY < _dimen.height));
+}
+
 
 #pragma mark -
 #pragma mark Input Handling
@@ -431,5 +438,6 @@ void MenuMode::update(float timestep) {
     // Move Menu Tiles
     for (auto i = 0; i < _menuTiles.size(); i++) {
         _menuTiles[i]->setPosition(menuTilePosition(i));
+        _menuTiles[i]->setVisible(menuTileOnScreen(i));
     }
 }

@@ -51,6 +51,7 @@ protected:
     bool _introScroll = true;
     bool _scroll = false;
     float _velocity = 0.0f;
+    bool _playSelected = false;
     
 public:
 #pragma mark -

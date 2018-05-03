@@ -104,6 +104,7 @@ void MenuMode::dispose() {
     _maxOffset = 0.0f;
     _originY = 0.0f;
     _introScroll = true;
+    _playSelected = false;
 }
 
 
@@ -343,9 +344,7 @@ void MenuMode::update(float timestep) {
                 _velocity = 0.0f;
                 Vec2 touchPosition = _input->getTouchPosition();
                 if (touchSelectedLevel(touchPosition)) {
-                    // Select level and exit Level Select Menu
-                    this->_selectedLevelJson = _levelsJson->get(_selectedLevel)->asString();
-                    this->setActive(false);
+                    _playSelected = true;
                 }
                 _hardOffset = _softOffset;
                 _input->recordMove();
@@ -360,6 +359,11 @@ void MenuMode::update(float timestep) {
                     _softOffset = _minOffset - applyOffsetCapFunction(diff);
                 }
             } else {
+                if (_playSelected && touchSelectedLevel(_input->getTouchPosition())) {
+                    // Select level and exit Level Select Menu
+                    this->_selectedLevelJson = _levelsJson->get(_selectedLevel)->asString();
+                    this->setActive(false);
+                }
                 if (_input->isTapTime()) {
                     int level = tappedLevel(_input->getTouchPosition());
                     if (level != -1) {

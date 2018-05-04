@@ -52,6 +52,9 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     _assets = assets;
     _dimen = dimen;
     
+    // Initialize ActionManager
+    _actions = ActionManager::alloc();
+    
     // Initialize Input Handler
     _input = input;
     _input->init(getCamera());
@@ -105,6 +108,7 @@ void MenuMode::dispose() {
     _originY = 0.0f;
     _introScroll = true;
     _playSelected = false;
+    _mikaAttack = false;
 }
 
 
@@ -200,18 +204,18 @@ std::shared_ptr<Node> MenuMode::createMikaNode() {
     nullTileSprite->setContentSize(length, length);
     
     // Mika Sprite
-    std::shared_ptr<AnimationNode> mikaSprite = AnimationNode::alloc(_assets->get<Texture>(PLAYER_TEXTURE_KEY_0), PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
-    mikaSprite->setAnchor(Vec2::ANCHOR_CENTER);
-    mikaSprite->setFrame(PLAYER_IMG_NORMAL);
+    _mikaSprite = AnimationNode::alloc(_assets->get<Texture>(PLAYER_TEXTURE_KEY_0), PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
+    _mikaSprite->setAnchor(Vec2::ANCHOR_CENTER);
+    _mikaSprite->setFrame(PLAYER_IMG_NORMAL);
     float height = nullTileSprite->getContentSize().height*1.3f;
-    float width = mikaSprite->getContentSize().width/mikaSprite->getContentSize().height * height;
-    mikaSprite->setContentSize(width, height);
+    float width = _mikaSprite->getContentSize().width/_mikaSprite->getContentSize().height * height;
+    _mikaSprite->setContentSize(width, height);
     float x = nullTileSprite->getContentSize().width*0.5f;
     float y = nullTileSprite->getContentSize().height*0.9f;
-    mikaSprite->setPosition(x, y);
+    _mikaSprite->setPosition(x, y);
     
     // Combine and return
-    nullTileSprite->addChildWithName(mikaSprite, MENU_MIKA_NAME);
+    nullTileSprite->addChildWithName(_mikaSprite, MENU_MIKA_NAME);
     return nullTileSprite;
 }
 
@@ -288,6 +292,28 @@ void MenuMode::updateMikaNode() {
     _mikaNode->setPosition(x, y);
 }
 
+/** Update mika animation */
+void MenuMode::updateMikaAnimation(float timestep, bool touchDown) {
+    if (!touchDown) {
+        _mikaAttack = false;
+        if (!_actions->isActive(MIKA_IDLE_KEY)) {
+            _actions->activate(MIKA_IDLE_KEY, _mikaIdleAction, _mikaSprite);
+        }
+    } else {
+        if (!_mikaAttack) {
+            if (!_actions->isActive(MIKA_TRANSITION_KEY)) {
+                _actions->activate(MIKA_TRANSITION_KEY, _mikaTransitionAction, _mikaSprite);
+            } else {
+                _mikaAttack = true;
+            }
+        } else {
+            if (!_actions->isActive(MIKA_ATTACK_KEY)) {
+                _actions->activate(MIKA_ATTACK_KEY, _mikaAttackAction, _mikaSprite);
+            }
+        }
+    }
+}
+
 /** Update selected level */
 void MenuMode::updateSelectedLevel() {
     _selectedLevel = (int)std::round(_softOffset / _menuTileSize.height);
@@ -300,7 +326,7 @@ void MenuMode::updateSelectedLevel() {
 bool MenuMode::touchSelectedLevel(cugl::Vec2 touchPosition) {
     bool inNullTile = _mikaNode->getBoundingBox().contains(touchPosition);
     Vec2 touchPositionNodeCoords = _mikaNode->worldToNodeCoords(touchPosition);
-    bool inMikaSprite = _mikaNode->getChildByName(MENU_MIKA_NAME)->getBoundingBox().contains(touchPositionNodeCoords);
+    bool inMikaSprite = _mikaSprite->getBoundingBox().contains(touchPositionNodeCoords);
     return inNullTile || inMikaSprite;
 }
 
@@ -394,11 +420,13 @@ void MenuMode::update(float timestep) {
     }
     
     // Relax back to selected level
+    bool animateMika = (moveEvent != InputController::MoveEvent::NONE && moveEvent != InputController::MoveEvent::END);
     if (moveEvent == InputController::MoveEvent::NONE || moveEvent == InputController::MoveEvent::END) {
         float epsilon = 0.1f;
         float velocityThreshold = _menuTileSize.height*0.1f;
         // Inertia
         if (std::abs(_velocity) > velocityThreshold) {
+            animateMika = true;
             // Apply inertia
             float dy = _velocity * timestep;
             _softOffset += dy;
@@ -444,4 +472,8 @@ void MenuMode::update(float timestep) {
         _menuTiles[i]->setPosition(menuTilePosition(i));
         _menuTiles[i]->setVisible(menuTileOnScreen(i));
     }
+    
+    // Update Mika Animation
+    updateMikaAnimation(timestep, animateMika);
+    _actions->update(timestep);
 }

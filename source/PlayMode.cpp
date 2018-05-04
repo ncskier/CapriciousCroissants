@@ -517,8 +517,10 @@ void PlayMode::updateInterruptingAnimations(std::set<std::string>& interruptingA
 void PlayMode::updateWinAnimation(float dt) {
     float disappearTime = 0.035f+0.035f+0.035f+0.035f+0.035f+0.035f+0.4f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f;
     float appearTime = TILE_IMG_APPEAR_TIME;
-    float timeInterval = disappearTime/std::max(_board->getWidth(), _board->getHeight());
-    float time = winTimer / timeInterval;
+    float endTime = 0.75f;
+//    float timeInterval = disappearTime/std::max(_board->getWidth(), _board->getHeight());
+    float timeInterval = 0.15f;
+//    float time = winTimer / timeInterval;
     int mikaX = _board->getAlly(0)->getX();
     int mikaY = _board->getAlly(0)->getY();
     bool winAnimationOver = true;
@@ -526,13 +528,16 @@ void PlayMode::updateWinAnimation(float dt) {
         for (int y = 0; y < _board->getHeight(); y++) {
             bool winOver = false;
             float diff = (float)std::max(std::abs(mikaX-x), std::abs(mikaY - y));
-            if (diff + disappearTime + appearTime < winTimer) {
-                // Animation over
-                CULog("animation over (%d, %d)", x, y);
-                winOver = true;
-            } else if (diff + disappearTime < winTimer) {
+//            if (diff + disappearTime + appearTime < winTimer) {
+            if (diff*timeInterval + disappearTime + appearTime < winTimer) {
+//                if (diff + disappearTime + appearTime + endTime < winTimer) {
+                if (diff*timeInterval + disappearTime + appearTime + endTime < winTimer) {
+                    // Animation over
+                    winOver = true;
+                }
+//            } else if (diff + disappearTime < winTimer) {
+            } else if (diff*timeInterval + disappearTime < winTimer) {
                 // Appear animation
-                CULog("animation APPEAR (%d, %d)", x, y);
                 std::stringstream ss_appear;
                 ss_appear << "tile_win_animation_appear_(" << x << "," << y << ")";
                 if (!_actions->isActive(ss_appear.str())) {
@@ -546,7 +551,8 @@ void PlayMode::updateWinAnimation(float dt) {
                     _actions->activate(ss_appear.str(), _board->tileAddAction, tile->getSprite());
                     _board->getNode()->sortZOrder();
                 }
-            } else if (diff < winTimer) {
+//            } else if (diff < winTimer) {
+            } else if (diff*timeInterval < winTimer) {
                 // Disappear animation
                 std::stringstream ss_disappear;
                 ss_disappear << "tile_win_animation_disappear_(" << x << "," << y << ")";

@@ -281,6 +281,29 @@ void InputController::touchMovedCB(const cugl::MouseEvent& event, const Vec2& pr
 	if (_moveEvent != MoveEvent::END) {
 		if (event.buttons.hasLeft()) {
 			_touchPosition = event.position;
+            // Acceleration calculations
+            Vec2 diff = event.position;
+            diff.subtract(_prevTouch);
+            float dy = std::abs(diff.y);
+            float dt = _touchDownTime - _prevTouchTime;
+            if (dt > 0.001f) {
+                dt *= 1000.0f;      // Convert to ms because velocities were too high
+                float velocity = dy/dt;
+                float acceleration = velocity/dt;
+                // Mark if acceleration is greater than threashold
+                if (acceleration >= _swipeAccelerationThreshold && _acceleration < _swipeAccelerationThreshold) {
+                    _swiping = true;
+                    _swipeInitPos = event.position;
+                    _swipeInitTime = _touchDownTime;
+                } else if (acceleration < _swipeAccelerationThreshold) {
+                    _swiping  = false;
+                }
+                // Update previous touch info
+                _prevTouch = event.position;
+                _prevTouchTime = _touchDownTime;
+                _velocity = velocity;
+                _acceleration = acceleration;
+            }
 		}
 	}
 }

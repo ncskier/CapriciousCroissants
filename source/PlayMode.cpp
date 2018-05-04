@@ -166,6 +166,7 @@ void PlayMode::dispose() {
         done = false;
         doneCtr = 30;
         win = false;
+        winTimer = 0.0f;
         _beginAttack = false;
         _attacking = false;
 		if (_resetButton) {
@@ -512,6 +513,57 @@ void PlayMode::updateInterruptingAnimations(std::set<std::string>& interruptingA
     }
 }
 
+/** Update interrupting win animation if player has won */
+void PlayMode::updateWinAnimation(float dt) {
+    float disappearTime = 0.035f+0.035f+0.035f+0.035f+0.035f+0.035f+0.4f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f;
+    float appearTime = TILE_IMG_APPEAR_TIME;
+    float timeInterval = disappearTime/std::max(_board->getWidth(), _board->getHeight());
+    float time = winTimer / timeInterval;
+    int mikaX = _board->getAlly(0)->getX();
+    int mikaY = _board->getAlly(0)->getY();
+    bool winAnimationOver = true;
+    for (int x = 0; x < _board->getWidth(); x++) {
+        for (int y = 0; y < _board->getHeight(); y++) {
+            bool winOver = false;
+            float diff = (float)std::max(std::abs(mikaX-x), std::abs(mikaY - y));
+            if (diff + disappearTime + appearTime < winTimer) {
+                // Animation over
+                CULog("animation over (%d, %d)", x, y);
+                winOver = true;
+            } else if (diff + disappearTime < winTimer) {
+                // Appear animation
+                CULog("animation APPEAR (%d, %d)", x, y);
+                std::stringstream ss_appear;
+                ss_appear << "tile_win_animation_appear_(" << x << "," << y << ")";
+                if (!_actions->isActive(ss_appear.str())) {
+                    _board->getTile(x, y)->getSprite()->setVisible(false);
+                    int color = 2;
+                    Rect bounds = _board->calculateDrawBounds(x, y);
+                    std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
+                    tile->getSprite()->setZOrder(_board->calculateDrawZ(x, y, true));
+                    tile->getSprite()->setFrame(TILE_IMG_APPEAR_START);
+                    _board->getNode()->addChild(tile->getSprite());
+                    _actions->activate(ss_appear.str(), _board->tileAddAction, tile->getSprite());
+                    _board->getNode()->sortZOrder();
+                }
+            } else if (diff < winTimer) {
+                // Disappear animation
+                std::stringstream ss_disappear;
+                ss_disappear << "tile_win_animation_disappear_(" << x << "," << y << ")";
+                if (!_actions->isActive(ss_disappear.str())) {
+                    _actions->activate(ss_disappear.str(), _board->tileRemoveAction, _board->getTile(x, y)->getSprite());
+                }
+            }
+            winAnimationOver = winAnimationOver && winOver;
+        }
+    }
+    if (winAnimationOver) {
+        setComplete(true);
+    }
+    
+    winTimer += dt;
+}
+
 /**
  * Executes the core gameplay loop of this world.
  *
@@ -531,52 +583,55 @@ void PlayMode::update(float dt) {
     
     // Update actions
     _actions->update(dt);
-    
-    // Check for interrupting animations
-	bool hasInterrupts = false;
-	for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
-		if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
-			hasInterrupts = true;
-			break;
-		}
-	}
-    if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && !hasInterrupts) {
-        // Update Gameplay
-        if (!done) {
-            //    CULog("PlayMode Update");
-            if (_state == State::PLAYER) {
-                // PLAYER turn
-                updatePlayerTurn(dt);
-            } else if (_state == State::BOARD) {
-                // BOARD turn
-                updateBoardTurn(dt);
-            } else {
-                // ENEMY turn
-                updateEnemyTurn(dt);
-            }
-        } else {
-            if (doneCtr == 0) {
-                setComplete(true);
-                CULog("Level Complete");
-            } else {
-                doneCtr -= 1;
+    if (win) {
+        updateWinAnimation(dt);
+    } else {
+        // Check for interrupting animations
+        bool hasInterrupts = false;
+        for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
+            if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
+                hasInterrupts = true;
+                break;
             }
         }
-    } else {
-        // Update Interrupting Animations
-        if (!_playerController.getInterruptingActions().empty()) { updateInterruptingAnimations(_playerController.getInterruptingActions()); }
-        if (!_boardController.getInterruptingActions().empty()) { updateInterruptingAnimations(_boardController.getInterruptingActions()); }
-        if (!_enemyController.getInterruptingActions().empty()) { updateInterruptingAnimations(_enemyController.getInterruptingActions()); }
+        if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && !hasInterrupts) {
+            // Update Gameplay
+            if (!done) {
+                //    CULog("PlayMode Update");
+                if (_state == State::PLAYER) {
+                    // PLAYER turn
+                    updatePlayerTurn(dt);
+                } else if (_state == State::BOARD) {
+                    // BOARD turn
+                    updateBoardTurn(dt);
+                } else {
+                    // ENEMY turn
+                    updateEnemyTurn(dt);
+                }
+            } else {
+                if (doneCtr == 0) {
+                    setComplete(true);
+                    CULog("Level Complete");
+                } else {
+                    doneCtr -= 1;
+                }
+            }
+        } else {
+            // Update Interrupting Animations
+            if (!_playerController.getInterruptingActions().empty()) { updateInterruptingAnimations(_playerController.getInterruptingActions()); }
+            if (!_boardController.getInterruptingActions().empty()) { updateInterruptingAnimations(_boardController.getInterruptingActions()); }
+            if (!_enemyController.getInterruptingActions().empty()) { updateInterruptingAnimations(_enemyController.getInterruptingActions()); }
 
-		for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
-			if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
-				IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enem));
-				updateInterruptingAnimations(idle._interruptingActions);
-				_entityManager->addComponent<IdleComponent>((*enem), idle);
-			}
-		}
+            for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
+                if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
+                    IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enem));
+                    updateInterruptingAnimations(idle._interruptingActions);
+                    _entityManager->addComponent<IdleComponent>((*enem), idle);
+                }
+            }
 
-        _input->clear();
+            _input->clear();
+        }
     }
 }
 

@@ -26,7 +26,7 @@
 		EB0FF4942016E06400517030 /* CULayout.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF48F2016E06400517030 /* CULayout.h */; };
 		EB0FF4952016E06400517030 /* CUGridLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF4902016E06400517030 /* CUGridLayout.h */; };
 		EB0FF4962016E06A00517030 /* cu_2d.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1921D74AA60007EC7A6 /* cu_2d.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB0FF4972016E06B00517030 /* cu_2d.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1921D74AA60007EC7A6 /* cu_2d.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4972016E06B00517030 /* cu_2d.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1921D74AA60007EC7A6 /* cu_2d.h */; };
 		EB0FF4982016E06B00517030 /* CUNinePatch.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF47C2016E00B00517030 /* CUNinePatch.h */; };
 		EB0FF49A2016E0A800517030 /* CULabel.h in Headers */ = {isa = PBXBuildFile; fileRef = EB4AEC191CFD4DCD0090AF7F /* CULabel.h */; };
 		EB0FF49B2016E0A800517030 /* CUButton.h in Headers */ = {isa = PBXBuildFile; fileRef = EBFE7C0B1E1A86FC001007C2 /* CUButton.h */; };
@@ -37,13 +37,13 @@
 		EB0FF4A02016E0A900517030 /* CUSlider.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF47D2016E00B00517030 /* CUSlider.h */; };
 		EB0FF4A12016E0A900517030 /* CUTextField.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF47E2016E00C00517030 /* CUTextField.h */; };
 		EB0FF4A22016E0B200517030 /* cugl.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18C1D74AA1D007EC7A6 /* cugl.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB0FF4A32016E0B300517030 /* cugl.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18C1D74AA1D007EC7A6 /* cugl.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4A32016E0B300517030 /* cugl.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18C1D74AA1D007EC7A6 /* cugl.h */; };
 		EB0FF4A52016E0C000517030 /* cu_platform.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18B1D74AA15007EC7A6 /* cu_platform.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB0FF4A62016E0C000517030 /* CUBase.h in Headers */ = {isa = PBXBuildFile; fileRef = EB6CDA521D25B684006AD8CF /* CUBase.h */; };
 		EB0FF4A72016E0C000517030 /* CUEndian.h in Headers */ = {isa = PBXBuildFile; fileRef = EB202C871DEBBA1000116616 /* CUEndian.h */; };
 		EB0FF4A82016E0C000517030 /* CUApplication.h in Headers */ = {isa = PBXBuildFile; fileRef = EB4AEC051CFCBA270090AF7F /* CUApplication.h */; };
 		EB0FF4A92016E0C000517030 /* CUDisplay.h in Headers */ = {isa = PBXBuildFile; fileRef = EB77F1CF1D3690E000D52B9E /* CUDisplay.h */; };
-		EB0FF4AA2016E0C000517030 /* cu_platform.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18B1D74AA15007EC7A6 /* cu_platform.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4AA2016E0C000517030 /* cu_platform.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18B1D74AA15007EC7A6 /* cu_platform.h */; };
 		EB0FF4AC2016E0D700517030 /* cu_util.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18F1D74AA40007EC7A6 /* cu_util.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB0FF4AD2016E0D700517030 /* CUDebug.h in Headers */ = {isa = PBXBuildFile; fileRef = EB4AEC1D1CFDB9AC0090AF7F /* CUDebug.h */; };
 		EB0FF4AE2016E0D700517030 /* CUStrings.h in Headers */ = {isa = PBXBuildFile; fileRef = EB4AEC471D01BC4F0090AF7F /* CUStrings.h */; };
@@ -51,28 +51,28 @@
 		EB0FF4B02016E0D700517030 /* CUThreadPool.h in Headers */ = {isa = PBXBuildFile; fileRef = EBCE54671DED12D6003B52FE /* CUThreadPool.h */; };
 		EB0FF4B12016E0D700517030 /* CUFreeList.h in Headers */ = {isa = PBXBuildFile; fileRef = EBCE546C1DED12E6003B52FE /* CUFreeList.h */; };
 		EB0FF4B22016E0D700517030 /* CUGreedyFreeList.h in Headers */ = {isa = PBXBuildFile; fileRef = EBCE546F1DED1315003B52FE /* CUGreedyFreeList.h */; };
-		EB0FF4B32016E0D800517030 /* cu_util.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18F1D74AA40007EC7A6 /* cu_util.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4B32016E0D800517030 /* cu_util.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18F1D74AA40007EC7A6 /* cu_util.h */; };
 		EB0FF4B42016E0EA00517030 /* cu_math.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18D1D74AA27007EC7A6 /* cu_math.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB0FF4B52016E0EC00517030 /* cu_math.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18D1D74AA27007EC7A6 /* cu_math.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4B52016E0EC00517030 /* cu_math.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18D1D74AA27007EC7A6 /* cu_math.h */; };
 		EB0FF4B62016E0FB00517030 /* cu_polygon.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18E1D74AA33007EC7A6 /* cu_polygon.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB0FF4B72016E0FC00517030 /* cu_polygon.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18E1D74AA33007EC7A6 /* cu_polygon.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4B72016E0FC00517030 /* cu_polygon.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F18E1D74AA33007EC7A6 /* cu_polygon.h */; };
 		EB0FF4B82016E11200517030 /* cu_input.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1931D74AA68007EC7A6 /* cu_input.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB0FF4B92016E11400517030 /* cu_input.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1931D74AA68007EC7A6 /* cu_input.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4B92016E11400517030 /* cu_input.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1931D74AA68007EC7A6 /* cu_input.h */; };
 		EB0FF4BA2016E13C00517030 /* cu_io.h in Headers */ = {isa = PBXBuildFile; fileRef = EB202C4E1DE63E5200116616 /* cu_io.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB0FF4BB2016E13D00517030 /* cu_io.h in Headers */ = {isa = PBXBuildFile; fileRef = EB202C4E1DE63E5200116616 /* cu_io.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4BB2016E13D00517030 /* cu_io.h in Headers */ = {isa = PBXBuildFile; fileRef = EB202C4E1DE63E5200116616 /* cu_io.h */; };
 		EB0FF4BC2016E14D00517030 /* cu_assets.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1911D74AA53007EC7A6 /* cu_assets.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EB0FF4BD2016E14D00517030 /* CUJsonValue.h in Headers */ = {isa = PBXBuildFile; fileRef = EB202C4F1DE63F0B00116616 /* CUJsonValue.h */; };
-		EB0FF4BE2016E14E00517030 /* cu_assets.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1911D74AA53007EC7A6 /* cu_assets.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4BE2016E14E00517030 /* cu_assets.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1911D74AA53007EC7A6 /* cu_assets.h */; };
 		EB0FF4BF2016E14E00517030 /* CUSceneLoader.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF4652016DFD000517030 /* CUSceneLoader.h */; };
 		EB0FF4C02016E15F00517030 /* cu_renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1901D74AA4B007EC7A6 /* cu_renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB0FF4C12016E16000517030 /* cu_renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1901D74AA4B007EC7A6 /* cu_renderer.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB0FF4C22016E21A00517030 /* cu_layout.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF48D2016E06300517030 /* cu_layout.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4C12016E16000517030 /* cu_renderer.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1901D74AA4B007EC7A6 /* cu_renderer.h */; };
+		EB0FF4C22016E21A00517030 /* cu_layout.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF48D2016E06300517030 /* cu_layout.h */; };
 		EB0FF4C32016E21A00517030 /* CULayout.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF48F2016E06400517030 /* CULayout.h */; };
 		EB0FF4C42016E21A00517030 /* CUAnchoredLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF48C2016E06300517030 /* CUAnchoredLayout.h */; };
 		EB0FF4C52016E21A00517030 /* CUFloatLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF48E2016E06400517030 /* CUFloatLayout.h */; };
 		EB0FF4C62016E21A00517030 /* CUGridLayout.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF4902016E06400517030 /* CUGridLayout.h */; };
 		EB0FF4C72016E23F00517030 /* cu_physics.h in Headers */ = {isa = PBXBuildFile; fileRef = EB202C1F1DE2880800116616 /* cu_physics.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB0FF4C82016E24100517030 /* cu_physics.h in Headers */ = {isa = PBXBuildFile; fileRef = EB202C1F1DE2880800116616 /* cu_physics.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB0FF4C82016E24100517030 /* cu_physics.h in Headers */ = {isa = PBXBuildFile; fileRef = EB202C1F1DE2880800116616 /* cu_physics.h */; };
 		EB0FF4CA2016E29600517030 /* CUSceneLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB0FF4C92016E29600517030 /* CUSceneLoader.cpp */; };
 		EB0FF4CB2016E29600517030 /* CUSceneLoader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB0FF4C92016E29600517030 /* CUSceneLoader.cpp */; };
 		EB0FF4CE2016E2B300517030 /* AVAudioObserver.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0FF4CC2016E2B300517030 /* AVAudioObserver.h */; };
@@ -394,10 +394,10 @@
 		EB7454521D74D2BE002FBAE6 /* CUTouchscreen.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC7E78C1D333886000A892F /* CUTouchscreen.h */; };
 		EB7454531D74D2BE002FBAE6 /* CUTextInput.h in Headers */ = {isa = PBXBuildFile; fileRef = EB0789591D306BE4000BFDF7 /* CUTextInput.h */; };
 		EB7454541D74D2CC002FBAE6 /* CUAccelerometer.h in Headers */ = {isa = PBXBuildFile; fileRef = EBCB16171D36F79E0089A883 /* CUAccelerometer.h */; };
-		EB7454551D74D2CC002FBAE6 /* utf8.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1691D74A86E007EC7A6 /* utf8.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB7454561D74D2CC002FBAE6 /* utf8checked.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F16A1D74A86E007EC7A6 /* utf8checked.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB7454571D74D2CC002FBAE6 /* utf8core.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F16B1D74A86E007EC7A6 /* utf8core.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		EB7454581D74D2CC002FBAE6 /* utf8unchecked.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F16C1D74A86E007EC7A6 /* utf8unchecked.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB7454551D74D2CC002FBAE6 /* utf8.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F1691D74A86E007EC7A6 /* utf8.h */; };
+		EB7454561D74D2CC002FBAE6 /* utf8checked.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F16A1D74A86E007EC7A6 /* utf8checked.h */; };
+		EB7454571D74D2CC002FBAE6 /* utf8core.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F16B1D74A86E007EC7A6 /* utf8core.h */; };
+		EB7454581D74D2CC002FBAE6 /* utf8unchecked.h in Headers */ = {isa = PBXBuildFile; fileRef = EBC2F16C1D74A86E007EC7A6 /* utf8unchecked.h */; };
 		EB7454591D74D2E1002FBAE6 /* CUDisplay-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = EB77F1CB1D3690AB00D52B9E /* CUDisplay-impl.h */; };
 		EB74545A1D74D2E1002FBAE6 /* ColorTextureOpenGL.vert in Headers */ = {isa = PBXBuildFile; fileRef = EB8EC5C51D1D930B0005448C /* ColorTextureOpenGL.vert */; };
 		EB74545B1D74D2E1002FBAE6 /* ColorTextureOpenGL.frag in Headers */ = {isa = PBXBuildFile; fileRef = EB8EC5C81D1D9C910005448C /* ColorTextureOpenGL.frag */; };
@@ -468,7 +468,7 @@
 		EBB1AC691DF8E8A200C353B0 /* CUMusic.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB1AC671DF8E8A200C353B0 /* CUMusic.h */; };
 		EBB1AC6C1DF8E9C600C353B0 /* CUAudioEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB1AC6B1DF8E9C600C353B0 /* CUAudioEngine.h */; };
 		EBB1AC6D1DF8E9C600C353B0 /* CUAudioEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB1AC6B1DF8E9C600C353B0 /* CUAudioEngine.h */; };
-		EBB1AC761DF90F6800C353B0 /* cu_audio.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB1AC751DF90F6800C353B0 /* cu_audio.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EBB1AC761DF90F6800C353B0 /* cu_audio.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB1AC751DF90F6800C353B0 /* cu_audio.h */; };
 		EBB1AC771DF90F6800C353B0 /* cu_audio.h in Headers */ = {isa = PBXBuildFile; fileRef = EBB1AC751DF90F6800C353B0 /* cu_audio.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EBB1AC791DF9106000C353B0 /* CUAudioEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBB1AC781DF9106000C353B0 /* CUAudioEngine.cpp */; };
 		EBB1AC7A1DF9106000C353B0 /* CUAudioEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBB1AC781DF9106000C353B0 /* CUAudioEngine.cpp */; };
@@ -595,7 +595,7 @@
 		EBFE7BC01E0CB211001007C2 /* CUPanInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE7BBE1E0CB211001007C2 /* CUPanInput.cpp */; };
 		EBFE7BC21E0DAF5D001007C2 /* CURotationInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE7BC11E0DAF5D001007C2 /* CURotationInput.cpp */; };
 		EBFE7BC31E0DAF5D001007C2 /* CURotationInput.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EBFE7BC11E0DAF5D001007C2 /* CURotationInput.cpp */; };
-		EBFE7BC71E0DB3FB001007C2 /* cu_gesture.h in Headers */ = {isa = PBXBuildFile; fileRef = EBFE7BC61E0DB3FB001007C2 /* cu_gesture.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EBFE7BC71E0DB3FB001007C2 /* cu_gesture.h in Headers */ = {isa = PBXBuildFile; fileRef = EBFE7BC61E0DB3FB001007C2 /* cu_gesture.h */; };
 		EBFE7BC81E0DB3FB001007C2 /* cu_gesture.h in Headers */ = {isa = PBXBuildFile; fileRef = EBFE7BC61E0DB3FB001007C2 /* cu_gesture.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		EBFE7BCA1E0DC1A0001007C2 /* CUPathname.h in Headers */ = {isa = PBXBuildFile; fileRef = EBFE7BC91E0DC1A0001007C2 /* CUPathname.h */; };
 		EBFE7BCB1E0DC1A0001007C2 /* CUPathname.h in Headers */ = {isa = PBXBuildFile; fileRef = EBFE7BC91E0DC1A0001007C2 /* CUPathname.h */; };
@@ -1733,17 +1733,9 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EB0FF4BB2016E13D00517030 /* cu_io.h in Headers */,
 				EB7454541D74D2CC002FBAE6 /* CUAccelerometer.h in Headers */,
-				EB0FF4B72016E0FC00517030 /* cu_polygon.h in Headers */,
 				EBFE7C0D1E1A872B001007C2 /* CUProgressBar.h in Headers */,
-				EB7454551D74D2CC002FBAE6 /* utf8.h in Headers */,
-				EB7454561D74D2CC002FBAE6 /* utf8checked.h in Headers */,
-				EB0FF4BE2016E14E00517030 /* cu_assets.h in Headers */,
 				EB202C8C1DEBC7CE00116616 /* CUBinaryWriter.h in Headers */,
-				EB7454571D74D2CC002FBAE6 /* utf8core.h in Headers */,
-				EB7454581D74D2CC002FBAE6 /* utf8unchecked.h in Headers */,
-				EB0FF4C22016E21A00517030 /* cu_layout.h in Headers */,
 				EB7454251D74D2BE002FBAE6 /* CUBase.h in Headers */,
 				EBFE7BF31E15E428001007C2 /* CUSoundLoader.h in Headers */,
 				EB7454261D74D2BE002FBAE6 /* CUApplication.h in Headers */,
@@ -1751,6 +1743,24 @@
 				EB7454281D74D2BE002FBAE6 /* CUMathBase.h in Headers */,
 				EB7454291D74D2BE002FBAE6 /* CUVec2.h in Headers */,
 				EB74542A1D74D2BE002FBAE6 /* CUVec3.h in Headers */,
+				EB0FF4BB2016E13D00517030 /* cu_io.h in Headers */,
+				EB0FF4B72016E0FC00517030 /* cu_polygon.h in Headers */,
+				EB7454551D74D2CC002FBAE6 /* utf8.h in Headers */,
+				EB7454561D74D2CC002FBAE6 /* utf8checked.h in Headers */,
+				EB0FF4BE2016E14E00517030 /* cu_assets.h in Headers */,
+				EB7454571D74D2CC002FBAE6 /* utf8core.h in Headers */,
+				EB7454581D74D2CC002FBAE6 /* utf8unchecked.h in Headers */,
+				EB0FF4C22016E21A00517030 /* cu_layout.h in Headers */,
+				EB0FF4972016E06B00517030 /* cu_2d.h in Headers */,
+				EB0FF4C82016E24100517030 /* cu_physics.h in Headers */,
+				EB0FF4A32016E0B300517030 /* cugl.h in Headers */,
+				EB0FF4AA2016E0C000517030 /* cu_platform.h in Headers */,
+				EB0FF4C12016E16000517030 /* cu_renderer.h in Headers */,
+				EB0FF4B52016E0EC00517030 /* cu_math.h in Headers */,
+				EB0FF4B92016E11400517030 /* cu_input.h in Headers */,
+				EB0FF4B32016E0D800517030 /* cu_util.h in Headers */,
+				EBFE7BC71E0DB3FB001007C2 /* cu_gesture.h in Headers */,
+				EBB1AC761DF90F6800C353B0 /* cu_audio.h in Headers */,
 				EB74542B1D74D2BE002FBAE6 /* CUVec4.h in Headers */,
 				EBFE7BD71E158735001007C2 /* CUAssetManager.h in Headers */,
 				EBFE7BF91E15E45C001007C2 /* CUGenericLoader.h in Headers */,
@@ -1768,8 +1778,6 @@
 				EB7454321D74D2BE002FBAE6 /* CUPolynomial.h in Headers */,
 				EBFE7BB61E0C926B001007C2 /* CURotationInput.h in Headers */,
 				EB0FF4C42016E21A00517030 /* CUAnchoredLayout.h in Headers */,
-				EB0FF4972016E06B00517030 /* cu_2d.h in Headers */,
-				EB0FF4C82016E24100517030 /* cu_physics.h in Headers */,
 				EB7454331D74D2BE002FBAE6 /* CUPoly2.h in Headers */,
 				EB9A8A441DE24C4C007B4123 /* CUPolygonObstacle.h in Headers */,
 				EB7454341D74D2BE002FBAE6 /* CUCubicSpline.h in Headers */,
@@ -1779,10 +1787,8 @@
 				EB202C541DE9219100116616 /* CUJsonReader.h in Headers */,
 				EBE28EAC1DFE183700C059A7 /* CUAudioEngine-impl.h in Headers */,
 				EB7454381D74D2BE002FBAE6 /* CUSimpleTriangulator.h in Headers */,
-				EB0FF4A32016E0B300517030 /* cugl.h in Headers */,
 				EBFE7BBC1E0C92B0001007C2 /* CUGestureInput.h in Headers */,
 				EB0FF4CF2016E2B300517030 /* AVAudioObserver.h in Headers */,
-				EB0FF4AA2016E0C000517030 /* cu_platform.h in Headers */,
 				EBCE54681DED12D6003B52FE /* CUThreadPool.h in Headers */,
 				EB7454391D74D2BE002FBAE6 /* CUPathExtruder.h in Headers */,
 				EB74543A1D74D2BE002FBAE6 /* CUPathOutliner.h in Headers */,
@@ -1804,10 +1810,7 @@
 				EB7454431D74D2BE002FBAE6 /* CUSpriteShader.h in Headers */,
 				EBFE7BF61E15E43D001007C2 /* CUMusicLoader.h in Headers */,
 				EB0FF4A12016E0A900517030 /* CUTextField.h in Headers */,
-				EB0FF4C12016E16000517030 /* cu_renderer.h in Headers */,
 				EB7454441D74D2BE002FBAE6 /* CUCamera.h in Headers */,
-				EB0FF4B52016E0EC00517030 /* cu_math.h in Headers */,
-				EB0FF4B92016E11400517030 /* cu_input.h in Headers */,
 				EB7454451D74D2BE002FBAE6 /* CUOrthographicCamera.h in Headers */,
 				EBFE7BDA1E15927A001007C2 /* CULoader.h in Headers */,
 				EBFE7BE51E15BFD4001007C2 /* CUFontLoader.h in Headers */,
@@ -1826,7 +1829,6 @@
 				EB9A8A371DE242C9007B4123 /* CUCapsuleObstacle.h in Headers */,
 				EBB1AC651DF8E88D00C353B0 /* CUSound.h in Headers */,
 				EBCE546D1DED12E6003B52FE /* CUFreeList.h in Headers */,
-				EB0FF4B32016E0D800517030 /* cu_util.h in Headers */,
 				EB74544C1D74D2BE002FBAE6 /* CUWireNode.h in Headers */,
 				EB9A8A4A1DE25561007B4123 /* CUComplexObstacle.h in Headers */,
 				EB0FF4A02016E0A900517030 /* CUSlider.h in Headers */,
@@ -1835,13 +1837,11 @@
 				EBE91E221DCFE7C200F80D62 /* CUObstacleSelector.h in Headers */,
 				EB202C8A1DEBBB1D00116616 /* CUJsonValue.h in Headers */,
 				EBE91E211DCFE7C200F80D62 /* CUBoxObstacle.h in Headers */,
-				EBFE7BC71E0DB3FB001007C2 /* cu_gesture.h in Headers */,
 				EB74544E1D74D2BE002FBAE6 /* CULabel.h in Headers */,
 				EB0FF4982016E06B00517030 /* CUNinePatch.h in Headers */,
 				EB74544F1D74D2BE002FBAE6 /* CUInput.h in Headers */,
 				EB839DF61DCD82A6001039BC /* CUObstacle.h in Headers */,
 				EB839E001DCD82A6001039BC /* CUObstacleWorld.h in Headers */,
-				EBB1AC761DF90F6800C353B0 /* cu_audio.h in Headers */,
 				EBE91E231DCFE7C200F80D62 /* CUSimpleObstacle.h in Headers */,
 				EB7454501D74D2BE002FBAE6 /* CUKeyboard.h in Headers */,
 				EBB1AC681DF8E8A200C353B0 /* CUMusic.h in Headers */,

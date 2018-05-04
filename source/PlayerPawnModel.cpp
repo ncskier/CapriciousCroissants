@@ -22,14 +22,23 @@ bool PlayerPawnModel::init(int x, int y) {
 }
 
 /** Initialize a new player pawn at (x, y) tile with [tileBounds] */
-bool PlayerPawnModel::init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
+bool PlayerPawnModel::init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika) {
     _x = x;
     _y = y;
+    _isMika = isMika;
     // Create sprite
-    std::shared_ptr<Texture> texture = assets->get<Texture>(PLAYER_TEXTURE_KEY_0);
-    _sprite = AnimationNode::alloc(texture, PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
-    _sprite->setFrame(PLAYER_IMG_NORMAL);
-    _sprite->setAnchor(Vec2::ZERO);
+    if (isMika) {
+        // Mika
+        std::shared_ptr<Texture> texture = assets->get<Texture>(PLAYER_TEXTURE_KEY_0);
+        _sprite = AnimationNode::alloc(texture, PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
+        _sprite->setFrame(PLAYER_IMG_NORMAL);
+    } else {
+        // Ally
+        std::shared_ptr<Texture> texture = assets->get<Texture>(ALLY_TEXTURE_KEY_IDLE);
+        _sprite = AnimationNode::alloc(texture, ALLY_IDLE_IMG_ROWS, ALLY_IDLE_IMG_COLS, ALLY_IDLE_IMG_SIZE);
+        _sprite->setFrame(ALLY_IDLE_IMG_START);
+    }
+        _sprite->setAnchor(Vec2::ZERO);
     setSpriteBounds(tileBounds);
     return true;
 }
@@ -46,10 +55,20 @@ void PlayerPawnModel::dispose() {
 /** Set sprite bounds from tile [tileBounds] */
 void PlayerPawnModel::setSpriteBounds(cugl::Rect tileBounds) {
     Size nodeSize = _sprite->cugl::Node::getSize();
-    float width = nodeSize.width / nodeSize.height * tileBounds.size.height;
+    // Keeps aspect ratio, but matches [tileBounds] height
     float height = tileBounds.size.height;
+    float width = nodeSize.width / nodeSize.height * height;
+    if (!_isMika) {
+        float scale = 2.0f;
+        height *= scale;
+        width *= scale;
+    }
     float positionX = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
     float positionY = tileBounds.getMinY() + tileBounds.size.height*0.3f;
+    if (!_isMika) {
+        positionX += width*0.04f;
+        positionY = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f + tileBounds.size.height*0.3f;
+    }
     _sprite->setPosition(positionX, positionY);
     _sprite->setContentSize(width, height);
 }

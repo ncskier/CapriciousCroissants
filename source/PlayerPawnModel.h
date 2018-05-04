@@ -26,13 +26,31 @@
 #define PLAYER_IMG_ATTACKING_END   47
 #define PLAYER_IMG_ATTACKING_TIME  0.5f
 
+/** Ally (crystal) Animations */
+/** Idle loop */
+#define ALLY_IDLE_IMG_START 0
+#define ALLY_IDLE_IMG_END   15
+#define ALLY_IDLE_IMG_TIME  2.0f
+/** Death animation */
+#define ALLY_DEATH_IMG_START 0
+#define ALLY_DEATH_IMG_END   15
+#define ALLY_DEATH_IMG_TIME  2.0f
+
 /** Number of rows and cols in film strip */
 #define PLAYER_IMG_ROWS 3
 #define PLAYER_IMG_COLS 16
 #define PLAYER_IMG_SIZE 48
+#define ALLY_IDLE_IMG_ROWS 4
+#define ALLY_IDLE_IMG_COLS 4
+#define ALLY_IDLE_IMG_SIZE 16
+#define ALLY_DEATH_IMG_ROWS 4
+#define ALLY_DEATH_IMG_COLS 4
+#define ALLY_DEATH_IMG_SIZE 16
 
 /** Player Texture Key */
 #define PLAYER_TEXTURE_KEY_0 "mika_spritesheet"
+#define ALLY_TEXTURE_KEY_IDLE "ally_idle"
+#define ALLY_TEXTURE_KEY_DEATH "ally_death"
 
 
 #pragma mark -
@@ -47,6 +65,7 @@ class PlayerPawnModel {
 protected:
     int _x;
     int _y;
+    bool _isMika;
     
     /** Reference to image in SceneGraph for animation */
     std::shared_ptr<cugl::AnimationNode> _sprite;
@@ -70,7 +89,7 @@ public:
     virtual bool init(int x, int y);
     
     /** Initialize a new player pawn at (x, y) tile with [tileBounds] */
-    virtual bool init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets);
+    virtual bool init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika);
     
     
 #pragma mark -
@@ -88,9 +107,9 @@ public:
     }
     
     /** Returns newly allocated player pawn at (x, y) tile with [tileBounds] */
-    static std::shared_ptr<PlayerPawnModel> alloc(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets) {
+    static std::shared_ptr<PlayerPawnModel> alloc(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika) {
         std::shared_ptr<PlayerPawnModel> result = std::make_shared<PlayerPawnModel>();
-        return (result->init(x, y, tileBounds, assets) ? result : nullptr);
+        return (result->init(x, y, tileBounds, assets, isMika) ? result : nullptr);
     }
     
     

@@ -1,5 +1,19 @@
 {
 	"textures": {
+        "ally_death": {
+            "file":     "textures/ally_death.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "ally_idle": {
+            "file":     "textures/ally_idle.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "touch": {
             "file":     "textures/touch.png",
             "minfilter":"nearest",

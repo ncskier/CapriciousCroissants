@@ -154,9 +154,9 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx) {
     // Initialize Level Dot
     std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
     levelDot->setAnchor(Vec2::ANCHOR_CENTER);
-    float height = _menuTileSize.height*0.5f;
-    float width = levelDot->getContentSize().width/levelDot->getContentSize().height * height;
-    levelDot->setContentSize(width, height);
+//    float height = _menuTileSize.height*0.5f;
+//    float width = levelDot->getContentSize().width/levelDot->getContentSize().height * height;
+    levelDot->setContentSize(_dotSize);
     levelDot->setPosition(_menuTileSize.width*levelFractionX(levelIdx), _menuTileSize.height*0.5f);
     menuTile->addChild(levelDot);
     
@@ -225,6 +225,11 @@ cugl::Vec2 MenuMode::menuTilePosition(int levelIdx) {
     return Vec2(0.0f, positionY);
 }
 
+/** Calculate dot position */
+cugl::Vec2 MenuMode::dotPosition(int levelIdx) {
+    return Vec2(_menuTileSize.width*levelFractionX(levelIdx), _menuTileSize.height*0.5f);
+}
+
 /** Apply offset cap function to difference between offset min/max and movement offset */
 float MenuMode::applyOffsetCapFunction(float diff) {
     float converter = _menuTileSize.height*0.1f;        // Lower value means cap will converge faster
@@ -258,11 +263,20 @@ float MenuMode::levelFractionX(int levelIdx) {
 
 /** Set menu tile size */
 void MenuMode::setMenuTileSize() {
+    // Menu Tile Size
     std::shared_ptr<AnimationNode> tileNode = AnimationNode::alloc(_assets->get<Texture>(MENU_TILE_KEY_0), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
     Size tileSize = tileNode->getContentSize();
     float width = _dimen.width;
     float height = (tileSize.height / tileSize.width) * width;
     _menuTileSize = Size(width, height);
+    
+    // Dot Size
+    std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
+    float dotHeight = _menuTileSize.height*0.5f;
+    float dotWidth = levelDot->getContentSize().width/levelDot->getContentSize().height * dotHeight;
+    _dotSize = Size(dotWidth, dotHeight);
+    // Dot Position
+    
 }
 
 /** Update mika node */
@@ -393,26 +407,26 @@ void MenuMode::update(float timestep) {
                 if (_input->isTapTime()) {
                     int level = tappedLevel(_input->getTouchPosition());
                     if (level != -1) {
-                        _selectedLevel = level;
-                        _hardOffset = offsetForLevel(_selectedLevel);
+//                        _selectedLevel = level;
+//                        _hardOffset = offsetForLevel(_selectedLevel);
+                        _hardOffset = offsetForLevel(level);
                         _scroll = true;
                     }
-                } else if (_input->isSwipe()) {
-                    float time = _input->getSwipeTime();
-                    float distance = _input->getSwipeVector().y;
-                    _velocity = -distance / time;
-//                    CULog("time: %f", time);
-//                    CULog("distance: %f", distance);
-//                    CULog("init_velocity: %f", _velocity);
+                } else {
+                    _hardOffset = offsetForLevel(_selectedLevel);
+                    if (_input->isSwipe()) {
+                        float time = _input->getSwipeTime();
+                        float distance = _input->getSwipeVector().y;
+                        _velocity = -distance / time;
+                    }
                 }
                 _input->clear();
-                _hardOffset = offsetForLevel(_selectedLevel);
             }
         }
     }
     
     // Update
-    if (!_introScroll && !_scroll) {
+    if (!_introScroll) {
         updateSelectedLevel();
     }
     if (!_introScroll) {
@@ -469,8 +483,19 @@ void MenuMode::update(float timestep) {
     
     // Move Menu Tiles
     for (auto i = 0; i < _menuTiles.size(); i++) {
+        // Menu Tiles
         _menuTiles[i]->setPosition(menuTilePosition(i));
         _menuTiles[i]->setVisible(menuTileOnScreen(i));
+        
+        // Dots
+        Size size = (i == _selectedLevel) ? _dotSize*2.1f : _dotSize;
+        Vec2 position = (i == _selectedLevel) ? dotPosition(i)-Vec2(0.0f, _menuTileSize.height*0.1f) : dotPosition(i);
+        _menuDots[i]->setContentSize(size);
+        _menuDots[i]->setPosition(position);
+        
+        // Label
+        Size labelSize = (i == _selectedLevel) ? Size(size.width*0.5f, size.height*0.2f) : size*0.5f;
+        _menuDots[i]->getChild(0)->setPosition(labelSize);
     }
     
     // Update Mika Animation

@@ -39,6 +39,7 @@ protected:
     std::vector<std::shared_ptr<cugl::Node>> _menuTiles;
     std::vector<std::shared_ptr<cugl::Node>> _menuDots;
     cugl::Size _menuTileSize;
+    cugl::Size _dotSize;
     std::shared_ptr<cugl::Node> _mikaNode;
     std::shared_ptr<cugl::AnimationNode> _mikaSprite;
     /** The action manager for this game mode. */
@@ -123,6 +124,9 @@ public:
     
     /** Calculate menu tile position given the level index */
     cugl::Vec2 menuTilePosition(int levelIdx);
+    
+    /** Calculate dot position */
+    cugl::Vec2 dotPosition(int levelIdx);
     
     /** Set menu tile size */
     void setMenuTileSize();

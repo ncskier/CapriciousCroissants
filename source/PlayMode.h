@@ -57,6 +57,9 @@ protected:
 	bool done = false;
     int doneCtr = 30;
 	bool win = false;
+    float winTimer = 0.0f;
+    bool winAnimationDisappear = true;
+    bool winAnimationAppear = true;
     /** The asset manager for this game mode. */
     std::shared_ptr<cugl::AssetManager> _assets;
 	std::shared_ptr<cugl::Label> _text;
@@ -240,6 +243,9 @@ public:
     
     /** Update interrupting animations (action manager is already updated every iteration) */
     void updateInterruptingAnimations(std::set<std::string>& interruptingActions);
+    
+    /** Update interrupting win animation if player has won */
+    void updateWinAnimation(float dt);
     
     /** Reset level/PlayMode */
     void reset();

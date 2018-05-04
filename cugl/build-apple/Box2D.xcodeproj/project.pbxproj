@@ -146,7 +146,7 @@
 		EB8834B81DCD4FD10043B3F1 /* b2StackAllocator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB798B9A1DCD090E00460886 /* b2StackAllocator.cpp */; };
 		EB8834B91DCD4FD10043B3F1 /* b2Timer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB798B9C1DCD090E00460886 /* b2Timer.cpp */; };
 		EB8834BA1DCD4FD10043B3F1 /* b2Rope.cpp in Sources */ = {isa = PBXBuildFile; fileRef = EB798C191DCD097E00460886 /* b2Rope.cpp */; };
-		EB8834BC1DCD4FED0043B3F1 /* Box2D.h in Headers */ = {isa = PBXBuildFile; fileRef = EB798B601DCD08C300460886 /* Box2D.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		EB8834BC1DCD4FED0043B3F1 /* Box2D.h in Headers */ = {isa = PBXBuildFile; fileRef = EB798B601DCD08C300460886 /* Box2D.h */; };
 		EB8834BD1DCD4FED0043B3F1 /* b2Body.h in Headers */ = {isa = PBXBuildFile; fileRef = EB798BAF1DCD094400460886 /* b2Body.h */; };
 		EB8834BE1DCD50280043B3F1 /* b2ContactManager.h in Headers */ = {isa = PBXBuildFile; fileRef = EB798BB11DCD094400460886 /* b2ContactManager.h */; };
 		EB8834BF1DCD50280043B3F1 /* b2Fixture.h in Headers */ = {isa = PBXBuildFile; fileRef = EB798BB31DCD094400460886 /* b2Fixture.h */; };

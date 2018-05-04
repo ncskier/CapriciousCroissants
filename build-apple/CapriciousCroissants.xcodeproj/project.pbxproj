@@ -736,7 +736,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(STATIC_LIB)";
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.CapriciousCroissants;
+				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.ArcaneTectonics;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -769,7 +769,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(STATIC_LIB)";
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.CapriciousCroissants;
+				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.ArcaneTectonics;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -794,7 +794,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.CapriciousCroissants;
+				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.ArcaneTectonics;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -817,7 +817,8 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.9;
 				ONLY_ACTIVE_ARCH = NO;
-				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.CapriciousCroissants;
+				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.ArcaneTectonics;
+				PRODUCT_NAME = CapriciousCroissants;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
@@ -948,7 +949,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.CapriciousCroissants;
+				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.ArcaneTectonics;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Debug;
@@ -965,7 +966,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/Resources/Mac-Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
 				MACOSX_DEPLOYMENT_TARGET = 10.10;
-				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.CapriciousCroissants;
+				PRODUCT_BUNDLE_IDENTIFIER = com.capriciouscroissants.ArcaneTectonics;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 			};
 			name = Release;

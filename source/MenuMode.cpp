@@ -52,6 +52,9 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     _assets = assets;
     _dimen = dimen;
     
+    // Initialize ActionManager
+    _actions = ActionManager::alloc();
+    
     // Initialize Input Handler
     _input = input;
     _input->init(getCamera());
@@ -67,17 +70,20 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     Application::get()->setClearColor(Color4(192,192,192,255));
     
     // Load levels
-    _introScroll = true;
-    _scroll = false;
-    _softOffset = 0.0f;
-    _hardOffset = offsetForLevel(_selectedLevel);
     setMenuTileSize();
     loadLevelsFromJson("json/levelList.json");
     
     // Create Mika Node
     _mikaNode = createMikaNode();
-    updateMikaNode();
     _worldNode->addChild(_mikaNode);
+    
+    // Begin intro scroll
+    _introScroll = true;
+    _scroll = false;
+    _hardOffset = offsetForLevel(_selectedLevel);
+    _softOffset = _hardOffset;
+    updateMikaNode();
+    _softOffset = 0.0f;
     
     return true;
 }
@@ -101,6 +107,8 @@ void MenuMode::dispose() {
     _maxOffset = 0.0f;
     _originY = 0.0f;
     _introScroll = true;
+    _playSelected = false;
+    _mikaAttack = false;
 }
 
 
@@ -196,18 +204,18 @@ std::shared_ptr<Node> MenuMode::createMikaNode() {
     nullTileSprite->setContentSize(length, length);
     
     // Mika Sprite
-    std::shared_ptr<AnimationNode> mikaSprite = AnimationNode::alloc(_assets->get<Texture>(PLAYER_TEXTURE_KEY_0), PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
-    mikaSprite->setAnchor(Vec2::ANCHOR_CENTER);
-    mikaSprite->setFrame(PLAYER_IMG_NORMAL);
+    _mikaSprite = AnimationNode::alloc(_assets->get<Texture>(PLAYER_TEXTURE_KEY_0), PLAYER_IMG_ROWS, PLAYER_IMG_COLS, PLAYER_IMG_SIZE);
+    _mikaSprite->setAnchor(Vec2::ANCHOR_CENTER);
+    _mikaSprite->setFrame(PLAYER_IMG_NORMAL);
     float height = nullTileSprite->getContentSize().height*1.3f;
-    float width = mikaSprite->getContentSize().width/mikaSprite->getContentSize().height * height;
-    mikaSprite->setContentSize(width, height);
+    float width = _mikaSprite->getContentSize().width/_mikaSprite->getContentSize().height * height;
+    _mikaSprite->setContentSize(width, height);
     float x = nullTileSprite->getContentSize().width*0.5f;
     float y = nullTileSprite->getContentSize().height*0.9f;
-    mikaSprite->setPosition(x, y);
+    _mikaSprite->setPosition(x, y);
     
     // Combine and return
-    nullTileSprite->addChildWithName(mikaSprite, MENU_MIKA_NAME);
+    nullTileSprite->addChildWithName(_mikaSprite, MENU_MIKA_NAME);
     return nullTileSprite;
 }
 
@@ -279,9 +287,31 @@ void MenuMode::updateMikaNode() {
         if (dragHighCap) {
             x = ((1.0f-fraction)*0.5f + fraction*levelFractionX(closestLevelUp)) * _menuTileSize.width;
         }
-//        if (dragY < -1.0f || (double)_levelsJson->size() < dragY) { x = 0.5f * _menuTileSize.width; }
+        if (dragY < -1.0f || (double)_levelsJson->size() < dragY) { x = 0.5f * _menuTileSize.width; }
     }
     _mikaNode->setPosition(x, y);
+}
+
+/** Update mika animation */
+void MenuMode::updateMikaAnimation(float timestep, bool touchDown) {
+    if (!touchDown) {
+        _mikaAttack = false;
+        if (!_actions->isActive(MIKA_IDLE_KEY)) {
+            _actions->activate(MIKA_IDLE_KEY, _mikaIdleAction, _mikaSprite);
+        }
+    } else {
+        if (!_mikaAttack) {
+            if (!_actions->isActive(MIKA_TRANSITION_KEY)) {
+                _actions->activate(MIKA_TRANSITION_KEY, _mikaTransitionAction, _mikaSprite);
+            } else {
+                _mikaAttack = true;
+            }
+        } else {
+            if (!_actions->isActive(MIKA_ATTACK_KEY)) {
+                _actions->activate(MIKA_ATTACK_KEY, _mikaAttackAction, _mikaSprite);
+            }
+        }
+    }
 }
 
 /** Update selected level */
@@ -296,7 +326,7 @@ void MenuMode::updateSelectedLevel() {
 bool MenuMode::touchSelectedLevel(cugl::Vec2 touchPosition) {
     bool inNullTile = _mikaNode->getBoundingBox().contains(touchPosition);
     Vec2 touchPositionNodeCoords = _mikaNode->worldToNodeCoords(touchPosition);
-    bool inMikaSprite = _mikaNode->getChildByName(MENU_MIKA_NAME)->getBoundingBox().contains(touchPositionNodeCoords);
+    bool inMikaSprite = _mikaSprite->getBoundingBox().contains(touchPositionNodeCoords);
     return inNullTile || inMikaSprite;
 }
 
@@ -310,6 +340,13 @@ int MenuMode::tappedLevel(cugl::Vec2 touchPosition) {
         }
     }
     return -1;
+}
+
+/** Returns if menu tile at index [i] should be hidden (if it's off the screen) */
+bool MenuMode::menuTileOnScreen(int i) {
+    float minY = menuTilePosition(i).y;
+    float maxY = minY + _menuTileSize.height;
+    return ((minY > 0.0f && minY < _dimen.height) || (maxY > 0.0f && maxY < _dimen.height));
 }
 
 
@@ -330,11 +367,10 @@ void MenuMode::update(float timestep) {
             Vec2 moveOffset = _input->getMoveOffset();
             if (moveEvent == InputController::MoveEvent::START) {
                 // Check if player tapped on Mika
+                _velocity = 0.0f;
                 Vec2 touchPosition = _input->getTouchPosition();
                 if (touchSelectedLevel(touchPosition)) {
-                    // Select level and exit Level Select Menu
-                    this->_selectedLevelJson = _levelsJson->get(_selectedLevel)->asString();
-                    this->setActive(false);
+                    _playSelected = true;
                 }
                 _hardOffset = _softOffset;
                 _input->recordMove();
@@ -349,6 +385,11 @@ void MenuMode::update(float timestep) {
                     _softOffset = _minOffset - applyOffsetCapFunction(diff);
                 }
             } else {
+                if (_playSelected && touchSelectedLevel(_input->getTouchPosition())) {
+                    // Select level and exit Level Select Menu
+                    this->_selectedLevelJson = _levelsJson->get(_selectedLevel)->asString();
+                    this->setActive(false);
+                }
                 if (_input->isTapTime()) {
                     int level = tappedLevel(_input->getTouchPosition());
                     if (level != -1) {
@@ -356,8 +397,16 @@ void MenuMode::update(float timestep) {
                         _hardOffset = offsetForLevel(_selectedLevel);
                         _scroll = true;
                     }
+                } else if (_input->isSwipe()) {
+                    float time = _input->getSwipeTime();
+                    float distance = _input->getSwipeVector().y;
+                    _velocity = -distance / time;
+//                    CULog("time: %f", time);
+//                    CULog("distance: %f", distance);
+//                    CULog("init_velocity: %f", _velocity);
                 }
                 _input->clear();
+                _hardOffset = offsetForLevel(_selectedLevel);
             }
         }
     }
@@ -371,30 +420,60 @@ void MenuMode::update(float timestep) {
     }
     
     // Relax back to selected level
-    if (moveEvent == InputController::MoveEvent::END) {
-        _hardOffset = offsetForLevel(_selectedLevel);
-    }
+    bool animateMika = (moveEvent != InputController::MoveEvent::NONE && moveEvent != InputController::MoveEvent::END);
     if (moveEvent == InputController::MoveEvent::NONE || moveEvent == InputController::MoveEvent::END) {
         float epsilon = 0.1f;
-        if (std::abs(_softOffset - _hardOffset) > epsilon) {
-            float diff = std::abs(_softOffset - _hardOffset);
-            float velocity = diff*10.0f;
-            float dx = velocity * timestep;
-            if (_softOffset < _hardOffset) {
-                _softOffset = _softOffset + dx;
-                if (_softOffset > _hardOffset) { _softOffset = _hardOffset; }
-            } else {
-                _softOffset = _softOffset - dx;
-                if (_softOffset < _hardOffset) { _softOffset = _hardOffset; }
+        float velocityThreshold = _menuTileSize.height*0.1f;
+        // Inertia
+        if (std::abs(_velocity) > velocityThreshold) {
+            animateMika = true;
+            // Apply inertia
+            float dy = _velocity * timestep;
+            _softOffset += dy;
+            // Update velocity
+            float drag = _menuTileSize.height*20.0f;
+            if (_softOffset < _minOffset || _maxOffset < _softOffset) {
+                drag *= std::pow(1.0f + std::min(std::abs(_softOffset-_minOffset), std::abs(_softOffset-_maxOffset))/_menuTileSize.height, 2);
             }
-        } else if (_introScroll || _scroll) {
-            _introScroll = false;
-            _scroll = false;
+            float dv = drag * timestep;
+            if (std::abs(dv) > std::abs(_velocity)) {
+                _velocity = 0.0f;
+            } else {
+                _velocity = (_velocity > 0) ? _velocity-dv : _velocity+dv;
+            }
+            updateSelectedLevel();
+            _hardOffset = offsetForLevel(_selectedLevel);
+        } else {
+            _velocity = 0.0f;
+        }
+        // Relax to level & check bounds
+        if ((_softOffset < _minOffset || _maxOffset < _softOffset) || std::abs(_velocity) <= velocityThreshold) {
+            if (std::abs(_softOffset - _hardOffset) > epsilon) {
+                float diff = std::abs(_softOffset - _hardOffset);
+                float velocity = diff*10.0f;
+                float dy = velocity * timestep;
+                if (_softOffset < _hardOffset) {
+                    _softOffset = _softOffset + dy;
+                    if (_softOffset > _hardOffset) { _softOffset = _hardOffset; }
+                } else {
+                    _softOffset = _softOffset - dy;
+                    if (_softOffset < _hardOffset) { _softOffset = _hardOffset; }
+                }
+            } else if (_introScroll || _scroll) {
+                _softOffset = _hardOffset;
+                _introScroll = false;
+                _scroll = false;
+            }
         }
     }
     
     // Move Menu Tiles
     for (auto i = 0; i < _menuTiles.size(); i++) {
         _menuTiles[i]->setPosition(menuTilePosition(i));
+        _menuTiles[i]->setVisible(menuTileOnScreen(i));
     }
+    
+    // Update Mika Animation
+    updateMikaAnimation(timestep, animateMika);
+    _actions->update(timestep);
 }

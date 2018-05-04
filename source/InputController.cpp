@@ -36,8 +36,9 @@ _active(false),
 //_scale(Size::ZERO),
 _touchID(NULL),
 _initTouch(Vec2::ZERO),
+_prevTouch(Vec2::ZERO),
 _touchPosition(Vec2::ZERO),
-_moveEvent(MoveEvent::NONE) {
+_moveEvent(InputController::MoveEvent::NONE) {
 }
 
 /**
@@ -136,8 +137,15 @@ void InputController::clear() {
     _touchID = NULL;
     _touchPosition = Vec2::ZERO;
     _initTouch = Vec2::ZERO;
+    _prevTouch = Vec2::ZERO;
     _moveEvent = MoveEvent::NONE;
     _touchDownTime = 0.0f;
+    // Swipe info
+    _swipeInitPos = Vec2::ZERO;
+    _swipeInitTime = 0.0f;
+    _swiping = false;
+    _acceleration = 0.0f;
+    _velocity = 0.0f;
 }
 
 /**
@@ -149,7 +157,7 @@ void InputController::recordMove() {
 
 #pragma mark -
 #pragma mark Input Results
-/** Returns touch down time */
+/** Returns if touch event was a tap by time standards */
 bool InputController::isTapTime() {
     float maxTapTime = 0.15f;
     return (_touchDownTime < maxTapTime);
@@ -170,6 +178,8 @@ void InputController::touchBeganCB(const cugl::TouchEvent& event, bool focus) {
         _moveEvent = MoveEvent::START;
         _initTouch = event.position;
         _touchPosition = event.position;
+        _prevTouch = event.position;
+        _prevTouchTime = _touchDownTime;
         _touchID = event.touch;
     }
 }
@@ -199,6 +209,29 @@ void InputController::touchMovedCB(const cugl::TouchEvent& event, const Vec2& pr
     if (_moveEvent != MoveEvent::END) {
         if (event.touch == _touchID) {
             _touchPosition = event.position;
+            // Acceleration calculations
+            Vec2 diff = event.position;
+            diff.subtract(_prevTouch);
+            float dy = std::abs(diff.y);
+            float dt = _touchDownTime - _prevTouchTime;
+            if (dt > 0.001f) {
+                dt *= 1000.0f;      // Convert to ms because velocities were too high
+                float velocity = dy/dt;
+                float acceleration = velocity/dt;
+                // Mark if acceleration is greater than threashold
+                if (acceleration >= _swipeAccelerationThreshold && _acceleration < _swipeAccelerationThreshold) {
+                    _swiping = true;
+                    _swipeInitPos = event.position;
+                    _swipeInitTime = _touchDownTime;
+                } else if (acceleration < _swipeAccelerationThreshold) {
+                    _swiping  = false;
+                }
+                // Update previous touch info
+                _prevTouch = event.position;
+                _prevTouchTime = _touchDownTime;
+                _velocity = velocity;
+                _acceleration = acceleration;
+            }
         }
     }
 }
@@ -218,6 +251,8 @@ void InputController::touchBeganCB(const cugl::MouseEvent& event, bool focus) {
 		_moveEvent = MoveEvent::START;
 		_initTouch = event.position;
 		_touchPosition = event.position;
+        _prevTouch = event.position;
+        _prevTouchTime = _touchDownTime;
 	}
 }
 

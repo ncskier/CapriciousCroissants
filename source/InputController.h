@@ -54,17 +54,27 @@ private:
     // TOUCH SUPPORT
     /** The initial touch location for the current gesture */
     cugl::Vec2 _initTouch;
+    /** The previous touch location and time for the current gesture */
+    cugl::Vec2 _prevTouch;
+    float _prevTouchTime;
     /** The touch id of the touch that starts the move */
     cugl::TouchID _touchID;
     /** Move event type */
     MoveEvent _moveEvent;
-    /** Time touch is down */
-    float _touchDownTime;
     
 protected:
     // INPUT RESULTS
     /** The current touch location. */
     cugl::Vec2 _touchPosition;
+    /** Time touch is down */
+    float _touchDownTime;
+    /** Swipe info */
+    cugl::Vec2 _swipeInitPos;
+    float _swipeInitTime;
+    bool _swiping;
+    float _acceleration;
+    float _velocity;
+    float _swipeAccelerationThreshold = 0.001f;
     
 public:
 #pragma mark -
@@ -150,8 +160,22 @@ public:
         return (_camera->screenToWorldCoords(_touchPosition)-_camera->screenToWorldCoords(_initTouch));
     }
     
-    /** Returns touch down time */
+    /** Returns if touch event was a tap by time standards */
     bool isTapTime();
+    
+    /** Returns touch down time */
+    float getTouchDownTime() const { return _touchDownTime; }
+    
+    /** Returns if there is a swipe event */
+    bool isSwipe() { return _swiping; }
+    
+    /** Return swipe vector */
+    cugl::Vec2 getSwipeVector() const {
+        return (_camera->screenToWorldCoords(_touchPosition)-_camera->screenToWorldCoords(_swipeInitPos));
+    }
+    
+    /** Return swipe time */
+    float getSwipeTime() { return _touchDownTime-_swipeInitTime; }
     
     /**
      * Returns _moveEvent

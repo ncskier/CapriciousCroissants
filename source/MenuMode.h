@@ -19,6 +19,9 @@
 //#define MENU_TILE_KEY_1 "menu_tile1"
 //#define MENU_TILE_KEY_2 "menu_tile2"
 #define MENU_DOT_KEY "menu_dot"
+#define MIKA_IDLE_KEY "mika_idle_action"
+#define MIKA_TRANSITION_KEY "mika_transition_action"
+#define MIKA_ATTACK_KEY "mika_attack_action"
 
 #define MENU_TILE_ROWS 6
 #define MENU_TILE_COLS 1
@@ -37,6 +40,12 @@ protected:
     std::vector<std::shared_ptr<cugl::Node>> _menuDots;
     cugl::Size _menuTileSize;
     std::shared_ptr<cugl::Node> _mikaNode;
+    std::shared_ptr<cugl::AnimationNode> _mikaSprite;
+    /** The action manager for this game mode. */
+    std::shared_ptr<cugl::ActionManager> _actions;
+    std::shared_ptr<cugl::Animate> _mikaIdleAction = cugl::Animate::alloc(PLAYER_IMG_IDLE_START, PLAYER_IMG_IDLE_END, PLAYER_IMG_IDLE_TIME);
+    std::shared_ptr<cugl::Animate> _mikaTransitionAction = cugl::Animate::alloc(PLAYER_IMG_BEGIN_ATTACK_START, PLAYER_IMG_BEGIN_ATTACK_END, PLAYER_IMG_BEGIN_ATTACK_TIME);
+    std::shared_ptr<cugl::Animate> _mikaAttackAction = cugl::Animate::alloc(PLAYER_IMG_ATTACKING_START, PLAYER_IMG_ATTACKING_END, PLAYER_IMG_ATTACKING_TIME);
     
     // TODO: MODEL
     std::shared_ptr<cugl::JsonValue> _levelsJson;
@@ -50,6 +59,9 @@ protected:
     std::shared_ptr<InputController> _input;
     bool _introScroll = true;
     bool _scroll = false;
+    float _velocity = 0.0f;
+    bool _playSelected = false;
+    bool _mikaAttack = false;
     
 public:
 #pragma mark -
@@ -103,6 +115,9 @@ public:
     /** Update mika node */
     void updateMikaNode();
     
+    /** Update mika animation */
+    void updateMikaAnimation(float timestep, bool animate);
+    
     /** Update selected level */
     void updateSelectedLevel();
     
@@ -129,6 +144,9 @@ public:
     
     /** Returns tapped level and -1 if no level tapped */
     int tappedLevel(cugl::Vec2 touchPosition);
+    
+    /** Returns if menu tile at index [i] is on the screen (shouldn't or should hidden) */
+    bool menuTileOnScreen(int i);
     
     
 #pragma mark -

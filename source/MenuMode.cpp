@@ -514,14 +514,50 @@ void MenuMode::update(float timestep) {
         _menuTiles[i]->setVisible(menuTileOnScreen(i));
         
         // Dots
-        Size size = (i == _selectedLevel) ? _dotSize*2.1f : _dotSize;
+        float time = 0.1f;
+        float scale = (i == _selectedLevel) ? 2.1f : 1.0f;
+        std::stringstream ss;
+        if (i == _selectedLevel) {
+            ss << "select_";
+        } else {
+            ss << "unselect_";
+        }
+        ss << i;
+//        Size maxDotSize = _dotSize*2.1f;
+//        Size size = (i == _selectedLevel) ? maxDotSize : _dotSize;
+        Size size = _dotSize*scale;
         Vec2 position = (i == _selectedLevel) ? dotPosition(i)-Vec2(0.0f, _menuTileSize.height*0.1f) : dotPosition(i);
-        _menuDots[i]->setContentSize(size);
+//        _menuDots[i]->setContentSize(size);
         _menuDots[i]->setPosition(position);
+        std::shared_ptr<ScaleTo> scaleAction = ScaleTo::alloc(Vec2(scale, scale), time);
+        if (!_actions->isActive(ss.str())) {
+            _actions->activate(ss.str(), scaleAction, _menuDots[i]);
+        }
         
         // Label
-        Size labelSize = (i == _selectedLevel) ? Size(size.width*0.5f, size.height*0.2f) : size*0.5f;
-        _menuDots[i]->getChild(0)->setPosition(labelSize);
+//        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.5f, size.height*0.2f) : Vec2(size.width*0.5f, size.height*0.5f);
+        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.25f, size.height*0.1f) : Vec2(size.width*0.5f, size.height*0.5f);
+//        _menuDots[i]->getChild(0)->setPosition(labelPos);
+        std::stringstream ssLabel;
+        std::stringstream ssLabelScale;
+        if (i == _selectedLevel) {
+            ssLabel << "select_label_";
+            ssLabelScale << "select_label_scale_";
+        } else {
+            ssLabel << "unselect_label_";
+            ssLabelScale << "unselect_label_scale_";
+        }
+        ssLabel << i;
+        ssLabelScale << i;
+        std::shared_ptr<MoveTo> moveAction = MoveTo::alloc(labelPos, time);
+        std::shared_ptr<ScaleTo> labelScaleAction = ScaleTo::alloc(Vec2(1.0f/scale, 1.0f/scale), time);
+        if (!_actions->isActive(ssLabel.str())) {
+            _actions->activate(ssLabel.str(), moveAction, _menuDots[i]->getChild(0));
+        }
+        if (!_actions->isActive(ssLabelScale.str())) {
+            _actions->activate(ssLabelScale.str(), labelScaleAction, _menuDots[i]->getChild(0));
+        }
+        
     }
     
     // Update Mika Animation

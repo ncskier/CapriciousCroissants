@@ -100,10 +100,10 @@ public:
      * @return true if the controller is initialized properly, false otherwise.
      */
     bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<InputController>& input);
-
+    
     
 #pragma mark -
-#pragma mark Helper Functions
+#pragma mark Helper Initialization
     /** Load levels from json */
     void loadLevelsFromJson(const std::string& filePath);
     
@@ -113,27 +113,29 @@ public:
     /** Create mika node */
     std::shared_ptr<cugl::Node> createMikaNode();
     
-    /** Update mika node */
-    void updateMikaNode();
+    /** Set menu tile size */
+    void setMenuTileSize();
     
-    /** Update mika animation */
-    void updateMikaAnimation(float timestep, bool animate);
-    
-    /** Update selected level */
-    void updateSelectedLevel();
-    
+#pragma mark -
+#pragma mark Helper Coordinates
     /** Calculate menu tile position given the level index */
     cugl::Vec2 menuTilePosition(int levelIdx);
     
     /** Calculate dot position */
     cugl::Vec2 dotPosition(int levelIdx);
     
-    /** Set menu tile size */
-    void setMenuTileSize();
-    
     /** Apply offset cap function to difference between offset min/max and movement offset */
     float applyOffsetCapFunction(float diff);
     
+    /** Return true if touch selected the level */
+    bool touchSelectedLevel(cugl::Vec2 touchPosition);
+    
+    /** Returns tapped level and -1 if no level tapped */
+    int tappedLevel(cugl::Vec2 touchPosition);
+    
+    
+#pragma mark -
+#pragma mark Helper Visuals
     /** Return offset for level at [levelIdx] */
     float offsetForLevel(int levelIdx);
     
@@ -143,15 +145,23 @@ public:
     /** Return horizontal position of level dot as fraction of level width */
     float levelFractionX(int levelIdx);
     
-    /** Return true if touch selected the level */
-    bool touchSelectedLevel(cugl::Vec2 touchPosition);
     
-    /** Returns tapped level and -1 if no level tapped */
-    int tappedLevel(cugl::Vec2 touchPosition);
-    
+#pragma mark -
+#pragma mark Menu Tiles
     /** Returns if menu tile at index [i] is on the screen (shouldn't or should hidden) */
     bool menuTileOnScreen(int i);
     
+    
+#pragma mark -
+#pragma mark Helper Input Handling
+    /** Update mika node */
+    void updateMikaNode();
+    
+    /** Update mika animation */
+    void updateMikaAnimation(float timestep, bool animate);
+    
+    /** Update selected level */
+    void updateSelectedLevel();
     
 #pragma mark -
 #pragma mark Input Handling
@@ -162,7 +172,7 @@ public:
      */
     void update(float timestep);
     
-
+    
 #pragma mark -
 #pragma mark Accessors
     std::string& getSelectedLevelJson() { return _selectedLevelJson; }

@@ -74,7 +74,7 @@ protected:
     bool _swiping;
     float _acceleration;
     float _velocity;
-    float _swipeAccelerationThreshold = 0.001f;
+    float _swipeAccelerationThreshold = 0.0005f;
     
 public:
 #pragma mark -
@@ -162,6 +162,9 @@ public:
     
     /** Returns if touch event was a tap by time standards */
     bool isTapTime();
+    
+    /** Returns if touch event was a tap by space standards */
+    bool isTapSpace();
     
     /** Returns touch down time */
     float getTouchDownTime() const { return _touchDownTime; }

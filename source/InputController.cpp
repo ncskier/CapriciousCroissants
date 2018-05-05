@@ -163,6 +163,12 @@ bool InputController::isTapTime() {
     return (_touchDownTime < maxTapTime);
 }
 
+/** Returns if touch event was a tap by space standards */
+bool InputController::isTapSpace() {
+    Vec2 drag = Vec2(_touchPosition) - Vec2(_initTouch);
+    return drag.length() < 50.0f;
+}
+
 #pragma mark -
 #pragma mark Touch Callbacks
 /**

@@ -113,7 +113,7 @@ void MenuMode::dispose() {
 
 
 #pragma mark -
-#pragma mark Helper Functions
+#pragma mark Helper Initialization
 
 /** Load levels from json */
 void MenuMode::loadLevelsFromJson(const std::string& filePath) {
@@ -127,7 +127,7 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     
     // Load levels
     _levelsJson = json->get("levels");
-    _originY = _dimen.height*0.1f;
+    _originY = _dimen.height*0.2f;
     _maxOffset = _menuTileSize.height * (_levelsJson->size() - 1);
     for (auto i = 0; i < _levelsJson->size(); i++) {
         std::shared_ptr<Node> menuTile = createLevelNode(i);
@@ -219,6 +219,26 @@ std::shared_ptr<Node> MenuMode::createMikaNode() {
     return nullTileSprite;
 }
 
+/** Set menu tile size */
+void MenuMode::setMenuTileSize() {
+    // Menu Tile Size
+    std::shared_ptr<AnimationNode> tileNode = AnimationNode::alloc(_assets->get<Texture>(MENU_TILE_KEY_0), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
+    Size tileSize = tileNode->getContentSize();
+    float width = _dimen.width;
+    float height = (tileSize.height / tileSize.width) * width;
+    _menuTileSize = Size(width, height);
+    
+    // Dot Size
+    std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
+    float dotHeight = _menuTileSize.height*0.5f;
+    float dotWidth = levelDot->getContentSize().width/levelDot->getContentSize().height * dotHeight;
+    _dotSize = Size(dotWidth, dotHeight);
+}
+
+
+#pragma mark -
+#pragma mark Helper Coordinates
+
 /** Calculate menu tile position given the level index */
 cugl::Vec2 MenuMode::menuTilePosition(int levelIdx) {
     float positionY = _originY + _menuTileSize.height*levelIdx - _softOffset;
@@ -238,14 +258,44 @@ float MenuMode::applyOffsetCapFunction(float diff) {
     return y * converter;
 }
 
-/** Calculate level spritesheet frame given the level index [levelIdx] */
-int MenuMode::menuTileFrame(int levelIdx) {
-    return MENU_TILE_SIZE - (levelIdx % MENU_TILE_SIZE) - 1;
+/** Return true if touch selected the level */
+bool MenuMode::touchSelectedLevel(cugl::Vec2 touchPosition) {
+    // Check Null Tile
+    bool inNullTile = _mikaNode->getBoundingBox().contains(touchPosition);
+    // Check Mika Sprite
+    Vec2 touchPositionMikaNodeCoords = _mikaNode->worldToNodeCoords(touchPosition);
+    bool inMikaSprite = _mikaSprite->getBoundingBox().contains(touchPositionMikaNodeCoords);
+    // Check Dot
+    std::shared_ptr<Node> menuTile = _menuTiles[_selectedLevel];
+    Vec2 touchPositionMenuNodeCoords = menuTile->worldToNodeCoords(touchPosition);
+    bool inDotSprite = _menuDots[_selectedLevel]->getBoundingBox().contains(touchPositionMenuNodeCoords);
+    return inNullTile || inMikaSprite || inDotSprite;
 }
+
+/** Returns tapped level and -1 if no level tapped */
+int MenuMode::tappedLevel(cugl::Vec2 touchPosition) {
+    for (int i = 0; i < _menuDots.size(); i++) {
+        std::shared_ptr<Node> menuTile = _menuTiles[i];
+        Vec2 touchPositionNodeCoords = menuTile->worldToNodeCoords(touchPosition);
+        if (_menuDots[i]->getBoundingBox().contains(touchPositionNodeCoords)) {
+            return i;
+        }
+    }
+    return -1;
+}
+
+
+#pragma mark -
+#pragma mark Helper Visuals
 
 /** Return offset for level at [levelIdx] */
 float MenuMode::offsetForLevel(int levelIdx) {
     return _menuTileSize.height*levelIdx;
+}
+
+/** Calculate level spritesheet frame given the level index [levelIdx] */
+int MenuMode::menuTileFrame(int levelIdx) {
+    return MENU_TILE_SIZE - (levelIdx % MENU_TILE_SIZE) - 1;
 }
 
 /** Return horizontal position of level dot as fraction of level width */
@@ -261,23 +311,19 @@ float MenuMode::levelFractionX(int levelIdx) {
     return xFractions[menuTileFrame(levelIdx)];
 }
 
-/** Set menu tile size */
-void MenuMode::setMenuTileSize() {
-    // Menu Tile Size
-    std::shared_ptr<AnimationNode> tileNode = AnimationNode::alloc(_assets->get<Texture>(MENU_TILE_KEY_0), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
-    Size tileSize = tileNode->getContentSize();
-    float width = _dimen.width;
-    float height = (tileSize.height / tileSize.width) * width;
-    _menuTileSize = Size(width, height);
-    
-    // Dot Size
-    std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
-    float dotHeight = _menuTileSize.height*0.5f;
-    float dotWidth = levelDot->getContentSize().width/levelDot->getContentSize().height * dotHeight;
-    _dotSize = Size(dotWidth, dotHeight);
-    // Dot Position
-    
+#pragma mark -
+#pragma mark Menu Tiles
+
+/** Returns if menu tile at index [i] should be hidden (if it's off the screen) */
+bool MenuMode::menuTileOnScreen(int i) {
+    float minY = menuTilePosition(i).y;
+    float maxY = minY + _menuTileSize.height;
+    return ((minY > 0.0f && minY < _dimen.height) || (maxY > 0.0f && maxY < _dimen.height));
 }
+
+
+#pragma mark -
+#pragma mark Helper Input Handling
 
 /** Update mika node */
 void MenuMode::updateMikaNode() {
@@ -336,32 +382,7 @@ void MenuMode::updateSelectedLevel() {
     if (_selectedLevel > _levelsJson->size()-1) { _selectedLevel = (int)(_levelsJson->size()-1); }
 }
 
-/** Return true if touch selected the level */
-bool MenuMode::touchSelectedLevel(cugl::Vec2 touchPosition) {
-    bool inNullTile = _mikaNode->getBoundingBox().contains(touchPosition);
-    Vec2 touchPositionNodeCoords = _mikaNode->worldToNodeCoords(touchPosition);
-    bool inMikaSprite = _mikaSprite->getBoundingBox().contains(touchPositionNodeCoords);
-    return inNullTile || inMikaSprite;
-}
 
-/** Returns tapped level and -1 if no level tapped */
-int MenuMode::tappedLevel(cugl::Vec2 touchPosition) {
-    for (int i = 0; i < _menuDots.size(); i++) {
-        std::shared_ptr<Node> menuTile = _menuTiles[i];
-        Vec2 touchPositionNodeCoords = menuTile->worldToNodeCoords(touchPosition);
-        if (_menuDots[i]->getBoundingBox().contains(touchPositionNodeCoords)) {
-            return i;
-        }
-    }
-    return -1;
-}
-
-/** Returns if menu tile at index [i] should be hidden (if it's off the screen) */
-bool MenuMode::menuTileOnScreen(int i) {
-    float minY = menuTilePosition(i).y;
-    float maxY = minY + _menuTileSize.height;
-    return ((minY > 0.0f && minY < _dimen.height) || (maxY > 0.0f && maxY < _dimen.height));
-}
 
 
 #pragma mark -
@@ -380,6 +401,7 @@ void MenuMode::update(float timestep) {
             // Calculate Menu Tile offsets
             Vec2 moveOffset = _input->getMoveOffset();
             if (moveEvent == InputController::MoveEvent::START) {
+                // START
                 // Check if player tapped on Mika
                 _velocity = 0.0f;
                 Vec2 touchPosition = _input->getTouchPosition();
@@ -389,6 +411,7 @@ void MenuMode::update(float timestep) {
                 _hardOffset = _softOffset;
                 _input->recordMove();
             } else if (moveEvent != InputController::MoveEvent::END) {
+                // MOVED
                 _softOffset = _hardOffset - moveOffset.y;
                 // Check drag bounds (top & bottom)
                 if (_softOffset > _maxOffset) {
@@ -398,13 +421,16 @@ void MenuMode::update(float timestep) {
                     float diff = std::abs(_softOffset-_minOffset);
                     _softOffset = _minOffset - applyOffsetCapFunction(diff);
                 }
+                // Update _playSelected
+                _playSelected = _playSelected && touchSelectedLevel(_input->getTouchPosition());
             } else {
+                // END
                 if (_playSelected && touchSelectedLevel(_input->getTouchPosition())) {
                     // Select level and exit Level Select Menu
                     this->_selectedLevelJson = _levelsJson->get(_selectedLevel)->asString();
                     this->setActive(false);
                 }
-                if (_input->isTapTime()) {
+                if (_input->isTapTime() && _input->isTapSpace()) {
                     int level = tappedLevel(_input->getTouchPosition());
                     if (level != -1) {
 //                        _selectedLevel = level;

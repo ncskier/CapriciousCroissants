@@ -93,6 +93,7 @@ void PlayerController::update(float timestep) {
 //    CULog("PlayerController Update");
     InputController::MoveEvent moveEvent = _input->getMoveEvent();
     if (moveEvent != InputController::MoveEvent::NONE) {
+		bool hasRooting = false;
         if (moveEvent == InputController::MoveEvent::START) {
             // START
             Vec2 position = _input->getTouchPosition();
@@ -115,7 +116,6 @@ void PlayerController::update(float timestep) {
 			_board->requestedRow = row;
 
 			// Make sure no Rooting enemies
-			bool hasRooting = false;
 			int x = _board->xOfIndex(_board->getSelectedTile());
 			int y = _board->yOfIndex(_board->getSelectedTile());
 
@@ -164,8 +164,32 @@ void PlayerController::update(float timestep) {
 			if (_entityManager->updateEntities(_board, EntityManager::playerLimit) == 0) {
 				cells = _board->lengthToCells(offsetValue, _board->offsetRow);
 			}
+			
+			// Make sure no Rooting enemies
+			int x = _board->xOfIndex(_board->getSelectedTile());
+			int y = _board->yOfIndex(_board->getSelectedTile());
+
+			if (_entityManager->updateEntities(_board, EntityManager::playerLimit) == 0) {
+				if (row) {
+					// Check row
+					for (int r = 0; r < _board->getWidth(); r++) {
+						if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(r, y))) {
+							hasRooting = true;
+						}
+					}
+				}
+				else {
+					// Check column
+					for (int c = 0; c < _board->getHeight(); c++) {
+						if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(x, c))) {
+							hasRooting = true;
+						}
+					}
+				}
+			}
+
             // Check if valid move
-            if (abs(cells) > 0) {
+            if (abs(cells) > 0 && !hasRooting) {
                 // Update board
                 _board->slide(cells);
                 setComplete(true);

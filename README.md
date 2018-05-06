@@ -2,7 +2,7 @@
 ## Capricious Croissants
 Annie Hughey, Alejandro Devore-Oviedo, Brandon Walker, Joseph Ienna, Rowena Chen, Tyler Thompson
 
-## Alpha Release
+## Open Beta Release
 ### Supported Platforms
 - Android
 - iOS
@@ -34,17 +34,29 @@ __Plump Purple Cats__ - dumb enemies who move in the direction they're facing an
 
 __Skeletons__ - smart enemies who always move toward Mika.
 
+__Dragons__ - dumb enemies who have ranged attacks. They can attack anything in their row/column.
+
+__Plants__ - immobile enemies who the player cannot move. These enemies do not attack the player, but the player cannot move the tiles these enemies root into.
+
 ### Levels
-0. Dumb enemy tutorial
-1. Dumb enemy tutorial 2
-2. Dumb enemy level
-3. Smart enemy tutorial
-4. Dumb and Smart enemy level
-5. Ally tutorial
-6. Same as level 5, but more tile colors
-7. Medium/Hard smart enemy level
+1. Dumb enemy tutorial
+2. Dumb enemy tutorial 2
+3. Dumb enemy level
+4. Smart enemy tutorial
+5. Dumb and Smart enemy level with Allies
+6. Medium/Hard smart enemy level
+7. Ranged enemy level
+8. Rooting (plant) enemy tutorial
+9. Easy rooting enemy level
+10. Easy rooting enemy level
+11. Medium rooting enemy level
+12. Medium rooting enemy level
 
 ### Grade
 Please grade on Android.
 
+### TestFlight
+We will have a TestFlight distribution once it is approved (probably by Sunday).
+
+### Extra Notes
 Icicle enemy death animations are placeholders for all the non-ice tiles. There will be different death animations when enemies die on the other tiles.

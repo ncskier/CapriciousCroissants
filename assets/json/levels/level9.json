@@ -13,9 +13,9 @@
                 "location": {
                     "x": 0,
                     "y": 0,
-                    "direction" : 3
+                    "direction" : 0
                 },
-                "smartMovement": {
+                "dumbMovement": {
                     "movementDistance" : 1
                 },
                 "idle": {
@@ -41,9 +41,9 @@
                 "location": {
                     "x": 2,
                     "y": 0,
-                    "direction" : 3
+                    "direction" : 0
                 },
-              "smartMovement": {
+              "dumbMovement": {
                   "movementDistance" : 1
               },
                 "idle": {

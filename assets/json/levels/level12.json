@@ -4,7 +4,7 @@
         "height": 5
     },
     "generationAlgorithm": "random",
-    "seed": 0,
+    "seed": 13,
     "colors": 6,
     "tiles": [],
     "enemies": {
@@ -12,14 +12,13 @@
             "components": {
                 "location": {
                     "x": 0,
-                    "y": 0,
-                    "direction" : 0
+                    "y": 4,
+                    "direction" : 1
                 },
-                "dumbMovement": {
-                    "movementDistance" : 1
-                },
+                "immobleMovement": {},
+		"rooting":{},
                 "idle": {
-                    "textureKeys": "enemy3_strip",
+                    "textureKeys": "enemy2_strip",
                     "textureRows": [
                         8
                     ],
@@ -33,21 +32,21 @@
                         2
                     ]
                 },
-                "attackRanged" : {}
+                "attackMelee" : {}
             }
         },
         "enemy2": {
             "components": {
                 "location": {
                     "x": 2,
-                    "y": 0,
-                    "direction" : 0
+                    "y": 4,
+                    "direction" : 1
                 },
-              "dumbMovement": {
-                  "movementDistance" : 1
-              },
+		"rooting":{},
+                "immobleMovement": {
+                },
                 "idle": {
-                    "textureKeys": "enemy3_strip",
+                    "textureKeys": "enemy2_strip",
                     "textureRows": [
                         8
                     ],
@@ -61,18 +60,46 @@
                         2
                     ]
                 },
-                "attackRanged" : {}
+                "attackMelee" : {}
             }
         },
-        "enemy3": {
+	"enemy3": {
             "components": {
                 "location": {
                     "x": 4,
                     "y": 0,
-                    "direction" : 1
+                    "direction" : 3
+                },
+		"rooting":{},
+                "immobleMovement": {
+                },
+                "idle": {
+                    "textureKeys": "enemy2_strip",
+                    "textureRows": [
+                        8
+                    ],
+                    "textureColumns": [
+                        16
+                    ],
+                    "textureSize": [
+                        128
+                    ],
+                    "textureSpeed": [
+                        2
+                    ]
+                },
+                "attackMelee" : {}
+            }
+        },
+	"enemy4": {
+            "components": {
+                "location": {
+                    "x": 2,
+                    "y": 0,
+                    "direction" : 3
                 },
                 "smartMovement": {
-                    "movementDistance" : 1
+			"movementDistance": 1
                 },
                 "idle": {
                     "textureKeys": "enemy1_strip",
@@ -92,20 +119,10 @@
                 "attackMelee" : {}
             }
         }
-     
     },
     "mika": {
-        "x": 4,
-        "y": 4
+        "x": 0,
+        "y": 0
     },
-    "allies": {
-        "ally1": {
-            "x": 2,
-            "y": 4
-        },
-        "ally2": {
-            "x": 0,
-            "y": 4
-        }
-    }
+    "allies": {}
 }

@@ -63,6 +63,9 @@ protected:
     float _velocity = 0.0f;
     bool _playSelected = false;
     bool _mikaAttack = false;
+    // Cap
+    int _lowCapTiles = 5;
+    int _hiCapTiles = 3;
     
 public:
 #pragma mark -
@@ -108,7 +111,7 @@ public:
     void loadLevelsFromJson(const std::string& filePath);
     
     /** Create level node */
-    std::shared_ptr<cugl::Node> createLevelNode(int levelIdx);
+    std::shared_ptr<cugl::Node> createLevelNode(int levelIdx, bool cap=false);
     
     /** Create mika node */
     std::shared_ptr<cugl::Node> createMikaNode();

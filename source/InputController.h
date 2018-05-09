@@ -75,6 +75,7 @@ protected:
     float _acceleration;
     float _velocity;
     float _swipeAccelerationThreshold = 0.0005f;
+    float _minSwipeDt = 0.001f;
     
 public:
 #pragma mark -
@@ -178,7 +179,11 @@ public:
     }
     
     /** Return swipe time */
-    float getSwipeTime() { return _touchDownTime-_swipeInitTime; }
+    float getSwipeTime() {
+        float time = _touchDownTime-_swipeInitTime;
+        time = (time < _minSwipeDt) ? _minSwipeDt : time;
+        return time;
+    }
     
     /**
      * Returns _moveEvent

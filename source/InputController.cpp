@@ -220,7 +220,7 @@ void InputController::touchMovedCB(const cugl::TouchEvent& event, const Vec2& pr
             diff.subtract(_prevTouch);
             float dy = std::abs(diff.y);
             float dt = _touchDownTime - _prevTouchTime;
-            if (dt > 0.001f) {
+            if (dt > _minSwipeDt) {
                 dt *= 1000.0f;      // Convert to ms because velocities were too high
                 float velocity = dy/dt;
                 float acceleration = velocity/dt;

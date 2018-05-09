@@ -101,6 +101,8 @@ void MenuMode::dispose() {
     _active = false;
     _menuTiles.clear();
     _menuDots.clear();
+    _menuCapHiTiles.clear();
+    _menuCapLowTiles.clear();
     _softOffset = 0.0f;
     _hardOffset = 0.0f;
     _minOffset = 0.0f;
@@ -129,12 +131,6 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     _levelsJson = json->get("levels");
     _originY = _dimen.height*0.2f;
     _maxOffset = _menuTileSize.height * (_levelsJson->size() - 1);
-//    // Create low cap
-//    for (int i = 0; i < _lowCapTiles; i++) {
-//        std::shared_ptr<Node> menuTileCap = createLevelNode(i, true);
-//        _worldNode->addChild(menuTileCap);
-//        _menuTiles.push_back(menuTileCap);
-//    }
     // Create levels
     for (auto i = 0; i < _levelsJson->size(); i++) {
         std::shared_ptr<Node> menuTile = createLevelNode(i);
@@ -143,9 +139,17 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     }
     // Create hi cap
     for (int i = 0; i < _hiCapTiles; i++) {
-        std::shared_ptr<Node> menuTileCap = createLevelNode(i, true);
+        int lvlIdx = int(_levelsJson->size())+i;
+        std::shared_ptr<Node> menuTileCap = createLevelNode(lvlIdx, true);
         _worldNode->addChild(menuTileCap);
-        _menuTiles.push_back(menuTileCap);
+        _menuCapHiTiles.push_back(menuTileCap);
+    }
+    // Create low cap
+    for (int i = 0; i < _lowCapTiles; i++) {
+        int lvlIdx = -1 - i;
+        std::shared_ptr<Node> menuTileCap = createLevelNode(lvlIdx, true);
+        _worldNode->addChild(menuTileCap);
+        _menuCapLowTiles.push_back(menuTileCap);
     }
     
 }
@@ -310,7 +314,14 @@ float MenuMode::offsetForLevel(int levelIdx) {
 
 /** Calculate level spritesheet frame given the level index [levelIdx] */
 int MenuMode::menuTileFrame(int levelIdx) {
-    return MENU_TILE_SIZE - (levelIdx % MENU_TILE_SIZE) - 1;
+    // TODO: Update for negatives
+    int frame = MENU_TILE_SIZE - (levelIdx % MENU_TILE_SIZE) - 1;
+    if (levelIdx < 0) {
+        
+    } else if (levelIdx >= MENU_TILE_SIZE) {
+        
+    }
+    return frame;
 }
 
 /** Return horizontal position of level dot as fraction of level width */
@@ -538,53 +549,64 @@ void MenuMode::update(float timestep) {
         _menuTiles[i]->setPosition(menuTilePosition(i));
         _menuTiles[i]->setVisible(menuTileOnScreen(i));
         
-        // Only menu tiles (exclude caps)
-        if (i < _levelsJson->size()) {
-            // Dots
-            float time = 0.1f;
-            float scale = (i == _selectedLevel) ? 2.1f : 1.0f;
-            std::stringstream ss;
-            if (i == _selectedLevel) {
-                ss << "select_";
-            } else {
-                ss << "unselect_";
-            }
-            ss << i;
-    //        Size maxDotSize = _dotSize*2.1f;
-    //        Size size = (i == _selectedLevel) ? maxDotSize : _dotSize;
-            Size size = _dotSize*scale;
-            Vec2 position = (i == _selectedLevel) ? dotPosition(i)-Vec2(0.0f, _menuTileSize.height*0.1f) : dotPosition(i);
-    //        _menuDots[i]->setContentSize(size);
-            _menuDots[i]->setPosition(position);
-            std::shared_ptr<ScaleTo> scaleAction = ScaleTo::alloc(Vec2(scale, scale), time);
-            if (!_actions->isActive(ss.str())) {
-                _actions->activate(ss.str(), scaleAction, _menuDots[i]);
-            }
-            
-            // Label
-    //        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.5f, size.height*0.2f) : Vec2(size.width*0.5f, size.height*0.5f);
-            Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.25f, size.height*0.1f) : Vec2(size.width*0.5f, size.height*0.5f);
-    //        _menuDots[i]->getChild(0)->setPosition(labelPos);
-            std::stringstream ssLabel;
-            std::stringstream ssLabelScale;
-            if (i == _selectedLevel) {
-                ssLabel << "select_label_";
-                ssLabelScale << "select_label_scale_";
-            } else {
-                ssLabel << "unselect_label_";
-                ssLabelScale << "unselect_label_scale_";
-            }
-            ssLabel << i;
-            ssLabelScale << i;
-            std::shared_ptr<MoveTo> moveAction = MoveTo::alloc(labelPos, time);
-            std::shared_ptr<ScaleTo> labelScaleAction = ScaleTo::alloc(Vec2(1.0f/scale, 1.0f/scale), time);
-            if (!_actions->isActive(ssLabel.str())) {
-                _actions->activate(ssLabel.str(), moveAction, _menuDots[i]->getChild(0));
-            }
-            if (!_actions->isActive(ssLabelScale.str())) {
-                _actions->activate(ssLabelScale.str(), labelScaleAction, _menuDots[i]->getChild(0));
-            }
+        // Dots
+        float time = 0.1f;
+        float scale = (i == _selectedLevel) ? 2.1f : 1.0f;
+        std::stringstream ss;
+        if (i == _selectedLevel) {
+            ss << "select_";
+        } else {
+            ss << "unselect_";
         }
+        ss << i;
+//        Size maxDotSize = _dotSize*2.1f;
+//        Size size = (i == _selectedLevel) ? maxDotSize : _dotSize;
+        Size size = _dotSize*scale;
+        Vec2 position = (i == _selectedLevel) ? dotPosition(i)-Vec2(0.0f, _menuTileSize.height*0.1f) : dotPosition(i);
+//        _menuDots[i]->setContentSize(size);
+        _menuDots[i]->setPosition(position);
+        std::shared_ptr<ScaleTo> scaleAction = ScaleTo::alloc(Vec2(scale, scale), time);
+        if (!_actions->isActive(ss.str())) {
+            _actions->activate(ss.str(), scaleAction, _menuDots[i]);
+        }
+        
+        // Label
+//        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.5f, size.height*0.2f) : Vec2(size.width*0.5f, size.height*0.5f);
+        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.25f, size.height*0.1f) : Vec2(size.width*0.5f, size.height*0.5f);
+//        _menuDots[i]->getChild(0)->setPosition(labelPos);
+        std::stringstream ssLabel;
+        std::stringstream ssLabelScale;
+        if (i == _selectedLevel) {
+            ssLabel << "select_label_";
+            ssLabelScale << "select_label_scale_";
+        } else {
+            ssLabel << "unselect_label_";
+            ssLabelScale << "unselect_label_scale_";
+        }
+        ssLabel << i;
+        ssLabelScale << i;
+        std::shared_ptr<MoveTo> moveAction = MoveTo::alloc(labelPos, time);
+        std::shared_ptr<ScaleTo> labelScaleAction = ScaleTo::alloc(Vec2(1.0f/scale, 1.0f/scale), time);
+        if (!_actions->isActive(ssLabel.str())) {
+            _actions->activate(ssLabel.str(), moveAction, _menuDots[i]->getChild(0));
+        }
+        if (!_actions->isActive(ssLabelScale.str())) {
+            _actions->activate(ssLabelScale.str(), labelScaleAction, _menuDots[i]->getChild(0));
+        }
+    }
+    // Move upper cap
+    for (auto i = 0; i < _menuCapHiTiles.size(); i++) {
+        // Menu Tiles
+        int lvlIdx = int(_levelsJson->size())+i;
+        _menuTiles[i]->setPosition(menuTilePosition(lvlIdx));
+        _menuTiles[i]->setVisible(menuTileOnScreen(lvlIdx));
+    }
+    // Move lower cap
+    for (auto i = 0; i < _menuCapLowTiles.size(); i++) {
+        // Menu Tiles
+        int lvlIdx = -1 - i;
+        _menuTiles[i]->setPosition(menuTilePosition(lvlIdx));
+        _menuTiles[i]->setVisible(menuTileOnScreen(lvlIdx));
     }
     
     // Update Mika Animation

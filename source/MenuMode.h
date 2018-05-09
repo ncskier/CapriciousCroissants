@@ -38,6 +38,8 @@ protected:
     std::shared_ptr<cugl::Node> _worldNode;
     std::vector<std::shared_ptr<cugl::Node>> _menuTiles;
     std::vector<std::shared_ptr<cugl::Node>> _menuDots;
+    std::vector<std::shared_ptr<cugl::Node>> _menuCapLowTiles;
+    std::vector<std::shared_ptr<cugl::Node>> _menuCapHiTiles;
     cugl::Size _menuTileSize;
     cugl::Size _dotSize;
     std::shared_ptr<cugl::Node> _mikaNode;

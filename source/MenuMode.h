@@ -66,8 +66,8 @@ protected:
     bool _playSelected = false;
     bool _mikaAttack = false;
     // Cap
-    int _lowCapTiles = 5;
-    int _hiCapTiles = 3;
+    int _lowCapTiles = 3;
+    int _hiCapTiles = 5;
     
 public:
 #pragma mark -

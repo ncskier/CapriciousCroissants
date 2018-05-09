@@ -314,12 +314,10 @@ float MenuMode::offsetForLevel(int levelIdx) {
 
 /** Calculate level spritesheet frame given the level index [levelIdx] */
 int MenuMode::menuTileFrame(int levelIdx) {
-    // TODO: Update for negatives
     int frame = MENU_TILE_SIZE - (levelIdx % MENU_TILE_SIZE) - 1;
+    // TODO: Update for negatives
     if (levelIdx < 0) {
-        
-    } else if (levelIdx >= MENU_TILE_SIZE) {
-        
+        frame = ((-levelIdx) % MENU_TILE_SIZE) - 1;
     }
     return frame;
 }
@@ -598,15 +596,15 @@ void MenuMode::update(float timestep) {
     for (auto i = 0; i < _menuCapHiTiles.size(); i++) {
         // Menu Tiles
         int lvlIdx = int(_levelsJson->size())+i;
-        _menuTiles[i]->setPosition(menuTilePosition(lvlIdx));
-        _menuTiles[i]->setVisible(menuTileOnScreen(lvlIdx));
+        _menuCapHiTiles[i]->setPosition(menuTilePosition(lvlIdx));
+        _menuCapHiTiles[i]->setVisible(menuTileOnScreen(lvlIdx));
     }
     // Move lower cap
     for (auto i = 0; i < _menuCapLowTiles.size(); i++) {
         // Menu Tiles
         int lvlIdx = -1 - i;
-        _menuTiles[i]->setPosition(menuTilePosition(lvlIdx));
-        _menuTiles[i]->setVisible(menuTileOnScreen(lvlIdx));
+        _menuCapLowTiles[i]->setPosition(menuTilePosition(lvlIdx));
+        _menuCapLowTiles[i]->setVisible(menuTileOnScreen(lvlIdx));
     }
     
     // Update Mika Animation

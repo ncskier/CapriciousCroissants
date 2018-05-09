@@ -47,7 +47,7 @@
 #define TILE_TEXTURE_KEY_8 "tile0_strip"
 #define TILE_TEXTURE_KEY_9 "tile0_strip"
 /** Death animation */
-#define TILE_TEXTURE_KEY_DEATH_0 "tile2_death_strip"
+#define TILE_TEXTURE_KEY_DEATH_0 "tile0_death_strip"
 #define TILE_TEXTURE_KEY_DEATH_1 "tile2_death_strip"
 #define TILE_TEXTURE_KEY_DEATH_2 "tile2_death_strip"
 #define TILE_TEXTURE_KEY_DEATH_3 "tile3_death_strip"

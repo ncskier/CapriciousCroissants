@@ -32,6 +32,8 @@ protected:
     std::shared_ptr<BoardModel> _board;
 	/** Entity Manager */
 	std::shared_ptr<EntityManager> _entityManager;
+    /** NUmber of player moves */
+    int _numberMoves = 0;
     
     /** Whether we have completed the player's turn */
     bool _complete;
@@ -116,6 +118,9 @@ public:
     
     /** Returns interrupting actions */
     std::set<std::string>& getInterruptingActions() { return _interruptingActions; }
+    
+    /** Returns the number of player moves */
+    int getNumberMoves() { return _numberMoves; }
     
     
 #pragma mark -

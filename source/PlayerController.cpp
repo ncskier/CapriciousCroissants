@@ -44,6 +44,7 @@ bool PlayerController::init(std::shared_ptr<ActionManager>& actions, const std::
     
     _debug = false;
     _complete = false;
+    _numberMoves = 0;
     
     return true;
 }
@@ -190,9 +191,13 @@ void PlayerController::update(float timestep) {
 
             // Check if valid move
             if (abs(cells) > 0 && !hasRooting) {
-                // Update board
-                _board->slide(cells);
-                setComplete(true);
+                // Check for wrap around stagnant moves (moving to the same position)
+                if (!(abs(cells) == _board->getWidth() && _board->offsetRow) && !(abs(cells) == _board->getHeight() && _board->offsetCol)) {
+                    // Update board
+                    _board->slide(cells);
+                    _numberMoves++;
+                    setComplete(true);
+                }
             }
             _board->deselectTile();
             _input->clear();

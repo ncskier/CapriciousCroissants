@@ -317,7 +317,7 @@ int MenuMode::menuTileFrame(int levelIdx) {
     int frame = MENU_TILE_SIZE - (levelIdx % MENU_TILE_SIZE) - 1;
     // TODO: Update for negatives
     if (levelIdx < 0) {
-        frame = ((-levelIdx) % MENU_TILE_SIZE) - 1;
+        frame = (MENU_TILE_SIZE + ((-levelIdx) % MENU_TILE_SIZE) - 1) % MENU_TILE_SIZE;
     }
     return frame;
 }

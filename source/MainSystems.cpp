@@ -313,9 +313,10 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 			std::shared_ptr<PlayerPawnModel> ally = board->getAlly(i);
 			if (ally->getX() == loc.x && ally->getY() == loc.y) {
 				board->removeAlly(i);
-				if (i == 0) {
-					board->lose = true;
-				}
+                // Lose if any ally is killed
+//                if (i == 0) {
+                board->lose = true;
+//                }
 
 				std::stringstream key;
 				key << "int_ally_remove_" << i;
@@ -436,11 +437,11 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 					if (ally->getX() == closestAlignedAlly->getX() && ally->getY() == closestAlignedAlly->getY()) {
 						board->insertAttackingEnemy(entity);
 						ranged.target = ally;
-					;
 						board->removeAlly(i);
-						if (i == 0) {
-							board->lose = true;
-						}
+                        // Lose if any ally is killed
+//                        if (i == 0) {
+                        board->lose = true;
+//                        }
 						int shootDirectionX = (ally->getY() == loc.y)*copysign(1, ally->getX() - loc.x);
 						int shootDirectionY = (ally->getX() == loc.x)*copysign(1, ally->getY() - loc.y);
 						if(shootDirectionX > 0){

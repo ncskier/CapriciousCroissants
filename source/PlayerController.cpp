@@ -60,6 +60,7 @@ void PlayerController::dispose() {
     _entityManager = nullptr;
     _complete = false;
     _debug = false;
+    _numberMoves = 0;
     _interruptingActions.clear();
 }
 

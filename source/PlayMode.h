@@ -100,6 +100,9 @@ protected:
     std::shared_ptr<cugl::PolygonNode> _menuNode;
     cugl::Size _dimen;
     
+    // Move Counter
+    std::shared_ptr<cugl::Label> _moveCounter;
+    
 	//Entity Manager Instance
 	std::shared_ptr<EntityManager> _entityManager;
     

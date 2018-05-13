@@ -254,6 +254,10 @@
         "script": {
             "file": "fonts/SCRIPTBL.TTF",
             "size": 64
+        },
+        "alwaysHereToo": {
+            "file": "fonts/AlwaysHereToo.ttf",
+            "size": 64
         }
 	},
     "soundfx": {

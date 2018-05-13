@@ -581,6 +581,12 @@ void PlayMode::updateWinAnimation(float dt) {
  * @param  delta    Number of seconds since last animation frame
  */
 void PlayMode::update(float dt) {
+    // Test Sound
+    if (!AudioEngine::get()->isActiveEffect("boop1")) {
+        auto source = _assets->get<Sound>("boop1");
+        AudioEngine::get()->playEffect("boop1", source, false, source->getVolume());
+    }
+    
     // Update input controller
     _input->update(dt);
     

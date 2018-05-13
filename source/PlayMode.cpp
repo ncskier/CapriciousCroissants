@@ -133,6 +133,12 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     
     // Add all sprites to scene graph
     setupLevelSceneGraph();
+    
+    // Start Music
+    if (!AudioEngine::get()->isActiveEffect("music")) {
+        auto source = _assets->get<Sound>("music");
+        AudioEngine::get()->playEffect("music", source, true, source->getVolume());
+    }
 
 	// Set Background
 	Application::get()->setClearColor(Color4(229, 229, 229, 255));
@@ -175,8 +181,7 @@ void PlayMode::dispose() {
         _menuNode = nullptr;
 		_resetButton = nullptr;
         _soundButton = nullptr;
-        _soundOnNode = nullptr;
-        _soundOffNode = nullptr;
+        _soundSprite = nullptr;
     }
 }
 
@@ -218,14 +223,25 @@ void PlayMode::reset() {
 
 /** Exits the game */
 void PlayMode::exit() {
+    // Stop Music
+    if (AudioEngine::get()->isActiveEffect("music")) {
+        AudioEngine::get()->stopEffect("music");
+    }
     setComplete(true);
 }
 
 /** Toggle sound */
 void PlayMode::toggleSound() {
-//    if (_soundButton->getChild(0) == _soundOnNode) {
-//        _soundButton->getChild(0) = _soundOffNode;
-//    }
+    int frame = _soundSprite->getFrame();
+    if (frame == 0) {
+        // Turn Sound Off
+        _soundSprite->setFrame(1);
+        AudioEngine::get()->pauseEffect("music");
+    } else {
+        // Turn Sound On
+        _soundSprite->setFrame(0);
+        AudioEngine::get()->resumeEffect("music");
+    }
 }
 
 
@@ -323,14 +339,13 @@ void PlayMode::initMenu() {
     
     // Sound On
     i = 0;
-    _soundOnNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_SOUND_ON));
-    _soundOffNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_SOUND_OFF));
-    _soundButton = Button::alloc(_soundOnNode);
+    _soundSprite = AnimationNode::alloc(_assets->get<Texture>(PLAY_MENU_KEY_SOUND), 1, 2);
+    _soundSprite->setFrame(0);
+    _soundButton = Button::alloc(_soundSprite);
     _soundButton->setAnchor(Vec2::ANCHOR_CENTER);
-    float soundOnWidth = _soundButton->getContentSize().width/_soundButton->getContentSize().height * height;
-    _soundOnNode->setContentSize(soundOnWidth, height);
-    _soundOffNode->setContentSize(soundOnWidth, height);
-    _soundButton->setContentSize(soundOnWidth, height);
+    float soundWidth = _soundButton->getContentSize().width/_soundButton->getContentSize().height * height;
+    _soundSprite->setContentSize(soundWidth, height);
+    _soundButton->setContentSize(soundWidth, height);
     _soundButton->setPosition(unit*0.5f + i*unit, y);
     _soundButton->setListener([=](const std::string& name, bool down) {
         if (down) {
@@ -581,12 +596,6 @@ void PlayMode::updateWinAnimation(float dt) {
  * @param  delta    Number of seconds since last animation frame
  */
 void PlayMode::update(float dt) {
-    // Test Sound
-    if (!AudioEngine::get()->isActiveEffect("boop1")) {
-        auto source = _assets->get<Sound>("boop1");
-        AudioEngine::get()->playEffect("boop1", source, false, source->getVolume());
-    }
-    
     // Update input controller
     _input->update(dt);
     

@@ -217,6 +217,13 @@
             "wrapS": "clamp",
             "wrapT": "clamp"
         },
+        "play_menu_sound": {
+            "file": "textures/play_menu_sound.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
         "play_menu_toggle_out": {
             "file": "textures/play_menu_toggle_out.png",
             "minfilter": "nearest",
@@ -283,6 +290,10 @@
         },
         "boop6": {
             "file": "sounds/boop6.mp3",
+            "volume": 0.5
+        },
+        "music": {
+            "file": "sounds/music.wav",
             "volume": 0.5
         }
     },

@@ -521,12 +521,6 @@ void PlayMode::updateBoardTurn(float dt) {
             done = true;
             win = true;
             
-            // Play win sound
-            if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("win")) {
-                auto source = _assets->get<Sound>("win");
-                AudioEngine::get()->playEffect("win", source, false, source->getVolume());
-            }
-            
 //            _text->setText("You win");
 //            _text->setVisible(true);
 //            _text->setZOrder(1000);
@@ -639,6 +633,12 @@ void PlayMode::updateWinAnimation(float dt) {
 //        setComplete(true);
         // Present WinLose Screen
         if (!_winloseActive) {
+            // Play win sound
+            if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("win")) {
+                auto source = _assets->get<Sound>("win");
+                AudioEngine::get()->playEffect("win", source, false, source->getVolume());
+            }
+            // Create WinLose Screen
             initWinLose();
         }
     }
@@ -811,10 +811,19 @@ void PlayMode::initWinLose() {
     mikaNode->setContentSize(mikaWidth, mikaHeight);
     mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.5f);
     
+    // Level Label
+    std::stringstream ssLevel;
+    ssLevel << "Level " << _level;
+    std::shared_ptr<Font> font = _assets->get<Font>("alwaysHereToo");
+    std::shared_ptr<Label> levelLabel = Label::alloc(ssLevel.str(), font);
+    levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
+    levelLabel->setPosition(_dimen.width*0.5f, _dimen.height*0.888f);
+    
     // Setup Node
     _winloseNode = Node::allocWithBounds(0, 0, _dimen.width, _dimen.height);
     _winloseNode->addChild(background);
     _winloseNode->addChild(mikaNode);
+    _winloseNode->addChild(levelLabel);
     _winloseNode->addChild(_winloseRetryButton);
     _winloseNode->addChild(_winloseLevelsButton);
     if (win) {

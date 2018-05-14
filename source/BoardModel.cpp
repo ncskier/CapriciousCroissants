@@ -254,13 +254,13 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 				}
 
 				_entityManager->addComponent<LocationComponent>(enemyId, loc);
-			} else if ("dumbMovement" == cugl::to_lower(componentJson->key())) {
+			} else if ("dumbmovement" == cugl::to_lower(componentJson->key())) {
 				DumbMovementComponent move;
 
 				move.movementDistance = componentJson->get("movementDistance")->asInt();
 
 				_entityManager->addComponent<DumbMovementComponent>(enemyId, move);
-			} else if ("smartMovement" == cugl::to_lower(componentJson->key())) {
+			} else if ("smartmovement" == cugl::to_lower(componentJson->key())) {
 				SmartMovementComponent move;
 
 				move.movementDistance = componentJson->get("movementDistance")->asInt();
@@ -280,12 +280,12 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 
 				_entityManager->addComponent<IdleComponent>(enemyId, idle);
 
-			} else if ("attackMelee" == cugl::to_lower(componentJson->key()) || "meleeAttack" == cugl::to_lower(componentJson->key())) {
+			} else if ("attackmelee" == cugl::to_lower(componentJson->key()) || "meleeattack" == cugl::to_lower(componentJson->key())) {
 				MeleeAttackComponent melee;
 
 				_entityManager->addComponent<MeleeAttackComponent>(enemyId, melee);
 
-			} else if ("attackRanged" == cugl::to_lower(componentJson->key()) || "rangedAttack" == cugl::to_lower(componentJson->key())) {
+			} else if ("attackranged" == cugl::to_lower(componentJson->key()) || "rangedattack" == cugl::to_lower(componentJson->key())) {
 				RangeOrthoAttackComponent ranged;
 				ranged.horizontal = true;
 				ranged.vertical = true;
@@ -301,7 +301,7 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 
 				_entityManager->addComponent<RootingComponent>(enemyId, rooting);
 			}
-			else if ("immobileMovement" == componentJson->key()) {
+			else if ("immobilemovement" == componentJson->key()) {
 				ImmobileMovementComponent move;
 
 				_entityManager->addComponent<ImmobileMovementComponent>(enemyId, move);

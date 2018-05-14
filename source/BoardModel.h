@@ -137,6 +137,7 @@ protected:
     
     /** Setup enemies from Json */
     bool setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::ActionManager>& actions);
+
     
 public:    
 #pragma mark -
@@ -156,7 +157,8 @@ public:
     // Convert array index to y
     int yOfIndex(int i) const;
     
-    
+	std::shared_ptr<cugl::AssetManager>& getAssets() { return _assets; }
+
 
 public:
 #pragma mark -

@@ -46,6 +46,8 @@ bool PlayerController::init(std::shared_ptr<ActionManager>& actions, const std::
     _complete = false;
     _numberMoves = 0;
     
+
+
     return true;
 }
 
@@ -94,10 +96,14 @@ std::tuple<bool, float> PlayerController::calculateOffset(Vec2 inputOffset) {
 void PlayerController::update(float timestep) {
 //    CULog("PlayerController Update");
     InputController::MoveEvent moveEvent = _input->getMoveEvent();
-    if (moveEvent != InputController::MoveEvent::NONE) {
+	if (moveEvent != InputController::MoveEvent::NONE) {
 		bool hasRooting = false;
+		//bool drawY;
+	
         if (moveEvent == InputController::MoveEvent::START) {
-            // START
+			drawY = false;
+			drawX = false;
+			// START
             Vec2 position = _input->getTouchPosition();
             position = _board->getNode()->worldToNodeCoords(position);
             // Check if On Tile
@@ -108,7 +114,9 @@ void PlayerController::update(float timestep) {
                 // Invalid move start
                 _input->clear();
             }
-        } else if (moveEvent == InputController::MoveEvent::MOVING) {
+        } 
+		
+		else if (moveEvent == InputController::MoveEvent::MOVING) {
             // MOVING
             cugl::Vec2 inputOffset = _input->getMoveOffset();
 //            float threshold = _board->getCellLength()/5.0f;
@@ -153,8 +161,61 @@ void PlayerController::update(float timestep) {
 						_board->setOffsetCol(0);
 					}
 				}
+				
+
 			}
-        } else {
+
+			int selectedX = _board->xOfIndex(_board->getSelectedTile());
+			int selectedY = _board->yOfIndex(_board->getSelectedTile());
+
+			//std::stringstream key;
+			//std::string highlight;
+			//ranged.projectile = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow"));
+
+			bool onRootedX = false;
+			bool onRootedY = false;
+			for (int xx = 0; xx < _board->getWidth(); xx++) {
+				if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(xx, selectedY))) { onRootedX = true; }
+			}
+
+			for (int yy = 0; yy < _board->getHeight(); yy++) {
+				if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(selectedX, yy))) { onRootedY = true; }
+			}
+
+			if (onRootedX && std::abs(inputOffset.x) > _board->getCellLength() && !drawX) {
+				for (int xx = 0; xx < _board->getWidth(); xx++) {
+
+					std::shared_ptr<cugl::PolygonNode> rootedSprite;
+					rootedSprite = PolygonNode::allocWithTexture(_board->getAssets()->get<Texture>("arrow"));
+					Vec2 pos = Vec2(xx, selectedY);
+					rootedSprite->setPosition(_board->gridToScreenV(pos.x, pos.y));
+					_board->getNode()->addChildWithName(rootedSprite, "selected", _board->calculateDrawZ(xx, selectedY, true));
+					drawX = true;
+				
+
+				}
+			}
+
+			if (onRootedY && std::abs(inputOffset.y) > _board->getCellLength() && !drawY) {
+				for (int yy = 0; yy < _board->getHeight(); yy++) {
+					CULog("drawY");
+					std::shared_ptr<cugl::PolygonNode> rootedSprite;
+					rootedSprite = PolygonNode::allocWithTexture(_board->getAssets()->get<Texture>("arrow"));
+					Vec2 pos = Vec2(selectedX, yy);
+					rootedSprite->setPosition(_board->gridToScreenV(pos.x, pos.y));
+					_board->getNode()->addChildWithName(rootedSprite, "selected", _board->calculateDrawZ(selectedX, yy, true));
+					drawY = true;
+				
+
+
+
+				}
+			}
+
+
+
+        } 
+		else {
             // END
             // Calculate movement
             Vec2 inputOffset = _input->getMoveOffset();
@@ -190,6 +251,11 @@ void PlayerController::update(float timestep) {
 				}
 			}
 
+			
+			
+
+
+
             // Check if valid move
             if (abs(cells) > 0 && !hasRooting) {
                 // Check for wrap around stagnant moves (moving to the same position)
@@ -202,6 +268,14 @@ void PlayerController::update(float timestep) {
             }
             _board->deselectTile();
             _input->clear();
+
+			for (int xx = 0; xx < _board->getWidth(); xx++) {
+				CULog("xx %d", xx);
+				_board->getNode()->removeChildByName("selected");
+			}
+			for (int yy = 0; yy < _board->getHeight(); yy++) {
+				_board->getNode()->removeChildByName("selected");
+			}
         }
 	}
     

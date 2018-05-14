@@ -481,6 +481,10 @@ void PlayMode::updateBoardTurn(float dt) {
             done = true;
             win = true;
             
+            // Play win sound
+            auto source = _assets->get<Sound>("win");
+            AudioEngine::get()->playEffect("win", source, false, source->getVolume());
+            
             _text->setText("You win");
             _text->setVisible(true);
             _text->setZOrder(1000);
@@ -505,6 +509,10 @@ void PlayMode::updateEnemyTurn(float dt) {
         if (_board->lose) {
             done = true;
             win = false;
+            
+            // Plase lose sound
+            auto source = _assets->get<Sound>("lose");
+            AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
             
             _text->setText("You lose");
             _text->setVisible(true);

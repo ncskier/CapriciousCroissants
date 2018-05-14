@@ -123,6 +123,11 @@ void BoardController::update(float timestep) {
                 tileDeathKey << "int_tile_death_enemy_" << i;
                 _actions->activate(tileDeathKey.str(), _board->tileDeathAction, tile->getDeathSprite());
                 _interruptingActions.insert(tileDeathKey.str());
+                
+                // Tile Death Animation Sound
+                if (!AudioEngine::get()->isActiveEffect(tileDeathKey.str())) {
+                    AudioEngine::get()->playEffect(tileDeathKey.str(), tile->getDeathSound(), false, tile->getDeathSound()->getVolume());
+                }
             }
             
             // Enemy Death Animation

@@ -295,6 +295,46 @@
         "music": {
             "file": "sounds/music.wav",
             "volume": 0.5
+        },
+        "desertDeath": {
+            "file": "sounds/desertDeath.wav",
+            "volume": 0.7
+        },
+        "fireDeath": {
+            "file": "sounds/fireDeath.wav",
+            "volume": 0.7
+        },
+        "iceDeath": {
+            "file": "sounds/iceDeath.wav",
+            "volume": 0.7
+        },
+        "lose": {
+            "file": "sounds/lose.wav",
+            "volume": 0.5
+        },
+        "match": {
+            "file": "sounds/match.wav",
+            "volume": 0.5
+        },
+        "press": {
+            "file": "sounds/press.wav",
+            "volume": 0.5
+        },
+        "select": {
+            "file": "sounds/select.wav",
+            "volume": 0.5
+        },
+        "sliding": {
+            "file": "sounds/sliding.wav",
+            "volume": 0.5
+        },
+        "unpress.wav": {
+            "file": "sounds/unpress.wav",
+            "volume": 0.5
+        },
+        "win": {
+            "file": "sounds/win.wav",
+            "volume": 0.5
         }
     },
     "scenes": {

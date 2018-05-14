@@ -483,8 +483,10 @@ void PlayMode::updateBoardTurn(float dt) {
             win = true;
             
             // Play win sound
-            auto source = _assets->get<Sound>("win");
-            AudioEngine::get()->playEffect("win", source, false, source->getVolume());
+            if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("win")) {
+                auto source = _assets->get<Sound>("win");
+                AudioEngine::get()->playEffect("win", source, false, source->getVolume());
+            }
             
             _text->setText("You win");
             _text->setVisible(true);
@@ -512,8 +514,10 @@ void PlayMode::updateEnemyTurn(float dt) {
             win = false;
             
             // Plase lose sound
-            auto source = _assets->get<Sound>("lose");
-            AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
+            if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("lose")) {
+                auto source = _assets->get<Sound>("lose");
+                AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
+            }
             
             _text->setText("You lose");
             _text->setVisible(true);

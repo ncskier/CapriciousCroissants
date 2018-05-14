@@ -30,7 +30,8 @@ PlayMode::PlayMode() : Scene(),
 _state(State::PLAYER),
 _complete(false),
 _debug(false),
-done(false)
+done(false),
+_winloseActive(false)
 {
 }
 
@@ -48,7 +49,7 @@ done(false)
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputController>& input, std::string& levelJson) {
+bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputController>& input, int level) {
 	// Initialize the scene to a locked width
 	Size dimen = Application::get()->getDisplaySize();
 	dimen *= SCENE_WIDTH / dimen.width; // Lock the game to a reasonable resolution
@@ -58,7 +59,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
 		return false;
 	}
     _dimen = dimen;
-    _levelJson = levelJson;
+    _level = level;
 
 	_assets = assets;
     _actions = ActionManager::alloc();
@@ -118,7 +119,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
 	setDebug(false);
     
     // Create board from level file
-    setupLevelFromJson(levelJson, dimen);
+    setupLevelFromJson(dimen);
 //    setupLevelFromJson("json/levels/level1.json", dimen);
     
     // Setup Input handler
@@ -152,6 +153,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
 void PlayMode::dispose() {
     if (_active) {
         CULog("dispose PlayMode");
+        _worldNode->removeAllChildren();
         removeAllChildren();
         _assets = nullptr;
         _text = nullptr;
@@ -175,13 +177,36 @@ void PlayMode::dispose() {
         winTimer = 0.0f;
         _beginAttack = false;
         _attacking = false;
-		if (_resetButton) {
+        // Menu
+		if (_resetButton && _resetButton->isActive()) {
 			_resetButton->deactivate();
 		}
+        if (_exitButton && _exitButton->isActive()) {
+            _exitButton->deactivate();
+        }
+        if (_soundButton && _soundButton->isActive()) {
+            _soundButton->deactivate();
+        }
         _menuNode = nullptr;
 		_resetButton = nullptr;
         _soundButton = nullptr;
         _soundSprite = nullptr;
+        _exitButton = nullptr;
+        // WinLose
+        _winloseNode = nullptr;
+        _winloseActive = false;
+        if (_winloseContinueButton && _winloseContinueButton->isActive()) {
+            _winloseContinueButton->deactivate();
+        }
+        if (_winloseRetryButton && _winloseRetryButton->isActive()) {
+            _winloseRetryButton->deactivate();
+        }
+        if (_winloseLevelsButton && _winloseLevelsButton->isActive()) {
+            _winloseLevelsButton->deactivate();
+        }
+        _winloseContinueButton = nullptr;
+        _winloseRetryButton = nullptr;
+        _winloseLevelsButton = nullptr;
     }
 }
 
@@ -194,6 +219,9 @@ void PlayMode::reset() {
     // Remove/reset
     _input->clear();
     _worldNode->removeChild(_board->getNode());
+    if (_winloseActive) {
+        _worldNode->removeChild(_winloseNode);
+    }
     _board = nullptr;
     _playerController.dispose();
     _boardController.dispose();
@@ -203,9 +231,15 @@ void PlayMode::reset() {
     done = false;
     doneCtr = 30;
     win = false;
+    winTimer = 0.0f;
     _beginAttack = false;
     _attacking = false;
     _entityManager = nullptr;
+    if (_winloseActive) {
+        _winloseNode->removeAllChildren();
+    }
+    _winloseNode = nullptr;
+    _winloseActive = false;
     
     // Re initialize
     _entityManager = std::make_shared<EntityManager>();
@@ -214,7 +248,7 @@ void PlayMode::reset() {
     _entityManager->addSystem(std::make_shared<AttackMeleeSystem>(_entityManager), EntityManager::attack);
     _entityManager->addSystem(std::make_shared<AttackRangedSystem>(_entityManager), EntityManager::attack);
     _entityManager->addSystem(std::make_shared<SmartMovementFacingSystem>(_entityManager), EntityManager::onPlayerMove);
-    setupLevelFromJson(_levelJson, _dimen);
+    setupLevelFromJson(_dimen);
     _playerController.init(_actions, _board, _input, _entityManager);
     _boardController.init(_actions, _board, _entityManager);
     _enemyController.init(_actions, _board, _entityManager);
@@ -247,7 +281,11 @@ void PlayMode::toggleSound() {
 
 
 /** Load level from json */
-void PlayMode::setupLevelFromJson(const std::string& filePath, Size dimen) {
+void PlayMode::setupLevelFromJson(Size dimen) {
+    // Get filepath
+    std::shared_ptr<JsonReader> levelsReader = JsonReader::allocWithAsset("json/levelList.json");
+    std::shared_ptr<JsonValue> levelsJson = levelsReader->readJson();
+    std::string filePath = levelsJson->get("levels")->get(_level)->asString();
     // Load json
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(filePath);
     std::shared_ptr<JsonValue> json = reader->readJson();
@@ -361,38 +399,39 @@ void PlayMode::initMenu() {
     // Restart
     i = 1;
     std::shared_ptr<PolygonNode> restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_RESTART));
-    std::shared_ptr<Button> restartButton = Button::alloc(restartNode);
-    restartButton->setAnchor(Vec2::ANCHOR_CENTER);
-    float restartWidth = restartButton->getContentSize().width/restartButton->getContentSize().height * height;
+    _resetButton = Button::alloc(restartNode);
+    _resetButton->setAnchor(Vec2::ANCHOR_CENTER);
+    float restartWidth = _resetButton->getContentSize().width/_resetButton->getContentSize().height * height;
     restartNode->setContentSize(restartWidth, height);
-    restartButton->setContentSize(restartWidth, height);
-    restartButton->setPosition(unit*0.5f + i*unit, y);
-    restartButton->setListener([=](const std::string& name, bool down) {
+    _resetButton->setContentSize(restartWidth, height);
+    _resetButton->setPosition(unit*0.5f + i*unit, y);
+    _resetButton->setListener([=](const std::string& name, bool down) {
         if (down) {
             CULog("Restart");
             this->reset();
         }
     });
-    restartButton->activate(PLAY_MENU_LISTENER_RESTART);
-    _menuNode->addChildWithName(restartButton, PLAY_MENU_KEY_RESTART);
+    _resetButton->activate(PLAY_MENU_LISTENER_RESTART);
+    _menuNode->addChildWithName(_resetButton, PLAY_MENU_KEY_RESTART);
     
     // Exit
     i = 2;
     std::shared_ptr<PolygonNode> exitNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_EXIT));
-    std::shared_ptr<Button> exitButton = Button::alloc(exitNode);
-    exitButton->setAnchor(Vec2::ANCHOR_CENTER);
-    float exitWidth = exitButton->getContentSize().width/exitButton->getContentSize().height * height;
+    _exitButton = Button::alloc(exitNode);
+    _exitButton->setAnchor(Vec2::ANCHOR_CENTER);
+    float exitWidth = _exitButton->getContentSize().width/_exitButton->getContentSize().height * height;
     exitNode->setContentSize(exitWidth, height);
-    exitButton->setContentSize(exitWidth, height);
-    exitButton->setPosition(unit*0.5f + i*unit, y);
-    exitButton->setListener([=](const std::string& name, bool down) {
+    _exitButton->setContentSize(exitWidth, height);
+    _exitButton->setPosition(unit*0.5f + i*unit, y);
+    _exitButton->setListener([=](const std::string& name, bool down) {
         if (down) {
             CULog("Exit");
+            CULog("Exit Button");
             this->exit();
         }
     });
-    exitButton->activate(PLAY_MENU_LISTENER_EXIT);
-    _menuNode->addChildWithName(exitButton, PLAY_MENU_KEY_EXIT);
+    _exitButton->activate(PLAY_MENU_LISTENER_EXIT);
+    _menuNode->addChildWithName(_exitButton, PLAY_MENU_KEY_EXIT);
 }
 
 
@@ -488,10 +527,10 @@ void PlayMode::updateBoardTurn(float dt) {
                 AudioEngine::get()->playEffect("win", source, false, source->getVolume());
             }
             
-            _text->setText("You win");
-            _text->setVisible(true);
-            _text->setZOrder(1000);
-            sortZOrder();
+//            _text->setText("You win");
+//            _text->setVisible(true);
+//            _text->setZOrder(1000);
+//            sortZOrder();
         }
         if (!_enemyController.isComplete()) {
              _state = State::ENEMY;
@@ -519,10 +558,15 @@ void PlayMode::updateEnemyTurn(float dt) {
                 AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
             }
             
-            _text->setText("You lose");
-            _text->setVisible(true);
-            _text->setZOrder(1000);
-            sortZOrder();
+            // Present WinLose Screen
+            if (!_winloseActive) {
+                initWinLose();
+            }
+            
+//            _text->setText("You lose");
+//            _text->setVisible(true);
+//            _text->setZOrder(1000);
+//            sortZOrder();
         }
         _state = State::BOARD;
     }
@@ -592,7 +636,11 @@ void PlayMode::updateWinAnimation(float dt) {
         }
     }
     if (winAnimationOver) {
-        setComplete(true);
+//        setComplete(true);
+        // Present WinLose Screen
+        if (!_winloseActive) {
+            initWinLose();
+        }
     }
     
     winTimer += dt;
@@ -613,7 +661,9 @@ void PlayMode::update(float dt) {
     _input->update(dt);
     
     // Update animations
-    updateAnimations();
+    if (!_winloseActive) {
+        updateAnimations();
+    }
     
     // Update actions
     _actions->update(dt);
@@ -643,12 +693,12 @@ void PlayMode::update(float dt) {
                     updateEnemyTurn(dt);
                 }
             } else {
-                if (doneCtr == 0) {
-                    setComplete(true);
-                    CULog("Level Complete");
-                } else {
-                    doneCtr -= 1;
-                }
+//                if (doneCtr == 0) {
+//                    setComplete(true);
+//                    CULog("Level Complete");
+//                } else {
+//                    doneCtr -= 1;
+//                }
             }
         } else {
             // Update Interrupting Animations
@@ -667,5 +717,170 @@ void PlayMode::update(float dt) {
             _input->clear();
         }
     }
+}
+
+#pragma mark -
+#pragma mark WinLose Menu
+/** Initialize WinLose Menu */
+void PlayMode::initWinLose() {
+    CULog("initWinLose");
+    // Clean up if retry previously
+    if (_winloseContinueButton && _winloseContinueButton->isActive()) {
+        _winloseContinueButton->deactivate();
+    }
+    if (_winloseRetryButton && _winloseRetryButton->isActive()) {
+        _winloseRetryButton->deactivate();
+    }
+    if (_winloseLevelsButton && _winloseRetryButton->isActive()) {
+        _winloseLevelsButton->deactivate();
+    }
+    _winloseContinueButton = nullptr;
+    _winloseRetryButton = nullptr;
+    _winloseLevelsButton = nullptr;
+    _winloseActive = true;
+    
+    // Unit for sizing
+    float unit = _dimen.height*0.075f;
+    float buttonHeight = unit;
+    float buttonY = _dimen.height*0.05f;
+    
+    // Background
+    std::string backgroundTextureKey = win ? WIN_LOSE_BACKGROUND_WIN : WIN_LOSE_BACKGROUND_LOSE;
+    std::shared_ptr<PolygonNode> background = PolygonNode::allocWithTexture(_assets->get<Texture>(backgroundTextureKey));
+    background->setContentSize(_dimen);     // Stretch background to fit dimensions
+    
+    // Retry Button
+    std::shared_ptr<PolygonNode> retryNode = PolygonNode::allocWithTexture(_assets->get<Texture>(WIN_LOSE_RETRY));
+    _winloseRetryButton = Button::alloc(retryNode);
+    _winloseRetryButton->setAnchor(Vec2::ANCHOR_CENTER);
+    float retryWidth = _winloseRetryButton->getContentSize().width/_winloseRetryButton->getContentSize().height * buttonHeight;
+    retryNode->setContentSize(retryWidth, buttonHeight);
+    _winloseRetryButton->setContentSize(retryWidth, buttonHeight);
+    _winloseRetryButton->setPosition(_dimen.width*0.25f, buttonY);
+    _winloseRetryButton->setListener([=](const std::string& name, bool down) {
+//        if (!down && this->_winloseRetryButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
+        if (!down) {
+            CULog("Retry Level");
+            this->retryLevel();
+        }
+    });
+    _winloseRetryButton->activate(WIN_LOSE_LISTENER_RETRY);
+    
+    // Levels Button
+    std::string levelsTextureKey = win ? WIN_LOSE_LEVELS_WIN : WIN_LOSE_LEVELS_LOSE;
+    std::shared_ptr<PolygonNode> levelsNode = PolygonNode::allocWithTexture(_assets->get<Texture>(levelsTextureKey));
+    _winloseLevelsButton = Button::alloc(levelsNode);
+    _winloseLevelsButton->setAnchor(Vec2::ANCHOR_CENTER);
+    float levelsWidth = _winloseLevelsButton->getContentSize().width/_winloseLevelsButton->getContentSize().height * buttonHeight;
+    levelsNode->setContentSize(levelsWidth, buttonHeight);
+    _winloseLevelsButton->setContentSize(levelsWidth, buttonHeight);
+    float levelsX = win ? _dimen.width*0.5f : _dimen.width*0.75f;
+    _winloseLevelsButton->setPosition(levelsX, buttonY);
+    _winloseLevelsButton->setListener([=](const std::string& name, bool down) {
+//        if (!down && this->_winloseLevelsButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
+        if (!down) {
+            CULog("Level Menu");
+            this->levelMenu();
+        }
+    });
+    _winloseLevelsButton->activate(WIN_LOSE_LISTENER_LEVELS);
+    
+    // Continue Button
+    std::shared_ptr<PolygonNode> continueNode = PolygonNode::allocWithTexture(_assets->get<Texture>(WIN_LOSE_CONTINUE));
+    _winloseContinueButton = Button::alloc(continueNode);
+    _winloseContinueButton->setAnchor(Vec2::ANCHOR_CENTER);
+    float continueWidth = _winloseContinueButton->getContentSize().width/_winloseContinueButton->getContentSize().height * buttonHeight;
+    continueNode->setContentSize(continueWidth, buttonHeight);
+    _winloseContinueButton->setContentSize(continueWidth, buttonHeight);
+    _winloseContinueButton->setPosition(_dimen.width*0.75f, buttonY);
+    _winloseContinueButton->setListener([=](const std::string& name, bool down) {
+//        if (!down && this->_winloseNextButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
+        if (!down) {
+            CULog("Next Level");
+            this->nextLevel();
+        }
+    });
+    _winloseContinueButton->activate(WIN_LOSE_LISTENER_CONTINUE);
+    
+    // Mika
+    std::string mikaTextureKey = win ? WIN_LOSE_MIKA_WIN : WIN_LOSE_MIKA_LOSE;
+    std::shared_ptr<PolygonNode> mikaNode = PolygonNode::allocWithTexture(_assets->get<Texture>(mikaTextureKey));
+    mikaNode->setAnchor(Vec2::ANCHOR_CENTER);
+    float mikaHeight = unit*5.0f;
+    float mikaWidth = mikaNode->getContentSize().width/mikaNode->getContentSize().height * mikaHeight;
+    mikaNode->setContentSize(mikaWidth, mikaHeight);
+    mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.5f);
+    
+    // Setup Node
+    _winloseNode = Node::allocWithBounds(0, 0, _dimen.width, _dimen.height);
+    _winloseNode->addChild(background);
+    _winloseNode->addChild(mikaNode);
+    _winloseNode->addChild(_winloseRetryButton);
+    _winloseNode->addChild(_winloseLevelsButton);
+    if (win) {
+        _winloseNode->addChild(_winloseContinueButton);
+    }
+    _worldNode->addChild(_winloseNode, 1000);
+    _worldNode->sortZOrder();
+    
+    // Disable Menu Buttons
+    if (_resetButton && _resetButton->isActive()) {
+        _resetButton->deactivate();
+    }
+    if (_exitButton && _exitButton->isActive()) {
+        _exitButton->deactivate();
+    }
+    if (_soundButton && _soundButton->isActive()) {
+        _soundButton->deactivate();
+    }
+}
+
+/** Go to the next level. */
+void PlayMode::nextLevel() {
+    // Activate Menu Buttons
+    if (_resetButton && !_resetButton->isActive()) {
+        _resetButton->activate(PLAY_MENU_LISTENER_RESTART);
+    }
+    if (_exitButton && !_exitButton->isActive()) {
+        _exitButton->activate(PLAY_MENU_LISTENER_EXIT);
+    }
+    if (_soundButton && !_soundButton->isActive()) {
+        _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
+    }
+    _level++;
+    reset();
+}
+
+/** Go to the level select screen. */
+void PlayMode::levelMenu() {
+    // Activate Menu Buttons
+    if (_resetButton && !_resetButton->isActive()) {
+        _resetButton->activate(PLAY_MENU_LISTENER_RESTART);
+    }
+    if (_exitButton && !_exitButton->isActive()) {
+        _exitButton->activate(PLAY_MENU_LISTENER_EXIT);
+    }
+    if (_soundButton && !_soundButton->isActive()) {
+        _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
+    }
+    if (win) {
+        _level++;
+    }
+    exit();
+}
+
+/** Retry the level. */
+void PlayMode::retryLevel() {
+    // Activate Menu Buttons
+    if (_resetButton && !_resetButton->isActive()) {
+        _resetButton->activate(PLAY_MENU_LISTENER_RESTART);
+    }
+    if (_exitButton && !_exitButton->isActive()) {
+        _exitButton->activate(PLAY_MENU_LISTENER_EXIT);
+    }
+    if (_soundButton && !_soundButton->isActive()) {
+        _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
+    }
+    reset();
 }
 

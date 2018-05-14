@@ -133,25 +133,27 @@ void BoxApp::update(float timestep) {
     } else if (!_loadedMenu) {
         // Load Menu
         _loading.dispose();
-        _menu.init(_assets, _input);
+        _menu.init(_assets, _input, 0);
         _loadedMenu = true;
     } else if (!_loadedGameplay && _menu.isActive()) {
         // Update Menu
         _menu.update(timestep);
     } else if (!_loadedGameplay) {
         // Load Level
-        std::string& levelJson = _menu.getSelectedLevelJson();
+//        std::string& levelJson = _menu.getSelectedLevelJson();
+        int level = _menu.getSelectedLevel();
         _menu.dispose();
         CULog("Init Gameplay");
-        _gameplay.init(_assets, _input, levelJson);
+        _gameplay.init(_assets, _input, level);
         _loadedGameplay = true;
 	} else if (!_gameplay.isComplete()) {
         // Update Gameplay
 		_gameplay.update(timestep);
     } else {
         // Go back to Menu
+        int level = _gameplay.getLevel();
         _gameplay.dispose();
-        _menu.init(_assets, _input);
+        _menu.init(_assets, _input, level);
         _loadedGameplay = false;
     }
 }

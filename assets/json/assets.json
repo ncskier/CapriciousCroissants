@@ -251,6 +251,62 @@
 			"magfilter":"linear",
 			"wrapS":    "clamp",
 			"wrapT":    "clamp"
+        },
+        "winlose-background-win": {
+            "file":    "textures/winlose-background-win.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-background-lose": {
+            "file":    "textures/winlose-background-lose.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-continue": {
+            "file":    "textures/winlose-continue.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-retry": {
+            "file":    "textures/winlose-retry.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-levels-win": {
+            "file":    "textures/winlose-levels-win.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-levels-lose": {
+            "file":    "textures/winlose-levels-lose.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-mika-win": {
+            "file":    "textures/winlose-mika-win.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-mika-lose": {
+            "file":    "textures/winlose-mika-lose.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         }
 	},
 	"fonts": {

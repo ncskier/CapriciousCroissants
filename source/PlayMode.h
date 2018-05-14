@@ -18,6 +18,7 @@
 #include "EntityManager.h"
 #include "MainSystems.h"
 
+/** In-Game Menu */
 #define PLAY_MENU_KEY_TOGGLE_OUT "play_menu_toggle_out"
 #define PLAY_MENU_KEY_TOGGLE_IN  "play_menu_toggle_in"
 #define PLAY_MENU_KEY_SOUND      "play_menu_sound"
@@ -29,6 +30,19 @@
 #define PLAY_MENU_LISTENER_SOUND      52
 #define PLAY_MENU_LISTENER_RESTART    53
 #define PLAY_MENU_LISTENER_EXIT       54
+/** WinLose Screen */
+#define WIN_LOSE_BACKGROUND_WIN  "winlose-background-win"
+#define WIN_LOSE_BACKGROUND_LOSE "winlose-background-lose"
+#define WIN_LOSE_MIKA_WIN        "winlose-mika-win"
+#define WIN_LOSE_MIKA_LOSE       "winlose-mika-lose"
+#define WIN_LOSE_CONTINUE        "winlose-continue"
+#define WIN_LOSE_RETRY           "winlose-retry"
+#define WIN_LOSE_LEVELS_WIN      "winlose-levels-win"
+#define WIN_LOSE_LEVELS_LOSE     "winlose-levels-lose"
+#define WIN_LOSE_LISTENER_CONTINUE 60
+#define WIN_LOSE_LISTENER_RETRY    61
+#define WIN_LOSE_LISTENER_LEVELS   62
+
 
 /**
  * This class is the primary gameplay constroller for the demo.
@@ -81,7 +95,7 @@ protected:
     std::shared_ptr<BoardModel> _board;
     
     /** Level json */
-    std::string _levelJson;
+    int _level;
     
     // CONTROLLERS
     /** Controller for abstracting out input across multiple platforms */
@@ -94,9 +108,17 @@ protected:
 	//Buttons
 	std::shared_ptr<cugl::Button> _resetButton;
     std::shared_ptr<cugl::Button> _soundButton;
+    std::shared_ptr<cugl::Button> _exitButton;
     std::shared_ptr<cugl::AnimationNode> _soundSprite;
     std::shared_ptr<cugl::PolygonNode> _menuNode;
     cugl::Size _dimen;
+    
+    /** WinLose Menu */
+    bool _winloseActive;
+    std::shared_ptr<cugl::Node> _winloseNode;
+    std::shared_ptr<cugl::Button> _winloseContinueButton;
+    std::shared_ptr<cugl::Button> _winloseRetryButton;
+    std::shared_ptr<cugl::Button> _winloseLevelsButton;
     
 	//Entity Manager Instance
 	std::shared_ptr<EntityManager> _entityManager;
@@ -114,7 +136,7 @@ protected:
     
 #pragma mark Internal Object Management
     /** Load level from json */
-    void setupLevelFromJson(const std::string& filePath, cugl::Size dimen);
+    void setupLevelFromJson(cugl::Size dimen);
     
     /** Add level sprites to scene graph */
     void setupLevelSceneGraph();
@@ -155,7 +177,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<InputController>& input, std::string& levelJson);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<InputController>& input, int level);
     
     
 #pragma mark -
@@ -253,6 +275,23 @@ public:
     
     /** Toggle sound */
     void toggleSound();
+    
+#pragma mark -
+#pragma mark WinLose Menu
+    /** Initialize WinLose Menu */
+    void initWinLose();
+    
+    /** Go to the next level. */
+    void nextLevel();
+    
+    /** Go to the level select screen. */
+    void levelMenu();
+    
+    /** Retry the level. */
+    void retryLevel();
+    
+    /** Return the level */
+    int getLevel() { return _level; }
 };
 
 #endif /* __Play_Mode_H__ */

@@ -133,6 +133,12 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     
     // Add all sprites to scene graph
     setupLevelSceneGraph();
+    
+    // Start Music
+    auto music = Music::alloc("sounds/music.wav");
+    if (AudioEngine::get()->getMusicState() != AudioEngine::State::PLAYING) {
+        AudioEngine::get()->playMusic(music, true, 0.5f);
+    }
 
 	// Set Background
 	Application::get()->setClearColor(Color4(229, 229, 229, 255));
@@ -175,8 +181,7 @@ void PlayMode::dispose() {
         _menuNode = nullptr;
 		_resetButton = nullptr;
         _soundButton = nullptr;
-        _soundOnNode = nullptr;
-        _soundOffNode = nullptr;
+        _soundSprite = nullptr;
     }
 }
 
@@ -218,14 +223,26 @@ void PlayMode::reset() {
 
 /** Exits the game */
 void PlayMode::exit() {
+    // Stop Music
+    AudioEngine::get()->stopMusic();
     setComplete(true);
 }
 
 /** Toggle sound */
 void PlayMode::toggleSound() {
-//    if (_soundButton->getChild(0) == _soundOnNode) {
-//        _soundButton->getChild(0) = _soundOffNode;
-//    }
+    int frame = _soundSprite->getFrame();
+    if (frame == 0) {
+        // Turn Sound Off
+        _soundSprite->setFrame(1);
+        AudioEngine::get()->pauseMusic();
+        AudioEngine::get()->setMusicVolume(0.0f);
+        AudioEngine::get()->stopAllEffects();
+    } else {
+        // Turn Sound On
+        _soundSprite->setFrame(0);
+        AudioEngine::get()->resumeMusic();
+        AudioEngine::get()->setMusicVolume(0.5f);
+    }
 }
 
 
@@ -323,14 +340,13 @@ void PlayMode::initMenu() {
     
     // Sound On
     i = 0;
-    _soundOnNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_SOUND_ON));
-    _soundOffNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_SOUND_OFF));
-    _soundButton = Button::alloc(_soundOnNode);
+    _soundSprite = AnimationNode::alloc(_assets->get<Texture>(PLAY_MENU_KEY_SOUND), 1, 2);
+    _soundSprite->setFrame(0);
+    _soundButton = Button::alloc(_soundSprite);
     _soundButton->setAnchor(Vec2::ANCHOR_CENTER);
-    float soundOnWidth = _soundButton->getContentSize().width/_soundButton->getContentSize().height * height;
-    _soundOnNode->setContentSize(soundOnWidth, height);
-    _soundOffNode->setContentSize(soundOnWidth, height);
-    _soundButton->setContentSize(soundOnWidth, height);
+    float soundWidth = _soundButton->getContentSize().width/_soundButton->getContentSize().height * height;
+    _soundSprite->setContentSize(soundWidth, height);
+    _soundButton->setContentSize(soundWidth, height);
     _soundButton->setPosition(unit*0.5f + i*unit, y);
     _soundButton->setListener([=](const std::string& name, bool down) {
         if (down) {
@@ -466,6 +482,12 @@ void PlayMode::updateBoardTurn(float dt) {
             done = true;
             win = true;
             
+            // Play win sound
+            if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("win")) {
+                auto source = _assets->get<Sound>("win");
+                AudioEngine::get()->playEffect("win", source, false, source->getVolume());
+            }
+            
             _text->setText("You win");
             _text->setVisible(true);
             _text->setZOrder(1000);
@@ -490,6 +512,12 @@ void PlayMode::updateEnemyTurn(float dt) {
         if (_board->lose) {
             done = true;
             win = false;
+            
+            // Plase lose sound
+            if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("lose")) {
+                auto source = _assets->get<Sound>("lose");
+                AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
+            }
             
             _text->setText("You lose");
             _text->setVisible(true);

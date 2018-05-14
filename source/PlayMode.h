@@ -20,8 +20,7 @@
 
 #define PLAY_MENU_KEY_TOGGLE_OUT "play_menu_toggle_out"
 #define PLAY_MENU_KEY_TOGGLE_IN  "play_menu_toggle_in"
-#define PLAY_MENU_KEY_SOUND_ON   "play_menu_sound_on"
-#define PLAY_MENU_KEY_SOUND_OFF  "play_menu_sound_off"
+#define PLAY_MENU_KEY_SOUND      "play_menu_sound"
 #define PLAY_MENU_KEY_RESTART    "play_menu_restart"
 #define PLAY_MENU_KEY_EXIT       "play_menu_exit"
 #define PLAY_MENU_KEY_BACKGROUND "play_menu_background"
@@ -95,8 +94,7 @@ protected:
 	//Buttons
 	std::shared_ptr<cugl::Button> _resetButton;
     std::shared_ptr<cugl::Button> _soundButton;
-    std::shared_ptr<cugl::PolygonNode> _soundOnNode;
-    std::shared_ptr<cugl::PolygonNode> _soundOffNode;
+    std::shared_ptr<cugl::AnimationNode> _soundSprite;
     std::shared_ptr<cugl::PolygonNode> _menuNode;
     cugl::Size _dimen;
     

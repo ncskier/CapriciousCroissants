@@ -135,9 +135,9 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     setupLevelSceneGraph();
     
     // Start Music
-    if (!AudioEngine::get()->isActiveEffect("music")) {
-        auto source = _assets->get<Sound>("music");
-        AudioEngine::get()->playEffect("music", source, true, source->getVolume());
+    auto music = Music::alloc("sounds/music.wav");
+    if (AudioEngine::get()->getMusicState() != AudioEngine::State::PLAYING) {
+        AudioEngine::get()->playMusic(music, true, 0.5f);
     }
 
 	// Set Background
@@ -224,9 +224,7 @@ void PlayMode::reset() {
 /** Exits the game */
 void PlayMode::exit() {
     // Stop Music
-    if (AudioEngine::get()->isActiveEffect("music")) {
-        AudioEngine::get()->stopEffect("music");
-    }
+    AudioEngine::get()->stopMusic();
     setComplete(true);
 }
 
@@ -236,11 +234,14 @@ void PlayMode::toggleSound() {
     if (frame == 0) {
         // Turn Sound Off
         _soundSprite->setFrame(1);
-        AudioEngine::get()->pauseEffect("music");
+        AudioEngine::get()->pauseMusic();
+        AudioEngine::get()->setMusicVolume(0.0f);
+        AudioEngine::get()->stopAllEffects();
     } else {
         // Turn Sound On
         _soundSprite->setFrame(0);
-        AudioEngine::get()->resumeEffect("music");
+        AudioEngine::get()->resumeMusic();
+        AudioEngine::get()->setMusicVolume(0.5f);
     }
 }
 

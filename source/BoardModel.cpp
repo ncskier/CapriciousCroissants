@@ -250,7 +250,11 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 				loc.x = componentJson->get("x")->asInt();
 				loc.y = componentJson->get("y")->asInt();
 				if (componentJson->has("direction")) {
+
 					loc.dir = (LocationComponent::direction)componentJson->get("direction")->asInt();
+				}
+				else {
+					loc.dir = (LocationComponent::direction)componentJson->get("dir")->asInt();
 				}
 
 				_entityManager->addComponent<LocationComponent>(enemyId, loc);

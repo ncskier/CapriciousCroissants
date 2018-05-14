@@ -13,5 +13,8 @@
 	"json/levels/level13.json",
 	"json/levels/level14.json"
 
-    ]
+    ],
+    "settings": {
+        "mute": false
+    }
 }

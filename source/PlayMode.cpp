@@ -133,12 +133,6 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     
     // Add all sprites to scene graph
     setupLevelSceneGraph();
-    
-    // Start Music
-    auto music = Music::alloc("sounds/music.wav");
-    if (AudioEngine::get()->getMusicState() != AudioEngine::State::PLAYING) {
-        AudioEngine::get()->playMusic(music, true, 0.5f);
-    }
 
 	// Set Background
 	Application::get()->setClearColor(Color4(229, 229, 229, 255));
@@ -230,6 +224,7 @@ void PlayMode::exit() {
 
 /** Toggle sound */
 void PlayMode::toggleSound() {
+    bool mute;
     int frame = _soundSprite->getFrame();
     if (frame == 0) {
         // Turn Sound Off
@@ -237,12 +232,22 @@ void PlayMode::toggleSound() {
         AudioEngine::get()->pauseMusic();
         AudioEngine::get()->setMusicVolume(0.0f);
         AudioEngine::get()->stopAllEffects();
+        mute = true;
     } else {
         // Turn Sound On
         _soundSprite->setFrame(0);
         AudioEngine::get()->resumeMusic();
         AudioEngine::get()->setMusicVolume(0.5f);
+        mute = false;
     }
+    // Application::getSaveDirectory() - create singleton & class to deal with saving
+    std::shared_ptr<JsonWriter> writer = JsonWriter::alloc("json/settings.json");
+    std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("json/levelList.json");
+    std::shared_ptr<JsonValue> json = reader->readJson();
+    std::shared_ptr<JsonValue> muteJson = json->get("settings")->get("mute");
+    muteJson->set(mute);
+    CULog("save json: \n%s", json->toString().c_str());
+//    writer->writeJson(json);
 }
 
 
@@ -338,7 +343,7 @@ void PlayMode::initMenu() {
     float y = _menuNode->getContentSize().height*0.5f;
     int i;
     
-    // Sound On
+    // Sound
     i = 0;
     _soundSprite = AnimationNode::alloc(_assets->get<Texture>(PLAY_MENU_KEY_SOUND), 1, 2);
     _soundSprite->setFrame(0);
@@ -356,7 +361,24 @@ void PlayMode::initMenu() {
     });
     _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
     _menuNode->addChild(_soundButton);
-
+    // Load default setting
+    std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset("json/levelList.json");
+    std::shared_ptr<JsonValue> json = reader->readJson();
+    bool mute = json->get("settings")->get("mute")->asBool();
+    // Start Music
+    auto music = Music::alloc("sounds/music.wav");
+    if (AudioEngine::get()->getMusicState() != AudioEngine::State::PLAYING) {
+        AudioEngine::get()->playMusic(music, true, 0.5f);
+    }
+    if (mute) {
+        _soundSprite->setFrame(1);
+        AudioEngine::get()->pauseMusic();
+        AudioEngine::get()->setMusicVolume(0.0f);
+        AudioEngine::get()->stopAllEffects();
+    } else {
+        _soundSprite->setFrame(0);
+        AudioEngine::get()->setMusicVolume(0.5f);
+    }
     
     // Restart
     i = 1;

@@ -125,10 +125,10 @@ void BoardController::update(float timestep) {
                 _interruptingActions.insert(tileDeathKey.str());
                 
                 // Tile Death Animation Sound
-                if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect(tileDeathKey.str())) {
-                    // TODO: Need to decrease volume when multiple effects are played so it doesn't sound crunchy
-                    AudioEngine::get()->playEffect(tileDeathKey.str(), tile->getDeathSound(), false, tile->getDeathSound()->getVolume());
-                }
+//                if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect(tileDeathKey.str())) {
+//                    // TODO: Need to decrease volume when multiple effects are played so it doesn't sound crunchy
+//                    AudioEngine::get()->playEffect(tileDeathKey.str(), tile->getDeathSound(), false, tile->getDeathSound()->getVolume());
+//                }
             }
             
             // Enemy Death Animation

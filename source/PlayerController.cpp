@@ -46,8 +46,6 @@ bool PlayerController::init(std::shared_ptr<ActionManager>& actions, const std::
     _complete = false;
     _numberMoves = 0;
     
-
-
     return true;
 }
 
@@ -62,7 +60,6 @@ void PlayerController::dispose() {
     _entityManager = nullptr;
     _complete = false;
     _debug = false;
-    _numberMoves = 0;
     _interruptingActions.clear();
 }
 
@@ -96,14 +93,10 @@ std::tuple<bool, float> PlayerController::calculateOffset(Vec2 inputOffset) {
 void PlayerController::update(float timestep) {
 //    CULog("PlayerController Update");
     InputController::MoveEvent moveEvent = _input->getMoveEvent();
-	if (moveEvent != InputController::MoveEvent::NONE) {
+    if (moveEvent != InputController::MoveEvent::NONE) {
 		bool hasRooting = false;
-		//bool drawY;
-	
         if (moveEvent == InputController::MoveEvent::START) {
-			drawY = false;
-			drawX = false;
-			// START
+            // START
             Vec2 position = _input->getTouchPosition();
             position = _board->getNode()->worldToNodeCoords(position);
             // Check if On Tile
@@ -114,9 +107,7 @@ void PlayerController::update(float timestep) {
                 // Invalid move start
                 _input->clear();
             }
-        } 
-		
-		else if (moveEvent == InputController::MoveEvent::MOVING) {
+        } else if (moveEvent == InputController::MoveEvent::MOVING) {
             // MOVING
             cugl::Vec2 inputOffset = _input->getMoveOffset();
 //            float threshold = _board->getCellLength()/5.0f;
@@ -161,57 +152,8 @@ void PlayerController::update(float timestep) {
 						_board->setOffsetCol(0);
 					}
 				}
-				
-
 			}
-
-			bool onRootedX = false;
-			bool onRootedY = false;
-			std::shared_ptr<cugl::Texture> rootTexture = _board->getAssets()->get<Texture>("rooting");
-
-			for (int xx = 0; xx < _board->getWidth(); xx++) {
-				if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(xx, y))) { onRootedX = true; }
-			}
-
-			for (int yy = 0; yy < _board->getHeight(); yy++) {
-				if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(x, yy))) { onRootedY = true; }
-			}
-
-			if (onRootedX && std::abs(inputOffset.x) > _board->getCellLength()/2 && !drawX && _board->offsetRow) {
-				for (int xx = 0; xx < _board->getWidth(); xx++) {
-
-					std::shared_ptr<cugl::AnimationNode> rootedSprite;
-					rootedSprite = AnimationNode::alloc(rootTexture, 1, 2);
-					rootedSprite->setFrame(1);
-					Vec2 pos = Vec2(xx, y);
-					rootedSprite->setPosition(_board->gridToScreenV(pos.x, pos.y));
-					_board->getNode()->addChildWithName(rootedSprite, "selected", _board->calculateDrawZ(xx, y, true));
-					drawX = true;
-				
-
-				}
-			}
-
-			if (onRootedY && std::abs(inputOffset.y) > _board->getCellLength()/2 && !drawY && _board->offsetCol) {
-				for (int yy = 0; yy < _board->getHeight(); yy++) {
-					std::shared_ptr<cugl::AnimationNode> rootedSprite;
-					rootedSprite = AnimationNode::alloc(rootTexture, 1, 2);
-					rootedSprite->setFrame(0);
-					Vec2 pos = Vec2(x, yy);
-					rootedSprite->setPosition(_board->gridToScreenV(pos.x, pos.y));
-					_board->getNode()->addChildWithName(rootedSprite, "selected", _board->calculateDrawZ(x, yy, true));
-					drawY = true;
-				
-
-
-
-				}
-			}
-
-
-
-        } 
-		else {
+        } else {
             // END
             // Calculate movement
             Vec2 inputOffset = _input->getMoveOffset();
@@ -247,11 +189,6 @@ void PlayerController::update(float timestep) {
 				}
 			}
 
-			
-			
-
-
-
             // Check if valid move
             if (abs(cells) > 0 && !hasRooting) {
                 // Check for wrap around stagnant moves (moving to the same position)
@@ -264,14 +201,6 @@ void PlayerController::update(float timestep) {
             }
             _board->deselectTile();
             _input->clear();
-
-			for (int xx = 0; xx < _board->getWidth(); xx++) {
-				CULog("xx %d", xx);
-				_board->getNode()->removeChildByName("selected");
-			}
-			for (int yy = 0; yy < _board->getHeight(); yy++) {
-				_board->getNode()->removeChildByName("selected");
-			}
         }
 	}
     

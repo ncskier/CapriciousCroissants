@@ -104,7 +104,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<InputController>& input);
+    bool init(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<InputController>& input, int selectedLevel);
     
     
 #pragma mark -
@@ -181,6 +181,7 @@ public:
 #pragma mark -
 #pragma mark Accessors
     std::string& getSelectedLevelJson() { return _selectedLevelJson; }
+    int getSelectedLevel() { return _selectedLevel; }
 };
 
 #endif /* __Menu_Mode_H__ */

@@ -38,7 +38,7 @@ MenuMode::MenuMode() : Scene() {
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputController>& input) {
+bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputController>& input, int selectedLevel) {
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
@@ -51,6 +51,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     // Initialize
     _assets = assets;
     _dimen = dimen;
+    _selectedLevel = selectedLevel;
     
     // Initialize ActionManager
     _actions = ActionManager::alloc();
@@ -495,7 +496,7 @@ void MenuMode::update(float timestep) {
     // Relax back to selected level
     bool animateMika = (moveEvent != InputController::MoveEvent::NONE && moveEvent != InputController::MoveEvent::END);
     if (moveEvent == InputController::MoveEvent::NONE || moveEvent == InputController::MoveEvent::END) {
-        float epsilon = 0.1f;
+        float epsilon = _menuTileSize.height*0.01f;
         float velocityThreshold = _menuTileSize.height*0.1f;
         // Inertia
         if (std::abs(_velocity) > velocityThreshold) {

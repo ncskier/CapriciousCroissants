@@ -103,6 +103,12 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     initMenu();
     _worldNode->addChild(_menuNode, 100);
     
+    // Setup Move Counter
+    _moveCounter = Label::alloc("0", _assets->get<Font>("script"));
+    _moveCounter->setAnchor(Vec2::ANCHOR_CENTER);
+    _moveCounter->setPosition(_dimen.width*0.8f, _dimen.width*0.1f);
+    _worldNode->addChild(_moveCounter);
+    
     // Setup Touch Node
     _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 4, 8, 32);
     _touchNode->setFrame(0);
@@ -190,6 +196,9 @@ void PlayMode::dispose() {
         _menuNode = nullptr;
 		_resetButton = nullptr;
         _soundButton = nullptr;
+        _soundOnNode = nullptr;
+        _soundOffNode = nullptr;
+        _moveCounter = nullptr;
         _soundSprite = nullptr;
         _exitButton = nullptr;
         // WinLose
@@ -660,6 +669,11 @@ void PlayMode::update(float dt) {
     // Update input controller
     _input->update(dt);
     
+    // Update move counter
+    std::stringstream ssMoveCounter;
+    ssMoveCounter << _playerController.getNumberMoves();
+    _moveCounter->setText(ssMoveCounter.str());
+    
     // Update animations
     if (!_winloseActive) {
         updateAnimations();
@@ -667,6 +681,8 @@ void PlayMode::update(float dt) {
     
     // Update actions
     _actions->update(dt);
+    
+    // Update controllers
     if (win) {
         updateWinAnimation(dt);
     } else {

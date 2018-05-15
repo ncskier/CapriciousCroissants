@@ -681,6 +681,14 @@ void BoardModel::offsetReset() {
 void BoardModel::deselectTile() {
     _selectedTile = -1;
     offsetReset();
+
+	for (int x = 0; x < 50*getWidth(); x++) {
+		getNode()->removeChildByName("selected");
+	}
+	for (int y = 0; y < 50*getHeight(); y++) {
+		getNode()->removeChildByName("selected");
+	}
+
 }
 
 //Slide row [y] by [offset]
@@ -721,6 +729,10 @@ bool BoardModel::selectTileAtPosition(Vec2 position) {
         return false;
     }
     _selectedTile = indexOfCoordinate(x, y);
+
+
+
+	
     return true;
 }
 

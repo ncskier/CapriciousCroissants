@@ -1,72 +1,86 @@
 {
-    "size": {
-        "width": 5,
-        "height": 5
-    },
-    "generationAlgorithm": "random",
-    "seed": 10,
-    "colors": 6,
-    "tiles": [],
-    "enemies": {
-        "enemy1": {
-            "components": {
-                "location": {
-                    "x": 0,
-                    "y": 2,
-                    "direction" : 2
-                },
-                "immobleMovement": {},
-		"rooting":{},
-                "idle": {
-                    "textureKeys": "enemy2_strip",
-                    "textureRows": [
-                        8
-                    ],
-                    "textureColumns": [
-                        16
-                    ],
-                    "textureSize": [
-                        128
-                    ],
-                    "textureSpeed": [
-                        2
-                    ]
-                },
-                "attackMelee" : {}
-            }
-        },
-        "enemy2": {
-            "components": {
-                "location": {
-                    "x": 2,
-                    "y": 4,
-                    "direction" : 1
-                },
-		"rooting":{},
-                "immobleMovement": {
-                },
-                "idle": {
-                    "textureKeys": "enemy2_strip",
-                    "textureRows": [
-                        8
-                    ],
-                    "textureColumns": [
-                        16
-                    ],
-                    "textureSize": [
-                        128
-                    ],
-                    "textureSpeed": [
-                        2
-                    ]
-                },
-                "attackMelee" : {}
-            }
-        }
-    },
-    "mika": {
-        "x": 2,
-        "y": 2
-    },
-    "allies": {}
+	"size":	{
+		"width":	5,
+		"height":	5
+	},
+	"tiles":	[[5, 4, 5, 1, 0], [2, 2, 4, 2, 3], [5, 0, 4, 0, 4], [3, 3, 5, 2, 0], [1, 5, 3, 5, 3]],
+	"enemies":	{
+		"enemy1":	{
+			"components":	{
+				"Location":	{
+					"direction":	1,
+					"x":	0,
+					"y":	4
+				},
+				"ImmobileMovement":	{
+				},
+				"Rooting":	{
+				},
+				"Idle":	{
+					"textureKeys":	"enemy2_strip"
+				},
+				"MeleeAttack":	{
+				}
+			}
+		},
+		"enemy2":	{
+			"components":	{
+				"Location":	{
+					"direction":	1,
+					"x":	2,
+					"y":	4
+				},
+				"Rooting":	{
+				},
+				"Idle":	{
+					"textureKeys":	"enemy2_strip"
+				},
+				"ImmobileMovement":	{
+				},
+				"MeleeAttack":	{
+				}
+			}
+		},
+		"enemy3":	{
+			"components":	{
+				"Location":	{
+					"direction":	3,
+					"x":	4,
+					"y":	0
+				},
+				"Rooting":	{
+				},
+				"Idle":	{
+					"textureKeys":	"enemy2_strip"
+				},
+				"ImmobileMovement":	{
+				},
+				"MeleeAttack":	{
+				}
+			}
+		},
+		"enemy4":	{
+			"components":	{
+				"Location":	{
+					"direction":	3,
+					"x":	2,
+					"y":	0
+				},
+				"SmartMovement":	{
+					"movementDistance":	1
+				},
+				"Idle":	{
+					"textureKeys":	"enemy1_strip"
+				},
+				"MeleeAttack":	{
+				}
+			}
+		}
+	},
+	"mika":	{
+		"x":	0,
+		"y":	0
+	},
+	"allies":	{
+	}
 }

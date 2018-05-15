@@ -119,6 +119,20 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "tile4_death_strip": {
+            "file":     "textures/tile4_death_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "tile5_death_strip": {
+            "file":     "textures/tile5_death_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "mika_spritesheet": {
             "file":     "textures/mika_spritesheet.png",
             "minfilter":"nearest",
@@ -154,15 +168,8 @@
             "wrapS": "clamp",
             "wrapT": "clamp"
         },
-    "arrow": {
-      "file": "textures/arrow.png",
-      "minfilter": "nearest",
-      "magfilter": "linear",
-      "wrapS": "clamp",
-      "wrapT": "clamp"
-    },
-    "rooting": {
-            "file":     "textures/rooting.png",
+        "arrow": {
+            "file":     "textures/arrow.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",
@@ -472,5 +479,5 @@
                 }
             }
         }
-    }    
+    }
 }

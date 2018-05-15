@@ -113,7 +113,6 @@ protected:
     std::shared_ptr<cugl::PolygonNode> _menuNode;
     cugl::Size _dimen;
     
-
     /** WinLose Menu */
     bool _winloseActive;
     std::shared_ptr<cugl::Node> _winloseNode;

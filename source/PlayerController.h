@@ -39,9 +39,6 @@ protected:
     bool _complete;
     /** Whether or not debug mode is active */
     bool _debug;
-	
-	bool drawX;
-	bool drawY;
     
     
 public:

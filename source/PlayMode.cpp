@@ -756,7 +756,7 @@ void PlayMode::initWinLose() {
     float retryWidth = _winloseRetryButton->getContentSize().width/_winloseRetryButton->getContentSize().height * buttonHeight;
     retryNode->setContentSize(retryWidth, buttonHeight);
     _winloseRetryButton->setContentSize(retryWidth, buttonHeight);
-    _winloseRetryButton->setPosition(_dimen.width*0.25f, buttonY);
+    _winloseRetryButton->setPosition(_dimen.width*0.20f, buttonY);
     _winloseRetryButton->setListener([=](const std::string& name, bool down) {
 //        if (!down && this->_winloseRetryButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
         if (!down) {
@@ -774,7 +774,7 @@ void PlayMode::initWinLose() {
     float levelsWidth = _winloseLevelsButton->getContentSize().width/_winloseLevelsButton->getContentSize().height * buttonHeight;
     levelsNode->setContentSize(levelsWidth, buttonHeight);
     _winloseLevelsButton->setContentSize(levelsWidth, buttonHeight);
-    float levelsX = win ? _dimen.width*0.5f : _dimen.width*0.75f;
+    float levelsX = win ? _dimen.width*0.5f : _dimen.width*0.80f;
     _winloseLevelsButton->setPosition(levelsX, buttonY);
     _winloseLevelsButton->setListener([=](const std::string& name, bool down) {
 //        if (!down && this->_winloseLevelsButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
@@ -792,7 +792,7 @@ void PlayMode::initWinLose() {
     float continueWidth = _winloseContinueButton->getContentSize().width/_winloseContinueButton->getContentSize().height * buttonHeight;
     continueNode->setContentSize(continueWidth, buttonHeight);
     _winloseContinueButton->setContentSize(continueWidth, buttonHeight);
-    _winloseContinueButton->setPosition(_dimen.width*0.75f, buttonY);
+    _winloseContinueButton->setPosition(_dimen.width*0.80f, buttonY);
     _winloseContinueButton->setListener([=](const std::string& name, bool down) {
 //        if (!down && this->_winloseNextButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
         if (!down) {
@@ -813,7 +813,7 @@ void PlayMode::initWinLose() {
     
     // Level Label
     std::stringstream ssLevel;
-    ssLevel << "Level " << _level;
+    ssLevel << "Level " << (_level+1);
     std::shared_ptr<Font> font = _assets->get<Font>("alwaysHereToo");
     std::shared_ptr<Label> levelLabel = Label::alloc(ssLevel.str(), font);
     levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
@@ -857,7 +857,16 @@ void PlayMode::nextLevel() {
         _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
     }
     _level++;
-    reset();
+    
+    // Check if past last level
+    std::shared_ptr<JsonReader> levelsReader = JsonReader::allocWithAsset("json/levelList.json");
+    std::shared_ptr<JsonValue> levelsJson = levelsReader->readJson();
+    if (_level >= levelsJson->get("levels")->size()) {
+        _level--;
+        exit();
+    } else {
+        reset();
+    }
 }
 
 /** Go to the level select screen. */
@@ -874,6 +883,14 @@ void PlayMode::levelMenu() {
     }
     if (win) {
         _level++;
+    }
+    
+    // Check if past last level
+    std::shared_ptr<JsonReader> levelsReader = JsonReader::allocWithAsset("json/levelList.json");
+    std::shared_ptr<JsonValue> levelsJson = levelsReader->readJson();
+    if (_level >= levelsJson->get("levels")->size()) {
+        _level--;
+        exit();
     }
     exit();
 }

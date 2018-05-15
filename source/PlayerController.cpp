@@ -165,45 +165,41 @@ void PlayerController::update(float timestep) {
 
 			}
 
-			int selectedX = _board->xOfIndex(_board->getSelectedTile());
-			int selectedY = _board->yOfIndex(_board->getSelectedTile());
-
-			//std::stringstream key;
-			//std::string highlight;
-			//ranged.projectile = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow"));
-
 			bool onRootedX = false;
 			bool onRootedY = false;
+			std::shared_ptr<cugl::Texture> rootTexture = _board->getAssets()->get<Texture>("rooting");
+
 			for (int xx = 0; xx < _board->getWidth(); xx++) {
-				if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(xx, selectedY))) { onRootedX = true; }
+				if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(xx, y))) { onRootedX = true; }
 			}
 
 			for (int yy = 0; yy < _board->getHeight(); yy++) {
-				if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(selectedX, yy))) { onRootedY = true; }
+				if (_entityManager->hasComponent<RootingComponent>(_board->getEnemy(x, yy))) { onRootedY = true; }
 			}
 
-			if (onRootedX && std::abs(inputOffset.x) > _board->getCellLength() && !drawX) {
+			if (onRootedX && std::abs(inputOffset.x) > _board->getCellLength()/2 && !drawX && _board->offsetRow) {
 				for (int xx = 0; xx < _board->getWidth(); xx++) {
 
-					std::shared_ptr<cugl::PolygonNode> rootedSprite;
-					rootedSprite = PolygonNode::allocWithTexture(_board->getAssets()->get<Texture>("arrow"));
-					Vec2 pos = Vec2(xx, selectedY);
+					std::shared_ptr<cugl::AnimationNode> rootedSprite;
+					rootedSprite = AnimationNode::alloc(rootTexture, 1, 2);
+					rootedSprite->setFrame(1);
+					Vec2 pos = Vec2(xx, y);
 					rootedSprite->setPosition(_board->gridToScreenV(pos.x, pos.y));
-					_board->getNode()->addChildWithName(rootedSprite, "selected", _board->calculateDrawZ(xx, selectedY, true));
+					_board->getNode()->addChildWithName(rootedSprite, "selected", _board->calculateDrawZ(xx, y, true));
 					drawX = true;
 				
 
 				}
 			}
 
-			if (onRootedY && std::abs(inputOffset.y) > _board->getCellLength() && !drawY) {
+			if (onRootedY && std::abs(inputOffset.y) > _board->getCellLength()/2 && !drawY && _board->offsetCol) {
 				for (int yy = 0; yy < _board->getHeight(); yy++) {
-					CULog("drawY");
-					std::shared_ptr<cugl::PolygonNode> rootedSprite;
-					rootedSprite = PolygonNode::allocWithTexture(_board->getAssets()->get<Texture>("arrow"));
-					Vec2 pos = Vec2(selectedX, yy);
+					std::shared_ptr<cugl::AnimationNode> rootedSprite;
+					rootedSprite = AnimationNode::alloc(rootTexture, 1, 2);
+					rootedSprite->setFrame(0);
+					Vec2 pos = Vec2(x, yy);
 					rootedSprite->setPosition(_board->gridToScreenV(pos.x, pos.y));
-					_board->getNode()->addChildWithName(rootedSprite, "selected", _board->calculateDrawZ(selectedX, yy, true));
+					_board->getNode()->addChildWithName(rootedSprite, "selected", _board->calculateDrawZ(x, yy, true));
 					drawY = true;
 				
 

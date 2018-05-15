@@ -818,6 +818,7 @@ void PlayMode::initWinLose() {
     std::shared_ptr<Label> levelLabel = Label::alloc(ssLevel.str(), font);
     levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
     levelLabel->setPosition(_dimen.width*0.5f, _dimen.height*0.888f);
+    levelLabel->setForeground(Color4::WHITE);
     
     // Setup Node
     _winloseNode = Node::allocWithBounds(0, 0, _dimen.width, _dimen.height);

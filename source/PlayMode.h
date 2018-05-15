@@ -17,6 +17,7 @@
 #include "BoardModel.h"
 #include "EntityManager.h"
 #include "MainSystems.h"
+#include "GameData.h"
 
 /** In-Game Menu */
 #define PLAY_MENU_KEY_TOGGLE_OUT "play_menu_toggle_out"

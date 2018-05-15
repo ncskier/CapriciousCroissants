@@ -10,6 +10,9 @@
 		2003DF2B208C159300D44A0C /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 2003DF27208C159300D44A0C /* sounds */; };
 		2003DF2C208C159300D44A0C /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 2003DF27208C159300D44A0C /* sounds */; };
 		2003DF2D208C159300D44A0C /* sounds in Resources */ = {isa = PBXBuildFile; fileRef = 2003DF27208C159300D44A0C /* sounds */; };
+		2015014120AB622500E930A3 /* GameData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2015013E20AB622500E930A3 /* GameData.cpp */; };
+		2015014220AB622500E930A3 /* GameData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2015013E20AB622500E930A3 /* GameData.cpp */; };
+		2015014620AB666B00E930A3 /* GameData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2015013E20AB622500E930A3 /* GameData.cpp */; };
 		2031AA13206C0BCF007274BE /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		208DC6AD206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		208DC6B1206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
@@ -153,6 +156,8 @@
 
 /* Begin PBXFileReference section */
 		2003DF27208C159300D44A0C /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
+		2015013E20AB622500E930A3 /* GameData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameData.cpp; sourceTree = "<group>"; };
+		2015013F20AB622500E930A3 /* GameData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameData.h; sourceTree = "<group>"; };
 		2031AA0F206C0BCF007274BE /* MainSystems.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainSystems.cpp; sourceTree = "<group>"; };
 		2031AA14206C0BD5007274BE /* MainSystems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainSystems.h; sourceTree = "<group>"; };
 		20BD4E69206945E400424848 /* ComponentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentType.h; sourceTree = "<group>"; };
@@ -415,6 +420,8 @@
 		EBBF18B11D749176008E2001 /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				2015013F20AB622500E930A3 /* GameData.h */,
+				2015013E20AB622500E930A3 /* GameData.cpp */,
 				2031AA14206C0BD5007274BE /* MainSystems.h */,
 				2031AA0F206C0BCF007274BE /* MainSystems.cpp */,
 				20BD4E6E206945E500424848 /* Components.h */,
@@ -644,6 +651,7 @@
 				20F92DD22055894000F4DCC3 /* InputController.cpp in Sources */,
 				20F92DFA2055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */,
 				20F92E0C2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */,
+				2015014220AB622500E930A3 /* GameData.cpp in Sources */,
 				20F92DC020557DE000F4DCC3 /* BoxApp.cpp in Sources */,
 				20BD4E79206945EA00424848 /* Entity.cpp in Sources */,
 				20F92DE62055A73900F4DCC3 /* BoardController.cpp in Sources */,
@@ -669,6 +677,7 @@
 				20F92DD12055894000F4DCC3 /* InputController.cpp in Sources */,
 				20F92DF92055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */,
 				20F92E0B2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */,
+				2015014120AB622500E930A3 /* GameData.cpp in Sources */,
 				20F92DBF20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
 				20BD4E78206945EA00424848 /* Entity.cpp in Sources */,
 				20F92DE52055A73900F4DCC3 /* BoardController.cpp in Sources */,
@@ -694,6 +703,7 @@
 				20BD4E76206945E600424848 /* Entity.cpp in Sources */,
 				20F92DF82055A8A600F4DCC3 /* PlayerPawnModel.cpp in Sources */,
 				20F92E0A2056676800F4DCC3 /* BoardSettingsMode.cpp in Sources */,
+				2015014620AB666B00E930A3 /* GameData.cpp in Sources */,
 				20F92DBE20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
 				20F92DE42055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,

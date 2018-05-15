@@ -49,6 +49,9 @@ void BoxApp::onStartup() {
     AudioEngine::start();
     _assets->loadDirectoryAsync("json/assets.json",nullptr);
     
+    // Start GameData
+    GameData::start(Application::getSaveDirectory());
+    
     Application::onStartup(); // YOU MUST END with call to parent
 }
 
@@ -79,6 +82,7 @@ void BoxApp::onShutdown() {
 #endif
     
     AudioEngine::stop();
+    GameData::stop();
     Application::onShutdown();  // YOU MUST END with call to parent
 }
 

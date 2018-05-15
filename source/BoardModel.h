@@ -128,6 +128,7 @@ protected:
      * Assume board properties are already setup
      */
     bool generateTiles(int seed);
+	bool generateTiles(std::shared_ptr<cugl::JsonValue> &tileColors);
     
     /** Change (x,y) to NULL tile */
     void setNullTile(int x, int y);

@@ -47,26 +47,42 @@ bool BoardModel::init(std::shared_ptr<cugl::JsonValue> &json, std::shared_ptr<As
     // Set asset manager
     _assets = assets;
 	_entityManager = entityManager;
+
+	//Check if it is an old or new json
+	if (json->get("seed") != nullptr) { //old json						
+		// Get Board Node info (width, height, colors, seed)
+		int width = json->get("size")->get("width")->asInt();
+		int height = json->get("size")->get("height")->asInt();
+		int colors = json->get("colors")->asInt();
+
+		// Setup Board Node
+		if (!setupBoardNode(width, height, colors, dimen)) {
+			return false;
+		}
+
+		// Setup Tiles from json
+		int seed = (int)time(NULL);
+		if (json->get("seed") != nullptr) {
+			seed = json->get("seed")->asInt();
+		}
+		CULog("seed: %i", seed);
+		if (!generateTiles(seed)) {
+			return false;
+		}
+	}
+	else {
+		int width = json->get("size")->get("width")->asInt();
+		int height = json->get("size")->get("height")->asInt();
+		std::shared_ptr<cugl::JsonValue> tileColors = json->get("tiles");
+		if (!setupBoardNode(width, height, 6, dimen)) {
+			return false;
+		}
+		if (!generateTiles(tileColors)) {
+			return false;
+		}
+	}
     
-    // Get Board Node info (width, height, colors, seed)
-    int width = json->get("size")->get("width")->asInt();
-    int height = json->get("size")->get("height")->asInt();
-    int colors = json->get("colors")->asInt();
     
-    // Setup Board Node
-    if (!setupBoardNode(width, height, colors, dimen)) {
-        return false;
-    }
-    
-    // Setup Tiles from json
-    int seed = (int)time(NULL);
-    if (json->get("seed") != nullptr) {
-        seed = json->get("seed")->asInt();
-    }
-    CULog("seed: %i", seed);
-    if (!generateTiles(seed)) {
-        return false;
-    }
     
     // Setup Allies from json
     if (!setupAlliesFromJson(json)) {
@@ -150,6 +166,25 @@ bool BoardModel::generateTiles(int seed) {
     return true;
 }
 
+/** Generate tiles based on a json*/
+bool BoardModel::generateTiles(std::shared_ptr<cugl::JsonValue> &tileColors) {
+	_tiles.reserve(_width * _height);
+	int color;
+	for (int i = 0; i < _height * _width; i++) {
+		int selfX = xOfIndex(i);
+		int selfY = yOfIndex(i);
+		color = tileColors->get(selfX)->get(selfY)->asInt();
+		Rect bounds = calculateDrawBounds(xOfIndex(i), yOfIndex(i));
+		std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
+		_tiles.push_back(tile);
+		_addedTiles.insert(tile);
+	}
+	while (checkForMatches(false));
+
+	return true;
+}
+
+
 /** Change (x,y) to NULL tile */
 void BoardModel::setNullTile(int x, int y) {
     Rect bounds = calculateDrawBounds(x, y);
@@ -209,35 +244,39 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
         std::shared_ptr<JsonValue> enemyComponentsJson = enemyJson->get("components");
         for (auto j = 0; j < enemyComponentsJson->size(); j++) {
             std::shared_ptr<JsonValue> componentJson = enemyComponentsJson->get(j);
-            if ("location" == componentJson->key()) {
+            if ("location" == cugl::to_lower(componentJson->key())) {
 				LocationComponent loc;
 
 				loc.x = componentJson->get("x")->asInt();
 				loc.y = componentJson->get("y")->asInt();
 				if (componentJson->has("direction")) {
+
 					loc.dir = (LocationComponent::direction)componentJson->get("direction")->asInt();
+				}
+				else {
+					loc.dir = (LocationComponent::direction)componentJson->get("dir")->asInt();
 				}
 
 				_entityManager->addComponent<LocationComponent>(enemyId, loc);
-			} else if ("dumbMovement" == componentJson->key()) {
+			} else if ("dumbmovement" == cugl::to_lower(componentJson->key())) {
 				DumbMovementComponent move;
 
 				move.movementDistance = componentJson->get("movementDistance")->asInt();
 
 				_entityManager->addComponent<DumbMovementComponent>(enemyId, move);
-			} else if ("smartMovement" == componentJson->key()) {
+			} else if ("smartmovement" == cugl::to_lower(componentJson->key())) {
 				SmartMovementComponent move;
 
 				move.movementDistance = componentJson->get("movementDistance")->asInt();
 
 				_entityManager->addComponent<SmartMovementComponent>(enemyId, move);
-			} else if ("idle" == componentJson->key()) {
+			} else if ("idle" == cugl::to_lower(componentJson->key())) {
 				IdleComponent idle;
 				idle.textureKey = componentJson->get("textureKeys")->asString();
-				idle.textureRows = componentJson->get("textureRows")->asIntArray();
-				idle.textureColumns = componentJson->get("textureColumns")->asIntArray();
-				idle.textureSize = componentJson->get("textureSize")->asIntArray();
-				idle.speed = componentJson->get("textureSpeed")->asIntArray();
+				idle.textureRows = { 8 };
+				idle.textureColumns = { 16 };
+				idle.textureSize = { 128 };
+				idle.speed = { 2 };
 				idle.sprite = AnimationNode::alloc(_assets->get<Texture>(idle.textureKey), idle.textureRows[0], idle.textureColumns[0], idle.textureSize[0]);
 				idle.sprite->setAnchor(Vec2::ZERO);
 				idle._actions = actions;
@@ -245,12 +284,12 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 
 				_entityManager->addComponent<IdleComponent>(enemyId, idle);
 
-			} else if ("attackMelee" == componentJson->key()) {
+			} else if ("attackmelee" == cugl::to_lower(componentJson->key()) || "meleeattack" == cugl::to_lower(componentJson->key())) {
 				MeleeAttackComponent melee;
 
 				_entityManager->addComponent<MeleeAttackComponent>(enemyId, melee);
 
-			} else if ("attackRanged" == componentJson->key()) {
+			} else if ("attackranged" == cugl::to_lower(componentJson->key()) || "rangedattack" == cugl::to_lower(componentJson->key())) {
 				RangeOrthoAttackComponent ranged;
 				ranged.horizontal = true;
 				ranged.vertical = true;
@@ -261,12 +300,12 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 			}
 
 
-			else if ("rooting" == componentJson->key()) {
+			else if ("rooting" == cugl::to_lower(componentJson->key())) {
 				RootingComponent rooting;
 
 				_entityManager->addComponent<RootingComponent>(enemyId, rooting);
 			}
-			else if ("immobileMovement" == componentJson->key()) {
+			else if ("immobilemovement" == componentJson->key()) {
 				ImmobileMovementComponent move;
 
 				_entityManager->addComponent<ImmobileMovementComponent>(enemyId, move);

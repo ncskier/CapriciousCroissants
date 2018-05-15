@@ -461,6 +461,29 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 							idle.sprite->setFrame(1);
 						}
 					
+						if (i == 0) {
+							board->lose = true;
+						}
+                        // Commented out so ranged enemies will not turn incorrectly
+//                        int shootDirectionX = (ally->getY() == loc.y)*copysign(1, ally->getX() - loc.x);
+//                        int shootDirectionY = (ally->getX() == loc.x)*copysign(1, ally->getY() - loc.y);
+//                        if(shootDirectionX > 0){
+//                            loc.dir = LocationComponent::RIGHT;
+//                            idle.sprite->setFrame(3);
+//                        }
+//                        if (shootDirectionX < 0) {
+//                            loc.dir = LocationComponent::LEFT;
+//                            idle.sprite->setFrame(0);
+//                        }
+//                        if (shootDirectionY > 0) {
+//                            loc.dir = LocationComponent::UP;
+//                            idle.sprite->setFrame(2);
+//                        }
+//                        if (shootDirectionY < 0) {
+//                            loc.dir = LocationComponent::DOWN;
+//                            idle.sprite->setFrame(1);
+//                        }
+				
 						std::stringstream key;
 						key << "int_ally_remove_" << i;
 						idle._actions->activate(key.str(), board->allyRemoveAction, ally->getSprite());

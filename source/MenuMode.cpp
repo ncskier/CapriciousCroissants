@@ -38,7 +38,7 @@ MenuMode::MenuMode() : Scene() {
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputController>& input) {
+bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr<InputController>& input, int selectedLevel) {
     // Initialize the scene to a locked width
     Size dimen = Application::get()->getDisplaySize();
     dimen *= SCENE_WIDTH/dimen.width; // Lock the game to a reasonable resolution
@@ -51,6 +51,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     // Initialize
     _assets = assets;
     _dimen = dimen;
+    _selectedLevel = selectedLevel;
     
     // Initialize ActionManager
     _actions = ActionManager::alloc();
@@ -131,6 +132,13 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     _levelsJson = json->get("levels");
     _originY = _dimen.height*0.2f;
     _maxOffset = _menuTileSize.height * (_levelsJson->size() - 1);
+    // Create low cap
+    for (int i = 0; i < _lowCapTiles; i++) {
+        int lvlIdx = -1 - i;
+        std::shared_ptr<Node> menuTileCap = createLevelNode(lvlIdx, true);
+        _worldNode->addChild(menuTileCap);
+        _menuCapLowTiles.push_back(menuTileCap);
+    }
     // Create levels
     for (auto i = 0; i < _levelsJson->size(); i++) {
         std::shared_ptr<Node> menuTile = createLevelNode(i);
@@ -144,14 +152,6 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
         _worldNode->addChild(menuTileCap);
         _menuCapHiTiles.push_back(menuTileCap);
     }
-    // Create low cap
-    for (int i = 0; i < _lowCapTiles; i++) {
-        int lvlIdx = -1 - i;
-        std::shared_ptr<Node> menuTileCap = createLevelNode(lvlIdx, true);
-        _worldNode->addChild(menuTileCap);
-        _menuCapLowTiles.push_back(menuTileCap);
-    }
-    
 }
 
 /** Create level node */
@@ -179,10 +179,10 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx, bool cap) {
         menuTile->addChild(levelDot);
         
     //    // Initialize Level Button Node
-        std::shared_ptr<Font> font = _assets->get<Font>("script");
+        std::shared_ptr<Font> font = _assets->get<Font>("alwaysHereToo");
         std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
         levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
-        levelLabel->setPosition(levelDot->getContentSize().width*0.5f, levelDot->getContentSize().height*0.5f);
+        levelLabel->setPosition(levelDot->getContentSize().width*0.55f, levelDot->getContentSize().height*0.5f);    // Font appears off-center
         levelDot->addChild(levelLabel);
         _menuDots.push_back(levelDot);
     //    levelLabel->setBackground(Color4::BLACK);
@@ -496,7 +496,7 @@ void MenuMode::update(float timestep) {
     // Relax back to selected level
     bool animateMika = (moveEvent != InputController::MoveEvent::NONE && moveEvent != InputController::MoveEvent::END);
     if (moveEvent == InputController::MoveEvent::NONE || moveEvent == InputController::MoveEvent::END) {
-        float epsilon = 0.1f;
+        float epsilon = _menuTileSize.height*0.01f;
         float velocityThreshold = _menuTileSize.height*0.1f;
         // Inertia
         if (std::abs(_velocity) > velocityThreshold) {
@@ -570,7 +570,7 @@ void MenuMode::update(float timestep) {
         
         // Label
 //        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.5f, size.height*0.2f) : Vec2(size.width*0.5f, size.height*0.5f);
-        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.25f, size.height*0.1f) : Vec2(size.width*0.5f, size.height*0.5f);
+        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.25f, size.height*0.1f) : Vec2(size.width*0.55f, size.height*0.5f);
 //        _menuDots[i]->getChild(0)->setPosition(labelPos);
         std::stringstream ssLabel;
         std::stringstream ssLabelScale;

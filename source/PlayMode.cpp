@@ -806,10 +806,15 @@ void PlayMode::initWinLose() {
     std::string mikaTextureKey = win ? WIN_LOSE_MIKA_WIN : WIN_LOSE_MIKA_LOSE;
     std::shared_ptr<PolygonNode> mikaNode = PolygonNode::allocWithTexture(_assets->get<Texture>(mikaTextureKey));
     mikaNode->setAnchor(Vec2::ANCHOR_CENTER);
-    float mikaHeight = unit*5.0f;
+    float mikaHeight = unit*7.0f;
     float mikaWidth = mikaNode->getContentSize().width/mikaNode->getContentSize().height * mikaHeight;
     mikaNode->setContentSize(mikaWidth, mikaHeight);
-    mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.5f);
+    if (win) {
+        mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.37f);
+    } else {
+        mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.43f);
+    }
+//    mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.5f);
     
     // Level Label
     std::stringstream ssLevel;
@@ -817,14 +822,25 @@ void PlayMode::initWinLose() {
     std::shared_ptr<Font> font = _assets->get<Font>("alwaysHereToo");
     std::shared_ptr<Label> levelLabel = Label::alloc(ssLevel.str(), font);
     levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
+//    levelLabel->setPosition(_dimen.width*0.5f, _dimen.height*0.888f);
     levelLabel->setPosition(_dimen.width*0.5f, _dimen.height*0.888f);
     levelLabel->setForeground(Color4::WHITE);
+    
+    // Text
+    std::stringstream ssText;
+    std::string text = win ? "Victory!" : "You Lose";
+    std::shared_ptr<Label> textLabel = Label::alloc(text, font);
+    textLabel->setAnchor(Vec2::ANCHOR_CENTER);
+    textLabel->setPosition(_dimen.width*0.5f, _dimen.height*0.70f);
+    textLabel->setScale(2.5f);
+    textLabel->setForeground(Color4::WHITE);
     
     // Setup Node
     _winloseNode = Node::allocWithBounds(0, 0, _dimen.width, _dimen.height);
     _winloseNode->addChild(background);
     _winloseNode->addChild(mikaNode);
     _winloseNode->addChild(levelLabel);
+    _winloseNode->addChild(textLabel);
     _winloseNode->addChild(_winloseRetryButton);
     _winloseNode->addChild(_winloseLevelsButton);
     if (win) {

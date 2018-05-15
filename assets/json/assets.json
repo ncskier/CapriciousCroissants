@@ -182,6 +182,13 @@
 			"wrapS":    "clamp",
 			"wrapT":    "clamp"
 		},
+        "rooting": {
+            "file":     "textures/rooting.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
 		"close-normal": {
 			"file":     "textures/CloseNormal.png",
 			"minfilter":"nearest",

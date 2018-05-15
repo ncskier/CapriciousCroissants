@@ -134,12 +134,6 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     
     // Add all sprites to scene graph
     setupLevelSceneGraph();
-    
-    // Start Music
-    auto music = Music::alloc("sounds/music.wav");
-    if (AudioEngine::get()->getMusicState() != AudioEngine::State::PLAYING) {
-        AudioEngine::get()->playMusic(music, true, 0.5f);
-    }
 
 	// Set Background
 	Application::get()->setClearColor(Color4(229, 229, 229, 255));
@@ -271,11 +265,17 @@ void PlayMode::toggleSound() {
         AudioEngine::get()->pauseMusic();
         AudioEngine::get()->setMusicVolume(0.0f);
         AudioEngine::get()->stopAllEffects();
+        
+        // Save state
+        GameData::get()->setMuteSetting(true);
     } else {
         // Turn Sound On
         _soundSprite->setFrame(0);
         AudioEngine::get()->resumeMusic();
         AudioEngine::get()->setMusicVolume(0.5f);
+        
+        // Save state
+        GameData::get()->setMuteSetting(false);
     }
 }
 
@@ -379,7 +379,6 @@ void PlayMode::initMenu() {
     // Sound On
     i = 0;
     _soundSprite = AnimationNode::alloc(_assets->get<Texture>(PLAY_MENU_KEY_SOUND), 1, 2);
-    _soundSprite->setFrame(0);
     _soundButton = Button::alloc(_soundSprite);
     _soundButton->setAnchor(Vec2::ANCHOR_CENTER);
     float soundWidth = _soundButton->getContentSize().width/_soundButton->getContentSize().height * height;
@@ -394,6 +393,23 @@ void PlayMode::initMenu() {
     });
     _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
     _menuNode->addChild(_soundButton);
+    // Get mute setting & set accordingly
+    auto music = Music::alloc("sounds/music.wav");
+    if (AudioEngine::get()->getMusicState() != AudioEngine::State::PLAYING) {
+        AudioEngine::get()->playMusic(music, true, 0.5f);
+    }
+    if (GameData::get()->getMuteSetting()) {
+        // Turn Sound Off
+        _soundSprite->setFrame(1);
+        AudioEngine::get()->pauseMusic();
+        AudioEngine::get()->setMusicVolume(0.0f);
+        AudioEngine::get()->stopAllEffects();
+    } else {
+        // Turn Sound On
+        _soundSprite->setFrame(0);
+        AudioEngine::get()->resumeMusic();
+        AudioEngine::get()->setMusicVolume(0.5f);
+    }
 
     
     // Restart

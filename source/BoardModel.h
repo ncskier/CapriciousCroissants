@@ -171,6 +171,9 @@ public:
     /** Initialized the board */
     bool init(std::shared_ptr<cugl::JsonValue>& json, std::shared_ptr<cugl::AssetManager>& assets, cugl::Size dimen, std::shared_ptr<EntityManager>& entityManager, std::shared_ptr<cugl::ActionManager>& actions);
     
+
+	std::shared_ptr<cugl::AssetManager>& getAssets() { return _assets; }
+
 #pragma mark -
 #pragma mark Static Constructors
     /** Allocates board for shared pointer */

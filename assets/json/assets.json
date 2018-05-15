@@ -154,8 +154,15 @@
             "wrapS": "clamp",
             "wrapT": "clamp"
         },
-        "arrow": {
-            "file":     "textures/arrow.png",
+    "arrow": {
+      "file": "textures/arrow.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "rooting": {
+            "file":     "textures/rooting.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",

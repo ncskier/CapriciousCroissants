@@ -193,14 +193,14 @@ void PlayerController::update(float timestep) {
 					}
 				}
 
-				if (drawX && std::abs(inputOffset.x) < _board->getCellLength() / 2 || _board->offsetCol) {
+                if ((drawX && std::abs(inputOffset.x) < _board->getCellLength() / 2) || _board->offsetCol) {
 					for (int xx = 0; xx < _board->getWidth(); xx++) {
 						_board->getNode()->removeChildByName("selectedx");
 					}
 					drawX = false;
 				}
 
-				if (drawY && std::abs(inputOffset.y) < _board->getCellLength() / 2 || _board->offsetRow) {
+                if ((drawY && std::abs(inputOffset.y) < _board->getCellLength() / 2) || _board->offsetRow) {
 					for (int yy = 0; yy < _board->getWidth(); yy++) {
 						_board->getNode()->removeChildByName("selectedy");
 					}

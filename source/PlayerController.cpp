@@ -175,7 +175,7 @@ void PlayerController::update(float timestep) {
 						rootedSprite->setFrame(1);
 						Vec2 pos = Vec2(xx, y);
 						rootedSprite->setPosition(_board->gridToScreenV(pos.x, pos.y));
-						_board->getNode()->addChildWithName(rootedSprite, "selected", 10000 + _board->calculateDrawZ(xx, y, true));
+						_board->getNode()->addChildWithName(rootedSprite, "selectedx", _board->calculateDrawZ(xx, y, true));
 						drawX = true;
 					}
 				}
@@ -188,10 +188,25 @@ void PlayerController::update(float timestep) {
 						rootedSprite->setFrame(0);
 						Vec2 pos = Vec2(x, yy);
 						rootedSprite->setPosition(_board->gridToScreenV(pos.x, pos.y));
-						_board->getNode()->addChildWithName(rootedSprite, "selected", _board->calculateDrawZ(x, yy, true));
+						_board->getNode()->addChildWithName(rootedSprite, "selectedy", _board->calculateDrawZ(x, yy, true));
 						drawY = true;
 					}
 				}
+
+				if (drawX && std::abs(inputOffset.x) < _board->getCellLength() / 2 || _board->offsetCol) {
+					for (int xx = 0; xx < _board->getWidth(); xx++) {
+						_board->getNode()->removeChildByName("selectedx");
+					}
+					drawX = false;
+				}
+
+				if (drawY && std::abs(inputOffset.y) < _board->getCellLength() / 2 || _board->offsetRow) {
+					for (int yy = 0; yy < _board->getWidth(); yy++) {
+						_board->getNode()->removeChildByName("selectedy");
+					}
+					drawY = false;
+				}
+
 			}
         } else {
             // END
@@ -246,11 +261,10 @@ void PlayerController::update(float timestep) {
 			drawY = false;
 			
 			for (int xx = 0; xx < _board->getWidth(); xx++) {
-				CULog("xx %d", xx);
-				_board->getNode()->removeChildByName("selected");
+				_board->getNode()->removeChildByName("selectedx");
 			}
 			for (int yy = 0; yy < _board->getHeight(); yy++) {
-				_board->getNode()->removeChildByName("selected");
+				_board->getNode()->removeChildByName("selectedy");
 			}
 
 

@@ -195,6 +195,7 @@
     <ClInclude Include="..\..\source\EnemyController.h" />
     <ClInclude Include="..\..\source\Entity.h" />
     <ClInclude Include="..\..\source\EntityManager.h" />
+    <ClInclude Include="..\..\source\GameData.h" />
     <ClInclude Include="..\..\source\InputController.h" />
     <ClInclude Include="..\..\source\LoadingMode.h" />
     <ClInclude Include="..\..\source\MainSystems.h" />
@@ -212,6 +213,7 @@
     <ClCompile Include="..\..\source\BoxApp.cpp" />
     <ClCompile Include="..\..\source\EnemyController.cpp" />
     <ClCompile Include="..\..\source\EntityManager.cpp" />
+    <ClCompile Include="..\..\source\GameData.cpp" />
     <ClCompile Include="..\..\source\InputController.cpp" />
     <ClCompile Include="..\..\source\LoadingMode.cpp" />
     <ClCompile Include="..\..\source\main.cpp" />

@@ -695,10 +695,12 @@ void BoardModel::slideCol(int x, int offset) {
 
 // Slide row/col by [offset]
 void BoardModel::slide(int offset) {
-    if (offsetRow) {
-        slideRow(yOfIndex(_selectedTile), offset);
-    } else {
-        slideCol(xOfIndex(_selectedTile), offset);
+    if (_selectedTile != -1) {
+        if (offsetRow) {
+            slideRow(yOfIndex(_selectedTile), offset);
+        } else {
+            slideCol(xOfIndex(_selectedTile), offset);
+        }
     }
 }
 

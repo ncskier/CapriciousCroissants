@@ -52,6 +52,9 @@ void BoxApp::onStartup() {
     // Start GameData
     GameData::start(Application::getSaveDirectory());
     
+    // Start AnimationController
+    AnimationController::start();
+    
     Application::onStartup(); // YOU MUST END with call to parent
 }
 
@@ -83,6 +86,7 @@ void BoxApp::onShutdown() {
     
     AudioEngine::stop();
     GameData::stop();
+    AnimationController::stop();
     Application::onShutdown();  // YOU MUST END with call to parent
 }
 

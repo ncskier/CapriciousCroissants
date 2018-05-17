@@ -15,6 +15,7 @@
 #include "MenuMode.h"
 #include "InputController.h"
 #include "GameData.h"
+#include "AnimationController.h"
 
 /**
  * This class represents the application root for the game.

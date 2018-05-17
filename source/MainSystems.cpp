@@ -512,7 +512,7 @@ bool SmartMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Bo
 			}
 			else if (tile.x == loc.x && !isRow) {
 				ownY += offsetAmount;
-				ownY = ownY % board->getHeight() + (ownX % board->getHeight() < 0 ? board->getHeight() : 0);
+				ownY = ownY % board->getHeight() + (ownY % board->getHeight() < 0 ? board->getHeight() : 0);
 			}
 		}
 
@@ -561,7 +561,6 @@ bool SmartMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Bo
 
 		int dX = nearestX - ownX;
 		int dY = nearestY - ownY;
-
 
 		if (std::abs(dY) >= std::abs(dX)) {
 			if (dY >= 0) {

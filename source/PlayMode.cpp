@@ -772,12 +772,19 @@ void PlayMode::initWinLose() {
     // Unit for sizing
     float unit = _dimen.height*0.075f;
     float buttonHeight = unit;
-    float buttonY = _dimen.height*0.05f;
+//    float buttonY = _dimen.height*0.05f;
+    float buttonY = _dimen.height*0.1f;
     float starsY = _dimen.height*0.70f;
     float starsYUp = starsY + unit*0.70f;
     float starHeight = unit*2.0f;
     float highStarsY = _dimen.height*0.3f;
     float highStarHeight = unit;
+    float highscoreTextY = highStarsY - unit;
+    float mikaHeight = unit*5.0f;
+//    float mikaWinY = _dimen.height*0.37f;
+    float mikaWinY = _dimen.height*0.50f;
+//    float mikaLoseY = _dimen.height*0.43f;
+    float mikaLoseY = _dimen.height*0.60f;
     float textY = _dimen.height*0.7f;
     
     // Init Node
@@ -851,13 +858,12 @@ void PlayMode::initWinLose() {
     std::string mikaTextureKey = win ? WIN_LOSE_MIKA_WIN : WIN_LOSE_MIKA_LOSE;
     std::shared_ptr<PolygonNode> mikaNode = PolygonNode::allocWithTexture(_assets->get<Texture>(mikaTextureKey));
     mikaNode->setAnchor(Vec2::ANCHOR_CENTER);
-    float mikaHeight = unit*7.0f;
     float mikaWidth = mikaNode->getContentSize().width/mikaNode->getContentSize().height * mikaHeight;
     mikaNode->setContentSize(mikaWidth, mikaHeight);
     if (win) {
-        mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.37f);
+        mikaNode->setPosition(_dimen.width*0.5f, mikaWinY);
     } else {
-        mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.43f);
+        mikaNode->setPosition(_dimen.width*0.5f, mikaLoseY);
     }
     _winloseNode->addChild(mikaNode);
     
@@ -908,7 +914,7 @@ void PlayMode::initWinLose() {
         float highStarWidth = highStar1->getContentSize().width/highStar1->getContentSize().height * highStarHeight;
         highStar1->setAnchor(Vec2::ANCHOR_CENTER);
         highStar1->setContentSize(highStarWidth, highStarHeight);
-        highStar1->setPosition(_dimen.width*0.35f, highStarsY);
+        highStar1->setPosition(_dimen.width*0.4f, highStarsY);
         _winloseNode->addChild(highStar1);
         // 2
         std::string highStar2Key = (highStars >= 2) ? WIN_LOSE_STAR : WIN_LOSE_STAR;
@@ -922,19 +928,28 @@ void PlayMode::initWinLose() {
         std::shared_ptr<PolygonNode> highStar3 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar3Key));
         highStar3->setAnchor(Vec2::ANCHOR_CENTER);
         highStar3->setContentSize(highStarWidth, highStarHeight);
-        highStar3->setPosition(_dimen.width*0.65f, highStarsY);
+        highStar3->setPosition(_dimen.width*0.6f, highStarsY);
         _winloseNode->addChild(highStar3);
     }
     
+    // High score text
+    if (win) {
+        std::shared_ptr<Label> highscoreText = Label::alloc("HIGHSCORE", font);
+        highscoreText->setAnchor(Vec2::ANCHOR_CENTER);
+        highscoreText->setPosition(_dimen.width*0.5f, highscoreTextY);
+        highscoreText->setScale(0.8f);
+        highscoreText->setForeground(Color4::WHITE);
+        _winloseNode->addChild(highscoreText);
+    }
+    
     // Text
-    std::stringstream ssText;
-    std::string text = win ? "Victory!" : "You Lose";
-    std::shared_ptr<Label> textLabel = Label::alloc(text, font);
-    textLabel->setAnchor(Vec2::ANCHOR_CENTER);
-    textLabel->setPosition(_dimen.width*0.5f, textY);
-    textLabel->setScale(2.5f);
-    textLabel->setForeground(Color4::WHITE);
     if (!win) {
+        std::string text = win ? "Victory!" : "You Lose";
+        std::shared_ptr<Label> textLabel = Label::alloc(text, font);
+        textLabel->setAnchor(Vec2::ANCHOR_CENTER);
+        textLabel->setPosition(_dimen.width*0.5f, textY);
+        textLabel->setScale(2.5f);
+        textLabel->setForeground(Color4::WHITE);
         _winloseNode->addChild(textLabel);
     }
     

@@ -264,7 +264,7 @@ void MenuMode::setMenuTileSize() {
     
     // Star Size
     std::shared_ptr<PolygonNode> star = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_STAR_KEY));
-    float starHeight = _menuTileSize.height*0.2f;
+    float starHeight = _menuTileSize.height*0.18f;
     float starWidth = star->getContentSize().width/star->getContentSize().height * starHeight;
     _starSize = Size(starWidth, starHeight);
 }
@@ -564,7 +564,7 @@ void MenuMode::update(float timestep) {
         
         // Dots
         float time = 0.1f;
-        float scale = (i == _selectedLevel) ? 2.1f : 1.0f;
+        float scale = (i == _selectedLevel) ? 1.9f : 1.0f;
         std::stringstream ss;
         if (i == _selectedLevel) {
             ss << "select_";
@@ -577,16 +577,14 @@ void MenuMode::update(float timestep) {
         Size size = _dotSize*scale;
         Vec2 position = (i == _selectedLevel) ? dotPosition(i)-Vec2(0.0f, _menuTileSize.height*0.1f) : dotPosition(i);
 //        _menuDots[i]->setContentSize(size);
-        _menuDots[i]->setPosition(position);
         std::shared_ptr<ScaleTo> scaleAction = ScaleTo::alloc(Vec2(scale, scale), time);
         if (!_actions->isActive(ss.str())) {
             _actions->activate(ss.str(), scaleAction, _menuDots[i]);
         }
+        _menuDots[i]->setAnchor(Vec2::ANCHOR_CENTER);
+        _menuDots[i]->setPosition(position);
         
         // Label
-//        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.5f, size.height*0.2f) : Vec2(size.width*0.5f, size.height*0.5f);
-        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.25f, size.height*0.1f) : Vec2(size.width*0.55f, size.height*0.5f);
-//        _menuDots[i]->getChild(0)->setPosition(labelPos);
         std::stringstream ssLabel;
         std::stringstream ssLabelScale;
         if (i == _selectedLevel) {
@@ -598,14 +596,22 @@ void MenuMode::update(float timestep) {
         }
         ssLabel << i;
         ssLabelScale << i;
+//        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.5f, size.height*0.2f) : Vec2(size.width*0.5f, size.height*0.5f);
+        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.29f, size.height*0.09f) : Vec2(size.width*0.55f, size.height*0.5f);
+//        Vec2 labelMoveBy = Vec2(0.0f, _dotSize.height*0.4f);
+//        labelMoveBy = (i == _selectedLevel) ? -labelMoveBy : labelMoveBy;
+//        _menuDots[i]->getChild(0)->setPosition(labelPos);
         std::shared_ptr<MoveTo> moveAction = MoveTo::alloc(labelPos, time);
-        std::shared_ptr<ScaleTo> labelScaleAction = ScaleTo::alloc(Vec2(1.0f/scale, 1.0f/scale), time);
+//        std::shared_ptr<MoveBy> moveAction = MoveBy::alloc(labelMoveBy, time);
+        float labelScale = (i == _selectedLevel) ? 0.60f : 1.0f;
+        std::shared_ptr<ScaleTo> labelScaleAction = ScaleTo::alloc(Vec2(labelScale, labelScale), time);
         if (!_actions->isActive(ssLabel.str())) {
             _actions->activate(ssLabel.str(), moveAction, _menuDots[i]->getChild(0));
         }
         if (!_actions->isActive(ssLabelScale.str())) {
             _actions->activate(ssLabelScale.str(), labelScaleAction, _menuDots[i]->getChild(0));
         }
+        _menuDots[i]->getChild(0)->setAnchor(Vec2::ANCHOR_CENTER);
     }
     // Move upper cap
     for (auto i = 0; i < _menuCapHiTiles.size(); i++) {

@@ -185,10 +185,37 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx, bool cap) {
         _menuDots.push_back(levelDot);
         
         // TODO: Initialize Level Stars
+        float starXLeft = levelDot->getContentSize().width*0.20f;
+        float starXMid = levelDot->getContentSize().width*0.55f;
+        float starXRight = levelDot->getContentSize().width*0.90f;
+        float starY = levelDot->getContentSize().height*0.0f;
+        float starYMid = levelDot->getContentSize().height*-0.13f;
         int levelStars = GameData::get()->getLevelStars(levelIdx);
         CULog("level %d stars: %d", levelIdx, levelStars);
+        // 1
+        std::string star1Key = (levelStars >= 1) ? MENU_STAR_KEY : MENU_STAR_EMPTY_KEY;
+        std::shared_ptr<PolygonNode> star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(star1Key));
+        star1->setAnchor(Vec2::ANCHOR_CENTER);
+        star1->setContentSize(_starSize);
+        star1->setPosition(starXLeft, starY);
+        levelDot->addChild(star1);
+        // 2
+        std::string star2Key = (levelStars >= 2) ? MENU_STAR_KEY : MENU_STAR_EMPTY_KEY;
+        std::shared_ptr<PolygonNode> star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(star2Key));
+        star2->setAnchor(Vec2::ANCHOR_CENTER);
+        star2->setContentSize(_starSize);
+        star2->setPosition(starXMid, starYMid);
+        levelDot->addChild(star2);
+        // 3
+        std::string star3Key = (levelStars >= 3) ? MENU_STAR_KEY : MENU_STAR_EMPTY_KEY;
+        std::shared_ptr<PolygonNode> star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(star3Key));
+        star3->setAnchor(Vec2::ANCHOR_CENTER);
+        star3->setContentSize(_starSize);
+        star3->setPosition(starXRight, starY);
+        levelDot->addChild(star3);
         // TODO: Initialize Level High Score
         int levelMoves = GameData::get()->getLevelMoves(levelIdx);
+        
         CULog("level %d moves: %d", levelIdx, levelMoves);
     }
     
@@ -234,6 +261,12 @@ void MenuMode::setMenuTileSize() {
     float dotHeight = _menuTileSize.height*0.5f;
     float dotWidth = levelDot->getContentSize().width/levelDot->getContentSize().height * dotHeight;
     _dotSize = Size(dotWidth, dotHeight);
+    
+    // Star Size
+    std::shared_ptr<PolygonNode> star = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_STAR_KEY));
+    float starHeight = _menuTileSize.height*0.2f;
+    float starWidth = star->getContentSize().width/star->getContentSize().height * starHeight;
+    _starSize = Size(starWidth, starHeight);
 }
 
 

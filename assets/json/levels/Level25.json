@@ -23,24 +23,6 @@
 				}
 			}
 		},
-		"root2":	{
-			"components":	{
-				"Location":	{
-					"direction":	3,
-					"x":	3,
-					"y":	1
-				},
-				"MeleeAttack":	{
-				},
-				"ImmobileMovement":	{
-				},
-				"Idle":	{
-					"textureKeys":	"enemy2_strip"
-				},
-				"Rooting":	{
-				}
-			}
-		},
 		"smart1":	{
 			"components":	{
 				"Location":	{

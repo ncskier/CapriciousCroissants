@@ -23,8 +23,6 @@ GameData::GameData() {
 
 /** Dispose of all (non-static) resources */
 void GameData::dispose() {
-    _saveDir = nullptr;
-    _settingsPath = nullptr;
     _settingsJson = nullptr;
 }
 

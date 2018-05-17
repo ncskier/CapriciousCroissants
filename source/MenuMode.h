@@ -14,6 +14,7 @@
 #include "InputController.h"
 #include "PlayerPawnModel.h"
 #include "TileModel.h"
+#include "GameData.h"
 
 #define MENU_TILE_KEY_0 "menu_tile0_strip"
 //#define MENU_TILE_KEY_1 "menu_tile1"

@@ -537,6 +537,11 @@ void PlayMode::updateBoardTurn(float dt) {
             done = true;
             win = true;
             
+            // TODO: Set Stars
+//            GameData::get()->setLevelStars(_level, stars);
+            // TODO: Set Moves
+//            GameData::get()->setLevelMoves(_level, moves);
+            
 //            _text->setText("You win");
 //            _text->setVisible(true);
 //            _text->setZOrder(1000);

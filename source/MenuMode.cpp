@@ -185,9 +185,13 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx, bool cap) {
         _menuDots.push_back(levelDot);
         
         // TODO: Initialize Level Stars
-        float starXLeft = levelDot->getContentSize().width*0.20f;
+        float starOffset = _starSize.width*-0.1;
+//        float starXLeft = levelDot->getContentSize().width*0.20f;
+//        float starXMid = levelDot->getContentSize().width*0.55f;
+//        float starXRight = levelDot->getContentSize().width*0.90f;
         float starXMid = levelDot->getContentSize().width*0.55f;
-        float starXRight = levelDot->getContentSize().width*0.90f;
+        float starXLeft = starXMid - _starSize.width - starOffset;
+        float starXRight = starXMid + _starSize.width + starOffset;
         float starY = levelDot->getContentSize().height*0.0f;
         float starYMid = levelDot->getContentSize().height*-0.13f;
         int levelStars = GameData::get()->getLevelStars(levelIdx);

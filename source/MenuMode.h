@@ -23,8 +23,8 @@
 #define MIKA_IDLE_KEY "mika_idle_action"
 #define MIKA_TRANSITION_KEY "mika_transition_action"
 #define MIKA_ATTACK_KEY "mika_attack_action"
-#define MENU_STAR_KEY "winlose-star"
-#define MENU_STAR_EMPTY_KEY "winlose-star"
+#define MENU_STAR_KEY "winlose-high-star"
+#define MENU_STAR_EMPTY_KEY "winlose-high-star-outline"
 #define MENU_LABEL_NAME "menu-label"
 
 #define MENU_TILE_ROWS 6

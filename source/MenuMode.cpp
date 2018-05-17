@@ -172,42 +172,55 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx, bool cap) {
         // Initialize Level Dot
         std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
         levelDot->setAnchor(Vec2::ANCHOR_CENTER);
-    //    float height = _menuTileSize.height*0.5f;
-    //    float width = levelDot->getContentSize().width/levelDot->getContentSize().height * height;
         levelDot->setContentSize(_dotSize);
         levelDot->setPosition(_menuTileSize.width*levelFractionX(levelIdx), _menuTileSize.height*0.5f);
         menuTile->addChild(levelDot);
         
-    //    // Initialize Level Button Node
+        // Initialize Level Number
         std::shared_ptr<Font> font = _assets->get<Font>("alwaysHereToo");
         std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
         levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
         levelLabel->setPosition(levelDot->getContentSize().width*0.55f, levelDot->getContentSize().height*0.5f);    // Font appears off-center
         levelDot->addChild(levelLabel);
         _menuDots.push_back(levelDot);
-    //    levelLabel->setBackground(Color4::BLACK);
-    //    levelLabel->setForeground(Color4::WHITE);
-    //    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
-    //    levelButton->setAnchor(Vec2::ANCHOR_CENTER);
-    //    levelButton->setName(ss.str());
-    //
-    //    // Set Button Position
-    //    float frameLength = _menuTileSize.height*0.5f;
-    //    levelButton->setPosition(_menuTileSize.width*0.5f, _menuTileSize.height*0.5f);
-    //    levelButton->setContentSize(frameLength, frameLength);
-    //    levelLabel->setContentSize(frameLength, frameLength);
-    //
-    //    // Set Button Callback
-    //    levelButton->setListener([=](const std::string& name, bool down) {
-    //        if (!down) {
-    //            int i = std::stoi(name);
-    //            this->_selectedLevelJson = _levelsJson->get(i)->asString();
-    //            this->setActive(false);
-    //        }
-    //    });
-    //    levelButton->activate(100+levelIdx);
-    //    menuTile->addChild(levelButton);
-    //    _menuButtons.push_back(levelButton);
+        
+        // TODO: Initialize Level Stars
+        float starOffset = _starSize.width*-0.1;
+//        float starXLeft = levelDot->getContentSize().width*0.20f;
+//        float starXMid = levelDot->getContentSize().width*0.55f;
+//        float starXRight = levelDot->getContentSize().width*0.90f;
+        float starXMid = levelDot->getContentSize().width*0.55f;
+        float starXLeft = starXMid - _starSize.width - starOffset;
+        float starXRight = starXMid + _starSize.width + starOffset;
+        float starY = levelDot->getContentSize().height*0.0f;
+        float starYMid = levelDot->getContentSize().height*-0.13f;
+        int levelStars = GameData::get()->getLevelStars(levelIdx);
+        CULog("level %d stars: %d", levelIdx, levelStars);
+        // 1
+        std::string star1Key = (levelStars >= 1) ? MENU_STAR_KEY : MENU_STAR_EMPTY_KEY;
+        std::shared_ptr<PolygonNode> star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(star1Key));
+        star1->setAnchor(Vec2::ANCHOR_CENTER);
+        star1->setContentSize(_starSize);
+        star1->setPosition(starXLeft, starY);
+        levelDot->addChild(star1);
+        // 2
+        std::string star2Key = (levelStars >= 2) ? MENU_STAR_KEY : MENU_STAR_EMPTY_KEY;
+        std::shared_ptr<PolygonNode> star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(star2Key));
+        star2->setAnchor(Vec2::ANCHOR_CENTER);
+        star2->setContentSize(_starSize);
+        star2->setPosition(starXMid, starYMid);
+        levelDot->addChild(star2);
+        // 3
+        std::string star3Key = (levelStars >= 3) ? MENU_STAR_KEY : MENU_STAR_EMPTY_KEY;
+        std::shared_ptr<PolygonNode> star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(star3Key));
+        star3->setAnchor(Vec2::ANCHOR_CENTER);
+        star3->setContentSize(_starSize);
+        star3->setPosition(starXRight, starY);
+        levelDot->addChild(star3);
+        // TODO: Initialize Level High Score
+        int levelMoves = GameData::get()->getLevelMoves(levelIdx);
+        
+        CULog("level %d moves: %d", levelIdx, levelMoves);
     }
     
     return menuTile;
@@ -252,6 +265,12 @@ void MenuMode::setMenuTileSize() {
     float dotHeight = _menuTileSize.height*0.5f;
     float dotWidth = levelDot->getContentSize().width/levelDot->getContentSize().height * dotHeight;
     _dotSize = Size(dotWidth, dotHeight);
+    
+    // Star Size
+    std::shared_ptr<PolygonNode> star = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_STAR_KEY));
+    float starHeight = _menuTileSize.height*0.18f;
+    float starWidth = star->getContentSize().width/star->getContentSize().height * starHeight;
+    _starSize = Size(starWidth, starHeight);
 }
 
 
@@ -549,7 +568,7 @@ void MenuMode::update(float timestep) {
         
         // Dots
         float time = 0.1f;
-        float scale = (i == _selectedLevel) ? 2.1f : 1.0f;
+        float scale = (i == _selectedLevel) ? 1.9f : 1.0f;
         std::stringstream ss;
         if (i == _selectedLevel) {
             ss << "select_";
@@ -562,16 +581,14 @@ void MenuMode::update(float timestep) {
         Size size = _dotSize*scale;
         Vec2 position = (i == _selectedLevel) ? dotPosition(i)-Vec2(0.0f, _menuTileSize.height*0.1f) : dotPosition(i);
 //        _menuDots[i]->setContentSize(size);
-        _menuDots[i]->setPosition(position);
         std::shared_ptr<ScaleTo> scaleAction = ScaleTo::alloc(Vec2(scale, scale), time);
         if (!_actions->isActive(ss.str())) {
             _actions->activate(ss.str(), scaleAction, _menuDots[i]);
         }
+        _menuDots[i]->setAnchor(Vec2::ANCHOR_CENTER);
+        _menuDots[i]->setPosition(position);
         
         // Label
-//        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.5f, size.height*0.2f) : Vec2(size.width*0.5f, size.height*0.5f);
-        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.25f, size.height*0.1f) : Vec2(size.width*0.55f, size.height*0.5f);
-//        _menuDots[i]->getChild(0)->setPosition(labelPos);
         std::stringstream ssLabel;
         std::stringstream ssLabelScale;
         if (i == _selectedLevel) {
@@ -583,14 +600,22 @@ void MenuMode::update(float timestep) {
         }
         ssLabel << i;
         ssLabelScale << i;
+//        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.5f, size.height*0.2f) : Vec2(size.width*0.5f, size.height*0.5f);
+        Vec2 labelPos = (i == _selectedLevel) ? Vec2(size.width*0.29f, size.height*0.09f) : Vec2(size.width*0.55f, size.height*0.5f);
+//        Vec2 labelMoveBy = Vec2(0.0f, _dotSize.height*0.4f);
+//        labelMoveBy = (i == _selectedLevel) ? -labelMoveBy : labelMoveBy;
+//        _menuDots[i]->getChild(0)->setPosition(labelPos);
         std::shared_ptr<MoveTo> moveAction = MoveTo::alloc(labelPos, time);
-        std::shared_ptr<ScaleTo> labelScaleAction = ScaleTo::alloc(Vec2(1.0f/scale, 1.0f/scale), time);
+//        std::shared_ptr<MoveBy> moveAction = MoveBy::alloc(labelMoveBy, time);
+        float labelScale = (i == _selectedLevel) ? 0.60f : 1.0f;
+        std::shared_ptr<ScaleTo> labelScaleAction = ScaleTo::alloc(Vec2(labelScale, labelScale), time);
         if (!_actions->isActive(ssLabel.str())) {
             _actions->activate(ssLabel.str(), moveAction, _menuDots[i]->getChild(0));
         }
         if (!_actions->isActive(ssLabelScale.str())) {
             _actions->activate(ssLabelScale.str(), labelScaleAction, _menuDots[i]->getChild(0));
         }
+        _menuDots[i]->getChild(0)->setAnchor(Vec2::ANCHOR_CENTER);
     }
     // Move upper cap
     for (auto i = 0; i < _menuCapHiTiles.size(); i++) {

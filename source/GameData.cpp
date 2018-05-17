@@ -12,11 +12,14 @@
 
 using namespace cugl;
 
+
 /** Reference to the game data singleton */
 GameData* GameData::_gData = nullptr;
 
+
 #pragma mark -
 #pragma mark Constructors
+
 /** Constructor */
 GameData::GameData() {
 }
@@ -24,6 +27,7 @@ GameData::GameData() {
 /** Dispose of all (non-static) resources */
 void GameData::dispose() {
     _settingsJson = nullptr;
+    _levelsJson = nullptr;
 }
 
 /** Initialize GameData */
@@ -44,18 +48,52 @@ bool GameData::init(std::string saveDir) {
     std::shared_ptr<JsonReader> reader = JsonReader::alloc(_settingsPath);
     _settingsJson = reader->readJson();
     
+    // LevelsJson
+    if (!_settingsJson->has(LEVELS_KEY)) {
+        _settingsJson->appendChild(LEVELS_KEY, JsonValue::allocObject());
+    }
+    _levelsJson = _settingsJson->get(LEVELS_KEY);
+    
     return true;
 }
 
 
 #pragma mark -
 #pragma mark Helper Methods
+
 /** Initialize the settings JSON file from INIT_SETTINGS_PATH */
 void GameData::initSettings() {
     std::shared_ptr<JsonWriter> writer = JsonWriter::alloc(_settingsPath);
     std::shared_ptr<JsonReader> reader = JsonReader::allocWithAsset(INIT_SETTINGS_PATH);
     std::shared_ptr<JsonValue> initSettingsJson = reader->readJson();
     writer->writeJson(initSettingsJson);
+}
+
+/** Initializes the [level] JSON */
+void GameData::initLevelData(int level) {
+    std::shared_ptr<JsonValue> starsData = JsonValue::alloc(0.0f);
+    std::shared_ptr<JsonValue> movesData = JsonValue::alloc(0.0f);
+    std::shared_ptr<JsonValue> levelData = JsonValue::allocObject();
+    levelData->appendChild(STARS_KEY, starsData);
+    levelData->appendChild(MOVES_KEY, movesData);
+    _levelsJson->appendChild(to_string(level), levelData);
+    saveSettings();
+}
+
+/** Returns reference to the level JsonValue */
+std::shared_ptr<JsonValue> GameData::getLevelJson(int level) {
+    std::string levelKey = std::to_string(level);
+    if (!_levelsJson->has(levelKey)) {
+        initLevelData(level);
+    }
+    return _levelsJson->get(levelKey);
+}
+
+/** Writes settings json */
+void GameData::saveSettings() {
+//    CULog("save json: \n%s", _settingsJson->toString().c_str());
+    std::shared_ptr<JsonWriter> writer = JsonWriter::alloc(_settingsPath);
+    writer->writeJson(_settingsJson);
 }
 
 
@@ -104,8 +142,41 @@ bool GameData::getMuteSetting() {
 void GameData::setMuteSetting(bool mute) {
     std::shared_ptr<JsonValue> muteJson = _settingsJson->get(MUTE_KEY);
     muteJson->set(mute);
-    CULog("save json: \n%s", _settingsJson->toString().c_str());
-    std::shared_ptr<JsonWriter> writer = JsonWriter::alloc(_settingsPath);
-    writer->writeJson(_settingsJson);
+    saveSettings();
 }
+
+/** Get the saved level number of stars */
+int GameData::getLevelStars(int level) {
+    std::shared_ptr<JsonValue> starsJson = getLevelJson(level)->get(STARS_KEY);
+    return starsJson->asInt();
+}
+
+/** Set the saved level number of stars */
+void GameData::setLevelStars(int level, int stars) {
+    std::shared_ptr<JsonValue> starsJson = getLevelJson(level)->get(STARS_KEY);
+    starsJson->set((double)stars);
+    saveSettings();
+}
+
+/** Get the level saved number of moves */
+int GameData::getLevelMoves(int level) {
+    std::shared_ptr<JsonValue> movesJson = getLevelJson(level)->get(MOVES_KEY);
+    return movesJson->asInt();
+}
+
+/** Set the level saved number of moves */
+void GameData::setLevelMoves(int level, int moves) {
+    std::shared_ptr<JsonValue> movesJson = getLevelJson(level)->get(MOVES_KEY);
+    movesJson->set((double)moves);
+    saveSettings();
+}
+
+
+
+
+
+
+
+
+
 

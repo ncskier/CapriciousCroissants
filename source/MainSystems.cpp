@@ -469,12 +469,44 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 				}
 
 			}
+			
+
+
+			if (manager->hasComponent<DumbMovementComponent>(entity)) {
+				switch (loc.dir) {
+				case LocationComponent::UP:
+					if (loc.y == board->getHeight() - 1) {
+						loc.dir = LocationComponent::DOWN;
+						idle.sprite->setFrame(ENEMY_FRAME_DOWN);
+					}
+					break;
+				case LocationComponent::DOWN:
+					if (loc.y == 0) {
+						loc.dir = LocationComponent::UP;
+						idle.sprite->setFrame(ENEMY_FRAME_UP);
+					}
+					break;
+				case LocationComponent::LEFT:
+					if (loc.x == 0) {
+						loc.dir = LocationComponent::RIGHT;
+						idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
+					}
+					break;
+				case LocationComponent::RIGHT:
+					if (loc.x == board->getWidth() - 1) {
+						loc.dir = LocationComponent::LEFT;
+						idle.sprite->setFrame(ENEMY_FRAME_LEFT);
+					}
+					break;
+				}
+			}
+
 			manager->addComponent<LocationComponent>(entity, loc);
 			manager->addComponent<IdleComponent>(entity, idle);
 			manager->addComponent<RangeOrthoAttackComponent>(entity, ranged);
-
 		}
 	
+
 	return true;
 }
 

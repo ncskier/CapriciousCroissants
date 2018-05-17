@@ -233,6 +233,9 @@ public:
     /** Initialize in-game menu */
     void initMenu();
     
+    /** Calculate stars */
+    int calculateLevelStars();
+    
     
 #pragma mark -
 #pragma mark Gameplay Handling

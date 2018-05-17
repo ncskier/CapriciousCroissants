@@ -335,6 +335,13 @@
             "magfilter":"linear",
             "wrapS":    "clamp",
             "wrapT":    "clamp"
+        },
+        "winlose-star": {
+            "file":    "textures/winlose-star.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
         }
 	},
 	"fonts": {

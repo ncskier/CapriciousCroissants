@@ -537,8 +537,10 @@ void PlayMode::updateBoardTurn(float dt) {
             done = true;
             win = true;
             
-            // TODO: Set Stars
-//            GameData::get()->setLevelStars(_level, stars);
+            // Set Stars
+            int allies = (int)_board->getAllies().size();
+            int stars = 3 - (_board->maxAllies - allies);
+            GameData::get()->setLevelStars(_level, stars);
             // TODO: Set Moves
 //            GameData::get()->setLevelMoves(_level, moves);
             
@@ -764,6 +766,8 @@ void PlayMode::initWinLose() {
     float unit = _dimen.height*0.075f;
     float buttonHeight = unit;
     float buttonY = _dimen.height*0.05f;
+    float starsY = _dimen.height*0.70f;
+    float textY = _dimen.height*0.7f;
     
     // Background
     std::string backgroundTextureKey = win ? WIN_LOSE_BACKGROUND_WIN : WIN_LOSE_BACKGROUND_LOSE;
@@ -852,9 +856,30 @@ void PlayMode::initWinLose() {
     std::string text = win ? "Victory!" : "You Lose";
     std::shared_ptr<Label> textLabel = Label::alloc(text, font);
     textLabel->setAnchor(Vec2::ANCHOR_CENTER);
-    textLabel->setPosition(_dimen.width*0.5f, _dimen.height*0.70f);
+    textLabel->setPosition(_dimen.width*0.5f, textY);
     textLabel->setScale(2.5f);
     textLabel->setForeground(Color4::WHITE);
+    
+    // Stars
+    int stars = GameData::get()->getLevelStars(_level);
+    // 1
+    std::shared_ptr<PolygonNode> star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(WIN_LOSE_STAR));
+    star1->setAnchor(Vec2::ANCHOR_CENTER);
+    star1->setPosition(_dimen.width*0.25f, starsY);
+    float starHeight = unit;
+    float starWidth = star1->getContentSize().width/star1->getContentSize().height * starHeight;
+    star1->setContentSize(starWidth, starHeight);
+    // 2
+    std::shared_ptr<PolygonNode> star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(WIN_LOSE_STAR));
+    star2->setAnchor(Vec2::ANCHOR_CENTER);
+    star2->setPosition(_dimen.width*0.5f, starsY);
+    star2->setContentSize(starWidth, starHeight);
+    // 3
+    std::shared_ptr<PolygonNode> star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(WIN_LOSE_STAR));
+    star3->setAnchor(Vec2::ANCHOR_CENTER);
+    star3->setPosition(_dimen.width*0.75f, starsY);
+    star3->setContentSize(starWidth, starHeight);
+    
     
     // Setup Node
     _winloseNode = Node::allocWithBounds(0, 0, _dimen.width, _dimen.height);
@@ -862,6 +887,9 @@ void PlayMode::initWinLose() {
     _winloseNode->addChild(mikaNode);
     _winloseNode->addChild(levelLabel);
     _winloseNode->addChild(textLabel);
+    _winloseNode->addChild(star1);
+    _winloseNode->addChild(star2);
+    _winloseNode->addChild(star3);
     _winloseNode->addChild(_winloseRetryButton);
     _winloseNode->addChild(_winloseLevelsButton);
     if (win) {

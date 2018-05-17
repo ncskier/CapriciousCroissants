@@ -40,6 +40,7 @@
 #define WIN_LOSE_RETRY           "winlose-retry"
 #define WIN_LOSE_LEVELS_WIN      "winlose-levels-win"
 #define WIN_LOSE_LEVELS_LOSE     "winlose-levels-lose"
+#define WIN_LOSE_STAR            "winlose-star"
 #define WIN_LOSE_LISTENER_CONTINUE 60
 #define WIN_LOSE_LISTENER_RETRY    61
 #define WIN_LOSE_LISTENER_LEVELS   62

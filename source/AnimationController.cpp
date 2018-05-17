@@ -22,11 +22,12 @@ AnimationController::AnimationController() {
 
 /** Dispose of all (non-static) resources */
 void AnimationController::dispose() {
-    
+    _actions = nullptr;
 }
 
 /** Initialize AnimationController */
 bool AnimationController::init() {
+    _actions = ActionManager::alloc();
     return true;
 }
 

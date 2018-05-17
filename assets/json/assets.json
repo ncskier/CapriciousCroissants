@@ -140,6 +140,13 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "mika_levelend": {
+            "file":     "textures/mika_levelend.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "enemy0_strip": {
             "file":     "textures/enemy0_strip.png",
             "minfilter":"nearest",

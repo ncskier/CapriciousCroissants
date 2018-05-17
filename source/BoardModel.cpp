@@ -753,10 +753,15 @@ void BoardModel::updateNodes(bool position, bool z) {
     
     // Allies
     for (std::vector<std::shared_ptr<PlayerPawnModel>>::iterator it = _allies.begin(); it != _allies.end(); ++it) {
-        if (position)
+        if (position) {
             (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
-        if (z)
+        }
+        if (z) {
             (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+            if ((*it)->isMika()) {
+                (*it)->getEndSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+            }
+        }
     }
     
     // Enemies

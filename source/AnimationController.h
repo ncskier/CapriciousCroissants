@@ -16,6 +16,9 @@ private:
     /** Reference to AnimationController singleton */
     static AnimationController* _gController;
     
+    /** Reference to ActionManager */
+    std::shared_ptr<cugl::ActionManager> _actions;
+    
 #pragma mark -
 #pragma mark Constructors
     /** Constructor */
@@ -61,7 +64,8 @@ public:
     
 #pragma mark -
 #pragma mark Non-Static Accessors/Mutators
-    
+    /** Return ActionManager */
+    std::shared_ptr<cugl::ActionManager> getActionManager() { return _actions; }
 };
 
 #endif /* AnimationController_hpp */

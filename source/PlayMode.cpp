@@ -329,6 +329,9 @@ void PlayMode::setupLevelSceneGraph() {
     std::set<std::shared_ptr<PlayerPawnModel>>::iterator allyIter;
     for (allyIter = _board->getAddedAllies().begin(); allyIter != _board->getAddedAllies().end(); ++allyIter) {
         _board->getNode()->addChild((*allyIter)->getSprite());
+        if ((*allyIter)->isMika()) {
+            _board->getNode()->addChild((*allyIter)->getEndSprite());
+        }
         std::stringstream key;
         key << "int_add_ally_" << i;
         _actions->activate(key.str(), _board->allyAddAction, (*allyIter)->getSprite());
@@ -548,6 +551,17 @@ void PlayMode::updateBoardTurn(float dt) {
             if (stars > GameData::get()->getLevelStars(_level)) {
                 GameData::get()->setLevelStars(_level, stars);
             }
+            
+            // Begin Mika Win Animation
+            std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
+            mika->getSprite()->setVisible(false);
+            mika->getEndSprite()->setVisible(true);
+            std::string mikaWinActionKey = "mika-win-animation";
+            std::shared_ptr<Animate> mikaWinAction = Animate::alloc(PLAYER_END_WIN_START, PLAYER_END_WIN_END, PLAYER_END_WIN_TIME);
+            if (!_actions->isActive(mikaWinActionKey)) {
+                _actions->activate(mikaWinActionKey, mikaWinAction, mika->getEndSprite());
+            }
+            
             // TODO: Set Moves
 //            GameData::get()->setLevelMoves(_level, moves);
             
@@ -613,9 +627,10 @@ void PlayMode::updateInterruptingAnimations(std::set<std::string>& interruptingA
 void PlayMode::updateWinAnimation(float dt) {
     float disappearTime = 0.035f+0.035f+0.035f+0.035f+0.035f+0.035f+0.4f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f;
     float appearTime = TILE_IMG_APPEAR_TIME;
-    float endTime = 0.75f;
+    float endTime = 0.25f;
 //    float timeInterval = disappearTime/std::max(_board->getWidth(), _board->getHeight());
-    float timeInterval = 0.15f;
+//    float timeInterval = 0.15f;
+    float timeInterval = 0.1f;
 //    float time = winTimer / timeInterval;
     int mikaX = _board->getAlly(0)->getX();
     int mikaY = _board->getAlly(0)->getY();

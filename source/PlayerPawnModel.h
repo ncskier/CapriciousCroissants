@@ -25,6 +25,14 @@
 #define PLAYER_IMG_ATTACKING_START 32
 #define PLAYER_IMG_ATTACKING_END   47
 #define PLAYER_IMG_ATTACKING_TIME  0.5f
+/** Win animation */
+#define PLAYER_END_WIN_START 0
+#define PLAYER_END_WIN_END   15
+#define PLAYER_END_WIN_TIME  1.0f
+/** Lose animation */
+#define PLAYER_END_LOSE_START 16
+#define PLAYER_END_LOSE_END   31
+#define PLAYER_END_LOSE_TIME  1.0f
 
 /** Ally (crystal) Animations */
 /** Idle loop */
@@ -40,6 +48,9 @@
 #define PLAYER_IMG_ROWS 6
 #define PLAYER_IMG_COLS 8
 #define PLAYER_IMG_SIZE 48
+#define PLAYER_END_ROWS 4
+#define PLAYER_END_COLS 8
+#define PLAYER_END_SIZE 32
 #define ALLY_IDLE_IMG_ROWS 4
 #define ALLY_IDLE_IMG_COLS 4
 #define ALLY_IDLE_IMG_SIZE 16
@@ -49,6 +60,7 @@
 
 /** Player Texture Key */
 #define PLAYER_TEXTURE_KEY_0 "mika_spritesheet"
+#define PLAYER_TEXTURE_END_KEY "mika_levelend"
 #define ALLY_TEXTURE_KEY_IDLE "ally_idle"
 #define ALLY_TEXTURE_KEY_DEATH "ally_death"
 
@@ -69,6 +81,9 @@ protected:
     
     /** Reference to image in SceneGraph for animation */
     std::shared_ptr<cugl::AnimationNode> _sprite;
+    
+    /** Reference to image in SceneGraph for win/lose animation */
+    std::shared_ptr<cugl::AnimationNode> _endSprite;
     
 public:
 #pragma mark -
@@ -115,6 +130,9 @@ public:
     
 #pragma mark -
 #pragma mark Accessors/Mutators
+    /** Returns if isMika */
+    bool isMika() { return _isMika; }
+    
     /** Returns x coordinate */
     int getX() const { return _x; }
     
@@ -138,6 +156,9 @@ public:
 #pragma mark Animation
     /** Returns a reference to the film strip */
     std::shared_ptr<cugl::AnimationNode>& getSprite() { return _sprite; }
+    
+    /** Returns a reference to the end sprite strip */
+    std::shared_ptr<cugl::AnimationNode>& getEndSprite() { return _endSprite; }
     
     /** Set sprite bounds from tile [tileBounds] */
     void setSpriteBounds(cugl::Rect tileBounds);

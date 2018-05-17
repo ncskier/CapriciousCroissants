@@ -71,6 +71,8 @@ void EnemyController::dispose() {
  * @param timestep  The amount of time (in seconds) since the last frame
  */
 void EnemyController::update(float timestep) {
+	//CULog(">");
+
 //    CULog("EnemyController Update");
 
     if (_state == State::MOVE) {
@@ -83,6 +85,7 @@ void EnemyController::update(float timestep) {
         
         _state = State::ATTACK;
     } else if (_state == State::ATTACK) {
+
 		_entityManager->updateEntities(_board, EntityManager::attack);
 		std::set<size_t>::iterator enemyIter;
 
@@ -92,8 +95,17 @@ void EnemyController::update(float timestep) {
 				RangeOrthoAttackComponent ranged = _entityManager->getComponent<RangeOrthoAttackComponent>((*enemyIter));
 				IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enemyIter));
 
+				int drawZ = _board->calculateDrawZ(loc.x, loc.y, false);
+
+				if (ranged.target->getY() > loc.y) {
+					drawZ = _board->calculateDrawZ(loc.x, loc.y, true);
+				}
+				if (ranged.target->getY() < loc.y) {
+					drawZ = _board->calculateDrawZ(ranged.target->getX(), ranged.target->getY(), true);
+				}
+
 				ranged.projectile->setPosition(_board->gridToScreenV(loc.x, loc.y));
-				_board->getNode()->addChild(ranged.projectile, 1000);
+				_board->getNode()->addChild(ranged.projectile, drawZ);
 				_board->getNode()->sortZOrder();
 				
 				cugl::Rect oldBounds = _board->calculateDrawBounds(loc.x, loc.y);

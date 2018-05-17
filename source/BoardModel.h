@@ -193,6 +193,9 @@ public:
     float offset;
 
 	bool lose = false;
+    
+    // Max allies (number of starting allies)
+    int maxAllies;
 
 	bool requestedRow;
 

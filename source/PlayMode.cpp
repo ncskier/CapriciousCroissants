@@ -450,6 +450,12 @@ void PlayMode::initMenu() {
     _menuNode->addChildWithName(_exitButton, PLAY_MENU_KEY_EXIT);
 }
 
+/** Calculate stars */
+int PlayMode::calculateLevelStars() {
+    int allies = (int)_board->getAllies().size();
+    return (3 - (_board->maxAllies - allies));
+}
+
 
 #pragma mark -
 #pragma mark Gameplay Handling
@@ -537,8 +543,11 @@ void PlayMode::updateBoardTurn(float dt) {
             done = true;
             win = true;
             
-            // TODO: Set Stars
-//            GameData::get()->setLevelStars(_level, stars);
+            // Set Stars
+            int stars = calculateLevelStars();
+            if (stars > GameData::get()->getLevelStars(_level)) {
+                GameData::get()->setLevelStars(_level, stars);
+            }
             // TODO: Set Moves
 //            GameData::get()->setLevelMoves(_level, moves);
             
@@ -763,12 +772,30 @@ void PlayMode::initWinLose() {
     // Unit for sizing
     float unit = _dimen.height*0.075f;
     float buttonHeight = unit;
-    float buttonY = _dimen.height*0.05f;
+    float buttonY = _dimen.height*0.095f;
+    float starsY = _dimen.height*0.73f;
+    float starsYUp = starsY + unit*0.65f;
+    float starHeight = unit*2.0f;
+    float starOffset = starHeight*-0.1f;
+    float highStarsY = _dimen.height*0.275f;
+    float highStarHeight = unit;
+    float highStarOffset = highStarHeight*0.1f;
+    float highscoreTextY = highStarsY - unit*0.8f;
+    float mikaHeight = unit*5.5f;
+    float mikaWinY = _dimen.height*0.49f;
+//    float mikaLoseY = _dimen.height*0.53f;
+    float mikaLoseY = _dimen.height*0.492;
+    float textY = starsY;
+    float levelTextY = _dimen.height*0.9f;
+    
+    // Init Node
+    _winloseNode = Node::allocWithBounds(0, 0, _dimen.width, _dimen.height);
     
     // Background
     std::string backgroundTextureKey = win ? WIN_LOSE_BACKGROUND_WIN : WIN_LOSE_BACKGROUND_LOSE;
     std::shared_ptr<PolygonNode> background = PolygonNode::allocWithTexture(_assets->get<Texture>(backgroundTextureKey));
     background->setContentSize(_dimen);     // Stretch background to fit dimensions
+    _winloseNode->addChild(background);
     
     // Retry Button
     std::shared_ptr<PolygonNode> retryNode = PolygonNode::allocWithTexture(_assets->get<Texture>(WIN_LOSE_RETRY));
@@ -786,6 +813,7 @@ void PlayMode::initWinLose() {
         }
     });
     _winloseRetryButton->activate(WIN_LOSE_LISTENER_RETRY);
+    _winloseNode->addChild(_winloseRetryButton);
     
     // Levels Button
     std::string levelsTextureKey = win ? WIN_LOSE_LEVELS_WIN : WIN_LOSE_LEVELS_LOSE;
@@ -805,37 +833,40 @@ void PlayMode::initWinLose() {
         }
     });
     _winloseLevelsButton->activate(WIN_LOSE_LISTENER_LEVELS);
+    _winloseNode->addChild(_winloseLevelsButton);
     
     // Continue Button
-    std::shared_ptr<PolygonNode> continueNode = PolygonNode::allocWithTexture(_assets->get<Texture>(WIN_LOSE_CONTINUE));
-    _winloseContinueButton = Button::alloc(continueNode);
-    _winloseContinueButton->setAnchor(Vec2::ANCHOR_CENTER);
-    float continueWidth = _winloseContinueButton->getContentSize().width/_winloseContinueButton->getContentSize().height * buttonHeight;
-    continueNode->setContentSize(continueWidth, buttonHeight);
-    _winloseContinueButton->setContentSize(continueWidth, buttonHeight);
-    _winloseContinueButton->setPosition(_dimen.width*0.80f, buttonY);
-    _winloseContinueButton->setListener([=](const std::string& name, bool down) {
-//        if (!down && this->_winloseNextButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
-        if (!down) {
-            CULog("Next Level");
-            this->nextLevel();
-        }
-    });
-    _winloseContinueButton->activate(WIN_LOSE_LISTENER_CONTINUE);
+    if (win) {
+        std::shared_ptr<PolygonNode> continueNode = PolygonNode::allocWithTexture(_assets->get<Texture>(WIN_LOSE_CONTINUE));
+        _winloseContinueButton = Button::alloc(continueNode);
+        _winloseContinueButton->setAnchor(Vec2::ANCHOR_CENTER);
+        float continueWidth = _winloseContinueButton->getContentSize().width/_winloseContinueButton->getContentSize().height * buttonHeight;
+        continueNode->setContentSize(continueWidth, buttonHeight);
+        _winloseContinueButton->setContentSize(continueWidth, buttonHeight);
+        _winloseContinueButton->setPosition(_dimen.width*0.80f, buttonY);
+        _winloseContinueButton->setListener([=](const std::string& name, bool down) {
+    //        if (!down && this->_winloseNextButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
+            if (!down) {
+                CULog("Next Level");
+                this->nextLevel();
+            }
+        });
+        _winloseContinueButton->activate(WIN_LOSE_LISTENER_CONTINUE);
+        _winloseNode->addChild(_winloseContinueButton);
+    }
     
     // Mika
     std::string mikaTextureKey = win ? WIN_LOSE_MIKA_WIN : WIN_LOSE_MIKA_LOSE;
     std::shared_ptr<PolygonNode> mikaNode = PolygonNode::allocWithTexture(_assets->get<Texture>(mikaTextureKey));
     mikaNode->setAnchor(Vec2::ANCHOR_CENTER);
-    float mikaHeight = unit*7.0f;
     float mikaWidth = mikaNode->getContentSize().width/mikaNode->getContentSize().height * mikaHeight;
     mikaNode->setContentSize(mikaWidth, mikaHeight);
     if (win) {
-        mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.37f);
+        mikaNode->setPosition(_dimen.width*0.5f, mikaWinY);
     } else {
-        mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.43f);
+        mikaNode->setPosition(_dimen.width*0.5f, mikaLoseY);
     }
-//    mikaNode->setPosition(_dimen.width*0.5f, _dimen.height*0.5f);
+    _winloseNode->addChild(mikaNode);
     
     // Level Label
     std::stringstream ssLevel;
@@ -843,30 +874,87 @@ void PlayMode::initWinLose() {
     std::shared_ptr<Font> font = _assets->get<Font>("alwaysHereToo");
     std::shared_ptr<Label> levelLabel = Label::alloc(ssLevel.str(), font);
     levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
-//    levelLabel->setPosition(_dimen.width*0.5f, _dimen.height*0.888f);
-    levelLabel->setPosition(_dimen.width*0.5f, _dimen.height*0.888f);
+    levelLabel->setPosition(_dimen.width*0.5f, levelTextY);
     levelLabel->setForeground(Color4::WHITE);
+    _winloseNode->addChild(levelLabel);
+    
+    // Level Stars
+    int stars = win ? calculateLevelStars() : 0;
+    // 1
+    std::string star1Key = (stars >= 1) ? WIN_LOSE_STAR : WIN_LOSE_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(star1Key));
+    float starWidth = star1->getContentSize().width/star1->getContentSize().height * starHeight;
+    star1->setAnchor(Vec2::ANCHOR_CENTER);
+    star1->setContentSize(starWidth, starHeight);
+    star1->setPosition(_dimen.width*0.5f - starWidth - starOffset, starsY);
+    _winloseNode->addChild(star1);
+    // 2
+    std::string star2Key = (stars >= 2) ? WIN_LOSE_STAR : WIN_LOSE_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(star2Key));
+    star2->setAnchor(Vec2::ANCHOR_CENTER);
+    star2->setContentSize(starWidth, starHeight);
+    star2->setPosition(_dimen.width*0.5f, starsYUp);
+    _winloseNode->addChild(star2);
+    // 3
+    std::string star3Key = (stars >= 3) ? WIN_LOSE_STAR : WIN_LOSE_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(star3Key));
+    star3->setAnchor(Vec2::ANCHOR_CENTER);
+    star3->setContentSize(starWidth, starHeight);
+    star3->setPosition(_dimen.width*0.5f + starWidth + starOffset, starsY);
+    _winloseNode->addChild(star3);
+    if (!win) {
+        Color4 color = star1->getColor();
+        color.a = 127.0f;
+        star1->setColor(color);
+        star2->setColor(color);
+        star3->setColor(color);
+    }
+    
+    // High score stars
+    int highStars = GameData::get()->getLevelStars(_level);
+    // 1
+    std::string highStar1Key = (highStars >= 1) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> highStar1 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar1Key));
+    float highStarWidth = highStar1->getContentSize().width/highStar1->getContentSize().height * highStarHeight;
+    highStar1->setAnchor(Vec2::ANCHOR_CENTER);
+    highStar1->setContentSize(highStarWidth, highStarHeight);
+    highStar1->setPosition(_dimen.width*0.5f - highStarWidth - highStarOffset, highStarsY);
+    _winloseNode->addChild(highStar1);
+    // 2
+    std::string highStar2Key = (highStars >= 2) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> highStar2 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar2Key));
+    highStar2->setAnchor(Vec2::ANCHOR_CENTER);
+    highStar2->setContentSize(highStarWidth, highStarHeight);
+    highStar2->setPosition(_dimen.width*0.5f, highStarsY);
+    _winloseNode->addChild(highStar2);
+    // 3
+    std::string highStar3Key = (highStars >= 3) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> highStar3 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar3Key));
+    highStar3->setAnchor(Vec2::ANCHOR_CENTER);
+    highStar3->setContentSize(highStarWidth, highStarHeight);
+    highStar3->setPosition(_dimen.width*0.5f + highStarWidth + highStarOffset, highStarsY);
+    _winloseNode->addChild(highStar3);
+    
+    // High score text
+    std::shared_ptr<Label> highscoreText = Label::alloc("HIGHSCORE", font);
+    highscoreText->setAnchor(Vec2::ANCHOR_CENTER);
+    highscoreText->setPosition(_dimen.width*0.5f, highscoreTextY);
+    highscoreText->setScale(0.55f);
+    highscoreText->setForeground(Color4::WHITE);
+    _winloseNode->addChild(highscoreText);
     
     // Text
-    std::stringstream ssText;
-    std::string text = win ? "Victory!" : "You Lose";
-    std::shared_ptr<Label> textLabel = Label::alloc(text, font);
-    textLabel->setAnchor(Vec2::ANCHOR_CENTER);
-    textLabel->setPosition(_dimen.width*0.5f, _dimen.height*0.70f);
-    textLabel->setScale(2.5f);
-    textLabel->setForeground(Color4::WHITE);
-    
-    // Setup Node
-    _winloseNode = Node::allocWithBounds(0, 0, _dimen.width, _dimen.height);
-    _winloseNode->addChild(background);
-    _winloseNode->addChild(mikaNode);
-    _winloseNode->addChild(levelLabel);
-    _winloseNode->addChild(textLabel);
-    _winloseNode->addChild(_winloseRetryButton);
-    _winloseNode->addChild(_winloseLevelsButton);
-    if (win) {
-        _winloseNode->addChild(_winloseContinueButton);
+    if (!win) {
+        std::string text = win ? "Victory!" : "You Lose";
+        std::shared_ptr<Label> textLabel = Label::alloc(text, font);
+        textLabel->setAnchor(Vec2::ANCHOR_CENTER);
+        textLabel->setPosition(_dimen.width*0.5f, textY);
+        textLabel->setScale(2.5f);
+        textLabel->setForeground(Color4::WHITE);
+        _winloseNode->addChild(textLabel);
     }
+    
+    // Add Node to World
     _worldNode->addChild(_winloseNode, 1000);
     _worldNode->sortZOrder();
     

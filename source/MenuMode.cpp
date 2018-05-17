@@ -172,42 +172,24 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx, bool cap) {
         // Initialize Level Dot
         std::shared_ptr<PolygonNode> levelDot = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_DOT_KEY));
         levelDot->setAnchor(Vec2::ANCHOR_CENTER);
-    //    float height = _menuTileSize.height*0.5f;
-    //    float width = levelDot->getContentSize().width/levelDot->getContentSize().height * height;
         levelDot->setContentSize(_dotSize);
         levelDot->setPosition(_menuTileSize.width*levelFractionX(levelIdx), _menuTileSize.height*0.5f);
         menuTile->addChild(levelDot);
         
-    //    // Initialize Level Button Node
+        // Initialize Level Number
         std::shared_ptr<Font> font = _assets->get<Font>("alwaysHereToo");
         std::shared_ptr<Label> levelLabel = Label::alloc(ss.str(), font);
         levelLabel->setAnchor(Vec2::ANCHOR_CENTER);
         levelLabel->setPosition(levelDot->getContentSize().width*0.55f, levelDot->getContentSize().height*0.5f);    // Font appears off-center
         levelDot->addChild(levelLabel);
         _menuDots.push_back(levelDot);
-    //    levelLabel->setBackground(Color4::BLACK);
-    //    levelLabel->setForeground(Color4::WHITE);
-    //    std::shared_ptr<Button> levelButton = Button::alloc(levelLabel);
-    //    levelButton->setAnchor(Vec2::ANCHOR_CENTER);
-    //    levelButton->setName(ss.str());
-    //
-    //    // Set Button Position
-    //    float frameLength = _menuTileSize.height*0.5f;
-    //    levelButton->setPosition(_menuTileSize.width*0.5f, _menuTileSize.height*0.5f);
-    //    levelButton->setContentSize(frameLength, frameLength);
-    //    levelLabel->setContentSize(frameLength, frameLength);
-    //
-    //    // Set Button Callback
-    //    levelButton->setListener([=](const std::string& name, bool down) {
-    //        if (!down) {
-    //            int i = std::stoi(name);
-    //            this->_selectedLevelJson = _levelsJson->get(i)->asString();
-    //            this->setActive(false);
-    //        }
-    //    });
-    //    levelButton->activate(100+levelIdx);
-    //    menuTile->addChild(levelButton);
-    //    _menuButtons.push_back(levelButton);
+        
+        // TODO: Initialize Level Stars
+        int levelStars = GameData::get()->getLevelStars(levelIdx);
+        CULog("level %d stars: %d", levelIdx, levelStars);
+        // TODO: Initialize Level High Score
+        int levelMoves = GameData::get()->getLevelMoves(levelIdx);
+        CULog("level %d moves: %d", levelIdx, levelMoves);
     }
     
     return menuTile;

@@ -12,6 +12,9 @@
 #define INIT_SETTINGS_PATH "json/settings.json"
 #define SETTINGS_FILENAME "settings.json"
 #define MUTE_KEY "mute"
+#define LEVELS_KEY "levels"
+#define STARS_KEY "stars"
+#define MOVES_KEY "moves"
 
 #include <cugl/cugl.h>
 
@@ -28,6 +31,9 @@ private:
     
     /** Reference to Settings JsonValue object */
     std::shared_ptr<cugl::JsonValue> _settingsJson;
+    
+    /** Reference to Levels JsonValue object */
+    std::shared_ptr<cugl::JsonValue> _levelsJson;
     
 #pragma mark -
 #pragma mark Constructors
@@ -47,6 +53,15 @@ private:
 #pragma mark Helper Methods
     /** Initialize the settings JSON file from INIT_SETTINGS_PATH */
     void initSettings();
+    
+    /** Initializes the [level] data in JSON */
+    void initLevelData(int level);
+    
+    /** Returns reference to the level JsonValue */
+    std::shared_ptr<cugl::JsonValue> getLevelJson(int level);
+    
+    /** Writes settings json */
+    void saveSettings();
     
 public:
 #pragma mark -
@@ -80,6 +95,18 @@ public:
     
     /** Set the saved mute setting */
     void setMuteSetting(bool mute);
+    
+    /** Get the saved level number of stars */
+    int getLevelStars(int level);
+    
+    /** Set the saved level number of stars */
+    void setLevelStars(int level, int stars);
+    
+    /** Get the level saved number of moves */
+    int getLevelMoves(int level);
+    
+    /** Set the level saved number of moves */
+    void setLevelMoves(int level, int moves);
 };
 
 #endif /* GameData_h */

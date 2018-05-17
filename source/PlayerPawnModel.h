@@ -16,7 +16,7 @@
 /** Idle loop */
 #define PLAYER_IMG_IDLE_START    0
 #define PLAYER_IMG_IDLE_END      15
-#define PLAYER_IMG_IDLE_TIME     0.5f
+#define PLAYER_IMG_IDLE_TIME     0.7f
 /** Begin Attack (Transition to Attack) */
 #define PLAYER_IMG_BEGIN_ATTACK_START 16
 #define PLAYER_IMG_BEGIN_ATTACK_END   31
@@ -37,8 +37,8 @@
 #define ALLY_DEATH_IMG_TIME  2.0f
 
 /** Number of rows and cols in film strip */
-#define PLAYER_IMG_ROWS 3
-#define PLAYER_IMG_COLS 16
+#define PLAYER_IMG_ROWS 6
+#define PLAYER_IMG_COLS 8
 #define PLAYER_IMG_SIZE 48
 #define ALLY_IDLE_IMG_ROWS 4
 #define ALLY_IDLE_IMG_COLS 4

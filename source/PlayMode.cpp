@@ -783,7 +783,8 @@ void PlayMode::initWinLose() {
     float highscoreTextY = highStarsY - unit*0.8f;
     float mikaHeight = unit*5.5f;
     float mikaWinY = _dimen.height*0.49f;
-    float mikaLoseY = _dimen.height*0.53f;
+//    float mikaLoseY = _dimen.height*0.53f;
+    float mikaLoseY = _dimen.height*0.492;
     float textY = starsY;
     float levelTextY = _dimen.height*0.9f;
     
@@ -878,30 +879,35 @@ void PlayMode::initWinLose() {
     _winloseNode->addChild(levelLabel);
     
     // Level Stars
-    if (win) {
-        int stars = calculateLevelStars();
-        // 1
-        std::string star1Key = (stars >= 1) ? WIN_LOSE_STAR : WIN_LOSE_STAR_EMPTY;
-        std::shared_ptr<PolygonNode> star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(star1Key));
-        float starWidth = star1->getContentSize().width/star1->getContentSize().height * starHeight;
-        star1->setAnchor(Vec2::ANCHOR_CENTER);
-        star1->setContentSize(starWidth, starHeight);
-        star1->setPosition(_dimen.width*0.5f - starWidth - starOffset, starsY);
-        _winloseNode->addChild(star1);
-        // 2
-        std::string star2Key = (stars >= 2) ? WIN_LOSE_STAR : WIN_LOSE_STAR_EMPTY;
-        std::shared_ptr<PolygonNode> star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(star2Key));
-        star2->setAnchor(Vec2::ANCHOR_CENTER);
-        star2->setContentSize(starWidth, starHeight);
-        star2->setPosition(_dimen.width*0.5f, starsYUp);
-        _winloseNode->addChild(star2);
-        // 3
-        std::string star3Key = (stars >= 3) ? WIN_LOSE_STAR : WIN_LOSE_STAR_EMPTY;
-        std::shared_ptr<PolygonNode> star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(star3Key));
-        star3->setAnchor(Vec2::ANCHOR_CENTER);
-        star3->setContentSize(starWidth, starHeight);
-        star3->setPosition(_dimen.width*0.5f + starWidth + starOffset, starsY);
-        _winloseNode->addChild(star3);
+    int stars = win ? calculateLevelStars() : 0;
+    // 1
+    std::string star1Key = (stars >= 1) ? WIN_LOSE_STAR : WIN_LOSE_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(star1Key));
+    float starWidth = star1->getContentSize().width/star1->getContentSize().height * starHeight;
+    star1->setAnchor(Vec2::ANCHOR_CENTER);
+    star1->setContentSize(starWidth, starHeight);
+    star1->setPosition(_dimen.width*0.5f - starWidth - starOffset, starsY);
+    _winloseNode->addChild(star1);
+    // 2
+    std::string star2Key = (stars >= 2) ? WIN_LOSE_STAR : WIN_LOSE_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(star2Key));
+    star2->setAnchor(Vec2::ANCHOR_CENTER);
+    star2->setContentSize(starWidth, starHeight);
+    star2->setPosition(_dimen.width*0.5f, starsYUp);
+    _winloseNode->addChild(star2);
+    // 3
+    std::string star3Key = (stars >= 3) ? WIN_LOSE_STAR : WIN_LOSE_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(star3Key));
+    star3->setAnchor(Vec2::ANCHOR_CENTER);
+    star3->setContentSize(starWidth, starHeight);
+    star3->setPosition(_dimen.width*0.5f + starWidth + starOffset, starsY);
+    _winloseNode->addChild(star3);
+    if (!win) {
+        Color4 color = star1->getColor();
+        color.a = 127.0f;
+        star1->setColor(color);
+        star2->setColor(color);
+        star3->setColor(color);
     }
     
     // High score stars

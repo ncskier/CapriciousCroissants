@@ -76,6 +76,7 @@ void EnemyController::update(float timestep) {
     //    CULog("EnemyController Update");
     
     if (_state == State::MOVE) {
+		CULog("Enemy move");
         // MOVE
         // CALL FOR MOVEMENT UPDATE ON ENTITIES
         _entityManager->updateEntities(_board, EntityManager::movement);
@@ -85,6 +86,7 @@ void EnemyController::update(float timestep) {
         
         _state = State::ATTACK;
     } else if (_state == State::ATTACK) {
+		CULog("Enemy attack");
         
         _entityManager->updateEntities(_board, EntityManager::attack);
         std::set<size_t>::iterator enemyIter;
@@ -118,15 +120,19 @@ void EnemyController::update(float timestep) {
                 int tiles = _board->lengthToCells(movement.length());
                 std::stringstream key;
                 key << "int_enemy_shoot_" << idle.name;
-                std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / 10*idle.speed[0]);
+                std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / 10.0f*idle.speed[0]);
                 idle._actions->activate(key.str(), moveAction, ranged.projectile);
                 idle._interruptingActions.insert(key.str());
                 ranged.projectile->setScale(Vec2(0.25, 0.25));
+				
+				_entityManager->addComponent<IdleComponent>((*enemyIter), idle);
             }
         }
         
         _state = State::FADE;
     } else if (_state == State::FADE) {
+		CULog("Enemy fade");
+		
         // Fade out destroyed allies before removing them
         std::set<std::shared_ptr<PlayerPawnModel>>::iterator it;
         int i = 0;
@@ -142,7 +148,9 @@ void EnemyController::update(float timestep) {
             }
         }
         _state = State::CHECK;
+
     } else {
+		CULog("Enemy check");
         // CHECK
         std::set<size_t>::iterator enemyIter;
         for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {

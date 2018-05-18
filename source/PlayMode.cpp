@@ -331,9 +331,7 @@ void PlayMode::setupLevelSceneGraph() {
     std::set<std::shared_ptr<PlayerPawnModel>>::iterator allyIter;
     for (allyIter = _board->getAddedAllies().begin(); allyIter != _board->getAddedAllies().end(); ++allyIter) {
         _board->getNode()->addChild((*allyIter)->getSprite());
-        if ((*allyIter)->isMika()) {
-            _board->getNode()->addChild((*allyIter)->getEndSprite());
-        }
+        _board->getNode()->addChild((*allyIter)->getEndSprite());
         std::stringstream key;
         key << "int_add_ally_" << i;
         _actions->activate(key.str(), _board->allyAddAction, (*allyIter)->getSprite());
@@ -560,9 +558,8 @@ void PlayMode::updateBoardTurn(float dt) {
             mika->getEndSprite()->setVisible(true);
             mika->getEndSprite()->setFrame(PLAYER_END_WIN_START);
             std::string mikaWinActionKey = "mika-win-animation";
-            std::shared_ptr<Animate> mikaWinAction = Animate::alloc(PLAYER_END_WIN_START, PLAYER_END_WIN_END, PLAYER_END_WIN_TIME);
             if (!_actions->isActive(mikaWinActionKey)) {
-                _actions->activate(mikaWinActionKey, mikaWinAction, mika->getEndSprite());
+                _actions->activate(mikaWinActionKey, _board->mikaWinAction, mika->getEndSprite());
             }
             
             // TODO: Set Moves
@@ -606,9 +603,8 @@ void PlayMode::updateEnemyTurn(float dt) {
             mika->getEndSprite()->setVisible(true);
             mika->getEndSprite()->setFrame(PLAYER_END_LOSE_START);
             std::string mikaLoseActionKey = "mika-lose-animation";
-            std::shared_ptr<Animate> mikaLoseAction = Animate::alloc(PLAYER_END_LOSE_START, PLAYER_END_LOSE_END, PLAYER_END_LOSE_TIME);
             if (!_actions->isActive(mikaLoseActionKey)) {
-                _actions->activate(mikaLoseActionKey, mikaLoseAction, mika->getEndSprite());
+                _actions->activate(mikaLoseActionKey, _board->mikaLoseAction, mika->getEndSprite());
             }
             
 //            _text->setText("You lose");
@@ -748,7 +744,7 @@ void PlayMode::update(float dt) {
                 break;
             }
         }
-        if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && !hasInterrupts) {
+        if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && _enemyController.getInterruptingActions().empty() && !hasInterrupts) {
             // Update Gameplay
             if (!done) {
                 //    CULog("PlayMode Update");

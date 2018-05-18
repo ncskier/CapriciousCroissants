@@ -42,7 +42,7 @@
 /** Death animation */
 #define ALLY_DEATH_IMG_START 0
 #define ALLY_DEATH_IMG_END   15
-#define ALLY_DEATH_IMG_TIME  2.0f
+#define ALLY_DEATH_IMG_TIME  0.7f
 
 /** Number of rows and cols in film strip */
 #define PLAYER_IMG_ROWS 6

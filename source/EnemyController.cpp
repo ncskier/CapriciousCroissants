@@ -125,26 +125,37 @@ void EnemyController::update(float timestep) {
 			}
 		}
 
-	
-		
+        _state = State::FADE;
+    } else if (_state == State::FADE) {
+        // Fade out destroyed allies before removing them
+        std::set<std::shared_ptr<PlayerPawnModel>>::iterator it;
+        int i = 0;
+        for (it = _board->getRemovedAllies().begin(); it != _board->getRemovedAllies().end(); ++it) {
+            std::stringstream key;
+            key << "int_ally_fade_out_" << i;
+            if (!_actions->isActive(key.str())) {
+                _actions->activate(key.str(), _board->allyFadeOutAction, (*it)->getEndSprite());
+                _interruptingActions.insert(key.str());
+            }
+            i++;
+        }
         _state = State::CHECK;
     } else {
         // CHECK
 		std::set<size_t>::iterator enemyIter;
 		for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {
 			if (_entityManager->hasComponent<RangeOrthoAttackComponent>(*enemyIter)) {
-				LocationComponent loc = _entityManager->getComponent<LocationComponent>((*enemyIter));
+//                LocationComponent loc = _entityManager->getComponent<LocationComponent>((*enemyIter));
 				_board->getNode()->removeChild(_entityManager->getComponent<RangeOrthoAttackComponent>((*enemyIter)).projectile);
 			}
 		}
 
 		_board->clearAttackingEnemies();
 
-
-
 		std::set<std::shared_ptr<PlayerPawnModel>>::iterator it;
         for (it = _board->getRemovedAllies().begin(); it != _board->getRemovedAllies().end(); ++it) {
             _board->getNode()->removeChild((*it)->getSprite());
+            _board->getNode()->removeChild((*it)->getEndSprite());
         }
         _board->clearRemovedAllies();
         

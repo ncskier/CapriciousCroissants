@@ -758,9 +758,7 @@ void BoardModel::updateNodes(bool position, bool z) {
         }
         if (z) {
             (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
-            if ((*it)->isMika()) {
-                (*it)->getEndSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
-            }
+            (*it)->getEndSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
         }
     }
     

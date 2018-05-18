@@ -75,7 +75,16 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
 
 
     // Add Background Node
-    std::shared_ptr<PolygonNode> background = PolygonNode::allocWithTexture(assets->get<Texture>("background"));
+    int realm = GameData::get()->getRealm(_level);
+    std::string backgroundKey;
+    if (realm == 0) {
+        backgroundKey = PLAY_BACKGROUND_0;
+    } else if (realm == 1) {
+        backgroundKey = PLAY_BACKGROUND_1;
+    } else {
+        backgroundKey = PLAY_BACKGROUND_2;
+    }
+    std::shared_ptr<PolygonNode> background = PolygonNode::allocWithTexture(assets->get<Texture>(backgroundKey));
     background->setContentSize(dimen);
     addChild(background);
     
@@ -89,19 +98,6 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     // Setup win/lose text
 	_text = std::dynamic_pointer_cast<Label>(assets->get<Node>("game_labelend"));
 	_text->setVisible(false);
-
-//    // setup reset button
-//    _resetButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("game_reset"));
-//    _resetButton->setListener([=](const std::string& name, bool down) {
-//        if (down) {
-//            CULog("RESET");
-//            win = false;
-//            done = true;
-//        }
-//    });
-//    _resetButton->activate(2);
-    initMenu();
-    _worldNode->addChild(_menuNode, 100);
     
     // Setup Touch Node
     _touchNode = AnimationNode::alloc(assets->get<Texture>("touch"), 4, 8, 32);
@@ -134,6 +130,9 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     
     // Add all sprites to scene graph
     setupLevelSceneGraph();
+    
+    // Setup menu
+    initMenu();
 
 	// Set Background
 	Application::get()->setClearColor(Color4(229, 229, 229, 255));
@@ -167,6 +166,7 @@ void PlayMode::dispose() {
         _enemyController.dispose();
         _board = nullptr;
         _state = State::PLAYER;
+        _moves = 0;
         done = false;
         doneCtr = 30;
         win = false;
@@ -223,6 +223,7 @@ void PlayMode::reset() {
     _boardController.dispose();
     _enemyController.dispose();
     _state = State::PLAYER;
+    _moves = 0;
     _complete = false;
     done = false;
     doneCtr = 30;
@@ -358,8 +359,16 @@ void PlayMode::setupLevelSceneGraph() {
 /** Initialize in-game menu */
 void PlayMode::initMenu() {
     float unit = _dimen.height*0.075f;
-    float padding = unit*0.25f;
-    float height = unit - padding;
+    float padding = unit*0.1f;
+    int z = 100;
+//    float height = unit - padding;
+    // Menu
+    float menuWidth = _dimen.width - padding*2.0f;
+    float menuY = _dimen.height - padding;
+    // Buttons
+    float buttonsHeight = unit - padding;
+    float buttonsY = padding + buttonsHeight*0.5f;
+    float buttonsPaddingX = padding;
     
     // Background
     int realm = GameData::get()->getRealm(_level);
@@ -372,21 +381,36 @@ void PlayMode::initMenu() {
         backgroundKey = PLAY_MENU_KEY_BACKGROUND_2;
     }
     _menuNode = PolygonNode::allocWithTexture(_assets->get<Texture>(backgroundKey));
-    _menuNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
-    _menuNode->setContentSize(unit*3.0f, unit);
-    _menuNode->setPosition(padding, padding);
-    float y = _menuNode->getContentSize().height*0.5f;
-    int i;
+    _menuNode->setAnchor(Vec2::ANCHOR_TOP_CENTER);
+    float menuHeight = _menuNode->getContentSize().height/_menuNode->getContentSize().width * menuWidth;
+    _menuNode->setContentSize(menuWidth, menuHeight);
+    _menuNode->setPosition(_dimen.width*0.5f, menuY);
+    _worldNode->addChild(_menuNode, z);
+    
+    // Restart
+    std::shared_ptr<PolygonNode> restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_RESTART));
+    _resetButton = Button::alloc(restartNode);
+    _resetButton->setAnchor(Vec2::ANCHOR_CENTER);
+    float buttonsWidth = _resetButton->getContentSize().width/_resetButton->getContentSize().height * buttonsHeight;
+    restartNode->setContentSize(buttonsWidth, buttonsHeight);
+    _resetButton->setContentSize(buttonsWidth, buttonsHeight);
+    _resetButton->setPosition(_dimen.width - padding - buttonsWidth*0.5f, buttonsY);
+    _resetButton->setListener([=](const std::string& name, bool down) {
+        if (!down) {
+            CULog("Restart");
+            this->reset();
+        }
+    });
+    _resetButton->activate(PLAY_MENU_LISTENER_RESTART);
+    _worldNode->addChild(_resetButton, z);
     
     // Sound On
-    i = 0;
     _soundSprite = AnimationNode::alloc(_assets->get<Texture>(PLAY_MENU_KEY_SOUND), 1, 2);
     _soundButton = Button::alloc(_soundSprite);
     _soundButton->setAnchor(Vec2::ANCHOR_CENTER);
-    float soundWidth = _soundButton->getContentSize().width/_soundButton->getContentSize().height * height;
-    _soundSprite->setContentSize(soundWidth, height);
-    _soundButton->setContentSize(soundWidth, height);
-    _soundButton->setPosition(unit*0.5f + i*unit, y);
+    _soundSprite->setContentSize(buttonsWidth, buttonsHeight);
+    _soundButton->setContentSize(buttonsWidth, buttonsHeight);
+    _soundButton->setPosition(_resetButton->getPosition().x - buttonsWidth - buttonsPaddingX, buttonsY);
     _soundButton->setListener([=](const std::string& name, bool down) {
         if (!down) {
             CULog("Sound on");
@@ -394,7 +418,7 @@ void PlayMode::initMenu() {
         }
     });
     _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
-    _menuNode->addChild(_soundButton);
+    _worldNode->addChild(_soundButton, z);
     // Get mute setting & set accordingly
     auto music = Music::alloc("sounds/music.wav");
     if (AudioEngine::get()->getMusicState() != AudioEngine::State::PLAYING) {
@@ -412,35 +436,14 @@ void PlayMode::initMenu() {
         AudioEngine::get()->resumeMusic();
         AudioEngine::get()->setMusicVolume(0.5f);
     }
-
-    
-    // Restart
-    i = 1;
-    std::shared_ptr<PolygonNode> restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_RESTART));
-    _resetButton = Button::alloc(restartNode);
-    _resetButton->setAnchor(Vec2::ANCHOR_CENTER);
-    float restartWidth = _resetButton->getContentSize().width/_resetButton->getContentSize().height * height;
-    restartNode->setContentSize(restartWidth, height);
-    _resetButton->setContentSize(restartWidth, height);
-    _resetButton->setPosition(unit*0.5f + i*unit, y);
-    _resetButton->setListener([=](const std::string& name, bool down) {
-        if (!down) {
-            CULog("Restart");
-            this->reset();
-        }
-    });
-    _resetButton->activate(PLAY_MENU_LISTENER_RESTART);
-    _menuNode->addChildWithName(_resetButton, PLAY_MENU_KEY_RESTART);
     
     // Exit
-    i = 2;
     std::shared_ptr<PolygonNode> exitNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_EXIT));
     _exitButton = Button::alloc(exitNode);
     _exitButton->setAnchor(Vec2::ANCHOR_CENTER);
-    float exitWidth = _exitButton->getContentSize().width/_exitButton->getContentSize().height * height;
-    exitNode->setContentSize(exitWidth, height);
-    _exitButton->setContentSize(exitWidth, height);
-    _exitButton->setPosition(unit*0.5f + i*unit, y);
+    exitNode->setContentSize(buttonsWidth, buttonsHeight);
+    _exitButton->setContentSize(buttonsWidth, buttonsHeight);
+    _exitButton->setPosition(padding + buttonsWidth*0.5f, buttonsY);
     _exitButton->setListener([=](const std::string& name, bool down) {
         if (!down) {
             CULog("Exit");
@@ -449,13 +452,96 @@ void PlayMode::initMenu() {
         }
     });
     _exitButton->activate(PLAY_MENU_LISTENER_EXIT);
-    _menuNode->addChildWithName(_exitButton, PLAY_MENU_KEY_EXIT);
+    _worldNode->addChild(_exitButton, z);
+    
+    // Moves Label
+    float menuNodeMid = _menuNode->getContentSize().height*0.5f;
+    float labelScale = 1.5f;
+    std::shared_ptr<Font> font = _assets->get<Font>("alwaysHereToo");
+    _movesLabel = Label::alloc(to_string(_moves), font);
+    _movesLabel->setAnchor(Vec2::ANCHOR_CENTER);
+    _movesLabel->setScale(labelScale);
+    _movesLabel->setPosition(_menuNode->getContentSize().width*0.5f, menuNodeMid);
+    _movesLabel->setText(to_string(_moves));
+    _movesLabel->setForeground(Color4::WHITE);
+    _menuNode->addChild(_movesLabel);
+    
+    // Highscore Moves Label
+    float cornerOffset = unit*0.55f;
+    _highMovesLabel = Label::alloc(to_string(GameData::get()->getLevelMoves(_level)), font);
+    _highMovesLabel->setAnchor(Vec2::ANCHOR_CENTER);
+    _highMovesLabel->setScale(labelScale);
+    _highMovesLabel->setPosition(_menuNode->getContentSize().width - cornerOffset, menuNodeMid);
+    _highMovesLabel->setForeground(Color4::WHITE);
+    _menuNode->addChild(_highMovesLabel);
+    
+    // Crystal
+    // TODO: Add crystal to menu
+    
+    // Stars
+    float starHeight = _menuNode->getContentSize().height*0.22f;
+    float starsX = _menuNode->getContentSize().width * 0.245f;
+    float highStarsX = _menuNode->getContentSize().width * 0.755f;
+    float starOffset = starHeight*-0.05f;
+    int stars = calculateLevelStars();
+    // 1
+    std::string star1Key = (stars >= 1) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(star1Key));
+    float starWidth = star1->getContentSize().width/star1->getContentSize().height * starHeight;
+    star1->setAnchor(Vec2::ANCHOR_CENTER);
+    star1->setContentSize(starWidth, starHeight);
+    star1->setPosition(starsX - starWidth - starOffset, menuNodeMid);
+    _menuNode->addChild(star1);
+    // 2
+    std::string star2Key = (stars >= 2) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(star2Key));
+    star2->setAnchor(Vec2::ANCHOR_CENTER);
+    star2->setContentSize(starWidth, starHeight);
+    star2->setPosition(starsX, menuNodeMid);
+    _menuNode->addChild(star2);
+    // 3
+    std::string star3Key = (stars >= 3) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(star3Key));
+    star3->setAnchor(Vec2::ANCHOR_CENTER);
+    star3->setContentSize(starWidth, starHeight);
+    star3->setPosition(starsX + starWidth + starOffset, menuNodeMid);
+    _menuNode->addChild(star3);
+    
+    // Highscore Stars
+    // High score stars
+    int highStars = GameData::get()->getLevelStars(_level);
+    // 1
+    std::string highStar1Key = (highStars >= 1) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> highStar1 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar1Key));
+    highStar1->setAnchor(Vec2::ANCHOR_CENTER);
+    highStar1->setContentSize(starWidth, starHeight);
+    highStar1->setPosition(highStarsX - starWidth - starOffset, menuNodeMid);
+    _menuNode->addChild(highStar1);
+    // 2
+    std::string highStar2Key = (highStars >= 2) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> highStar2 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar2Key));
+    highStar2->setAnchor(Vec2::ANCHOR_CENTER);
+    highStar2->setContentSize(starWidth, starHeight);
+    highStar2->setPosition(highStarsX, menuNodeMid);
+    _menuNode->addChild(highStar2);
+    // 3
+    std::string highStar3Key = (highStars >= 3) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> highStar3 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar3Key));
+    highStar3->setAnchor(Vec2::ANCHOR_CENTER);
+    highStar3->setContentSize(starWidth, starHeight);
+    highStar3->setPosition(highStarsX + starWidth + starOffset, menuNodeMid);
+    _menuNode->addChild(highStar3);
 }
 
 /** Calculate stars */
 int PlayMode::calculateLevelStars() {
     int allies = (int)_board->getAllies().size();
     return (3 - (_board->maxAllies - allies));
+}
+
+/** Update menu stars */
+void updateMenuStars() {
+    // TODO: Implement to update menu stars
 }
 
 
@@ -529,6 +615,8 @@ void PlayMode::updatePlayerTurn(float dt) {
     _playerController.update(dt);
     if (_playerController.isComplete()) {
         _state = State::BOARD;
+        _moves++;
+        _movesLabel->setText(to_string(_moves));
 
 		//Play push sound
 		/*auto source = _assets->get<Sound>("boop1");
@@ -550,8 +638,11 @@ void PlayMode::updateBoardTurn(float dt) {
             if (stars > GameData::get()->getLevelStars(_level)) {
                 GameData::get()->setLevelStars(_level, stars);
             }
-            // TODO: Set Moves
-//            GameData::get()->setLevelMoves(_level, moves);
+            // Set Moves
+            int highscoreMoves = GameData::get()->getLevelMoves(_level);
+            if (highscoreMoves == 0 || _moves < highscoreMoves) {
+                GameData::get()->setLevelMoves(_level, _moves);
+            }
             
 //            _text->setText("You win");
 //            _text->setVisible(true);

@@ -20,12 +20,15 @@
 #include "GameData.h"
 
 /** In-Game Menu */
+#define PLAY_BACKGROUND_0 "background-grass"
+#define PLAY_BACKGROUND_1 "background-ice"
+#define PLAY_BACKGROUND_2 "background-fire"
 #define PLAY_MENU_KEY_SOUND        "play_menu_sound"
 #define PLAY_MENU_KEY_RESTART      "play_menu_restart"
 #define PLAY_MENU_KEY_EXIT         "play_menu_exit"
 #define PLAY_MENU_KEY_BACKGROUND_0 "play_menu_bg_0"
-#define PLAY_MENU_KEY_BACKGROUND_1 "play_menu_bg_0"
-#define PLAY_MENU_KEY_BACKGROUND_2 "play_menu_bg_0"
+#define PLAY_MENU_KEY_BACKGROUND_1 "play_menu_bg_1"
+#define PLAY_MENU_KEY_BACKGROUND_2 "play_menu_bg_2"
 #define PLAY_MENU_LISTENER_TOGGLE_OUT 50
 #define PLAY_MENU_LISTENER_TOGGLE_IN  51
 #define PLAY_MENU_LISTENER_SOUND      52
@@ -99,6 +102,9 @@ protected:
     /** Game Board */
     std::shared_ptr<BoardModel> _board;
     
+    /** Number of moves */
+    int _moves = 0;
+    
     /** Level json */
     int _level;
     
@@ -116,6 +122,14 @@ protected:
     std::shared_ptr<cugl::Button> _exitButton;
     std::shared_ptr<cugl::AnimationNode> _soundSprite;
     std::shared_ptr<cugl::PolygonNode> _menuNode;
+    std::shared_ptr<cugl::Label> _movesLabel;
+    std::shared_ptr<cugl::Label> _highMovesLabel;
+    std::shared_ptr<cugl::PolygonNode> _star1;
+    std::shared_ptr<cugl::PolygonNode> _star2;
+    std::shared_ptr<cugl::PolygonNode> _star3;
+    std::shared_ptr<cugl::PolygonNode> _highStar1;
+    std::shared_ptr<cugl::PolygonNode> _highStar2;
+    std::shared_ptr<cugl::PolygonNode> _highStar3;
     cugl::Size _dimen;
     
     /** WinLose Menu */
@@ -238,6 +252,9 @@ public:
     
     /** Calculate stars */
     int calculateLevelStars();
+    
+    /** Update menu stars */
+    void updateMenuStars();
     
     
 #pragma mark -

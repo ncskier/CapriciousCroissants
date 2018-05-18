@@ -17,8 +17,6 @@
 #define STARS_KEY "stars"
 #define MOVES_KEY "moves"
 
-#define NUM_REALMS 3
-
 #include <cugl/cugl.h>
 
 class GameData {
@@ -114,7 +112,7 @@ public:
     /** Set the level saved number of moves */
     void setLevelMoves(int level, int moves);
     
-    /** Return which of the [NUM_REALMS] realms a level is in */
+    /** Return which of the 3 realms a level is in */
     int getRealm(int level);
     
 };

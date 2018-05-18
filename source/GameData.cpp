@@ -175,15 +175,15 @@ void GameData::setLevelMoves(int level, int moves) {
     saveSettings();
 }
 
-/** Return which of the [NUM_REALMS] realms a level is in */
+/** Return which of the 3 realms a level is in */
 int GameData::getRealm(int level) {
     auto numLevels = _levelListJson->size();
-    float fraction = ((float)numLevels) / ((float)NUM_REALMS);
-    for (int i = 0; i < NUM_REALMS; i++) {
-        int maxLevel = (int)(fraction * i);
-        if (level < maxLevel) {
-            return i;
-        }
+    float cap0 = numLevels/3.0f;
+    float cap1 = numLevels*2.0f/3.0f;
+    if (level < cap0) {
+        return 0;
+    } else if (level < cap1) {
+        return 1;
     }
-    return NUM_REALMS-1;
+    return 2;
 }

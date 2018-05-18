@@ -19,6 +19,8 @@ private:
     /** Reference to ActionManager */
     std::shared_ptr<cugl::ActionManager> _actions;
     
+    /***************************************************** THIS CLASS IS NOT USED *************************************************************/
+    
 #pragma mark -
 #pragma mark Constructors
     /** Constructor */

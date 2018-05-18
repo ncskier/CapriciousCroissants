@@ -23,6 +23,9 @@
 #define MIKA_IDLE_KEY "mika_idle_action"
 #define MIKA_TRANSITION_KEY "mika_transition_action"
 #define MIKA_ATTACK_KEY "mika_attack_action"
+#define MENU_STAR_KEY "winlose-high-star"
+#define MENU_STAR_EMPTY_KEY "winlose-high-star-outline"
+#define MENU_LABEL_NAME "menu-label"
 
 #define MENU_TILE_ROWS 6
 #define MENU_TILE_COLS 1
@@ -43,6 +46,7 @@ protected:
     std::vector<std::shared_ptr<cugl::Node>> _menuCapHiTiles;
     cugl::Size _menuTileSize;
     cugl::Size _dotSize;
+    cugl::Size _starSize;
     std::shared_ptr<cugl::Node> _mikaNode;
     std::shared_ptr<cugl::AnimationNode> _mikaSprite;
     /** The action manager for this game mode. */

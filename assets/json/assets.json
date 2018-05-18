@@ -36,7 +36,14 @@
             "wrapT":    "clamp"
         },
         "background": {
-            "file":     "textures/background.png",
+            "file":     "textures/background-grass.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "background-ice": {
+            "file":     "textures/background-ice.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",
@@ -331,6 +338,34 @@
         },
         "winlose-mika-lose": {
             "file":    "textures/winlose-mika-lose.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-star": {
+            "file":    "textures/winlose-star.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-star-outline": {
+            "file":    "textures/winlose-star-outline.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-high-star": {
+            "file":    "textures/winlose-high-star.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "winlose-high-star-outline": {
+            "file":    "textures/winlose-high-star-outline.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",

@@ -226,6 +226,7 @@ bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
     
     // Set num allies
     _numAllies = (int)_allies.size();
+    maxAllies = _numAllies;
     
     return true;
 }

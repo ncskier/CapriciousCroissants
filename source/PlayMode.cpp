@@ -854,12 +854,6 @@ void PlayMode::updateEnemyTurn(float dt) {
 			done = true;
 			win = false;
 
-			// Plase lose sound
-			if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("lose")) {
-				auto source = _assets->get<Sound>("lose");
-				AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
-			}
-
 			// Begin Mika Lose Animation
 			std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
 			mika->setSpriteLose();
@@ -987,6 +981,12 @@ void PlayMode::updateLoseAnimation(float dt) {
     // Present WinLose Screen
     if (loseTimer > totalTime) {
         if (!_winloseActive) {
+            // Plase lose sound
+            if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("lose")) {
+                auto source = _assets->get<Sound>("lose");
+                AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
+            }
+            
             initWinLose();
         }
     } else if (loseTimer > PLAYER_END_LOSE_TIME + disappearTime) {

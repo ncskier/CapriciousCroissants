@@ -462,23 +462,26 @@ void PlayMode::initMenu() {
     _worldNode->addChild(_exitButton, z);
     
     // Moves Label
-    float menuNodeMid = _menuNode->getContentSize().height*0.5f;
+    float menuNodeMid = _menuNode->getContentSize().height*0.51f;
     float labelScale = 1.5f;
     std::shared_ptr<Font> font = _assets->get<Font>("alwaysHereToo");
-    _movesLabel = Label::alloc(to_string(_moves), font);
+    _movesLabel = Label::alloc("XXXX", font);
     _movesLabel->setAnchor(Vec2::ANCHOR_CENTER);
     _movesLabel->setScale(labelScale);
     _movesLabel->setPosition(_menuNode->getContentSize().width*0.5f, menuNodeMid);
     _movesLabel->setText(to_string(_moves));
+    _movesLabel->setHorizontalAlignment(Label::HAlign::CENTER);
     _movesLabel->setForeground(Color4::WHITE);
     _menuNode->addChild(_movesLabel);
     
     // Highscore Moves Label
     float cornerOffset = _menuNode->getContentSize().width*0.08f;
-    _highMovesLabel = Label::alloc(to_string(GameData::get()->getLevelMoves(_level)), font);
+    _highMovesLabel = Label::alloc("XXXX", font);
     _highMovesLabel->setAnchor(Vec2::ANCHOR_CENTER);
     _highMovesLabel->setScale(labelScale);
     _highMovesLabel->setPosition(_menuNode->getContentSize().width - cornerOffset, menuNodeMid);
+    _highMovesLabel->setText(to_string(GameData::get()->getLevelMoves(_level)));
+    _highMovesLabel->setHorizontalAlignment(Label::HAlign::CENTER);
     _highMovesLabel->setForeground(Color4::WHITE);
     _menuNode->addChild(_highMovesLabel);
     

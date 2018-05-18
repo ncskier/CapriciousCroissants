@@ -36,7 +36,14 @@
             "wrapT":    "clamp"
         },
         "background": {
-            "file":     "textures/background.png",
+            "file":     "textures/background-grass.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "background-ice": {
+            "file":     "textures/background-ice.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",

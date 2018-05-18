@@ -477,6 +477,9 @@ void PlayMode::updateAnimations() {
 
 	// Update Allys
 	updateAllyAnimations();
+
+	// Update Enemies
+	updateEnemyAnimations();
 }
 
 /** Update touch node */
@@ -506,6 +509,78 @@ void PlayMode::updateAllyAnimations() {
 		}
 	}
 }
+
+/** Update Enemy animations based on entity ids of board */
+void PlayMode::updateEnemyAnimations() {
+	std::vector<size_t> enemies = _board->getEnemies();
+	for (auto e = enemies.begin(); e != enemies.end(); e++) {
+		// All enemies have an idle and location component, so not bothering to check
+		LocationComponent loc = _entityManager->getComponent<LocationComponent>(*e);
+		IdleComponent idle = _entityManager->getComponent<IdleComponent>(*e);
+		if (!loc.isMoving && !loc.isAttacking) {
+			idle._actions->remove("moveAnimation" + (*e));
+			idle._actions->remove("attackAnimation" + (*e));
+			if (!idle._actions->isActive("idleAnimation" + (*e))) {
+				switch (loc.dir) {
+				case LocationComponent::UP:
+					idle._actions->activate("idleAnimation" + (*e), _board->enemyIdleUpAction, idle.sprite);
+					break;
+				case LocationComponent::DOWN:
+					idle._actions->activate("idleAnimation" + (*e), _board->enemyIdleDownAction, idle.sprite);
+					break;
+				case LocationComponent::LEFT:
+					idle._actions->activate("idleAnimation" + (*e), _board->enemyIdleLeftAction, idle.sprite);
+					break;
+				case LocationComponent::RIGHT:
+					idle._actions->activate("idleAnimation" + (*e), _board->enemyIdleRightAction, idle.sprite);
+					break;
+				}
+			}
+		}
+		else if (loc.isMoving && !loc.isAttacking) {
+			idle._actions->remove("idleAnimation" + (*e));
+			idle._actions->remove("attackAnimation" + (*e));
+			if (!idle._actions->isActive("moveAnimation" + (*e))) {
+				switch (loc.dir) {
+				case LocationComponent::UP:
+					idle._actions->activate("moveAnimation" + (*e), _board->enemyMoveUpAction, idle.sprite);
+					break;
+				case LocationComponent::DOWN:
+					idle._actions->activate("moveAnimation" + (*e), _board->enemyMoveDownAction, idle.sprite);
+					break;
+				case LocationComponent::LEFT:
+					idle._actions->activate("moveAnimation" + (*e), _board->enemyMoveLeftAction, idle.sprite);
+					break;
+				case LocationComponent::RIGHT:
+					idle._actions->activate("moveAnimation" + (*e), _board->enemyMoveRightAction, idle.sprite);
+					break;
+				}
+			}
+		}
+		else if (!loc.isMoving && loc.isAttacking) {
+			idle._actions->remove("idleAnimation" + (*e));
+			idle._actions->remove("moveAnimation" + (*e));
+			if (!idle._actions->isActive("attackAnimation" + (*e))) {
+				switch (loc.dir) {
+				case LocationComponent::UP:
+					idle._actions->activate("attackAnimation" + (*e), _board->enemyAttackUpAction, idle.sprite);
+					break;
+				case LocationComponent::DOWN:
+					idle._actions->activate("attackAnimation" + (*e), _board->enemyAttackDownAction, idle.sprite);
+					break;
+				case LocationComponent::LEFT:
+					idle._actions->activate("attackAnimation" + (*e), _board->enemyAttackLeftAction, idle.sprite);
+					break;
+				case LocationComponent::RIGHT:
+					idle._actions->activate("attackAnimation" + (*e), _board->enemyAttackRightAction, idle.sprite);
+					break;
+				}
+			}
+		}
+		
+	}
+}
+
 
 /** Update Mika animations */
 void PlayMode::updateMikaAnimations() {
@@ -631,6 +706,14 @@ void PlayMode::updateEnemyTurn(float dt) {
 //            _text->setZOrder(1000);
 //            sortZOrder();
         }
+		std::vector<size_t> enemies = _board->getEnemies();
+		for (auto e = enemies.begin(); e != enemies.end(); e++) {
+			// All enemies have an idle and location component, so not bothering to check
+			LocationComponent loc = _entityManager->getComponent<LocationComponent>(*e);
+			loc.isAttacking = false;
+			loc.isMoving = false;
+			_entityManager->addComponent<LocationComponent>((*e), loc);
+		}
         _state = State::BOARD;
     }
 }

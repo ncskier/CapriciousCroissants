@@ -61,6 +61,9 @@ struct LocationComponent : Component {
 	int x;
 	int y;
 
+	bool isMoving = false;
+	bool isAttacking = false;
+
 	direction dir;
 };
 

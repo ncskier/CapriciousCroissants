@@ -48,7 +48,6 @@
 #define WIN_LOSE_LISTENER_RETRY    61
 #define WIN_LOSE_LISTENER_LEVELS   62
 
-
 /**
  * This class is the primary gameplay constroller for the demo.
  *
@@ -255,7 +254,10 @@ public:
 
 	/** Update Ally animations (Only idle animations)*/
 	void updateAllyAnimations();
-    
+
+	/** Update Enemy animations */
+	void updateEnemyAnimations();
+
     /**
      * The method called to update the game mode.
      *

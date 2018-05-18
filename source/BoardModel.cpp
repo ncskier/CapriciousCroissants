@@ -275,10 +275,19 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 			} else if ("idle" == cugl::to_lower(componentJson->key())) {
 				IdleComponent idle;
 				idle.textureKey = componentJson->get("textureKeys")->asString();
-				idle.textureRows = { 8 };
-				idle.textureColumns = { 16 };
-				idle.textureSize = { 128 };
-				idle.speed = { 2 };
+				if (componentJson->get("textureKeys")->asString().compare("enemy3_strip") == 0) {
+					CULog("Dragon loaded");
+					idle.textureRows = { 16 };
+					idle.textureColumns = { 16 };
+					idle.textureSize = { 192 };
+					idle.speed = { 2 };
+				}
+				else {
+					idle.textureRows = { 8 };
+					idle.textureColumns = { 16 };
+					idle.textureSize = { 128 };
+					idle.speed = { 2 };
+				}
 				idle.sprite = AnimationNode::alloc(_assets->get<Texture>(idle.textureKey), idle.textureRows[0], idle.textureColumns[0], idle.textureSize[0]);
 				idle.sprite->setAnchor(Vec2::ZERO);
 				idle._actions = actions;

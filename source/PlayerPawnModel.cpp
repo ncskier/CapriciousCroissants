@@ -35,14 +35,15 @@ bool PlayerPawnModel::init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<
         // Death sprite
         std::shared_ptr<Texture> endTexture = assets->get<Texture>(PLAYER_TEXTURE_END_KEY);
         _endSprite = AnimationNode::alloc(endTexture, PLAYER_END_ROWS, PLAYER_END_COLS, PLAYER_END_SIZE);
-//        _endSprite->setVisible(false);
+        _endSprite->setFrame(PLAYER_END_WIN_START);
+        _endSprite->setVisible(false);
     } else {
         // Ally
         std::shared_ptr<Texture> texture = assets->get<Texture>(ALLY_TEXTURE_KEY_IDLE);
         _sprite = AnimationNode::alloc(texture, ALLY_IDLE_IMG_ROWS, ALLY_IDLE_IMG_COLS, ALLY_IDLE_IMG_SIZE);
         _sprite->setFrame(ALLY_IDLE_IMG_START);
     }
-    _sprite->setAnchor(Vec2::ZERO);
+    _sprite->setAnchor(Vec2::ANCHOR_CENTER);
     setSpriteBounds(tileBounds);
     return true;
 }
@@ -68,20 +69,20 @@ void PlayerPawnModel::setSpriteBounds(cugl::Rect tileBounds) {
         height *= scale;
         width *= scale;
     }
-    float positionX = tileBounds.getMinX() + (tileBounds.size.width-width)/2.0f;
-    float positionY = tileBounds.getMinY() + tileBounds.size.height*0.3f;
+    float positionX = tileBounds.getMidX();
+    float positionY = tileBounds.getMidY() + tileBounds.size.height*0.3f;
     if (!_isMika) {
-        positionX += width*0.04f;
-        positionY = tileBounds.getMinY() + (tileBounds.size.height-height)/2.0f + tileBounds.size.height*0.3f;
+        positionX = tileBounds.getMidY() + width*0.04f;
+        positionY = tileBounds.getMidY() + tileBounds.size.height*0.3f;
     }
     _sprite->setPosition(positionX, positionY);
     _sprite->setContentSize(width, height);
     
     // Update end sprite
     if (_isMika) {
-        float endScale = 1.2f;
+        float endScale = 1.19f;
         _endSprite->setContentSize(width*endScale, height*endScale);
-        _endSprite->setPosition(positionX + width*0.5f, positionY + height*0.5f);
+        _endSprite->setPosition(positionX, positionY);
     }
 }
 

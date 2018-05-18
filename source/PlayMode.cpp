@@ -556,6 +556,7 @@ void PlayMode::updateBoardTurn(float dt) {
             std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
             mika->getSprite()->setVisible(false);
             mika->getEndSprite()->setVisible(true);
+            mika->getEndSprite()->setFrame(PLAYER_END_WIN_START);
             std::string mikaWinActionKey = "mika-win-animation";
             std::shared_ptr<Animate> mikaWinAction = Animate::alloc(PLAYER_END_WIN_START, PLAYER_END_WIN_END, PLAYER_END_WIN_TIME);
             if (!_actions->isActive(mikaWinActionKey)) {

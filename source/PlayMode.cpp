@@ -1016,6 +1016,13 @@ void PlayMode::updateLoseAnimation(float dt) {
                 i++;
             }
         }
+        for (auto it = _board->getRemovedTiles().begin(); it != _board->getRemovedTiles().end(); ++it) {
+            std::shared_ptr<TileModel> tile = *it;
+            std::stringstream key;
+            key << "disappear_lose_" << i;
+            _actions->activate(key.str(), fadeOut, tile->getSprite());
+            i++;
+        }
         // Allies
         for (int j = 0; j < _board->getNumAllies(); j++) {
             if (j != 0) {

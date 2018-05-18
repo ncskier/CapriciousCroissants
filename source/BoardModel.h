@@ -326,7 +326,7 @@ public:
     std::shared_ptr<cugl::FadeOut> enemyRemoveAction = cugl::FadeOut::alloc(TILE_IMG_DISAPPEAR_TIME);
     // Ally
     std::shared_ptr<cugl::FadeIn> allyAddAction = cugl::FadeIn::alloc(TILE_IMG_APPEAR_TIME);
-    std::shared_ptr<cugl::FadeOut> allyFadeOutAction = cugl::FadeOut::alloc(0.25f);
+    std::shared_ptr<cugl::FadeOut> allyFadeOutAction = cugl::FadeOut::alloc(0.2f);
     std::shared_ptr<cugl::Animate> allyDeathAction = cugl::Animate::alloc(ALLY_DEATH_IMG_START, ALLY_DEATH_IMG_END, ALLY_DEATH_IMG_TIME);
     // Mika
     std::shared_ptr<cugl::Animate> mikaIdleAction = cugl::Animate::alloc(PLAYER_IMG_IDLE_START, PLAYER_IMG_IDLE_END, PLAYER_IMG_IDLE_TIME);

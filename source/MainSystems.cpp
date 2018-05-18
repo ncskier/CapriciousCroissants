@@ -307,7 +307,8 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 			std::shared_ptr<PlayerPawnModel> ally = board->getAlly(i);
 			if (ally->getX() == loc.x && ally->getY() == loc.y) {
 				if (i == 0) {
-					board->lose = true;
+                    board->getRemovedAllies().insert(ally);
+//                    board->lose = true;
                 } else {
                     ally->getSprite()->setVisible(false);
                     ally->getEndSprite()->setVisible(true);
@@ -409,7 +410,8 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 						board->insertAttackingEnemy(entity);
 						ranged.target = ally;
                         if (i == 0) {
-                            board->lose = true;
+                            board->getRemovedAllies().insert(ally);
+//                            board->lose = true;
                         } else {
                             ally->getSprite()->setVisible(false);
                             ally->getEndSprite()->setVisible(true);

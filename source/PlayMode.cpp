@@ -357,21 +357,21 @@ void PlayMode::setupLevelSceneGraph() {
 #pragma mark Helper Functions
 /** Initialize in-game menu */
 void PlayMode::initMenu() {
-//    _resetButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("game_reset"));
-//    _resetButton->setListener([=](const std::string& name, bool down) {
-//        if (down) {
-//            CULog("RESET");
-//            win = false;
-//            done = true;
-//        }
-//    });
-//    _resetButton->activate(2);
     float unit = _dimen.height*0.075f;
     float padding = unit*0.25f;
     float height = unit - padding;
     
     // Background
-    _menuNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_BACKGROUND));
+    int realm = GameData::get()->getRealm(_level);
+    std::string backgroundKey;
+    if (realm == 0) {
+        backgroundKey = PLAY_MENU_KEY_BACKGROUND_0;
+    } else if (realm == 1) {
+        backgroundKey = PLAY_MENU_KEY_BACKGROUND_1;
+    } else {
+        backgroundKey = PLAY_MENU_KEY_BACKGROUND_2;
+    }
+    _menuNode = PolygonNode::allocWithTexture(_assets->get<Texture>(backgroundKey));
     _menuNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _menuNode->setContentSize(unit*3.0f, unit);
     _menuNode->setPosition(padding, padding);
@@ -388,7 +388,7 @@ void PlayMode::initMenu() {
     _soundButton->setContentSize(soundWidth, height);
     _soundButton->setPosition(unit*0.5f + i*unit, y);
     _soundButton->setListener([=](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             CULog("Sound on");
             this->toggleSound();
         }
@@ -424,7 +424,7 @@ void PlayMode::initMenu() {
     _resetButton->setContentSize(restartWidth, height);
     _resetButton->setPosition(unit*0.5f + i*unit, y);
     _resetButton->setListener([=](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             CULog("Restart");
             this->reset();
         }
@@ -442,7 +442,7 @@ void PlayMode::initMenu() {
     _exitButton->setContentSize(exitWidth, height);
     _exitButton->setPosition(unit*0.5f + i*unit, y);
     _exitButton->setListener([=](const std::string& name, bool down) {
-        if (down) {
+        if (!down) {
             CULog("Exit");
             CULog("Exit Button");
             this->exit();

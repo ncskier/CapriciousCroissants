@@ -224,8 +224,22 @@
             "wrapS": "clamp",
             "wrapT": "clamp"
         },
-        "play_menu_background": {
-            "file": "textures/play_menu_background.png",
+        "play_menu_bg_0": {
+            "file": "textures/play_menu_bg_0.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "play_menu_bg_1": {
+            "file": "textures/play_menu_bg_1.png",
+            "minfilter": "nearest",
+            "magfilter": "linear",
+            "wrapS": "clamp",
+            "wrapT": "clamp"
+        },
+        "play_menu_bg_2": {
+            "file": "textures/play_menu_bg_2.png",
             "minfilter": "nearest",
             "magfilter": "linear",
             "wrapS": "clamp",
@@ -238,36 +252,8 @@
             "wrapS": "clamp",
             "wrapT": "clamp"
         },
-        "play_menu_sound_off": {
-            "file": "textures/play_menu_sound_off.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "play_menu_sound_on": {
-            "file": "textures/play_menu_sound_on.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
         "play_menu_sound": {
             "file": "textures/play_menu_sound.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "play_menu_toggle_out": {
-            "file": "textures/play_menu_toggle_out.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "play_menu_toggle_in": {
-            "file": "textures/play_menu_toggle_in.png",
             "minfilter": "nearest",
             "magfilter": "linear",
             "wrapS": "clamp",

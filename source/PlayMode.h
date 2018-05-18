@@ -20,12 +20,12 @@
 #include "GameData.h"
 
 /** In-Game Menu */
-#define PLAY_MENU_KEY_TOGGLE_OUT "play_menu_toggle_out"
-#define PLAY_MENU_KEY_TOGGLE_IN  "play_menu_toggle_in"
-#define PLAY_MENU_KEY_SOUND      "play_menu_sound"
-#define PLAY_MENU_KEY_RESTART    "play_menu_restart"
-#define PLAY_MENU_KEY_EXIT       "play_menu_exit"
-#define PLAY_MENU_KEY_BACKGROUND "play_menu_background"
+#define PLAY_MENU_KEY_SOUND        "play_menu_sound"
+#define PLAY_MENU_KEY_RESTART      "play_menu_restart"
+#define PLAY_MENU_KEY_EXIT         "play_menu_exit"
+#define PLAY_MENU_KEY_BACKGROUND_0 "play_menu_bg_0"
+#define PLAY_MENU_KEY_BACKGROUND_1 "play_menu_bg_0"
+#define PLAY_MENU_KEY_BACKGROUND_2 "play_menu_bg_0"
 #define PLAY_MENU_LISTENER_TOGGLE_OUT 50
 #define PLAY_MENU_LISTENER_TOGGLE_IN  51
 #define PLAY_MENU_LISTENER_SOUND      52

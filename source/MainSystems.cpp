@@ -113,7 +113,9 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 			std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / idle.speed[0]);
 			idle._actions->activate(key.str(), moveAction, idle.sprite);
 			idle._interruptingActions.insert(key.str());
+			loc.isMoving = true;
 		}
+
 
 		manager->addComponent<LocationComponent>(entity, loc);
 		manager->addComponent<IdleComponent>(entity, idle);
@@ -290,9 +292,9 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 			std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / idle.speed[0]);
 			idle._actions->activate(key.str(), moveAction, idle.sprite);
 			idle._interruptingActions.insert(key.str());
+			loc.isMoving = true;
 		}
 
-		manager->addComponent<LocationComponent>(entity, loc);
 		manager->addComponent<IdleComponent>(entity, idle);
 		manager->addComponent<LocationComponent>(entity, loc);
 	}
@@ -413,6 +415,8 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 		IdleComponent idle = manager->getComponent<IdleComponent>(entity);
 		RangeOrthoAttackComponent ranged = manager->getComponent<RangeOrthoAttackComponent>(entity);
 
+		loc.isMoving = false;
+
 		//find closest ally who is on x or y
 		//turn to x or y
 		//attack
@@ -455,6 +459,7 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
                                 idle._interruptingActions.insert(key.str());
                             }
                         }
+						loc.isAttacking = true;
                         // Commented out so ranged enemies will not turn incorrectly
 //                        int shootDirectionX = (ally->getY() == loc.y)*copysign(1, ally->getX() - loc.x);
 //                        int shootDirectionY = (ally->getX() == loc.x)*copysign(1, ally->getY() - loc.y);

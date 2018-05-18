@@ -3,113 +3,106 @@
 		"width":	5,
 		"height":	5
 	},
-	"tiles":	[[5, 4, 0, 5, 4], [2, 4, 0, 0, 0], [4, 5, 4, 5, 4], [0, 1, 1, 5, 3], [5, 4, 5, 1, 3]],
+	"tiles":	[[4, 1, 2, 1, 3], [2, 3, 2, 5, 4], [2, 3, 2, 1, 4], [1, 2, 4, 4, 5], [2, 0, 1, 2, 0]],
 	"enemies":	{
-		"smart1":	{
+		"ranged1":	{
 			"components":	{
+				"RangedAttack":	{
+					"horizontal":	true,
+					"vertical":	true
+				},
 				"Location":	{
-					"direction":	2,
+					"direction":	1,
 					"x":	0,
 					"y":	4
 				},
-				"MeleeAttack":	{
-				},
-				"SmartMovement":	{
+				"DumbMovement":	{
 					"movementDistance":	1
 				},
 				"Idle":	{
-					"textureKeys":	"enemy1_strip"
+					"textureKeys":	"enemy3_strip"
 				}
 			}
 		},
-		"smart2":	{
+		"ranged2":	{
 			"components":	{
 				"Location":	{
-					"direction":	2,
-					"x":	0,
-					"y":	2
+					"direction":	1,
+					"x":	2,
+					"y":	4
 				},
-				"MeleeAttack":	{
+				"RangedAttack":	{
+					"horizontal":	true,
+					"vertical":	true
 				},
-				"SmartMovement":	{
+				"DumbMovement":	{
 					"movementDistance":	1
 				},
 				"Idle":	{
-					"textureKeys":	"enemy1_strip"
+					"textureKeys":	"enemy3_strip"
 				}
 			}
 		},
-		"smart3":	{
+		"ranged3":	{
 			"components":	{
+				"RangedAttack":	{
+					"horizontal":	true,
+					"vertical":	true
+				},
 				"Location":	{
-					"direction":	2,
-					"x":	0,
-					"y":	0
-				},
-				"MeleeAttack":	{
-				},
-				"SmartMovement":	{
-					"movementDistance":	1
-				},
-				"Idle":	{
-					"textureKeys":	"enemy1_strip"
-				}
-			}
-		},
-		"smart4":	{
-			"components":	{
-				"Location":	{
-					"direction":	3,
+					"direction":	1,
 					"x":	4,
 					"y":	4
 				},
-				"MeleeAttack":	{
-				},
-				"SmartMovement":	{
+				"DumbMovement":	{
 					"movementDistance":	1
 				},
 				"Idle":	{
-					"textureKeys":	"enemy1_strip"
+					"textureKeys":	"enemy3_strip"
 				}
 			}
 		},
-		"smart5":	{
+		"ranged4":	{
 			"components":	{
 				"Location":	{
-					"direction":	3,
-					"x":	4,
-					"y":	2
-				},
-				"MeleeAttack":	{
-				},
-				"SmartMovement":	{
-					"movementDistance":	1
-				},
-				"Idle":	{
-					"textureKeys":	"enemy1_strip"
-				}
-			}
-		},
-		"smart6":	{
-			"components":	{
-				"Location":	{
-					"direction":	3,
-					"x":	4,
+					"direction":	0,
+					"x":	1,
 					"y":	0
 				},
-				"MeleeAttack":	{
+				"RangedAttack":	{
+					"horizontal":	true,
+					"vertical":	true
 				},
-				"SmartMovement":	{
+				"DumbMovement":	{
 					"movementDistance":	1
 				},
 				"Idle":	{
-					"textureKeys":	"enemy1_strip"
+					"textureKeys":	"enemy3_strip"
+				}
+			}
+		},
+		"ranged5":	{
+			"components":	{
+				"RangedAttack":	{
+					"horizontal":	true,
+					"vertical":	true
+				},
+				"Location":	{
+					"direction":	0,
+					"x":	3,
+					"y":	0
+				},
+				"DumbMovement":	{
+					"movementDistance":	1
+				},
+				"Idle":	{
+					"textureKeys":	"enemy3_strip"
 				}
 			}
 		}
 	},
 	"mika":	{
-		"x":	2,
+		"x":	3,
 		"y":	2
 	},
 	"allies":	{

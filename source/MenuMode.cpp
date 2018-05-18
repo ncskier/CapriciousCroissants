@@ -161,7 +161,17 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx, bool cap) {
     ss << (levelIdx+1);
 
     // Initialize node
-    std::shared_ptr<AnimationNode> menuTile = AnimationNode::alloc(_assets->get<Texture>(MENU_TILE_KEY_0), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
+    int realm = GameData::get()->getRealm(levelIdx);
+    std::string tileKey;
+    if (realm == 0) {
+        tileKey = MENU_TILE_KEY_0;
+    } else if (realm == 1) {
+        tileKey = MENU_TILE_KEY_1;
+    } else {
+        tileKey = MENU_TILE_KEY_2;
+    }
+    
+    std::shared_ptr<AnimationNode> menuTile = AnimationNode::alloc(_assets->get<Texture>(tileKey), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
     menuTile->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     menuTile->setContentSize(_menuTileSize);
     menuTile->setPosition(menuTilePosition(levelIdx));
@@ -345,12 +355,12 @@ int MenuMode::menuTileFrame(int levelIdx) {
 float MenuMode::levelFractionX(int levelIdx) {
     // In reverse order than on screen
     float xFractions[MENU_TILE_SIZE];
-    xFractions[0] = 0.5f;
-    xFractions[1] = 0.4f;
-    xFractions[2] = 0.59f;
-    xFractions[3] = 0.31f;
-    xFractions[4] = 0.39f;
-    xFractions[5] = 0.75f;
+    xFractions[0] = 0.55f;
+    xFractions[1] = 0.28f;
+    xFractions[2] = 0.51f;
+    xFractions[3] = 0.70f;
+    xFractions[4] = 0.35f;
+    xFractions[5] = 0.50f;
     return xFractions[menuTileFrame(levelIdx)];
 }
 

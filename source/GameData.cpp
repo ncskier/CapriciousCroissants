@@ -28,6 +28,7 @@ GameData::GameData() {
 void GameData::dispose() {
     _settingsJson = nullptr;
     _levelsJson = nullptr;
+    _levelListJson = nullptr;
 }
 
 /** Initialize GameData */
@@ -53,6 +54,9 @@ bool GameData::init(std::string saveDir) {
         _settingsJson->appendChild(LEVELS_KEY, JsonValue::allocObject());
     }
     _levelsJson = _settingsJson->get(LEVELS_KEY);
+    
+    // LevelListJson
+    _levelListJson = JsonReader::allocWithAsset(LEVEL_LIST_PATH)->readJson()->get("levels");
     
     return true;
 }
@@ -171,12 +175,15 @@ void GameData::setLevelMoves(int level, int moves) {
     saveSettings();
 }
 
-
-
-
-
-
-
-
-
-
+/** Return which of the 3 realms a level is in */
+int GameData::getRealm(int level) {
+    auto numLevels = _levelListJson->size();
+    float cap0 = numLevels/3.0f;
+    float cap1 = numLevels*2.0f/3.0f;
+    if (level < cap0) {
+        return 0;
+    } else if (level < cap1) {
+        return 1;
+    }
+    return 2;
+}

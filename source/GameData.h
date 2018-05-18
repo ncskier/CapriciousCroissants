@@ -10,6 +10,7 @@
 #define GameData_h
 
 #define INIT_SETTINGS_PATH "json/settings.json"
+#define LEVEL_LIST_PATH "json/levelList.json"
 #define SETTINGS_FILENAME "settings.json"
 #define MUTE_KEY "mute"
 #define LEVELS_KEY "levels"
@@ -34,6 +35,9 @@ private:
     
     /** Reference to Levels JsonValue object */
     std::shared_ptr<cugl::JsonValue> _levelsJson;
+    
+    /** Reference to levelList Json */
+    std::shared_ptr<cugl::JsonValue> _levelListJson;
     
 #pragma mark -
 #pragma mark Constructors
@@ -107,6 +111,10 @@ public:
     
     /** Set the level saved number of moves */
     void setLevelMoves(int level, int moves);
+    
+    /** Return which of the 3 realms a level is in */
+    int getRealm(int level);
+    
 };
 
 #endif /* GameData_h */

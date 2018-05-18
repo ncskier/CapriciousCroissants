@@ -154,11 +154,16 @@ void BoxApp::update(float timestep) {
         // Update Gameplay
 		_gameplay.update(timestep);
     } else {
-        // Go back to Menu
         int level = _gameplay.getLevel();
-        _gameplay.dispose();
-        _menu.init(_assets, _input, level);
-        _loadedGameplay = false;
+        if (_gameplay.restart) {
+            _gameplay.dispose();
+            _gameplay.init(_assets, _input, level);
+        } else {
+            // Go back to Menu
+            _gameplay.dispose();
+            _menu.init(_assets, _input, level);
+            _loadedGameplay = false;
+        }
     }
 }
 

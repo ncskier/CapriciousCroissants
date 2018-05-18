@@ -143,6 +143,9 @@ protected:
     std::shared_ptr<cugl::Button> _winloseRetryButton;
     std::shared_ptr<cugl::Button> _winloseLevelsButton;
     
+    /** Background */
+    std::shared_ptr<cugl::PolygonNode> _background;
+    
 	//Entity Manager Instance
 	std::shared_ptr<EntityManager> _entityManager;
     
@@ -166,6 +169,7 @@ protected:
     
     
 public:
+    bool restart = false;
 #pragma mark -
 #pragma mark Constructors
     /**

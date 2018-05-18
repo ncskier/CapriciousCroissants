@@ -43,7 +43,7 @@
             "wrapT":    "clamp"
         },
         "menu_tile2_strip": {
-            "file":     "textures/menu_tile0_strip.png",
+            "file":     "textures/menu_tile2_strip.png",
             "minfilter":"nearest",
             "magfilter":"linear",
             "wrapS":    "clamp",

@@ -84,9 +84,9 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     } else {
         backgroundKey = PLAY_BACKGROUND_2;
     }
-    std::shared_ptr<PolygonNode> background = PolygonNode::allocWithTexture(assets->get<Texture>(backgroundKey));
-    background->setContentSize(dimen);
-    addChild(background);
+    _background = PolygonNode::allocWithTexture(assets->get<Texture>(backgroundKey));
+    _background->setContentSize(dimen);
+    addChild(_background);
     
 //    _worldNode = Node::allocWithBounds(dimen);
     _worldNode = _assets->get<Node>("game");
@@ -168,6 +168,7 @@ void PlayMode::dispose() {
         _state = State::PLAYER;
         _moves = 0;
         _prevStars = 3;
+        restart = false;
         done = false;
         doneCtr = 30;
         win = false;
@@ -231,6 +232,7 @@ void PlayMode::reset() {
     doneCtr = 30;
     win = false;
     winTimer = 0.0f;
+    restart = false;
     _beginAttack = false;
     _attacking = false;
     _entityManager = nullptr;
@@ -1173,9 +1175,12 @@ void PlayMode::nextLevel() {
     std::shared_ptr<JsonValue> levelsJson = levelsReader->readJson();
     if (_level >= levelsJson->get("levels")->size()) {
         _level--;
+        restart = false;
         exit();
     } else {
-        reset();
+        restart = true;
+//        reset();
+        exit();
     }
 }
 
@@ -1194,6 +1199,7 @@ void PlayMode::levelMenu() {
     if (win) {
         _level++;
     }
+    restart = false;
     
     // Check if past last level
     std::shared_ptr<JsonReader> levelsReader = JsonReader::allocWithAsset("json/levelList.json");
@@ -1217,6 +1223,8 @@ void PlayMode::retryLevel() {
     if (_soundButton && !_soundButton->isActive()) {
         _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
     }
-    reset();
+    restart = true;
+//    reset();
+    exit();
 }
 

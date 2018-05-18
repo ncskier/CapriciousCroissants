@@ -169,6 +169,7 @@ void PlayMode::dispose() {
         doneCtr = 30;
         win = false;
         winTimer = 0.0f;
+        loseTimer = 0.0f;
         _beginAttack = false;
         _attacking = false;
         // Menu
@@ -226,6 +227,7 @@ void PlayMode::reset() {
     doneCtr = 30;
     win = false;
     winTimer = 0.0f;
+    loseTimer = 0.0f;
     _beginAttack = false;
     _attacking = false;
     _entityManager = nullptr;
@@ -597,9 +599,16 @@ void PlayMode::updateEnemyTurn(float dt) {
                 AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
             }
             
-            // Present WinLose Screen
-            if (!_winloseActive) {
-                initWinLose();
+            // Begin Mika Lose Animation
+            std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
+            mika->setSpriteLose();
+            mika->getSprite()->setVisible(false);
+            mika->getEndSprite()->setVisible(true);
+            mika->getEndSprite()->setFrame(PLAYER_END_LOSE_START);
+            std::string mikaLoseActionKey = "mika-lose-animation";
+            std::shared_ptr<Animate> mikaLoseAction = Animate::alloc(PLAYER_END_LOSE_START, PLAYER_END_LOSE_END, PLAYER_END_LOSE_TIME);
+            if (!_actions->isActive(mikaLoseActionKey)) {
+                _actions->activate(mikaLoseActionKey, mikaLoseAction, mika->getEndSprite());
             }
             
 //            _text->setText("You lose");
@@ -692,6 +701,17 @@ void PlayMode::updateWinAnimation(float dt) {
     winTimer += dt;
 }
 
+/** Update interrupting lose animation if player has lost */
+void PlayMode::updateLoseAnimation(float dt) {
+    // Present WinLose Screen
+    if (loseTimer > PLAYER_END_LOSE_TIME + 0.5f) {
+        if (!_winloseActive) {
+            initWinLose();
+        }
+    }
+    loseTimer += dt;
+}
+
 /**
  * Executes the core gameplay loop of this world.
  *
@@ -713,8 +733,12 @@ void PlayMode::update(float dt) {
     
     // Update actions
     _actions->update(dt);
-    if (win) {
-        updateWinAnimation(dt);
+    if (done) {
+        if (win) {
+            updateWinAnimation(dt);
+        } else {
+            updateLoseAnimation(dt);
+        }
     } else {
         // Check for interrupting animations
         bool hasInterrupts = false;

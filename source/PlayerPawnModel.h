@@ -163,6 +163,9 @@ public:
     /** Set sprite bounds from tile [tileBounds] */
     void setSpriteBounds(cugl::Rect tileBounds);
     
+    /** Set sprite lose size */
+    void setSpriteLose();
+    
     /** Sets the film strip */
     void setSprite(const std::shared_ptr<cugl::AnimationNode>& sprite) { _sprite = sprite; }
     

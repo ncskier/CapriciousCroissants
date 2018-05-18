@@ -72,7 +72,7 @@ void PlayerPawnModel::setSpriteBounds(cugl::Rect tileBounds) {
     float positionX = tileBounds.getMidX();
     float positionY = tileBounds.getMidY() + tileBounds.size.height*0.3f;
     if (!_isMika) {
-        positionX = tileBounds.getMidY() + width*0.04f;
+        positionX = tileBounds.getMidX() + width*0.04f;
         positionY = tileBounds.getMidY() + tileBounds.size.height*0.3f;
     }
     _sprite->setPosition(positionX, positionY);
@@ -83,6 +83,18 @@ void PlayerPawnModel::setSpriteBounds(cugl::Rect tileBounds) {
         float endScale = 1.19f;
         _endSprite->setContentSize(width*endScale, height*endScale);
         _endSprite->setPosition(positionX, positionY);
+        setSpriteLose();
     }
 }
+
+/** Set sprite lose size */
+void PlayerPawnModel::setSpriteLose() {
+    if (_isMika) {
+        float scale = 1.04f;
+        _endSprite->setContentSize(_sprite->getContentSize().width*scale, _sprite->getContentSize().height*scale);
+        _endSprite->setPosition(_sprite->getPosition());
+    }
+}
+
+
 

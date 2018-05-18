@@ -76,6 +76,7 @@ protected:
     int doneCtr = 30;
 	bool win = false;
     float winTimer = 0.0f;
+    float loseTimer = 0.0f;
     bool winAnimationDisappear = true;
     bool winAnimationAppear = true;
     /** The asset manager for this game mode. */
@@ -274,6 +275,9 @@ public:
     
     /** Update interrupting win animation if player has won */
     void updateWinAnimation(float dt);
+    
+    /** Update interrupting lose animation if player has lost */
+    void updateLoseAnimation(float dt);
     
     /** Reset level/PlayMode */
     void reset();

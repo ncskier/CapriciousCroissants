@@ -139,6 +139,23 @@ void BoxApp::update(float timestep) {
         _loading.dispose();
         _menu.init(_assets, _input, 0);
         _loadedMenu = true;
+        
+        // Start Music
+        // Get mute setting & set accordingly
+        auto music = Music::alloc("sounds/music.wav");
+        if (AudioEngine::get()->getMusicState() != AudioEngine::State::PLAYING) {
+            AudioEngine::get()->playMusic(music, true, 0.5f);
+        }
+        if (GameData::get()->getMuteSetting()) {
+            // Turn Sound Off
+            AudioEngine::get()->pauseMusic();
+            AudioEngine::get()->setMusicVolume(0.0f);
+            AudioEngine::get()->stopAllEffects();
+        } else {
+            // Turn Sound On
+            AudioEngine::get()->resumeMusic();
+            AudioEngine::get()->setMusicVolume(0.5f);
+        }
     } else if (!_loadedGameplay && _menu.isActive()) {
         // Update Menu
         _menu.update(timestep);

@@ -271,8 +271,6 @@ void PlayMode::reset() {
 
 /** Exits the game */
 void PlayMode::exit() {
-    // Stop Music
-    AudioEngine::get()->stopMusic();
     setComplete(true);
 }
 
@@ -438,21 +436,12 @@ void PlayMode::initMenu() {
     _soundButton->activate(PLAY_MENU_LISTENER_SOUND);
     _worldNode->addChild(_soundButton, z);
     // Get mute setting & set accordingly
-    auto music = Music::alloc("sounds/music.wav");
-    if (AudioEngine::get()->getMusicState() != AudioEngine::State::PLAYING) {
-        AudioEngine::get()->playMusic(music, true, 0.5f);
-    }
     if (GameData::get()->getMuteSetting()) {
         // Turn Sound Off
         _soundSprite->setFrame(1);
-        AudioEngine::get()->pauseMusic();
-        AudioEngine::get()->setMusicVolume(0.0f);
-        AudioEngine::get()->stopAllEffects();
     } else {
         // Turn Sound On
         _soundSprite->setFrame(0);
-        AudioEngine::get()->resumeMusic();
-        AudioEngine::get()->setMusicVolume(0.5f);
     }
     
     // Exit

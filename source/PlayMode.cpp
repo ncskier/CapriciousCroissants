@@ -470,7 +470,7 @@ void PlayMode::initMenu() {
     _menuNode->addChild(_movesLabel);
     
     // Highscore Moves Label
-    float cornerOffset = unit*0.55f;
+    float cornerOffset = _menuNode->getContentSize().width*0.08f;
     _highMovesLabel = Label::alloc(to_string(GameData::get()->getLevelMoves(_level)), font);
     _highMovesLabel->setAnchor(Vec2::ANCHOR_CENTER);
     _highMovesLabel->setScale(labelScale);

@@ -51,8 +51,14 @@ bool LoadingMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
 	_bar = ProgressBar::alloc(bgBar, fgBar);
 	_bar->setAnchor(0.5f, 0.5f);
 	
+	std::shared_ptr<Node> bg = layer->getChildByName("background");
+	float bgheight = bg->getContentHeight();
+	float heightscale = dimen.height / bgheight;
+	bg->setScale(heightscale);
+
+
 	layer->getChildByName("background")->addChildWithName(_bar, "bar");
-	_bar->setPosition(510, 200);
+	_bar->setPosition(480, 140);
 
 
 
@@ -62,6 +68,7 @@ bool LoadingMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
         this->_active = down;
     });
     
+	_button->setPosition(480, 140);
     Application::get()->setClearColor(Color4(192,192,192,255));
     addChild(layer);
     return true;

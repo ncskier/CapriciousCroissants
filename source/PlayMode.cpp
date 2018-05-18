@@ -701,18 +701,27 @@ void PlayMode::updateWinAnimation(float dt) {
 
 /** Update interrupting lose animation if player has lost */
 void PlayMode::updateLoseAnimation(float dt) {
-    float waitTime = 1.0f;
+    float waitTime = 0.5f;
     float disappearTime = 1.0f;
-    float totalTime = PLAYER_END_LOSE_TIME + disappearTime + waitTime;
+    float totalTime = PLAYER_END_LOSE_TIME + disappearTime + disappearTime + waitTime;
     
     // Present WinLose Screen
     if (loseTimer > totalTime) {
         if (!_winloseActive) {
             initWinLose();
         }
-    } else if (loseTimer > PLAYER_END_LOSE_TIME && !loseDisappear) {
-        // Fade Out all tiles and enemies
+    } else if (loseTimer > PLAYER_END_LOSE_TIME + disappearTime) {
+        // Fade out Mika
         std::shared_ptr<FadeOut> fadeOut = FadeOut::alloc(disappearTime);
+        std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
+        if (mika->getEndSprite()->isVisible()) {
+            _actions->activate("fade_out_mika_lose", fadeOut, mika->getEndSprite());
+        } else {
+            _actions->activate("fade_out_mika_lose", fadeOut, mika->getSprite());
+        }
+    } else if (loseTimer > PLAYER_END_LOSE_TIME && !loseDisappear) {
+        std::shared_ptr<FadeOut> fadeOut = FadeOut::alloc(disappearTime);
+        // Fade Out all tiles and enemies
         int i = 0;
         int mikaX = _board->getAlly(0)->getX();
         int mikaY = _board->getAlly(0)->getY();

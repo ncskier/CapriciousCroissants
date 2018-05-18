@@ -77,6 +77,7 @@ protected:
 	bool win = false;
     float winTimer = 0.0f;
     float loseTimer = 0.0f;
+    float loseDisappear = false;
     bool winAnimationDisappear = true;
     bool winAnimationAppear = true;
     /** The asset manager for this game mode. */

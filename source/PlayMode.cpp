@@ -170,6 +170,7 @@ void PlayMode::dispose() {
         win = false;
         winTimer = 0.0f;
         loseTimer = 0.0f;
+        loseDisappear = false;
         _beginAttack = false;
         _attacking = false;
         // Menu
@@ -228,6 +229,7 @@ void PlayMode::reset() {
     win = false;
     winTimer = 0.0f;
     loseTimer = 0.0f;
+    loseDisappear = false;
     _beginAttack = false;
     _attacking = false;
     _entityManager = nullptr;
@@ -699,11 +701,59 @@ void PlayMode::updateWinAnimation(float dt) {
 
 /** Update interrupting lose animation if player has lost */
 void PlayMode::updateLoseAnimation(float dt) {
+    float waitTime = 1.0f;
+    float disappearTime = 1.0f;
+    float totalTime = PLAYER_END_LOSE_TIME + disappearTime + waitTime;
+    
     // Present WinLose Screen
-    if (loseTimer > PLAYER_END_LOSE_TIME + 0.5f) {
+    if (loseTimer > totalTime) {
         if (!_winloseActive) {
             initWinLose();
         }
+    } else if (loseTimer > PLAYER_END_LOSE_TIME && !loseDisappear) {
+        // Fade Out all tiles and enemies
+        std::shared_ptr<FadeOut> fadeOut = FadeOut::alloc(disappearTime);
+        int i = 0;
+        int mikaX = _board->getAlly(0)->getX();
+        int mikaY = _board->getAlly(0)->getY();
+        // Tiles
+        for (int j = 0; j < (_board->getWidth()*_board->getHeight()); j++) {
+            int tileX = _board->xOfIndex(j);
+            int tileY = _board->yOfIndex(j);
+            if (!(tileX == mikaX && tileY == mikaY)) {
+                std::shared_ptr<TileModel> tile = _board->getTile(tileX, tileY);
+                std::stringstream key;
+                key << "disappear_lose_" << i;
+                _actions->activate(key.str(), fadeOut, tile->getSprite());
+                i++;
+            }
+        }
+        // Allies
+        for (int j = 0; j < _board->getNumAllies(); j++) {
+            if (j != 0) {
+                std::shared_ptr<PlayerPawnModel> ally = _board->getAllies()[j];
+                std::stringstream key;
+                key << "disappear_lose_" << i;
+                if (ally->getSprite()->isVisible()) {
+                    _actions->activate(key.str(), fadeOut, ally->getSprite());
+                } else {
+                    _actions->activate(key.str(), fadeOut, ally->getEndSprite());
+                }
+                i++;
+            }
+        }
+        // Enemies
+        for (int j = 0; j < _board->getNumEnemies(); j++) {
+            LocationComponent enemyLoc = _entityManager->getComponent<LocationComponent>(_board->getEnemy(j));
+            if (!(enemyLoc.x == mikaX && enemyLoc.y == mikaY)) {
+                IdleComponent enemyIdle = _entityManager->getComponent<IdleComponent>(_board->getEnemy(j));
+                std::stringstream key;
+                key << "disappear_lose_" << i;
+                _actions->activate(key.str(), fadeOut, enemyIdle.sprite);
+                i++;
+            }
+        }
+        loseDisappear = true;
     }
     loseTimer += dt;
 }

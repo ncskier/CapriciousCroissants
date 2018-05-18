@@ -157,6 +157,12 @@ void PlayMode::dispose() {
         _worldNode = nullptr;
         _touchNode = nullptr;
         _touchAction = nullptr;
+		std::vector<size_t> enemies = _board->getEnemies();
+		for (auto e = enemies.begin(); e != enemies.end(); e++) {
+			IdleComponent idle = _entityManager->getComponent<IdleComponent>(*e);
+			idle._actions = nullptr;
+			_entityManager->addComponent<IdleComponent>((*e), idle);
+		}
         _entityManager = nullptr;
         _input = nullptr;
         _active = false;
@@ -518,65 +524,68 @@ void PlayMode::updateEnemyAnimations() {
 		LocationComponent loc = _entityManager->getComponent<LocationComponent>(*e);
 		IdleComponent idle = _entityManager->getComponent<IdleComponent>(*e);
 		if (!loc.isMoving && !loc.isAttacking) {
-			idle._actions->remove("moveAnimation" + (*e));
-			idle._actions->remove("attackAnimation" + (*e));
-			if (!idle._actions->isActive("idleAnimation" + (*e))) {
+			idle._actions->remove("moveAnimationEnemy" + idle.name);
+			idle._actions->remove("attackAnimationEnemy" + idle.name);
+			if (!idle._actions->isActive("idleAnimationEnemy" + idle.name)) {
 				switch (loc.dir) {
 				case LocationComponent::UP:
-					idle._actions->activate("idleAnimation" + (*e), _board->enemyIdleUpAction, idle.sprite);
+					idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleUpAction, idle.sprite);
 					break;
 				case LocationComponent::DOWN:
-					idle._actions->activate("idleAnimation" + (*e), _board->enemyIdleDownAction, idle.sprite);
+					idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleDownAction, idle.sprite);
 					break;
 				case LocationComponent::LEFT:
-					idle._actions->activate("idleAnimation" + (*e), _board->enemyIdleLeftAction, idle.sprite);
+					idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleLeftAction, idle.sprite);
 					break;
 				case LocationComponent::RIGHT:
-					idle._actions->activate("idleAnimation" + (*e), _board->enemyIdleRightAction, idle.sprite);
+					idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleRightAction, idle.sprite);
 					break;
 				}
+				
 			}
 		}
 		else if (loc.isMoving && !loc.isAttacking) {
-			idle._actions->remove("idleAnimation" + (*e));
-			idle._actions->remove("attackAnimation" + (*e));
-			if (!idle._actions->isActive("moveAnimation" + (*e))) {
+			idle._actions->remove("idleAnimationEnemy" + idle.name);
+			idle._actions->remove("attackAnimationEnemy" + idle.name);
+			if (!idle._actions->isActive("moveAnimationEnemy" + idle.name)) {
 				switch (loc.dir) {
 				case LocationComponent::UP:
-					idle._actions->activate("moveAnimation" + (*e), _board->enemyMoveUpAction, idle.sprite);
+					idle._actions->activate("moveAnimationEnemy" + idle.name, _board->enemyMoveUpAction, idle.sprite);
 					break;
 				case LocationComponent::DOWN:
-					idle._actions->activate("moveAnimation" + (*e), _board->enemyMoveDownAction, idle.sprite);
+					idle._actions->activate("moveAnimationEnemy" + idle.name, _board->enemyMoveDownAction, idle.sprite);
 					break;
 				case LocationComponent::LEFT:
-					idle._actions->activate("moveAnimation" + (*e), _board->enemyMoveLeftAction, idle.sprite);
+					idle._actions->activate("moveAnimationEnemy" + idle.name, _board->enemyMoveLeftAction, idle.sprite);
 					break;
 				case LocationComponent::RIGHT:
-					idle._actions->activate("moveAnimation" + (*e), _board->enemyMoveRightAction, idle.sprite);
+					idle._actions->activate("moveAnimationEnemy" + idle.name, _board->enemyMoveRightAction, idle.sprite);
 					break;
 				}
 			}
 		}
 		else if (!loc.isMoving && loc.isAttacking) {
-			idle._actions->remove("idleAnimation" + (*e));
-			idle._actions->remove("moveAnimation" + (*e));
-			if (!idle._actions->isActive("attackAnimation" + (*e))) {
+			idle._actions->remove("idleAnimationEnemy" + idle.name);
+			idle._actions->remove("moveAnimationEnemy" + idle.name);
+			if (!idle._actions->isActive("attackAnimationEnemy" + idle.name)) {
 				switch (loc.dir) {
 				case LocationComponent::UP:
-					idle._actions->activate("attackAnimation" + (*e), _board->enemyAttackUpAction, idle.sprite);
+					idle._actions->activate("attackAnimationEnemy" + idle.name, _board->enemyAttackUpAction, idle.sprite);
 					break;
 				case LocationComponent::DOWN:
-					idle._actions->activate("attackAnimation" + (*e), _board->enemyAttackDownAction, idle.sprite);
+					idle._actions->activate("attackAnimationEnemy" + idle.name, _board->enemyAttackDownAction, idle.sprite);
 					break;
 				case LocationComponent::LEFT:
-					idle._actions->activate("attackAnimation" + (*e), _board->enemyAttackLeftAction, idle.sprite);
+					idle._actions->activate("attackAnimationEnemy" + idle.name, _board->enemyAttackLeftAction, idle.sprite);
 					break;
 				case LocationComponent::RIGHT:
-					idle._actions->activate("attackAnimation" + (*e), _board->enemyAttackRightAction, idle.sprite);
+					idle._actions->activate("attackAnimationEnemy" + idle.name, _board->enemyMoveRightAction, idle.sprite);
 					break;
 				}
 			}
 		}
+
+		_entityManager->addComponent<IdleComponent>((*e), idle);
 		
 	}
 }
@@ -678,9 +687,28 @@ void PlayMode::updateBoardTurn(float dt) {
 
 /** Update for enemy turn */
 void PlayMode::updateEnemyTurn(float dt) {
-    _enemyController.update(dt);
+    
+	if (!_enemyController.isComplete()) {
+		_enemyController.update(dt);
+	}
     if (_enemyController.isComplete()) {
-        if (_board->lose) {
+		bool hasInterrupts = false;
+		for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
+			if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
+				hasInterrupts = true;
+				break;
+			}
+		}
+		if (hasInterrupts) {
+			for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
+				if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
+					IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enem));
+					updateInterruptingAnimations(idle._interruptingActions);
+					_entityManager->addComponent<IdleComponent>((*enem), idle);
+				}
+			}
+		}
+        else if (_board->lose) {
             done = true;
             win = false;
             

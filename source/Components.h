@@ -73,6 +73,7 @@ struct SizeComponent : Component {
 };
 
 struct IdleComponent : Component {
+	std::string name;
 	std::string textureKey;
 	std::vector<std::tuple<int, int>> textureStartStopFrame;
 	std::vector<int> textureRows;

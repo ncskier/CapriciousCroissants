@@ -276,7 +276,6 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 				IdleComponent idle;
 				idle.textureKey = componentJson->get("textureKeys")->asString();
 				if (componentJson->get("textureKeys")->asString().compare("enemy3_strip") == 0) {
-					CULog("Dragon loaded");
 					idle.textureRows = { 16 };
 					idle.textureColumns = { 16 };
 					idle.textureSize = { 192 };
@@ -291,6 +290,7 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 				idle.sprite = AnimationNode::alloc(_assets->get<Texture>(idle.textureKey), idle.textureRows[0], idle.textureColumns[0], idle.textureSize[0]);
 				idle.sprite->setAnchor(Vec2::ZERO);
 				idle._actions = actions;
+				idle.name = enemyJson->key();
 
 
 				_entityManager->addComponent<IdleComponent>(enemyId, idle);

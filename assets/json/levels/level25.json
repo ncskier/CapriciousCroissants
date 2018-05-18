@@ -3,20 +3,38 @@
 		"width":	5,
 		"height":	5
 	},
-	"tiles":	[[2, 1, 4, 3, 2], [0, 0, 3, 0, 3], [4, 2, 3, 4, 1], [2, 4, 4, 5, 0], [4, 5, 1, 2, 2]],
+	"tiles":	[[1, 3, 5, 1, 4], [4, 2, 3, 0, 5], [2, 2, 4, 4, 3], [2, 0, 5, 0, 4], [4, 0, 3, 2, 1]],
 	"enemies":	{
 		"root1":	{
 			"components":	{
 				"Location":	{
 					"direction":	2,
-					"x":	1,
-					"y":	3
+					"x":	0,
+					"y":	4
 				},
 				"MeleeAttack":	{
 				},
+				"Rooting":	{
+				},
 				"ImmobileMovement":	{
 				},
+				"Idle":	{
+					"textureKeys":	"enemy2_strip"
+				}
+			}
+		},
+		"root2":	{
+			"components":	{
+				"Location":	{
+					"direction":	3,
+					"x":	4,
+					"y":	0
+				},
+				"MeleeAttack":	{
+				},
 				"Rooting":	{
+				},
+				"ImmobileMovement":	{
 				},
 				"Idle":	{
 					"textureKeys":	"enemy2_strip"
@@ -26,9 +44,9 @@
 		"smart1":	{
 			"components":	{
 				"Location":	{
-					"direction":	1,
+					"direction":	2,
 					"x":	1,
-					"y":	2
+					"y":	3
 				},
 				"MeleeAttack":	{
 				},
@@ -43,9 +61,43 @@
 		"smart2":	{
 			"components":	{
 				"Location":	{
-					"direction":	0,
+					"direction":	3,
 					"x":	3,
-					"y":	2
+					"y":	3
+				},
+				"MeleeAttack":	{
+				},
+				"SmartMovement":	{
+					"movementDistance":	1
+				},
+				"Idle":	{
+					"textureKeys":	"enemy1_strip"
+				}
+			}
+		},
+		"smart3":	{
+			"components":	{
+				"Location":	{
+					"direction":	3,
+					"x":	3,
+					"y":	1
+				},
+				"MeleeAttack":	{
+				},
+				"SmartMovement":	{
+					"movementDistance":	1
+				},
+				"Idle":	{
+					"textureKeys":	"enemy1_strip"
+				}
+			}
+		},
+		"smart4":	{
+			"components":	{
+				"Location":	{
+					"direction":	2,
+					"x":	1,
+					"y":	1
 				},
 				"MeleeAttack":	{
 				},
@@ -59,13 +111,9 @@
 		}
 	},
 	"mika":	{
-		"x":	1,
-		"y":	1
+		"x":	2,
+		"y":	2
 	},
 	"allies":	{
-		"ally-1":	{
-			"x":	3,
-			"y":	3
-		}
 	}
 }

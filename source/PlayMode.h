@@ -105,6 +105,9 @@ protected:
     /** Number of moves */
     int _moves = 0;
     
+    /** Number of stars */
+    int _prevStars = 3;
+    
     /** Level json */
     int _level;
     
@@ -255,6 +258,9 @@ public:
     
     /** Update menu stars */
     void updateMenuStars();
+    
+    /** Reset menu */
+    void resetMenu();
     
     
 #pragma mark -

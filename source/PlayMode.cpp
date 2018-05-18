@@ -167,6 +167,7 @@ void PlayMode::dispose() {
         _board = nullptr;
         _state = State::PLAYER;
         _moves = 0;
+        _prevStars = 3;
         done = false;
         doneCtr = 30;
         win = false;
@@ -224,6 +225,7 @@ void PlayMode::reset() {
     _enemyController.dispose();
     _state = State::PLAYER;
     _moves = 0;
+    _prevStars = 0;
     _complete = false;
     done = false;
     doneCtr = 30;
@@ -250,6 +252,7 @@ void PlayMode::reset() {
     _boardController.init(_actions, _board, _entityManager);
     _enemyController.init(_actions, _board, _entityManager);
     setupLevelSceneGraph();
+    resetMenu();
 }
 
 /** Exits the game */
@@ -479,69 +482,139 @@ void PlayMode::initMenu() {
     // TODO: Add crystal to menu
     
     // Stars
-    float starHeight = _menuNode->getContentSize().height*0.22f;
+    float starHeight = _menuNode->getContentSize().height*0.215f;
     float starsX = _menuNode->getContentSize().width * 0.245f;
     float highStarsX = _menuNode->getContentSize().width * 0.755f;
     float starOffset = starHeight*-0.05f;
     int stars = calculateLevelStars();
+    _prevStars = stars;
     // 1
     std::string star1Key = (stars >= 1) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
-    std::shared_ptr<PolygonNode> star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(star1Key));
-    float starWidth = star1->getContentSize().width/star1->getContentSize().height * starHeight;
-    star1->setAnchor(Vec2::ANCHOR_CENTER);
-    star1->setContentSize(starWidth, starHeight);
-    star1->setPosition(starsX - starWidth - starOffset, menuNodeMid);
-    _menuNode->addChild(star1);
+    _star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(star1Key));
+    float starWidth = _star1->getContentSize().width/_star1->getContentSize().height * starHeight;
+    _star1->setAnchor(Vec2::ANCHOR_CENTER);
+    _star1->setContentSize(starWidth, starHeight);
+    _star1->setPosition(starsX - starWidth - starOffset, menuNodeMid);
+    _menuNode->addChild(_star1);
     // 2
     std::string star2Key = (stars >= 2) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
-    std::shared_ptr<PolygonNode> star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(star2Key));
-    star2->setAnchor(Vec2::ANCHOR_CENTER);
-    star2->setContentSize(starWidth, starHeight);
-    star2->setPosition(starsX, menuNodeMid);
-    _menuNode->addChild(star2);
+    _star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(star2Key));
+    _star2->setAnchor(Vec2::ANCHOR_CENTER);
+    _star2->setContentSize(starWidth, starHeight);
+    _star2->setPosition(starsX, menuNodeMid);
+    _menuNode->addChild(_star2);
     // 3
     std::string star3Key = (stars >= 3) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
-    std::shared_ptr<PolygonNode> star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(star3Key));
-    star3->setAnchor(Vec2::ANCHOR_CENTER);
-    star3->setContentSize(starWidth, starHeight);
-    star3->setPosition(starsX + starWidth + starOffset, menuNodeMid);
-    _menuNode->addChild(star3);
+    _star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(star3Key));
+    _star3->setAnchor(Vec2::ANCHOR_CENTER);
+    _star3->setContentSize(starWidth, starHeight);
+    _star3->setPosition(starsX + starWidth + starOffset, menuNodeMid);
+    _menuNode->addChild(_star3);
     
     // Highscore Stars
-    // High score stars
     int highStars = GameData::get()->getLevelStars(_level);
     // 1
     std::string highStar1Key = (highStars >= 1) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
-    std::shared_ptr<PolygonNode> highStar1 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar1Key));
-    highStar1->setAnchor(Vec2::ANCHOR_CENTER);
-    highStar1->setContentSize(starWidth, starHeight);
-    highStar1->setPosition(highStarsX - starWidth - starOffset, menuNodeMid);
-    _menuNode->addChild(highStar1);
+    _highStar1 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar1Key));
+    _highStar1->setAnchor(Vec2::ANCHOR_CENTER);
+    _highStar1->setContentSize(starWidth, starHeight);
+    _highStar1->setPosition(highStarsX - starWidth - starOffset, menuNodeMid);
+    _menuNode->addChild(_highStar1);
     // 2
     std::string highStar2Key = (highStars >= 2) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
-    std::shared_ptr<PolygonNode> highStar2 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar2Key));
-    highStar2->setAnchor(Vec2::ANCHOR_CENTER);
-    highStar2->setContentSize(starWidth, starHeight);
-    highStar2->setPosition(highStarsX, menuNodeMid);
-    _menuNode->addChild(highStar2);
+    _highStar2 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar2Key));
+    _highStar2->setAnchor(Vec2::ANCHOR_CENTER);
+    _highStar2->setContentSize(starWidth, starHeight);
+    _highStar2->setPosition(highStarsX, menuNodeMid);
+    _menuNode->addChild(_highStar2);
     // 3
     std::string highStar3Key = (highStars >= 3) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
-    std::shared_ptr<PolygonNode> highStar3 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar3Key));
-    highStar3->setAnchor(Vec2::ANCHOR_CENTER);
-    highStar3->setContentSize(starWidth, starHeight);
-    highStar3->setPosition(highStarsX + starWidth + starOffset, menuNodeMid);
-    _menuNode->addChild(highStar3);
+    _highStar3 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar3Key));
+    _highStar3->setAnchor(Vec2::ANCHOR_CENTER);
+    _highStar3->setContentSize(starWidth, starHeight);
+    _highStar3->setPosition(highStarsX + starWidth + starOffset, menuNodeMid);
+    _menuNode->addChild(_highStar3);
 }
 
 /** Calculate stars */
 int PlayMode::calculateLevelStars() {
-    int allies = (int)_board->getAllies().size();
+    int allies = _board->getNumAllies();
     return (3 - (_board->maxAllies - allies));
 }
 
 /** Update menu stars */
-void updateMenuStars() {
-    // TODO: Implement to update menu stars
+void PlayMode::updateMenuStars() {
+    int stars = calculateLevelStars();
+    if (done & !win) { stars = 0; }
+    // 1
+    std::string star1Key = (stars >= 1) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star1 = PolygonNode::allocWithTexture(_assets->get<Texture>(star1Key));
+    star1->setAnchor(_star1->getAnchor());
+    star1->setContentSize(_star1->getContentSize());
+    star1->setPosition(_star1->getPosition());
+    _menuNode->removeChild(_star1);
+    _star1 = star1;
+    _menuNode->addChild(_star1);
+    // 2
+    std::string star2Key = (stars >= 2) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star2 = PolygonNode::allocWithTexture(_assets->get<Texture>(star2Key));
+    star2->setAnchor(_star2->getAnchor());
+    star2->setContentSize(_star2->getContentSize());
+    star2->setPosition(_star2->getPosition());
+    _menuNode->removeChild(_star2);
+    _star2 = star2;
+    _menuNode->addChild(_star2);
+    // 3
+    std::string star3Key = (stars >= 3) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> star3 = PolygonNode::allocWithTexture(_assets->get<Texture>(star3Key));
+    star3->setAnchor(_star3->getAnchor());
+    star3->setContentSize(_star3->getContentSize());
+    star3->setPosition(_star3->getPosition());
+    _menuNode->removeChild(_star3);
+    _star3 = star3;
+    _menuNode->addChild(_star3);
+}
+
+/** Reset menu */
+void PlayMode::resetMenu() {
+    // Moves Label
+    _movesLabel->setText(to_string(_moves));
+    
+    // Highscore Moves Label
+    _highMovesLabel->setText(to_string(GameData::get()->getLevelMoves(_level)));
+    
+    // Stars
+    updateMenuStars();
+    
+    // Highscore Stars
+    int highStars = GameData::get()->getLevelStars(_level);
+    // 1
+    std::string highStar1Key = (highStars >= 1) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> highStar1 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar1Key));
+    highStar1->setAnchor(_highStar1->getAnchor());
+    highStar1->setContentSize(_highStar1->getContentSize());
+    highStar1->setPosition(_highStar1->getPosition());
+    _menuNode->removeChild(_highStar1);
+    _highStar1 = highStar1;
+    _menuNode->addChild(_highStar1);
+    // 2
+    std::string highStar2Key = (highStars >= 2) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> highStar2 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar2Key));
+    highStar2->setAnchor(_highStar2->getAnchor());
+    highStar2->setContentSize(_highStar2->getContentSize());
+    highStar2->setPosition(_highStar2->getPosition());
+    _menuNode->removeChild(_highStar2);
+    _highStar2 = highStar2;
+    _menuNode->addChild(_highStar2);
+    // 3
+    std::string highStar3Key = (highStars >= 3) ? WIN_LOSE_HIGH_STAR : WIN_LOSE_HIGH_STAR_EMPTY;
+    std::shared_ptr<PolygonNode> highStar3 = PolygonNode::allocWithTexture(_assets->get<Texture>(highStar3Key));
+    highStar3->setAnchor(_highStar3->getAnchor());
+    highStar3->setContentSize(_highStar3->getContentSize());
+    highStar3->setPosition(_highStar3->getPosition());
+    _menuNode->removeChild(_highStar3);
+    _highStar3 = highStar3;
+    _menuNode->addChild(_highStar3);
 }
 
 
@@ -786,6 +859,12 @@ void PlayMode::update(float dt) {
     // Update animations
     if (!_winloseActive) {
         updateAnimations();
+    }
+    
+    // Update menu
+    if (_prevStars != calculateLevelStars()) {
+        updateMenuStars();
+        _prevStars = calculateLevelStars();
     }
     
     // Update actions

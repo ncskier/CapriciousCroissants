@@ -13,13 +13,14 @@
 					"y":	2
 				},
 				"RangedAttack":	{
-					"horizontal":	true,
-					"vertical":	true
 				},
 				"DumbMovement":	{
 					"movementDistance":	1
 				},
 				"MeleeAttack":	{
+				},
+				"Idle":	{
+					"textureKeys":	"enemy3_strip"
 				}
 			}
 		}

@@ -217,7 +217,8 @@ bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
         std::shared_ptr<JsonValue> allyJson = alliesJson->get(i);
         x = allyJson->get("x")->asInt();
         y = allyJson->get("y")->asInt();
-        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets, false);
+		std::string name = allyJson->key();
+        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets, false, name);
         _allies.push_back(ally);
         _addedAllies.insert(ally);
         // Set ally's tile to NULL tile
@@ -258,6 +259,8 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 					loc.dir = (LocationComponent::direction)componentJson->get("dir")->asInt();
 				}
 
+				loc.realDir = loc.dir;
+
 				_entityManager->addComponent<LocationComponent>(enemyId, loc);
 			} else if ("dumbmovement" == cugl::to_lower(componentJson->key())) {
 				DumbMovementComponent move;
@@ -274,13 +277,22 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 			} else if ("idle" == cugl::to_lower(componentJson->key())) {
 				IdleComponent idle;
 				idle.textureKey = componentJson->get("textureKeys")->asString();
-				idle.textureRows = { 8 };
-				idle.textureColumns = { 16 };
-				idle.textureSize = { 128 };
-				idle.speed = { 2 };
+				if (componentJson->get("textureKeys")->asString().compare("enemy3_strip") == 0) {
+					idle.textureRows = { 16 };
+					idle.textureColumns = { 16 };
+					idle.textureSize = { 192 };
+					idle.speed = { 2 };
+				}
+				else {
+					idle.textureRows = { 8 };
+					idle.textureColumns = { 16 };
+					idle.textureSize = { 128 };
+					idle.speed = { 2 };
+				}
 				idle.sprite = AnimationNode::alloc(_assets->get<Texture>(idle.textureKey), idle.textureRows[0], idle.textureColumns[0], idle.textureSize[0]);
 				idle.sprite->setAnchor(Vec2::ZERO);
 				idle._actions = actions;
+				idle.name = enemyJson->key();
 
 
 				_entityManager->addComponent<IdleComponent>(enemyId, idle);
@@ -753,10 +765,13 @@ void BoardModel::updateNodes(bool position, bool z) {
     
     // Allies
     for (std::vector<std::shared_ptr<PlayerPawnModel>>::iterator it = _allies.begin(); it != _allies.end(); ++it) {
-        if (position)
+        if (position) {
             (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
-        if (z)
+        }
+        if (z) {
             (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+            (*it)->getEndSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+        }
     }
     
     // Enemies

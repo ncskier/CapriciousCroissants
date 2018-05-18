@@ -16,11 +16,13 @@
 #include <vector>
 #include "EntityManager.h"
 
-#define ENEMY_FRAME_LEFT  0
+#define ENEMY_FRAME_RIGHT  0
 #define ENEMY_FRAME_DOWN  16
 #define ENEMY_FRAME_UP    32
-#define ENEMY_FRAME_RIGHT 48
-
+#define ENEMY_FRAME_LEFT 48
+#define ENEMY_IDLE_TIME 1.0f
+#define ENEMY_WALK_TIME 1.0f
+#define ENEMY_ATTACK_TIME 1.0f
 
 #pragma mark -
 #pragma mark Board Model
@@ -324,14 +326,30 @@ public:
     // Enemy
     std::shared_ptr<cugl::FadeIn> enemyAddAction = cugl::FadeIn::alloc(TILE_IMG_APPEAR_TIME);
     std::shared_ptr<cugl::FadeOut> enemyRemoveAction = cugl::FadeOut::alloc(TILE_IMG_DISAPPEAR_TIME);
+	std::shared_ptr<cugl::Animate> enemyIdleLeftAction = cugl::Animate::alloc(ENEMY_FRAME_LEFT, ENEMY_FRAME_LEFT + 15, ENEMY_IDLE_TIME);
+	std::shared_ptr<cugl::Animate> enemyIdleRightAction = cugl::Animate::alloc(ENEMY_FRAME_RIGHT, ENEMY_FRAME_RIGHT + 15, ENEMY_IDLE_TIME);
+	std::shared_ptr<cugl::Animate> enemyIdleUpAction = cugl::Animate::alloc(ENEMY_FRAME_UP, ENEMY_FRAME_UP + 15, ENEMY_IDLE_TIME);
+	std::shared_ptr<cugl::Animate> enemyIdleDownAction = cugl::Animate::alloc(ENEMY_FRAME_DOWN, ENEMY_FRAME_DOWN + 15, ENEMY_IDLE_TIME);
+	std::shared_ptr<cugl::Animate> enemyMoveLeftAction = cugl::Animate::alloc(64 + ENEMY_FRAME_LEFT, 64 + ENEMY_FRAME_LEFT + 15, ENEMY_WALK_TIME);
+	std::shared_ptr<cugl::Animate> enemyMoveRightAction = cugl::Animate::alloc(64 + ENEMY_FRAME_RIGHT, 64 + ENEMY_FRAME_RIGHT + 15, ENEMY_WALK_TIME);
+	std::shared_ptr<cugl::Animate> enemyMoveUpAction = cugl::Animate::alloc(64 + ENEMY_FRAME_UP, 64 + ENEMY_FRAME_UP + 15, ENEMY_WALK_TIME);
+	std::shared_ptr<cugl::Animate> enemyMoveDownAction = cugl::Animate::alloc(64 + ENEMY_FRAME_DOWN, 64 + ENEMY_FRAME_DOWN + 15, ENEMY_WALK_TIME);
+	std::shared_ptr<cugl::Animate> enemyAttackLeftAction = cugl::Animate::alloc(128 + ENEMY_FRAME_LEFT, 128 + ENEMY_FRAME_LEFT + 15, ENEMY_ATTACK_TIME);
+	std::shared_ptr<cugl::Animate> enemyAttackRightAction = cugl::Animate::alloc(128 + ENEMY_FRAME_RIGHT, 128 + ENEMY_FRAME_RIGHT + 15, ENEMY_ATTACK_TIME);
+	std::shared_ptr<cugl::Animate> enemyAttackUpAction = cugl::Animate::alloc(128 + ENEMY_FRAME_UP, 128 + ENEMY_FRAME_UP + 15, ENEMY_ATTACK_TIME);
+	std::shared_ptr<cugl::Animate> enemyAttackDownAction = cugl::Animate::alloc(128 + ENEMY_FRAME_DOWN, 128 + ENEMY_FRAME_DOWN + 15, ENEMY_ATTACK_TIME);
     // Ally
     std::shared_ptr<cugl::FadeIn> allyAddAction = cugl::FadeIn::alloc(TILE_IMG_APPEAR_TIME);
+    std::shared_ptr<cugl::FadeOut> allyFadeOutAction = cugl::FadeOut::alloc(0.2f);
+    std::shared_ptr<cugl::Animate> allyDeathAction = cugl::Animate::alloc(ALLY_DEATH_IMG_START, ALLY_DEATH_IMG_END, ALLY_DEATH_IMG_TIME);
+	std::shared_ptr<cugl::Animate> allyIdleAction = cugl::Animate::alloc(ALLY_IDLE_IMG_START, ALLY_IDLE_IMG_END, ALLY_IDLE_IMG_TIME);
     std::shared_ptr<cugl::FadeOut> allyRemoveAction = cugl::FadeOut::alloc(TILE_IMG_DISAPPEAR_TIME);
     // Mika
     std::shared_ptr<cugl::Animate> mikaIdleAction = cugl::Animate::alloc(PLAYER_IMG_IDLE_START, PLAYER_IMG_IDLE_END, PLAYER_IMG_IDLE_TIME);
     std::shared_ptr<cugl::Animate> mikaBeginAttackAction = cugl::Animate::alloc(PLAYER_IMG_BEGIN_ATTACK_START, PLAYER_IMG_BEGIN_ATTACK_END, PLAYER_IMG_BEGIN_ATTACK_TIME);
     std::shared_ptr<cugl::Animate> mikaAttackingAction = cugl::Animate::alloc(PLAYER_IMG_ATTACKING_START, PLAYER_IMG_ATTACKING_END, PLAYER_IMG_ATTACKING_TIME);
-    
+    std::shared_ptr<cugl::Animate> mikaLoseAction = cugl::Animate::alloc(PLAYER_END_LOSE_START, PLAYER_END_LOSE_END, PLAYER_END_LOSE_TIME);
+    std::shared_ptr<cugl::Animate> mikaWinAction = cugl::Animate::alloc(PLAYER_END_WIN_START, PLAYER_END_WIN_END, PLAYER_END_WIN_TIME);
 	//Projectile
 	std::shared_ptr<cugl::Animate> projectileAction = cugl::Animate::alloc(0, 10, 0.5);
 

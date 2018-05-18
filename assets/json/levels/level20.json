@@ -3,55 +3,83 @@
 		"width":	5,
 		"height":	5
 	},
-	"tiles":	[[2, 1, 5, 2, 4], [3, 3, 4, 2, 1], [2, 4, 3, 0, 1], [5, 3, 1, 2, 2], [4, 0, 5, 0, 2]],
+	"tiles":	[[5, 0, 0, 3, 5], [4, 1, 5, 4, 2], [1, 2, 0, 0, 3], [3, 3, 5, 1, 0], [2, 4, 1, 4, 5]],
 	"enemies":	{
-		"ranged1":	{
+		"enemy1":	{
 			"components":	{
-				"RangedAttack":	{
-					"horizontal":	true,
-					"vertical":	true
-				},
 				"Location":	{
-					"direction":	1,
-					"x":	3,
-					"y":	4
+					"direction":	2,
+					"x":	0,
+					"y":	2
 				},
-				"DumbMovement":	{
-					"movementDistance":	1
+				"ImmobileMovement":	{
+				},
+				"Rooting":	{
 				},
 				"Idle":	{
-					"textureKeys":	"enemy3_strip"
+					"textureKeys":	"enemy2_strip"
+				},
+				"MeleeAttack":	{
 				}
 			}
 		},
-		"ranged2":	{
+		"enemy2":	{
 			"components":	{
 				"Location":	{
-					"direction":	0,
-					"x":	1,
-					"y":	0
+					"direction":	1,
+					"x":	2,
+					"y":	4
 				},
-				"RangedAttack":	{
-					"horizontal":	true,
-					"vertical":	true
+				"Rooting":	{
+				},
+				"Idle":	{
+					"textureKeys":	"enemy2_strip"
+				},
+				"ImmobileMovement":	{
+				},
+				"MeleeAttack":	{
+				}
+			}
+		},
+		"enemy3":	{
+			"components":	{
+				"Location":	{
+					"direction":	3,
+					"x":	3,
+					"y":	2
 				},
 				"DumbMovement":	{
 					"movementDistance":	1
 				},
 				"Idle":	{
-					"textureKeys":	"enemy3_strip"
+					"textureKeys":	"enemy0_strip"
+				},
+				"MeleeAttack":	{
+				}
+			}
+		},
+		"enemy4":	{
+			"components":	{
+				"Location":	{
+					"direction":	0,
+					"x":	2,
+					"y":	0
+				},
+				"DumbMovement":	{
+					"movementDistance":	1
+				},
+				"Idle":	{
+					"textureKeys":	"enemy0_strip"
+				},
+				"MeleeAttack":	{
 				}
 			}
 		}
 	},
 	"mika":	{
-		"x":	3,
+		"x":	2,
 		"y":	2
 	},
 	"allies":	{
-		"ally-1":	{
-			"x":	1,
-			"y":	2
-		}
 	}
 }

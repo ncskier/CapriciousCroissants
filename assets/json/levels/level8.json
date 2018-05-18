@@ -3,21 +3,20 @@
 		"width":	5,
 		"height":	5
 	},
-	"tiles":	[[1, 2, 2, 3, 0], [4, 5, 0, 2, 2], [3, 1, 5, 5, 4], [5, 4, 4, 5, 1], [0, 3, 1, 3, 4]],
+	"tiles":	[[0, 2, 4, 4, 0], [2, 1, 2, 2, 4], [0, 4, 3, 1, 2], [3, 3, 0, 3, 3], [4, 0, 1, 0, 0]],
 	"enemies":	{
 		"enemy1":	{
 			"components":	{
 				"Location":	{
-					"direction":	2,
-					"x":	0,
-					"y":	2
+					"direction":	1,
+					"x":	1,
+					"y":	3
 				},
-				"ImmobileMovement":	{
-				},
-				"Rooting":	{
+				"SmartMovement":	{
+					"movementDistance":	1
 				},
 				"Idle":	{
-					"textureKeys":	"enemy2_strip"
+					"textureKeys":	"enemy1_strip"
 				},
 				"MeleeAttack":	{
 				}
@@ -27,15 +26,82 @@
 			"components":	{
 				"Location":	{
 					"direction":	1,
-					"x":	2,
-					"y":	4
+					"x":	1,
+					"y":	1
 				},
-				"Rooting":	{
+				"SmartMovement":	{
+					"movementDistance":	1
 				},
 				"Idle":	{
-					"textureKeys":	"enemy2_strip"
+					"textureKeys":	"enemy1_strip"
 				},
-				"ImmobileMovement":	{
+				"MeleeAttack":	{
+				}
+			}
+		},
+		"enemy3":	{
+			"components":	{
+				"Location":	{
+					"direction":	1,
+					"x":	2,
+					"y":	2
+				},
+				"SmartMovement":	{
+					"movementDistance":	1
+				},
+				"Idle":	{
+					"textureKeys":	"enemy1_strip"
+				},
+				"MeleeAttack":	{
+				}
+			}
+		},
+		"enemy4":	{
+			"components":	{
+				"Location":	{
+					"direction":	1,
+					"x":	3,
+					"y":	3
+				},
+				"SmartMovement":	{
+					"movementDistance":	1
+				},
+				"Idle":	{
+					"textureKeys":	"enemy1_strip"
+				},
+				"MeleeAttack":	{
+				}
+			}
+		},
+		"enemy5":	{
+			"components":	{
+				"Location":	{
+					"direction":	1,
+					"x":	3,
+					"y":	1
+				},
+				"SmartMovement":	{
+					"movementDistance":	1
+				},
+				"Idle":	{
+					"textureKeys":	"enemy1_strip"
+				},
+				"MeleeAttack":	{
+				}
+			}
+		},
+		"enemy6":	{
+			"components":	{
+				"Location":	{
+					"direction":	1,
+					"x":	4,
+					"y":	0
+				},
+				"SmartMovement":	{
+					"movementDistance":	1
+				},
+				"Idle":	{
+					"textureKeys":	"enemy1_strip"
 				},
 				"MeleeAttack":	{
 				}
@@ -43,9 +109,17 @@
 		}
 	},
 	"mika":	{
-		"x":	2,
-		"y":	2
+		"x":	4,
+		"y":	4
 	},
 	"allies":	{
+		"ally-1":	{
+			"x":	0,
+			"y":	4
+		},
+		"ally-2":	{
+			"x":	0,
+			"y":	0
+		}
 	}
 }

@@ -61,7 +61,14 @@ struct LocationComponent : Component {
 	int x;
 	int y;
 
+	bool isMoving = false;
+	bool isAttacking = false;
+
+	bool hasTemporaryDirection = false;
+
+
 	direction dir;
+	direction realDir;
 };
 
 struct SizeComponent : Component {
@@ -70,6 +77,7 @@ struct SizeComponent : Component {
 };
 
 struct IdleComponent : Component {
+	std::string name;
 	std::string textureKey;
 	std::vector<std::tuple<int, int>> textureStartStopFrame;
 	std::vector<int> textureRows;

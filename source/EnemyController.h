@@ -25,8 +25,10 @@ public:
         MOVE   = 0,
         // Enemies attack
         ATTACK = 1,
+        // Fade destroyed sprites
+        FADE   = 2,
         // Check for lose
-        CHECK  = 2,
+        CHECK  = 3,
     };
 protected:
     // CONTROLLERS

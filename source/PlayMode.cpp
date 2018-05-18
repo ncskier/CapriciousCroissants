@@ -772,7 +772,7 @@ void PlayMode::updateWinAnimation(float dt) {
                 ss_appear << "tile_win_animation_appear_(" << x << "," << y << ")";
                 if (!_actions->isActive(ss_appear.str())) {
                     _board->getTile(x, y)->getSprite()->setVisible(false);
-                    int color = 2;
+                    int color = 4;
                     Rect bounds = _board->calculateDrawBounds(x, y);
                     std::shared_ptr<TileModel> tile = TileModel::alloc(color, bounds, _assets);
                     tile->getSprite()->setZOrder(_board->calculateDrawZ(x, y, true));

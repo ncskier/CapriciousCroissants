@@ -259,6 +259,8 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 					loc.dir = (LocationComponent::direction)componentJson->get("dir")->asInt();
 				}
 
+				loc.realDir = loc.dir;
+
 				_entityManager->addComponent<LocationComponent>(enemyId, loc);
 			} else if ("dumbmovement" == cugl::to_lower(componentJson->key())) {
 				DumbMovementComponent move;

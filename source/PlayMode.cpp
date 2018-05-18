@@ -716,6 +716,15 @@ void PlayMode::updateEnemyTurn(float dt) {
 			//            _text->setZOrder(1000);
 			//            sortZOrder();
 		}
+
+		std::vector<size_t> enemies = _board->getEnemies();
+		for (auto e = enemies.begin(); e != enemies.end(); e++) {
+			// All enemies have an idle and location component, so not bothering to check
+			LocationComponent loc = _entityManager->getComponent<LocationComponent>(*e);
+			loc.isAttacking = false;
+			loc.isMoving = false;
+			_entityManager->addComponent<LocationComponent>((*e), loc);
+		}
 		_state = State::BOARD;
 	}
 }

@@ -18,7 +18,7 @@
 
 #define MENU_TILE_KEY_0 "menu_tile0_strip"
 #define MENU_TILE_KEY_1 "menu_tile1_strip"
-#define MENU_TILE_KEY_2 "menu_tile1_strip"
+#define MENU_TILE_KEY_2 "menu_tile2_strip"
 #define MENU_DOT_KEY "menu_dot"
 #define MIKA_IDLE_KEY "mika_idle_action"
 #define MIKA_TRANSITION_KEY "mika_transition_action"

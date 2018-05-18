@@ -355,12 +355,12 @@ int MenuMode::menuTileFrame(int levelIdx) {
 float MenuMode::levelFractionX(int levelIdx) {
     // In reverse order than on screen
     float xFractions[MENU_TILE_SIZE];
-    xFractions[0] = 0.5f;
-    xFractions[1] = 0.4f;
-    xFractions[2] = 0.59f;
-    xFractions[3] = 0.31f;
-    xFractions[4] = 0.39f;
-    xFractions[5] = 0.75f;
+    xFractions[0] = 0.55f;
+    xFractions[1] = 0.28f;
+    xFractions[2] = 0.51f;
+    xFractions[3] = 0.70f;
+    xFractions[4] = 0.35f;
+    xFractions[5] = 0.50f;
     return xFractions[menuTileFrame(levelIdx)];
 }
 

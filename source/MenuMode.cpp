@@ -161,7 +161,17 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx, bool cap) {
     ss << (levelIdx+1);
 
     // Initialize node
-    std::shared_ptr<AnimationNode> menuTile = AnimationNode::alloc(_assets->get<Texture>(MENU_TILE_KEY_0), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
+    int realm = GameData::get()->getRealm(levelIdx);
+    std::string tileKey;
+    if (realm == 0) {
+        tileKey = MENU_TILE_KEY_0;
+    } else if (realm == 1) {
+        tileKey = MENU_TILE_KEY_1;
+    } else {
+        tileKey = MENU_TILE_KEY_2;
+    }
+    
+    std::shared_ptr<AnimationNode> menuTile = AnimationNode::alloc(_assets->get<Texture>(tileKey), MENU_TILE_ROWS, MENU_TILE_COLS, MENU_TILE_SIZE);
     menuTile->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     menuTile->setContentSize(_menuTileSize);
     menuTile->setPosition(menuTilePosition(levelIdx));

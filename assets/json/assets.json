@@ -35,6 +35,13 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "menu_tile1_strip": {
+            "file":     "textures/menu_tile1_strip.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "background-ice": {
             "file":     "textures/background-ice.png",
             "minfilter":"nearest",

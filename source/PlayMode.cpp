@@ -72,6 +72,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
 	_entityManager->addSystem(std::make_shared<AttackMeleeSystem>(_entityManager), EntityManager::attack);
 	_entityManager->addSystem(std::make_shared<AttackRangedSystem>(_entityManager), EntityManager::attack);
 	_entityManager->addSystem(std::make_shared<SmartMovementFacingSystem>(_entityManager), EntityManager::onPlayerMove);
+	_entityManager->addSystem(std::make_shared<DumbMovementFacingSystem>(_entityManager), EntityManager::onPlayerMove);
 
 
     // Add Background Node
@@ -254,6 +255,7 @@ void PlayMode::reset() {
     _entityManager->addSystem(std::make_shared<AttackMeleeSystem>(_entityManager), EntityManager::attack);
     _entityManager->addSystem(std::make_shared<AttackRangedSystem>(_entityManager), EntityManager::attack);
     _entityManager->addSystem(std::make_shared<SmartMovementFacingSystem>(_entityManager), EntityManager::onPlayerMove);
+	_entityManager->addSystem(std::make_shared<DumbMovementFacingSystem>(_entityManager), EntityManager::onPlayerMove);
     setupLevelFromJson(_dimen);
     _playerController.init(_actions, _board, _input, _entityManager);
     _boardController.init(_actions, _board, _entityManager);
@@ -586,7 +588,6 @@ void PlayMode::updateEnemyAnimations() {
 		}
 
 		_entityManager->addComponent<IdleComponent>((*e), idle);
-		
 	}
 }
 
@@ -687,63 +688,36 @@ void PlayMode::updateBoardTurn(float dt) {
 
 /** Update for enemy turn */
 void PlayMode::updateEnemyTurn(float dt) {
-    
-	if (!_enemyController.isComplete()) {
-		_enemyController.update(dt);
+	_enemyController.update(dt);
+	if (_enemyController.isComplete()) {
+		if (_board->lose) {
+			done = true;
+			win = false;
+
+			// Plase lose sound
+			if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("lose")) {
+				auto source = _assets->get<Sound>("lose");
+				AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
+			}
+
+			// Begin Mika Lose Animation
+			std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
+			mika->setSpriteLose();
+			mika->getSprite()->setVisible(false);
+			mika->getEndSprite()->setVisible(true);
+			mika->getEndSprite()->setFrame(PLAYER_END_LOSE_START);
+			std::string mikaLoseActionKey = "mika-lose-animation";
+			if (!_actions->isActive(mikaLoseActionKey)) {
+				_actions->activate(mikaLoseActionKey, _board->mikaLoseAction, mika->getEndSprite());
+			}
+
+			//            _text->setText("You lose");
+			//            _text->setVisible(true);
+			//            _text->setZOrder(1000);
+			//            sortZOrder();
+		}
+		_state = State::BOARD;
 	}
-    if (_enemyController.isComplete()) {
-		bool hasInterrupts = false;
-		for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
-			if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
-				hasInterrupts = true;
-				break;
-			}
-		}
-		if (hasInterrupts) {
-			for (auto enem = _board->getEnemies().begin(); enem != _board->getEnemies().end(); enem++) {
-				if (!_entityManager->getComponent<IdleComponent>((*enem))._interruptingActions.empty()) {
-					IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enem));
-					updateInterruptingAnimations(idle._interruptingActions);
-					_entityManager->addComponent<IdleComponent>((*enem), idle);
-				}
-			}
-		}
-        else if (_board->lose) {
-            done = true;
-            win = false;
-            
-            // Plase lose sound
-            if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("lose")) {
-                auto source = _assets->get<Sound>("lose");
-                AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
-            }
-            
-            // Begin Mika Lose Animation
-            std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
-            mika->setSpriteLose();
-            mika->getSprite()->setVisible(false);
-            mika->getEndSprite()->setVisible(true);
-            mika->getEndSprite()->setFrame(PLAYER_END_LOSE_START);
-            std::string mikaLoseActionKey = "mika-lose-animation";
-            if (!_actions->isActive(mikaLoseActionKey)) {
-                _actions->activate(mikaLoseActionKey, _board->mikaLoseAction, mika->getEndSprite());
-            }
-            
-//            _text->setText("You lose");
-//            _text->setVisible(true);
-//            _text->setZOrder(1000);
-//            sortZOrder();
-        }
-		std::vector<size_t> enemies = _board->getEnemies();
-		for (auto e = enemies.begin(); e != enemies.end(); e++) {
-			// All enemies have an idle and location component, so not bothering to check
-			LocationComponent loc = _entityManager->getComponent<LocationComponent>(*e);
-			loc.isAttacking = false;
-			loc.isMoving = false;
-			_entityManager->addComponent<LocationComponent>((*e), loc);
-		}
-        _state = State::BOARD;
-    }
 }
 
 /** Update interrupting animations (action manager is already updated every iteration) */

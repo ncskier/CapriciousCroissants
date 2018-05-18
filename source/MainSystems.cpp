@@ -18,6 +18,12 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 		int targetX;
 		int targetY;
 
+		if (loc.hasTemporaryDirection) {
+			loc.dir = loc.realDir;
+			loc.hasTemporaryDirection = false;
+		}
+
+
 		switch (loc.dir) {
 			case LocationComponent::UP:
 				if (loc.y == board->getHeight() - 1) {
@@ -461,24 +467,26 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
                         }
 						loc.isAttacking = true;
                         // Commented out so ranged enemies will not turn incorrectly
-//                        int shootDirectionX = (ally->getY() == loc.y)*copysign(1, ally->getX() - loc.x);
-//                        int shootDirectionY = (ally->getX() == loc.x)*copysign(1, ally->getY() - loc.y);
-//                        if(shootDirectionX > 0){
-//                            loc.dir = LocationComponent::RIGHT;
-//                            idle.sprite->setFrame(3);
-//                        }
-//                        if (shootDirectionX < 0) {
-//                            loc.dir = LocationComponent::LEFT;
-//                            idle.sprite->setFrame(0);
-//                        }
-//                        if (shootDirectionY > 0) {
-//                            loc.dir = LocationComponent::UP;
-//                            idle.sprite->setFrame(2);
-//                        }
-//                        if (shootDirectionY < 0) {
-//                            loc.dir = LocationComponent::DOWN;
-//                            idle.sprite->setFrame(1);
-//                        }
+                        int shootDirectionX = (ally->getY() == loc.y)*copysign(1, ally->getX() - loc.x);
+                        int shootDirectionY = (ally->getX() == loc.x)*copysign(1, ally->getY() - loc.y);
+						loc.realDir = loc.dir;
+						loc.hasTemporaryDirection = true;
+						if(shootDirectionX > 0){
+                            loc.dir = LocationComponent::RIGHT;
+                            idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
+                        }
+                        if (shootDirectionX < 0) {
+                            loc.dir = LocationComponent::LEFT;
+                            idle.sprite->setFrame(ENEMY_FRAME_LEFT);
+                        }
+                        if (shootDirectionY > 0) {
+                            loc.dir = LocationComponent::UP;
+                            idle.sprite->setFrame(ENEMY_FRAME_UP);
+                        }
+                        if (shootDirectionY < 0) {
+                            loc.dir = LocationComponent::DOWN;
+                            idle.sprite->setFrame(ENEMY_FRAME_DOWN);
+                        }
 					}
 
 				}
@@ -644,6 +652,64 @@ bool SmartMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Bo
 			idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 			break;
 		}
+		manager->addComponent<LocationComponent>(entity, loc);
+		manager->addComponent<IdleComponent>(entity, idle);
+	}
+
+	return true;
+}
+
+bool DumbMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel> board) {
+	//Can assume entity has a SmartMovementComponent(required)
+
+	if (manager->hasComponent<LocationComponent>(entity)) {
+		//        DumbMovementComponent move = manager->getComponent<DumbMovementComponent>(entity);
+		LocationComponent loc = manager->getComponent<LocationComponent>(entity);
+		IdleComponent idle = manager->getComponent<IdleComponent>(entity);
+		//        int movementDistance = manager->getComponent<SmartMovementComponent>(entity).movementDistance;
+
+		cugl::Vec2 tile = cugl::Vec2(board->xOfIndex(board->getSelectedTile()), board->yOfIndex(board->getSelectedTile()));
+		bool isOffset = board->offset != 0.0f;
+		bool isRow = board->offsetRow;
+
+		int offsetAmount = board->lengthToCells(board->offset, board->offsetRow);
+
+		int ownX = loc.x;
+		int ownY = loc.y;
+
+		if (loc.hasTemporaryDirection) {
+			loc.dir = loc.realDir;
+			loc.hasTemporaryDirection = false;
+
+			switch (loc.dir) {
+			case LocationComponent::UP:
+				idle.sprite->setFrame(ENEMY_FRAME_UP);
+				break;
+			case LocationComponent::DOWN:
+				idle.sprite->setFrame(ENEMY_FRAME_DOWN);
+				break;
+			case LocationComponent::LEFT:
+				idle.sprite->setFrame(ENEMY_FRAME_LEFT);
+				break;
+			case LocationComponent::RIGHT:
+				idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
+				break;
+			}
+		}
+
+		if (isOffset) {
+			if (tile.y == loc.y && isRow) {
+				ownX += offsetAmount;
+				ownX = ownX % board->getWidth() + (ownX % board->getWidth() < 0 ? board->getWidth() : 0);
+			}
+			else if (tile.x == loc.x && !isRow) {
+				ownY += offsetAmount;
+				ownY = ownY % board->getHeight() + (ownY % board->getHeight() < 0 ? board->getHeight() : 0);
+			}
+		}
+
+
+		
 		manager->addComponent<LocationComponent>(entity, loc);
 		manager->addComponent<IdleComponent>(entity, idle);
 	}

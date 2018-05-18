@@ -64,7 +64,11 @@ struct LocationComponent : Component {
 	bool isMoving = false;
 	bool isAttacking = false;
 
+	bool hasTemporaryDirection = false;
+
+
 	direction dir;
+	direction realDir;
 };
 
 struct SizeComponent : Component {

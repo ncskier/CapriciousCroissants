@@ -46,12 +46,29 @@ bool LoadingMode::init(const std::shared_ptr<cugl::AssetManager>& assets) {
     layer->setContentSize(dimen);
     layer->doLayout(); // This rearranges the children to fit the screen
     
-    _bar = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("load_bar"));
-    _button = std::dynamic_pointer_cast<Button>(assets->get<Node>("load_claw_play"));
+	std::shared_ptr<Texture> bgBar = assets->get<Texture>("progressbar_background");
+	std::shared_ptr<Texture> fgBar = assets->get<Texture>("progressbar_foreground");
+	_bar = ProgressBar::alloc(bgBar, fgBar);
+	_bar->setAnchor(0.5f, 0.5f);
+	
+	std::shared_ptr<Node> bg = layer->getChildByName("background");
+	float bgheight = bg->getContentHeight();
+	float heightscale = dimen.height / bgheight;
+	bg->setScale(heightscale);
+
+
+	layer->getChildByName("background")->addChildWithName(_bar, "bar");
+	_bar->setPosition(480, 140);
+
+
+
+    //_bar = std::dynamic_pointer_cast<ProgressBar>(assets->get<Node>("load_bar"));
+    _button = std::dynamic_pointer_cast<Button>(assets->get<Node>("load_background_play"));
     _button->setListener([=](const std::string& name, bool down) {
         this->_active = down;
     });
     
+	_button->setPosition(480, 140);
     Application::get()->setClearColor(Color4(192,192,192,255));
     addChild(layer);
     return true;
@@ -85,6 +102,10 @@ void LoadingMode::update(float progress) {
     if (_progress < 1) {
         _progress = _assets->progress();
         if (_progress >= 1) {
+			_button->setZOrder(1);
+			_bar->setZOrder(0);
+			auto layer = _assets->get<Node>("load_background");
+			layer->sortZOrder();
             _progress = 1.0f;
             _button->setVisible(true);
             _button->activate(1);

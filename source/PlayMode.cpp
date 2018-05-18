@@ -147,7 +147,9 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
 void PlayMode::dispose() {
     if (_active) {
         CULog("dispose PlayMode");
-        _worldNode->removeAllChildren();
+		if (_worldNode != nullptr) {
+			_worldNode->removeAllChildren();
+		}
         removeAllChildren();
         _assets = nullptr;
         _text = nullptr;

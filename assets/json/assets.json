@@ -401,30 +401,6 @@
         }
 	},
     "soundfx": {
-        "boop1": {
-            "file": "sounds/boop1.mp3",
-            "volume": 0.5
-        },
-        "boop2": {
-            "file": "sounds/boop2.mp3",
-            "volume": 0.5
-        },
-        "boop3": {
-            "file": "sounds/boop3.mp3",
-            "volume": 0.5
-        },
-        "boop4": {
-            "file": "sounds/boop4.mp3",
-            "volume": 0.5
-        },
-        "boop5": {
-            "file": "sounds/boop5.mp3",
-            "volume": 0.5
-        },
-        "boop6": {
-            "file": "sounds/boop6.mp3",
-            "volume": 0.5
-        },
         "music": {
             "file": "sounds/music.wav",
             "volume": 0.5

@@ -15,9 +15,6 @@ using namespace cugl;
 /** This is adjusted by screen aspect ratio to get the height */
 #define SCENE_WIDTH 1024
 
-/** The key for push sounds */
-#define PUSH_SOUND "boop1"
-
 #pragma mark -
 #pragma mark Constructors
 /**
@@ -796,11 +793,6 @@ void PlayMode::updatePlayerTurn(float dt) {
         _state = State::BOARD;
         _moves++;
         _movesLabel->setText(to_string(_moves));
-
-		//Play push sound
-		/*auto source = _assets->get<Sound>("boop1");
-		bool didSound = AudioEngine::get()->playEffect("boop1", source, false, source->getVolume(), true);
-		CULog(didSound?"true":"false");*/
     }
 }
 

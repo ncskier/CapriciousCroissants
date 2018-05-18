@@ -182,6 +182,7 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 			loc.dir = lastFace;
 		}
 
+
 		
 
 		//TODO Update the comp based on board/direction of entity
@@ -193,95 +194,79 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 
 		switch (loc.dir) {
 		case LocationComponent::UP:
-			if (loc.y == board->getHeight() - movementDistance) {
-				loc.dir = LocationComponent::DOWN;
-				targetX = loc.x;
-				targetY = loc.y - movementDistance;
-				idle.sprite->setFrame(ENEMY_FRAME_DOWN);
-			}
-			else {
-				targetX = loc.x;
-				targetY = loc.y + movementDistance;
-			}
+			targetX = loc.x;
+			targetY = loc.y + movementDistance;
 			break;
 		case LocationComponent::DOWN:
-			if (loc.y == 0) {
-				loc.dir = LocationComponent::UP;
-				targetX = loc.x;
-				targetY = loc.y + movementDistance;
-				idle.sprite->setFrame(ENEMY_FRAME_UP);
-			}
-			else {
-				targetX = loc.x;
-				targetY = loc.y - movementDistance;
-			}
+			targetX = loc.x;
+			targetY = loc.y - movementDistance;
 			break;
 		case LocationComponent::LEFT:
-			if (loc.x == 0) {
-				loc.dir = LocationComponent::RIGHT;
-				targetX = loc.x + movementDistance;
-				targetY = loc.y;
-				idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
-			}
-			else {
-				targetX = loc.x - movementDistance;
-				targetY = loc.y;
-			}
+			targetX = loc.x - movementDistance;
+			targetY = loc.y;
 			break;
 		case LocationComponent::RIGHT:
-			if (loc.x == board->getWidth() - movementDistance) {
-				loc.dir = LocationComponent::LEFT;
-				targetX = loc.x - movementDistance;
-				targetY = loc.y;
-				idle.sprite->setFrame(ENEMY_FRAME_LEFT);
-			}
-			else {
-				targetX = loc.x + movementDistance;
-				targetY = loc.y;
-			}
+			targetX = loc.x + movementDistance;
+			targetY = loc.y;
 			break;
-		}
-
-		switch (loc.dir) {
-			case LocationComponent::UP:
-				idle.sprite->setFrame(ENEMY_FRAME_UP);
-				break;
-			case LocationComponent::DOWN:
-				idle.sprite->setFrame(ENEMY_FRAME_DOWN);
-				break;
-			case LocationComponent::LEFT:
-				idle.sprite->setFrame(ENEMY_FRAME_LEFT);
-				break;
-			case LocationComponent::RIGHT:
-				idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
-				break;
 		}
 
 		for (auto enemy = board->getEnemies().begin(); enemy != board->getEnemies().end(); enemy++) {
 			LocationComponent loc2 = manager->getComponent<LocationComponent>((*enemy));
 			if (loc2.x == targetX && loc2.y == targetY) {
 				isFree = false;
-
-				switch (loc.dir) {
-				case LocationComponent::UP:
-					loc.dir = LocationComponent::DOWN;
-					idle.sprite->setFrame(ENEMY_FRAME_DOWN);
-					break;
-				case LocationComponent::DOWN:
+			}
+		}
+		if (!isFree) {
+			if (std::abs(dY) < std::abs(dX)) {
+				if (dY >= 0) {
 					loc.dir = LocationComponent::UP;
-					idle.sprite->setFrame(ENEMY_FRAME_UP);
-					break;
-				case LocationComponent::LEFT:
+				}
+				else {
+					loc.dir = LocationComponent::DOWN;
+				}
+			}
+			else if (std::abs(dY) > std::abs(dX)) {
+				if (dX >= 0) {
 					loc.dir = LocationComponent::RIGHT;
-					idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
-					break;
-				case LocationComponent::RIGHT:
+				}
+				else {
 					loc.dir = LocationComponent::LEFT;
-					idle.sprite->setFrame(ENEMY_FRAME_LEFT);
-					break;
+				}
+			}
+			else {
+				loc.dir = lastFace;
+			}
+
+			isFree = true;
+
+			switch (loc.dir) {
+			case LocationComponent::UP:
+				targetX = loc.x;
+				targetY = loc.y + movementDistance;
+				break;
+			case LocationComponent::DOWN:
+				targetX = loc.x;
+				targetY = loc.y - movementDistance;
+				break;
+			case LocationComponent::LEFT:
+				targetX = loc.x - movementDistance;
+				targetY = loc.y;
+				break;
+			case LocationComponent::RIGHT:
+				targetX = loc.x + movementDistance;
+				targetY = loc.y;
+				break;
+			}
+
+			for (auto enemy = board->getEnemies().begin(); enemy != board->getEnemies().end(); enemy++) {
+				LocationComponent loc2 = manager->getComponent<LocationComponent>((*enemy));
+				if (loc2.x == targetX && loc2.y == targetY) {
+					isFree = false;
 				}
 			}
 		}
+
 
 		if (isFree) {
             if (targetY < loc.y) {
@@ -605,6 +590,104 @@ bool SmartMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Bo
 				loc.dir = LocationComponent::LEFT;
 			}
 		}
+		bool isFree = true;
+		int targetX;
+		int targetY;
+
+		switch (loc.dir) {
+		case LocationComponent::UP:
+			targetX = ownX;
+			targetY = ownY + 1;
+			break;
+		case LocationComponent::DOWN:
+			targetX = ownX;
+			targetY = ownY - 1;
+			break;
+		case LocationComponent::LEFT:
+			targetX = ownX - 1;
+			targetY = ownY;
+			break;
+		case LocationComponent::RIGHT:
+			targetX = ownX + 1;
+			targetY = ownY;
+			break;
+		}
+
+		for (auto enemy = board->getEnemies().begin(); enemy != board->getEnemies().end(); enemy++) {
+			LocationComponent loc2 = manager->getComponent<LocationComponent>((*enemy));
+			int allyY = loc2.y;
+			int allyX = loc2.x;
+			if (isOffset) {
+				if (tile.y == allyY && isRow) {
+					allyX += offsetAmount;
+					allyX = allyX % board->getWidth() + (allyX % board->getWidth() < 0 ? board->getWidth() : 0);
+				}
+				else if (tile.x == allyX && !isRow) {
+					allyY += offsetAmount;
+					allyY = allyY % board->getHeight() + (allyY % board->getHeight() < 0 ? board->getHeight() : 0);
+				}
+			}
+			if (allyX == targetX && allyY == targetY) {
+				isFree = false;
+			}
+		}
+		if (!isFree) {
+			if (std::abs(dY) < std::abs(dX)) {
+				if (dY > 0) {
+					loc.dir = LocationComponent::UP;
+				}
+				else {
+					loc.dir = LocationComponent::DOWN;
+				}
+			}
+			else {
+				if (dX >= 0) {
+					loc.dir = LocationComponent::RIGHT;
+				}
+				else {
+					loc.dir = LocationComponent::LEFT;
+				}
+			}
+			isFree = true;
+
+			switch (loc.dir) {
+			case LocationComponent::UP:
+				targetX = ownX;
+				targetY = ownY + 1;
+				break;
+			case LocationComponent::DOWN:
+				targetX = ownX;
+				targetY = ownY - 1;
+				break;
+			case LocationComponent::LEFT:
+				targetX = ownX - 1;
+				targetY = ownY;
+				break;
+			case LocationComponent::RIGHT:
+				targetX = ownX + 1;
+				targetY = ownY;
+				break;
+			}
+
+			for (auto enemy = board->getEnemies().begin(); enemy != board->getEnemies().end(); enemy++) {
+				LocationComponent loc2 = manager->getComponent<LocationComponent>((*enemy));
+				int allyY = loc2.y;
+				int allyX = loc2.x;
+				if (isOffset) {
+					if (tile.y == allyY && isRow) {
+						allyX += offsetAmount;
+						allyX = allyX % board->getWidth() + (allyX % board->getWidth() < 0 ? board->getWidth() : 0);
+					}
+					else if (tile.x == allyX && !isRow) {
+						allyY += offsetAmount;
+						allyY = allyY % board->getHeight() + (allyY % board->getHeight() < 0 ? board->getHeight() : 0);
+					}
+				}
+				if (allyX == targetX && allyY == targetY) {
+					isFree = false;
+				}
+			}
+		}
 
 
 
@@ -671,10 +754,8 @@ bool DumbMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Boa
 		int targetX = -1;
 		int targetY = -1;
 
-		CULog("OWN X : %d, OWN Y: %d", ownX, ownY);
 		switch (loc.dir) {
 		case LocationComponent::UP:
-			CULog("I AM UP");
 			if (ownY == board->getHeight() - 1) {
 				loc.hasTemporaryDirection = true;
 				loc.dir = LocationComponent::DOWN;
@@ -687,7 +768,6 @@ bool DumbMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Boa
 			}
 			break;
 		case LocationComponent::DOWN:
-			CULog("I AM DOWN");
 			if (ownY == 0) {
 				loc.hasTemporaryDirection = true;
 				loc.dir = LocationComponent::UP;
@@ -700,7 +780,6 @@ bool DumbMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Boa
 			}
 			break;
 		case LocationComponent::LEFT:
-			CULog("I AM LEFT");
 			if (ownX == 0) {
 				loc.hasTemporaryDirection = true;
 				loc.dir = LocationComponent::RIGHT;
@@ -713,7 +792,6 @@ bool DumbMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Boa
 			}
 			break;
 		case LocationComponent::RIGHT:
-			CULog("I AM RIGHT");
 			if (ownX == board->getWidth() - 1) {
 				loc.hasTemporaryDirection = true;
 				loc.dir = LocationComponent::LEFT;
@@ -726,18 +804,11 @@ bool DumbMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Boa
 			}
 			break;
 		default:
-			CULog("I AM RETARDED");
 			break;
 		}
 
-		if (targetX == -1) {
-			CULog("How the fuck");
-		}
-
-
 		std::vector<size_t> enemies = board->getEnemies();
 		for (auto enemy = enemies.begin(); enemy != enemies.end(); enemy++) {
-			CULog("I am an entity in board %d", (*enemy));
 			if ((*enemy) != entity) {
 				LocationComponent loc2 = manager->getComponent<LocationComponent>((*enemy));
 				int allyY = loc2.y;

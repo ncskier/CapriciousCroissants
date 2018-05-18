@@ -13,6 +13,9 @@
 		2015014120AB622500E930A3 /* GameData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2015013E20AB622500E930A3 /* GameData.cpp */; };
 		2015014220AB622500E930A3 /* GameData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2015013E20AB622500E930A3 /* GameData.cpp */; };
 		2015014620AB666B00E930A3 /* GameData.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2015013E20AB622500E930A3 /* GameData.cpp */; };
+		202AC6D820AD1C3C004B3CB6 /* AnimationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 202AC6D620AD1C3C004B3CB6 /* AnimationController.cpp */; };
+		202AC6D920AD1C3C004B3CB6 /* AnimationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 202AC6D620AD1C3C004B3CB6 /* AnimationController.cpp */; };
+		202AC6DA20AD1C3C004B3CB6 /* AnimationController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 202AC6D620AD1C3C004B3CB6 /* AnimationController.cpp */; };
 		2031AA13206C0BCF007274BE /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		208DC6AD206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
 		208DC6B1206C0E77001A1259 /* MainSystems.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 2031AA0F206C0BCF007274BE /* MainSystems.cpp */; };
@@ -158,6 +161,8 @@
 		2003DF27208C159300D44A0C /* sounds */ = {isa = PBXFileReference; lastKnownFileType = folder; path = sounds; sourceTree = "<group>"; };
 		2015013E20AB622500E930A3 /* GameData.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = GameData.cpp; sourceTree = "<group>"; };
 		2015013F20AB622500E930A3 /* GameData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GameData.h; sourceTree = "<group>"; };
+		202AC6D620AD1C3C004B3CB6 /* AnimationController.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = AnimationController.cpp; sourceTree = "<group>"; };
+		202AC6D720AD1C3C004B3CB6 /* AnimationController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AnimationController.h; sourceTree = "<group>"; };
 		2031AA0F206C0BCF007274BE /* MainSystems.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MainSystems.cpp; sourceTree = "<group>"; };
 		2031AA14206C0BD5007274BE /* MainSystems.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainSystems.h; sourceTree = "<group>"; };
 		20BD4E69206945E400424848 /* ComponentType.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ComponentType.h; sourceTree = "<group>"; };
@@ -460,6 +465,8 @@
 				20F92DF12055A85300F4DCC3 /* TileModel.cpp */,
 				20F92DF72055A8A600F4DCC3 /* PlayerPawnModel.h */,
 				20F92DF62055A8A600F4DCC3 /* PlayerPawnModel.cpp */,
+				202AC6D720AD1C3C004B3CB6 /* AnimationController.h */,
+				202AC6D620AD1C3C004B3CB6 /* AnimationController.cpp */,
 			);
 			name = Source;
 			path = ../source;
@@ -654,6 +661,7 @@
 				2015014220AB622500E930A3 /* GameData.cpp in Sources */,
 				20F92DC020557DE000F4DCC3 /* BoxApp.cpp in Sources */,
 				20BD4E79206945EA00424848 /* Entity.cpp in Sources */,
+				202AC6DA20AD1C3C004B3CB6 /* AnimationController.cpp in Sources */,
 				20F92DE62055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				208DC6B1206C0E77001A1259 /* MainSystems.cpp in Sources */,
 				20F92DF02055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
@@ -680,6 +688,7 @@
 				2015014120AB622500E930A3 /* GameData.cpp in Sources */,
 				20F92DBF20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
 				20BD4E78206945EA00424848 /* Entity.cpp in Sources */,
+				202AC6D920AD1C3C004B3CB6 /* AnimationController.cpp in Sources */,
 				20F92DE52055A73900F4DCC3 /* BoardController.cpp in Sources */,
 				208DC6AD206C0E77001A1259 /* MainSystems.cpp in Sources */,
 				20F92DEF2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,
@@ -706,6 +715,7 @@
 				2015014620AB666B00E930A3 /* GameData.cpp in Sources */,
 				20F92DBE20557DE000F4DCC3 /* BoxApp.cpp in Sources */,
 				20F92DE42055A73900F4DCC3 /* BoardController.cpp in Sources */,
+				202AC6D820AD1C3C004B3CB6 /* AnimationController.cpp in Sources */,
 				EB2BE9B61D74952A002FE78B /* main.cpp in Sources */,
 				2031AA13206C0BCF007274BE /* MainSystems.cpp in Sources */,
 				20F92DEE2055A81B00F4DCC3 /* BoardModel.cpp in Sources */,

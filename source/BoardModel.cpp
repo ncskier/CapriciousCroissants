@@ -217,7 +217,8 @@ bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
         std::shared_ptr<JsonValue> allyJson = alliesJson->get(i);
         x = allyJson->get("x")->asInt();
         y = allyJson->get("y")->asInt();
-        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets, false);
+		std::string name = allyJson->key();
+        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets, false, name);
         _allies.push_back(ally);
         _addedAllies.insert(ally);
         // Set ally's tile to NULL tile
@@ -753,10 +754,13 @@ void BoardModel::updateNodes(bool position, bool z) {
     
     // Allies
     for (std::vector<std::shared_ptr<PlayerPawnModel>>::iterator it = _allies.begin(); it != _allies.end(); ++it) {
-        if (position)
+        if (position) {
             (*it)->setSpriteBounds(calculateDrawBounds((*it)->getX(), (*it)->getY()));
-        if (z)
+        }
+        if (z) {
             (*it)->getSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+            (*it)->getEndSprite()->setZOrder(calculateDrawZ((*it)->getX(), (*it)->getY(), false));
+        }
     }
     
     // Enemies

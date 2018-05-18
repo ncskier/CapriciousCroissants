@@ -10,6 +10,7 @@
 #define __PLAYER_PAWN_MODEL_H__
 
 #include <cugl/cugl.h>
+#include <string>
 
 /** Tile Frame Sprite numbers */
 #define PLAYER_IMG_NORMAL 0
@@ -25,6 +26,14 @@
 #define PLAYER_IMG_ATTACKING_START 32
 #define PLAYER_IMG_ATTACKING_END   47
 #define PLAYER_IMG_ATTACKING_TIME  0.5f
+/** Win animation */
+#define PLAYER_END_WIN_START 0
+#define PLAYER_END_WIN_END   15
+#define PLAYER_END_WIN_TIME  1.0f
+/** Lose animation */
+#define PLAYER_END_LOSE_START 16
+#define PLAYER_END_LOSE_END   31
+#define PLAYER_END_LOSE_TIME  1.0f
 
 /** Ally (crystal) Animations */
 /** Idle loop */
@@ -34,12 +43,15 @@
 /** Death animation */
 #define ALLY_DEATH_IMG_START 0
 #define ALLY_DEATH_IMG_END   15
-#define ALLY_DEATH_IMG_TIME  2.0f
+#define ALLY_DEATH_IMG_TIME  0.7f
 
 /** Number of rows and cols in film strip */
 #define PLAYER_IMG_ROWS 6
 #define PLAYER_IMG_COLS 8
 #define PLAYER_IMG_SIZE 48
+#define PLAYER_END_ROWS 4
+#define PLAYER_END_COLS 8
+#define PLAYER_END_SIZE 32
 #define ALLY_IDLE_IMG_ROWS 4
 #define ALLY_IDLE_IMG_COLS 4
 #define ALLY_IDLE_IMG_SIZE 16
@@ -49,6 +61,7 @@
 
 /** Player Texture Key */
 #define PLAYER_TEXTURE_KEY_0 "mika_spritesheet"
+#define PLAYER_TEXTURE_END_KEY "mika_levelend"
 #define ALLY_TEXTURE_KEY_IDLE "ally_idle"
 #define ALLY_TEXTURE_KEY_DEATH "ally_death"
 
@@ -70,7 +83,11 @@ protected:
     /** Reference to image in SceneGraph for animation */
     std::shared_ptr<cugl::AnimationNode> _sprite;
     
+    /** Reference to image in SceneGraph for win/lose animation */
+    std::shared_ptr<cugl::AnimationNode> _endSprite;
+    
 public:
+	std::string ownName;
 #pragma mark -
 #pragma mark Constructors/Destructors
     /** Creates a new enemy at (0, 0) */
@@ -90,6 +107,8 @@ public:
     
     /** Initialize a new player pawn at (x, y) tile with [tileBounds] */
     virtual bool init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika);
+
+	virtual bool init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika, std::string name);
     
     
 #pragma mark -
@@ -111,10 +130,19 @@ public:
         std::shared_ptr<PlayerPawnModel> result = std::make_shared<PlayerPawnModel>();
         return (result->init(x, y, tileBounds, assets, isMika) ? result : nullptr);
     }
+
+	/** Returns newly allocated player pawn at (x, y) tile with [tileBounds] */
+	static std::shared_ptr<PlayerPawnModel> alloc(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika, std::string name) {
+		std::shared_ptr<PlayerPawnModel> result = std::make_shared<PlayerPawnModel>();
+		return (result->init(x, y, tileBounds, assets, isMika, name) ? result : nullptr);
+	}
     
     
 #pragma mark -
 #pragma mark Accessors/Mutators
+    /** Returns if isMika */
+    bool isMika() { return _isMika; }
+    
     /** Returns x coordinate */
     int getX() const { return _x; }
     
@@ -139,8 +167,14 @@ public:
     /** Returns a reference to the film strip */
     std::shared_ptr<cugl::AnimationNode>& getSprite() { return _sprite; }
     
+    /** Returns a reference to the end sprite strip */
+    std::shared_ptr<cugl::AnimationNode>& getEndSprite() { return _endSprite; }
+    
     /** Set sprite bounds from tile [tileBounds] */
     void setSpriteBounds(cugl::Rect tileBounds);
+    
+    /** Set sprite lose size */
+    void setSpriteLose();
     
     /** Sets the film strip */
     void setSprite(const std::shared_ptr<cugl::AnimationNode>& sprite) { _sprite = sprite; }

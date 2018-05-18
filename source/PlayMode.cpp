@@ -171,6 +171,8 @@ void PlayMode::dispose() {
         doneCtr = 30;
         win = false;
         winTimer = 0.0f;
+        loseTimer = 0.0f;
+        loseDisappear = false;
         _beginAttack = false;
         _attacking = false;
         // Menu
@@ -228,6 +230,8 @@ void PlayMode::reset() {
     doneCtr = 30;
     win = false;
     winTimer = 0.0f;
+    loseTimer = 0.0f;
+    loseDisappear = false;
     _beginAttack = false;
     _attacking = false;
     _entityManager = nullptr;
@@ -331,6 +335,7 @@ void PlayMode::setupLevelSceneGraph() {
     std::set<std::shared_ptr<PlayerPawnModel>>::iterator allyIter;
     for (allyIter = _board->getAddedAllies().begin(); allyIter != _board->getAddedAllies().end(); ++allyIter) {
         _board->getNode()->addChild((*allyIter)->getSprite());
+        _board->getNode()->addChild((*allyIter)->getEndSprite());
         std::stringstream key;
         key << "int_add_ally_" << i;
         _actions->activate(key.str(), _board->allyAddAction, (*allyIter)->getSprite());
@@ -469,6 +474,9 @@ void PlayMode::updateAnimations() {
     
     // Update Mika
     updateMikaAnimations();
+
+	// Update Allys
+	updateAllyAnimations();
 }
 
 /** Update touch node */
@@ -485,6 +493,18 @@ void PlayMode::updateTouchNode() {
             _touchNode->setVisible(false);
         }
     }
+}
+
+/** Update Ally animations(Only idle animations */
+void PlayMode::updateAllyAnimations() {
+	std::vector<std::shared_ptr<PlayerPawnModel>> allies = _board->getAllies();
+	for (auto a = allies.begin(); a != allies.end(); a++) {
+		if (!(*a)->isMika()) {
+			if (!_actions->isActive((*a)->ownName + "IdleAction")) {
+				_actions->activate((*a)->ownName, _board->allyIdleAction, (*a)->getSprite());
+			}
+		}
+	}
 }
 
 /** Update Mika animations */
@@ -550,6 +570,17 @@ void PlayMode::updateBoardTurn(float dt) {
             if (stars > GameData::get()->getLevelStars(_level)) {
                 GameData::get()->setLevelStars(_level, stars);
             }
+            
+            // Begin Mika Win Animation
+            std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
+            mika->getSprite()->setVisible(false);
+            mika->getEndSprite()->setVisible(true);
+            mika->getEndSprite()->setFrame(PLAYER_END_WIN_START);
+            std::string mikaWinActionKey = "mika-win-animation";
+            if (!_actions->isActive(mikaWinActionKey)) {
+                _actions->activate(mikaWinActionKey, _board->mikaWinAction, mika->getEndSprite());
+            }
+            
             // TODO: Set Moves
 //            GameData::get()->setLevelMoves(_level, moves);
             
@@ -584,9 +615,15 @@ void PlayMode::updateEnemyTurn(float dt) {
                 AudioEngine::get()->playEffect("lose", source, false, source->getVolume());
             }
             
-            // Present WinLose Screen
-            if (!_winloseActive) {
-                initWinLose();
+            // Begin Mika Lose Animation
+            std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
+            mika->setSpriteLose();
+            mika->getSprite()->setVisible(false);
+            mika->getEndSprite()->setVisible(true);
+            mika->getEndSprite()->setFrame(PLAYER_END_LOSE_START);
+            std::string mikaLoseActionKey = "mika-lose-animation";
+            if (!_actions->isActive(mikaLoseActionKey)) {
+                _actions->activate(mikaLoseActionKey, _board->mikaLoseAction, mika->getEndSprite());
             }
             
 //            _text->setText("You lose");
@@ -615,9 +652,10 @@ void PlayMode::updateInterruptingAnimations(std::set<std::string>& interruptingA
 void PlayMode::updateWinAnimation(float dt) {
     float disappearTime = 0.035f+0.035f+0.035f+0.035f+0.035f+0.035f+0.4f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f+0.025f;
     float appearTime = TILE_IMG_APPEAR_TIME;
-    float endTime = 0.75f;
+    float endTime = 0.25f;
 //    float timeInterval = disappearTime/std::max(_board->getWidth(), _board->getHeight());
-    float timeInterval = 0.15f;
+//    float timeInterval = 0.15f;
+    float timeInterval = 0.1f;
 //    float time = winTimer / timeInterval;
     int mikaX = _board->getAlly(0)->getX();
     int mikaY = _board->getAlly(0)->getY();
@@ -678,6 +716,74 @@ void PlayMode::updateWinAnimation(float dt) {
     winTimer += dt;
 }
 
+/** Update interrupting lose animation if player has lost */
+void PlayMode::updateLoseAnimation(float dt) {
+    float waitTime = 0.5f;
+    float disappearTime = 1.0f;
+    float totalTime = PLAYER_END_LOSE_TIME + disappearTime + disappearTime + waitTime;
+    
+    // Present WinLose Screen
+    if (loseTimer > totalTime) {
+        if (!_winloseActive) {
+            initWinLose();
+        }
+    } else if (loseTimer > PLAYER_END_LOSE_TIME + disappearTime) {
+        // Fade out Mika
+        std::shared_ptr<FadeOut> fadeOut = FadeOut::alloc(disappearTime);
+        std::shared_ptr<PlayerPawnModel> mika = _board->getAlly(0);
+        if (mika->getEndSprite()->isVisible()) {
+            _actions->activate("fade_out_mika_lose", fadeOut, mika->getEndSprite());
+        } else {
+            _actions->activate("fade_out_mika_lose", fadeOut, mika->getSprite());
+        }
+    } else if (loseTimer > PLAYER_END_LOSE_TIME && !loseDisappear) {
+        std::shared_ptr<FadeOut> fadeOut = FadeOut::alloc(disappearTime);
+        // Fade Out all tiles and enemies
+        int i = 0;
+        int mikaX = _board->getAlly(0)->getX();
+        int mikaY = _board->getAlly(0)->getY();
+        // Tiles
+        for (int j = 0; j < (_board->getWidth()*_board->getHeight()); j++) {
+            int tileX = _board->xOfIndex(j);
+            int tileY = _board->yOfIndex(j);
+            if (!(tileX == mikaX && tileY == mikaY)) {
+                std::shared_ptr<TileModel> tile = _board->getTile(tileX, tileY);
+                std::stringstream key;
+                key << "disappear_lose_" << i;
+                _actions->activate(key.str(), fadeOut, tile->getSprite());
+                i++;
+            }
+        }
+        // Allies
+        for (int j = 0; j < _board->getNumAllies(); j++) {
+            if (j != 0) {
+                std::shared_ptr<PlayerPawnModel> ally = _board->getAllies()[j];
+                std::stringstream key;
+                key << "disappear_lose_" << i;
+                if (ally->getSprite()->isVisible()) {
+                    _actions->activate(key.str(), fadeOut, ally->getSprite());
+                } else {
+                    _actions->activate(key.str(), fadeOut, ally->getEndSprite());
+                }
+                i++;
+            }
+        }
+        // Enemies
+        for (int j = 0; j < _board->getNumEnemies(); j++) {
+            LocationComponent enemyLoc = _entityManager->getComponent<LocationComponent>(_board->getEnemy(j));
+            if (!(enemyLoc.x == mikaX && enemyLoc.y == mikaY)) {
+                IdleComponent enemyIdle = _entityManager->getComponent<IdleComponent>(_board->getEnemy(j));
+                std::stringstream key;
+                key << "disappear_lose_" << i;
+                _actions->activate(key.str(), fadeOut, enemyIdle.sprite);
+                i++;
+            }
+        }
+        loseDisappear = true;
+    }
+    loseTimer += dt;
+}
+
 /**
  * Executes the core gameplay loop of this world.
  *
@@ -699,8 +805,12 @@ void PlayMode::update(float dt) {
     
     // Update actions
     _actions->update(dt);
-    if (win) {
-        updateWinAnimation(dt);
+    if (done) {
+        if (win) {
+            updateWinAnimation(dt);
+        } else {
+            updateLoseAnimation(dt);
+        }
     } else {
         // Check for interrupting animations
         bool hasInterrupts = false;
@@ -710,7 +820,7 @@ void PlayMode::update(float dt) {
                 break;
             }
         }
-        if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && !hasInterrupts) {
+        if (_playerController.getInterruptingActions().empty() && _boardController.getInterruptingActions().empty() && _enemyController.getInterruptingActions().empty() && !hasInterrupts) {
             // Update Gameplay
             if (!done) {
                 //    CULog("PlayMode Update");

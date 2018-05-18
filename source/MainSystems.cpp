@@ -312,15 +312,20 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 		for (int i = 0; i < board->getNumAllies(); i++) {
 			std::shared_ptr<PlayerPawnModel> ally = board->getAlly(i);
 			if (ally->getX() == loc.x && ally->getY() == loc.y) {
-				board->removeAlly(i);
 				if (i == 0) {
 					board->lose = true;
-				}
-
-				std::stringstream key;
-				key << "int_ally_remove_" << i;
-				idle._actions->activate(key.str(), board->allyRemoveAction, ally->getSprite());
-				idle._interruptingActions.insert(key.str());
+                } else {
+                    ally->getSprite()->setVisible(false);
+                    ally->getEndSprite()->setVisible(true);
+                    ally->getEndSprite()->setFrame(ALLY_DEATH_IMG_START);
+                    board->removeAlly(i);
+                    std::stringstream key;
+                    key << "int_ally_remove_" << i;
+                    if (!idle._actions->isActive(key.str())) {
+                        idle._actions->activate(key.str(), board->allyDeathAction, ally->getEndSprite());
+                        idle._interruptingActions.insert(key.str());
+                    }
+                }
 			}
 		}
 
@@ -436,10 +441,20 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 					if (ally->getX() == closestAlignedAlly->getX() && ally->getY() == closestAlignedAlly->getY()) {
 						board->insertAttackingEnemy(entity);
 						ranged.target = ally;
-						board->removeAlly(i);
-						if (i == 0) {
-							board->lose = true;
-						}
+                        if (i == 0) {
+                            board->lose = true;
+                        } else {
+                            ally->getSprite()->setVisible(false);
+                            ally->getEndSprite()->setVisible(true);
+                            ally->getEndSprite()->setFrame(ALLY_DEATH_IMG_START);
+                            board->removeAlly(i);
+                            std::stringstream key;
+                            key << "int_ally_remove_" << i;
+                            if (!idle._actions->isActive(key.str())) {
+                                idle._actions->activate(key.str(), board->allyDeathAction, ally->getEndSprite());
+                                idle._interruptingActions.insert(key.str());
+                            }
+                        }
                         // Commented out so ranged enemies will not turn incorrectly
 //                        int shootDirectionX = (ally->getY() == loc.y)*copysign(1, ally->getX() - loc.x);
 //                        int shootDirectionY = (ally->getX() == loc.x)*copysign(1, ally->getY() - loc.y);
@@ -459,11 +474,6 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 //                            loc.dir = LocationComponent::DOWN;
 //                            idle.sprite->setFrame(1);
 //                        }
-				
-						std::stringstream key;
-						key << "int_ally_remove_" << i;
-						idle._actions->activate(key.str(), board->allyRemoveAction, ally->getSprite());
-						idle._interruptingActions.insert(key.str());
 					}
 
 				}
@@ -526,7 +536,7 @@ bool SmartMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Bo
 		//        DumbMovementComponent move = manager->getComponent<DumbMovementComponent>(entity);
 		LocationComponent loc = manager->getComponent<LocationComponent>(entity);
 		IdleComponent idle = manager->getComponent<IdleComponent>(entity);
-		int movementDistance = manager->getComponent<SmartMovementComponent>(entity).movementDistance;
+//        int movementDistance = manager->getComponent<SmartMovementComponent>(entity).movementDistance;
 
 		cugl::Vec2 tile = cugl::Vec2(board->xOfIndex(board->getSelectedTile()), board->yOfIndex(board->getSelectedTile()));
 		bool isOffset = board->offset != 0.0f;

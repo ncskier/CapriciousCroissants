@@ -125,6 +125,7 @@ protected:
     std::shared_ptr<cugl::Button> _exitButton;
     std::shared_ptr<cugl::AnimationNode> _soundSprite;
     std::shared_ptr<cugl::PolygonNode> _menuNode;
+    std::shared_ptr<cugl::AnimationNode> _menuAlly;
     std::shared_ptr<cugl::Label> _movesLabel;
     std::shared_ptr<cugl::Label> _highMovesLabel;
     std::shared_ptr<cugl::PolygonNode> _star1;

@@ -478,8 +478,15 @@ void PlayMode::initMenu() {
     _highMovesLabel->setForeground(Color4::WHITE);
     _menuNode->addChild(_highMovesLabel);
     
-    // Crystal
-    // TODO: Add crystal to menu
+    // Ally
+    _menuAlly = AnimationNode::alloc(_assets->get<Texture>(ALLY_TEXTURE_KEY_IDLE), ALLY_IDLE_IMG_ROWS, ALLY_IDLE_IMG_COLS, ALLY_IDLE_IMG_SIZE);
+    _menuAlly->setFrame(ALLY_IDLE_IMG_START);
+    _menuAlly->setAnchor(Vec2::ANCHOR_CENTER);
+    float allyWidth = unit*2.0f;
+    float allyHeight = _menuAlly->getContentSize().height/_menuAlly->getContentSize().width * allyWidth;
+    _menuAlly->setContentSize(allyWidth, allyHeight);
+    _menuAlly->setPosition(cornerOffset + allyWidth*0.04f, menuNodeMid);
+    _menuNode->addChild(_menuAlly);
     
     // Stars
     float starHeight = _menuNode->getContentSize().height*0.215f;
@@ -865,6 +872,11 @@ void PlayMode::update(float dt) {
     if (_prevStars != calculateLevelStars()) {
         updateMenuStars();
         _prevStars = calculateLevelStars();
+    }
+    std::string menuAllyKey = "menu_ally_loop";
+    if (!_actions->isActive(menuAllyKey)) {
+        std::shared_ptr<Animate> menuAllyAction = Animate::alloc(ALLY_IDLE_IMG_START, ALLY_IDLE_IMG_END, ALLY_IDLE_IMG_TIME);
+        _actions->activate(menuAllyKey, menuAllyAction, _menuAlly);
     }
     
     // Update actions

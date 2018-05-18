@@ -53,6 +53,12 @@ bool PlayerPawnModel::init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<
     return true;
 }
 
+/** Initialize a new player pawn at (x, y) tile with [tileBounds] */
+bool PlayerPawnModel::init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika, std::string name) {
+	ownName = name;
+	return init(x, y, tileBounds, assets, isMika);
+}
+
 /** Disposes all resources and assets of this enemy */
 void PlayerPawnModel::dispose() {
     _sprite = nullptr;

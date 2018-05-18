@@ -10,6 +10,7 @@
 #define __PLAYER_PAWN_MODEL_H__
 
 #include <cugl/cugl.h>
+#include <string>
 
 /** Tile Frame Sprite numbers */
 #define PLAYER_IMG_NORMAL 0
@@ -86,6 +87,7 @@ protected:
     std::shared_ptr<cugl::AnimationNode> _endSprite;
     
 public:
+	std::string ownName;
 #pragma mark -
 #pragma mark Constructors/Destructors
     /** Creates a new enemy at (0, 0) */
@@ -105,6 +107,8 @@ public:
     
     /** Initialize a new player pawn at (x, y) tile with [tileBounds] */
     virtual bool init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika);
+
+	virtual bool init(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika, std::string name);
     
     
 #pragma mark -
@@ -126,6 +130,12 @@ public:
         std::shared_ptr<PlayerPawnModel> result = std::make_shared<PlayerPawnModel>();
         return (result->init(x, y, tileBounds, assets, isMika) ? result : nullptr);
     }
+
+	/** Returns newly allocated player pawn at (x, y) tile with [tileBounds] */
+	static std::shared_ptr<PlayerPawnModel> alloc(int x, int y, cugl::Rect tileBounds, std::shared_ptr<cugl::AssetManager>& assets, bool isMika, std::string name) {
+		std::shared_ptr<PlayerPawnModel> result = std::make_shared<PlayerPawnModel>();
+		return (result->init(x, y, tileBounds, assets, isMika, name) ? result : nullptr);
+	}
     
     
 #pragma mark -

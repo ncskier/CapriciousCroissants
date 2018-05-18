@@ -470,6 +470,9 @@ void PlayMode::updateAnimations() {
     
     // Update Mika
     updateMikaAnimations();
+
+	// Update Allys
+	updateAllyAnimations();
 }
 
 /** Update touch node */
@@ -486,6 +489,18 @@ void PlayMode::updateTouchNode() {
             _touchNode->setVisible(false);
         }
     }
+}
+
+/** Update Ally animations(Only idle animations */
+void PlayMode::updateAllyAnimations() {
+	std::vector<std::shared_ptr<PlayerPawnModel>> allies = _board->getAllies();
+	for (auto a = allies.begin(); a != allies.end(); a++) {
+		if (!(*a)->isMika()) {
+			if (!_actions->isActive((*a)->ownName + "IdleAction")) {
+				_actions->activate((*a)->ownName, _board->allyIdleAction, (*a)->getSprite());
+			}
+		}
+	}
 }
 
 /** Update Mika animations */

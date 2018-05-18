@@ -251,6 +251,9 @@ public:
     
     /** Update Mika animations */
     void updateMikaAnimations();
+
+	/** Update Ally animations (Only idle animations)*/
+	void updateAllyAnimations();
     
     /**
      * The method called to update the game mode.

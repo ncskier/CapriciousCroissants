@@ -217,7 +217,8 @@ bool BoardModel::setupAlliesFromJson(std::shared_ptr<cugl::JsonValue>& json) {
         std::shared_ptr<JsonValue> allyJson = alliesJson->get(i);
         x = allyJson->get("x")->asInt();
         y = allyJson->get("y")->asInt();
-        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets, false);
+		std::string name = allyJson->key();
+        std::shared_ptr<PlayerPawnModel> ally = PlayerPawnModel::alloc(x, y, calculateDrawBounds(x, y), _assets, false, name);
         _allies.push_back(ally);
         _addedAllies.insert(ally);
         // Set ally's tile to NULL tile

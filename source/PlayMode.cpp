@@ -84,7 +84,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     }
     _background = PolygonNode::allocWithTexture(assets->get<Texture>(backgroundKey));
     _background->setContentSize(dimen);
-    addChild(_background);
+    addChild(_background, 0);
     
 //    _worldNode = Node::allocWithBounds(dimen);
     _worldNode = _assets->get<Node>("game");
@@ -315,7 +315,7 @@ void PlayMode::setupLevelFromJson(Size dimen) {
 /** Add level sprites to scene graph */
 void PlayMode::setupLevelSceneGraph() {
     // Board
-    _worldNode->addChild(_board->getNode());
+    _worldNode->addChild(_board->getNode(), 150);
     
     // Remove tiles
     std::set<std::shared_ptr<TileModel>>::iterator tileIter;
@@ -398,7 +398,7 @@ void PlayMode::initMenu() {
     float menuHeight = _menuNode->getContentSize().height/_menuNode->getContentSize().width * menuWidth;
     _menuNode->setContentSize(menuWidth, menuHeight);
     _menuNode->setPosition(_dimen.width*0.5f, menuY);
-    _worldNode->addChild(_menuNode, z);
+    _worldNode->addChild(_menuNode, 5);
     
     // Restart
     std::shared_ptr<PolygonNode> restartNode = PolygonNode::allocWithTexture(_assets->get<Texture>(PLAY_MENU_KEY_RESTART));
@@ -626,6 +626,9 @@ void PlayMode::resetMenu() {
     _menuNode->removeChild(_highStar3);
     _highStar3 = highStar3;
     _menuNode->addChild(_highStar3);
+    
+    // Sort z orders
+    _worldNode->sortZOrder();
 }
 
 
@@ -1171,6 +1174,7 @@ void PlayMode::initWinLose() {
     float mikaLoseY = _dimen.height*0.492;
     float textY = starsY;
     float levelTextY = _dimen.height*0.9f;
+    float z = 1000;
     
     // Init Node
     _winloseNode = Node::allocWithBounds(0, 0, _dimen.width, _dimen.height);
@@ -1339,7 +1343,7 @@ void PlayMode::initWinLose() {
     }
     
     // Add Node to World
-    _worldNode->addChild(_winloseNode, 1000);
+    _worldNode->addChild(_winloseNode, z);
     _worldNode->sortZOrder();
     
     // Disable Menu Buttons

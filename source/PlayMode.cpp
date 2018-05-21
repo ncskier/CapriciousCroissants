@@ -688,27 +688,114 @@ void PlayMode::updateEnemyAnimations() {
 		if (!loc.isMoving && !loc.isAttacking) {
 			idle._actions->remove("moveAnimationEnemy" + idle.name);
 			idle._actions->remove("attackAnimationEnemy" + idle.name);
-			if (!idle._actions->isActive("idleAnimationEnemy" + idle.name)) {
-				switch (loc.dir) {
-				case LocationComponent::UP:
-					idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleUpAction, idle.sprite);
-					break;
-				case LocationComponent::DOWN:
-					idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleDownAction, idle.sprite);
-					break;
-				case LocationComponent::LEFT:
-					idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleLeftAction, idle.sprite);
-					break;
-				case LocationComponent::RIGHT:
-					idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleRightAction, idle.sprite);
-					break;
-				}
-				
-			}
+//            if (!idle._actions->isActive("idleAnimationEnemy" + idle.name)) {
+//                switch (loc.dir) {
+//                case LocationComponent::UP:
+//                    idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleUpAction, idle.sprite);
+//                    break;
+//                case LocationComponent::DOWN:
+//                    idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleDownAction, idle.sprite);
+//                    break;
+//                case LocationComponent::LEFT:
+//                    idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleLeftAction, idle.sprite);
+//                    break;
+//                case LocationComponent::RIGHT:
+//                    idle._actions->activate("idleAnimationEnemy" + idle.name, _board->enemyIdleRightAction, idle.sprite);
+//                    break;
+//                }
+//
+//            }
+            std::string upIdleAnimationKey = "upIdleAnimationEnemy" + idle.name;
+            std::string downIdleAnimationKey = "downIdleAnimationEnemy" + idle.name;
+            std::string leftIdleAnimationKey = "leftIdleAnimationEnemy" + idle.name;
+            std::string rightIdleAnimationKey = "rightIdleAnimationEnemy" + idle.name;
+            if (loc.dir == LocationComponent::UP) {
+                // UP
+                // Cancel other running actions
+                if (idle._actions->isActive(downIdleAnimationKey)) {
+                    idle._actions->remove(downIdleAnimationKey);
+                }
+                if (idle._actions->isActive(leftIdleAnimationKey)) {
+                    idle._actions->remove(leftIdleAnimationKey);
+                }
+                if (idle._actions->isActive(rightIdleAnimationKey)) {
+                    idle._actions->remove(rightIdleAnimationKey);
+                }
+                // Run up action
+                if (!idle._actions->isActive(upIdleAnimationKey)) {
+                    idle._actions->activate(upIdleAnimationKey, _board->enemyIdleUpAction, idle.sprite);
+                }
+            } else if (loc.dir == LocationComponent::DOWN) {
+                // Down
+                // Cancel other running actions
+                if (idle._actions->isActive(upIdleAnimationKey)) {
+                    idle._actions->remove(upIdleAnimationKey);
+                }
+                if (idle._actions->isActive(leftIdleAnimationKey)) {
+                    idle._actions->remove(leftIdleAnimationKey);
+                }
+                if (idle._actions->isActive(rightIdleAnimationKey)) {
+                    idle._actions->remove(rightIdleAnimationKey);
+                }
+                // Run down action
+                if (!idle._actions->isActive(downIdleAnimationKey)) {
+                    idle._actions->activate(downIdleAnimationKey, _board->enemyIdleDownAction, idle.sprite);
+                }
+            } else if (loc.dir == LocationComponent::LEFT) {
+                // Left
+                // Cancel other running actions
+                if (idle._actions->isActive(upIdleAnimationKey)) {
+                    idle._actions->remove(upIdleAnimationKey);
+                }
+                if (idle._actions->isActive(downIdleAnimationKey)) {
+                    idle._actions->remove(downIdleAnimationKey);
+                }
+                if (idle._actions->isActive(rightIdleAnimationKey)) {
+                    idle._actions->remove(rightIdleAnimationKey);
+                }
+                // Run down action
+                if (!idle._actions->isActive(leftIdleAnimationKey)) {
+                    idle._actions->activate(leftIdleAnimationKey, _board->enemyIdleLeftAction, idle.sprite);
+                }
+            } else {
+                // Right
+                // Cancel other running actions
+                if (idle._actions->isActive(upIdleAnimationKey)) {
+                    idle._actions->remove(upIdleAnimationKey);
+                }
+                if (idle._actions->isActive(downIdleAnimationKey)) {
+                    idle._actions->remove(downIdleAnimationKey);
+                }
+                if (idle._actions->isActive(leftIdleAnimationKey)) {
+                    idle._actions->remove(leftIdleAnimationKey);
+                }
+                // Run down action
+                if (!idle._actions->isActive(rightIdleAnimationKey)) {
+                    idle._actions->activate(rightIdleAnimationKey, _board->enemyIdleRightAction, idle.sprite);
+                }
+            }
 		}
 		else if (loc.isMoving && !loc.isAttacking) {
-			idle._actions->remove("idleAnimationEnemy" + idle.name);
+            // Cancel running animations
+            std::string upIdleAnimationKey = "upIdleAnimationEnemy" + idle.name;
+            std::string downIdleAnimationKey = "downIdleAnimationEnemy" + idle.name;
+            std::string leftIdleAnimationKey = "leftIdleAnimationEnemy" + idle.name;
+            std::string rightIdleAnimationKey = "rightIdleAnimationEnemy" + idle.name;
+            if (idle._actions->isActive(upIdleAnimationKey)) {
+                idle._actions->remove(upIdleAnimationKey);
+            }
+            if (idle._actions->isActive(downIdleAnimationKey)) {
+                idle._actions->remove(downIdleAnimationKey);
+            }
+            if (idle._actions->isActive(leftIdleAnimationKey)) {
+                idle._actions->remove(leftIdleAnimationKey);
+            }
+            if (idle._actions->isActive(rightIdleAnimationKey)) {
+                idle._actions->remove(rightIdleAnimationKey);
+            }
+//            idle._actions->remove("idleAnimationEnemy" + idle.name);
 			idle._actions->remove("attackAnimationEnemy" + idle.name);
+            // Begin new animations
 			if (!idle._actions->isActive("moveAnimationEnemy" + idle.name)) {
 				switch (loc.dir) {
 				case LocationComponent::UP:
@@ -727,8 +814,26 @@ void PlayMode::updateEnemyAnimations() {
 			}
 		}
 		else if (!loc.isMoving && loc.isAttacking) {
-			idle._actions->remove("idleAnimationEnemy" + idle.name);
+            // Cancel running animations
+            std::string upIdleAnimationKey = "upIdleAnimationEnemy" + idle.name;
+            std::string downIdleAnimationKey = "downIdleAnimationEnemy" + idle.name;
+            std::string leftIdleAnimationKey = "leftIdleAnimationEnemy" + idle.name;
+            std::string rightIdleAnimationKey = "rightIdleAnimationEnemy" + idle.name;
+            if (idle._actions->isActive(upIdleAnimationKey)) {
+                idle._actions->remove(upIdleAnimationKey);
+            }
+            if (idle._actions->isActive(downIdleAnimationKey)) {
+                idle._actions->remove(downIdleAnimationKey);
+            }
+            if (idle._actions->isActive(leftIdleAnimationKey)) {
+                idle._actions->remove(leftIdleAnimationKey);
+            }
+            if (idle._actions->isActive(rightIdleAnimationKey)) {
+                idle._actions->remove(rightIdleAnimationKey);
+            }
+//            idle._actions->remove("idleAnimationEnemy" + idle.name);
 			idle._actions->remove("moveAnimationEnemy" + idle.name);
+            // Begin new animations
 			if (!idle._actions->isActive("attackAnimationEnemy" + idle.name)) {
 				switch (loc.dir) {
 				case LocationComponent::UP:

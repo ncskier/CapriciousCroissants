@@ -74,7 +74,8 @@ protected:
     bool _swiping;
     float _acceleration;
     float _velocity;
-    float _swipeAccelerationThreshold = 0.0005f;
+//    float _swipeAccelerationThreshold = 0.0005f;
+    float _swipeAccelerationThreshold = 0.01f;
     float _minSwipeDt = 0.001f;
     
 public:

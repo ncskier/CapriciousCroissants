@@ -190,6 +190,9 @@ public:
     /** Update selected level */
     void updateSelectedLevel();
     
+    /** Check and fix any offsets outside the min/max */
+    void fixOffsetCaps();
+    
 #pragma mark -
 #pragma mark Input Handling
     /**

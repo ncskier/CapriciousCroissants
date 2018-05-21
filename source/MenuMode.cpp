@@ -68,7 +68,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     _worldNode->doLayout(); // This rearranges the children to fit the screen
     addChild(_worldNode);
     // Background color
-    Application::get()->setClearColor(Color4(192,192,192,255));
+    Application::get()->setClearColor(Color4(54,54,54,255));
     
     // Load levels
     setMenuTileSize();
@@ -473,7 +473,17 @@ void MenuMode::updateSelectedLevel() {
     if (_selectedLevel > _levelsJson->size()-1) { _selectedLevel = (int)(_levelsJson->size()-1); }
 }
 
-
+/** Check and fix any offsets outside the min/max */
+void MenuMode::fixOffsetCaps() {
+    // Check drag bounds (top & bottom)
+    if (_softOffset > _maxOffset) {
+        float diff = std::abs(_softOffset-_maxOffset);
+        _softOffset = _maxOffset + applyOffsetCapFunction(diff);
+    } else if (_softOffset < _minOffset) {
+        float diff = std::abs(_softOffset-_minOffset);
+        _softOffset = _minOffset - applyOffsetCapFunction(diff);
+    }
+}
 
 
 #pragma mark -
@@ -504,14 +514,7 @@ void MenuMode::update(float timestep) {
             } else if (moveEvent != InputController::MoveEvent::END) {
                 // MOVED
                 _softOffset = _hardOffset - moveOffset.y;
-                // Check drag bounds (top & bottom)
-                if (_softOffset > _maxOffset) {
-                    float diff = std::abs(_softOffset-_maxOffset);
-                    _softOffset = _maxOffset + applyOffsetCapFunction(diff);
-                } else if (_softOffset < _minOffset) {
-                    float diff = std::abs(_softOffset-_minOffset);
-                    _softOffset = _minOffset - applyOffsetCapFunction(diff);
-                }
+                fixOffsetCaps();
                 // Update _playSelected
                 _playSelected = _playSelected && touchSelectedLevel(_input->getTouchPosition());
             } else {
@@ -574,7 +577,7 @@ void MenuMode::update(float timestep) {
             // Update velocity
             float drag = _menuTileSize.height*20.0f;
             if (_softOffset < _minOffset || _maxOffset < _softOffset) {
-                drag *= std::pow(1.0f + std::min(std::abs(_softOffset-_minOffset), std::abs(_softOffset-_maxOffset))/_menuTileSize.height, 2);
+                drag *= std::pow(1.0f + std::min(std::abs(_softOffset-_minOffset), std::abs(_softOffset-_maxOffset))/_menuTileSize.height, 3);
             }
             float dv = drag * timestep;
             if (std::abs(dv) > std::abs(_velocity)) {
@@ -670,14 +673,20 @@ void MenuMode::update(float timestep) {
         // Menu Tiles
         int lvlIdx = int(_levelsJson->size())+i;
         _menuCapHiTiles[i]->setPosition(menuTilePosition(lvlIdx));
-        _menuCapHiTiles[i]->setVisible(nodeOnScreen(_menuCapHiTiles[i]));
+        if (i != _menuCapHiTiles.size()-1) {
+            // Never hide high cap
+            _menuCapHiTiles[i]->setVisible(nodeOnScreen(_menuCapHiTiles[i]));
+        }
     }
     // Move lower cap
     for (auto i = 0; i < _menuCapLowTiles.size(); i++) {
         // Menu Tiles
         int lvlIdx = -1 - i;
         _menuCapLowTiles[i]->setPosition(menuTilePosition(lvlIdx));
-        _menuCapLowTiles[i]->setVisible(nodeOnScreen(_menuCapLowTiles[i]));
+        if (i != _menuCapLowTiles.size()-1) {
+            // Never hide low cap
+            _menuCapLowTiles[i]->setVisible(nodeOnScreen(_menuCapLowTiles[i]));
+        }
     }
     
     // Update Mika Animation

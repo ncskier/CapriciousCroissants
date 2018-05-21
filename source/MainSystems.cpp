@@ -116,7 +116,7 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 			int tiles = board->lengthToCells(movement.length());
 			std::stringstream key;
 			key << "int_enemy_move_" << entity;
-			std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / idle.speed[0]);
+			std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) * ENEMY_WALK_TIME);
 			idle._actions->activate(key.str(), moveAction, idle.sprite);
 			idle._interruptingActions.insert(key.str());
 			loc.isMoving = true;
@@ -281,7 +281,7 @@ bool MovementSmartSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMod
 			int tiles = board->lengthToCells(movement.length());
 			std::stringstream key;
 			key << "int_enemy_move_" << entity;
-			std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / idle.speed[0]);
+			std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) * ENEMY_WALK_TIME);
 			idle._actions->activate(key.str(), moveAction, idle.sprite);
 			idle._interruptingActions.insert(key.str());
 			loc.isMoving = true;
@@ -302,6 +302,9 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
 	if (manager->hasComponent<LocationComponent>(entity)) {
 		LocationComponent loc = manager->getComponent<LocationComponent>(entity);
 		IdleComponent idle = manager->getComponent<IdleComponent>(entity);
+        
+        // No longer moving
+        loc.isMoving = false;
 
 		for (int i = 0; i < board->getNumAllies(); i++) {
 			std::shared_ptr<PlayerPawnModel> ally = board->getAlly(i);
@@ -379,6 +382,7 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 		IdleComponent idle = manager->getComponent<IdleComponent>(entity);
 		RangeOrthoAttackComponent ranged = manager->getComponent<RangeOrthoAttackComponent>(entity);
 
+        // No longer moving
 		loc.isMoving = false;
 
 		//find closest ally who is on x or y

@@ -281,16 +281,38 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 					idle.textureRows = { 16 };
 					idle.textureColumns = { 16 };
 					idle.textureSize = { 192 };
-					idle.speed = { 2 };
+					idle.speed = { 1 };
 				}
 				else {
 					idle.textureRows = { 8 };
 					idle.textureColumns = { 16 };
 					idle.textureSize = { 128 };
-					idle.speed = { 2 };
+					idle.speed = { 1 };
 				}
+                /** Enemy spritesheets have different sizes between animations */
+                if (componentJson->get("textureKeys")->asString().compare("enemy0_strip") == 0) {
+                    // Cat
+                    idle.idleScale = 1.0f;
+                    idle.moveScale = 1.105f;
+                    idle.attackScale = 1.0f;
+                } else if (componentJson->get("textureKeys")->asString().compare("enemy1_strip") == 0) {
+                    // Skeleton
+                    idle.idleScale = 1.0f;
+                    idle.moveScale = 1.0f;
+                    idle.attackScale = 1.0f;
+                } else if (componentJson->get("textureKeys")->asString().compare("enemy2_strip") == 0) {
+                    // Plant
+                    idle.idleScale = 1.0f;
+                    idle.moveScale = 1.0f;
+                    idle.attackScale = 1.0f;
+                } else if (componentJson->get("textureKeys")->asString().compare("enemy3_strip") == 0) {
+                    // Dragon
+                    idle.idleScale = 1.0f;
+                    idle.moveScale = 1.05f;
+                    idle.attackScale = 1.0f;
+                }
 				idle.sprite = AnimationNode::alloc(_assets->get<Texture>(idle.textureKey), idle.textureRows[0], idle.textureColumns[0], idle.textureSize[0]);
-				idle.sprite->setAnchor(Vec2::ZERO);
+                idle.sprite->setAnchor(Vec2::ANCHOR_CENTER);
 				idle._actions = actions;
 				idle.name = enemyJson->key();
 
@@ -334,17 +356,11 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 		LocationComponent loc = _entityManager->getComponent<LocationComponent>(enemyId);
 		Rect tileBounds = calculateDrawBounds(loc.x, loc.y);
 
-		//* setSpriteBounds from old enemyPawnModel, this really should change to be done better */
-		float width = tileBounds.size.width * 1.2f;
-		float height = tileBounds.size.height * 1.2f;
-		float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
-		float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.4f;
-		if (_entityManager->hasComponent<SmartMovementComponent>(enemyId)) {
-			width = tileBounds.size.width * 0.9f;
-			height = tileBounds.size.height * 0.9f;
-			positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
-			positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.15f / 2.0f + tileBounds.size.height*0.2f;
-		}
+		//* Set initial sprite size */
+        float width = tileBounds.size.width;
+        float height = tileBounds.size.height;
+        float positionX = tileBounds.getMidX();
+        float positionY = tileBounds.getMidY() + tileBounds.size.height*0.3f;
 
 		idle.sprite->setPosition(positionX, positionY);
 		idle.sprite->setContentSize(width, height);
@@ -783,8 +799,8 @@ void BoardModel::updateNodes(bool position, bool z) {
 			Rect tileBounds = calculateDrawBounds(loc.x, loc.y);
             float width = tileBounds.size.width;
             float height = tileBounds.size.height;
-            float positionX = tileBounds.getMinX() + (tileBounds.size.width - width) / 2.0f;
-            float positionY = tileBounds.getMinY() + (tileBounds.size.height - height) / 2.0f + tileBounds.size.height*0.3f;
+            float positionX = tileBounds.getMidX();
+            float positionY = tileBounds.getMidY() + tileBounds.size.height*0.3f;
             idle.sprite->setPosition(positionX, positionY);
             idle.sprite->setContentSize(width, height);
 		}

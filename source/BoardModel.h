@@ -22,6 +22,7 @@
 #define ENEMY_FRAME_LEFT 48
 #define ENEMY_IDLE_TIME 1.0f
 #define ENEMY_WALK_TIME 1.0f
+#define ENEMY_WALK_CYCLES 2     // Number of walk animation cycles per tile movement
 #define ENEMY_ATTACK_TIME 1.0f
 
 #pragma mark -
@@ -330,10 +331,10 @@ public:
 	std::shared_ptr<cugl::Animate> enemyIdleRightAction = cugl::Animate::alloc(ENEMY_FRAME_RIGHT, ENEMY_FRAME_RIGHT + 15, ENEMY_IDLE_TIME);
 	std::shared_ptr<cugl::Animate> enemyIdleUpAction = cugl::Animate::alloc(ENEMY_FRAME_UP, ENEMY_FRAME_UP + 15, ENEMY_IDLE_TIME);
 	std::shared_ptr<cugl::Animate> enemyIdleDownAction = cugl::Animate::alloc(ENEMY_FRAME_DOWN, ENEMY_FRAME_DOWN + 15, ENEMY_IDLE_TIME);
-	std::shared_ptr<cugl::Animate> enemyMoveLeftAction = cugl::Animate::alloc(64 + ENEMY_FRAME_LEFT, 64 + ENEMY_FRAME_LEFT + 15, ENEMY_WALK_TIME);
-	std::shared_ptr<cugl::Animate> enemyMoveRightAction = cugl::Animate::alloc(64 + ENEMY_FRAME_RIGHT, 64 + ENEMY_FRAME_RIGHT + 15, ENEMY_WALK_TIME);
-	std::shared_ptr<cugl::Animate> enemyMoveUpAction = cugl::Animate::alloc(64 + ENEMY_FRAME_UP, 64 + ENEMY_FRAME_UP + 15, ENEMY_WALK_TIME);
-	std::shared_ptr<cugl::Animate> enemyMoveDownAction = cugl::Animate::alloc(64 + ENEMY_FRAME_DOWN, 64 + ENEMY_FRAME_DOWN + 15, ENEMY_WALK_TIME);
+	std::shared_ptr<cugl::Animate> enemyMoveLeftAction = cugl::Animate::alloc(64 + ENEMY_FRAME_LEFT, 64 + ENEMY_FRAME_LEFT + 15, ENEMY_WALK_TIME/(float)ENEMY_WALK_CYCLES);
+	std::shared_ptr<cugl::Animate> enemyMoveRightAction = cugl::Animate::alloc(64 + ENEMY_FRAME_RIGHT, 64 + ENEMY_FRAME_RIGHT + 15, ENEMY_WALK_TIME/(float)ENEMY_WALK_CYCLES);
+	std::shared_ptr<cugl::Animate> enemyMoveUpAction = cugl::Animate::alloc(64 + ENEMY_FRAME_UP, 64 + ENEMY_FRAME_UP + 15, ENEMY_WALK_TIME/(float)ENEMY_WALK_CYCLES);
+	std::shared_ptr<cugl::Animate> enemyMoveDownAction = cugl::Animate::alloc(64 + ENEMY_FRAME_DOWN, 64 + ENEMY_FRAME_DOWN + 15, ENEMY_WALK_TIME/(float)ENEMY_WALK_CYCLES);
 	std::shared_ptr<cugl::Animate> enemyAttackLeftAction = cugl::Animate::alloc(128 + ENEMY_FRAME_LEFT, 128 + ENEMY_FRAME_LEFT + 15, ENEMY_ATTACK_TIME);
 	std::shared_ptr<cugl::Animate> enemyAttackRightAction = cugl::Animate::alloc(128 + ENEMY_FRAME_RIGHT, 128 + ENEMY_FRAME_RIGHT + 15, ENEMY_ATTACK_TIME);
 	std::shared_ptr<cugl::Animate> enemyAttackUpAction = cugl::Animate::alloc(128 + ENEMY_FRAME_UP, 128 + ENEMY_FRAME_UP + 15, ENEMY_ATTACK_TIME);

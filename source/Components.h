@@ -84,6 +84,9 @@ struct IdleComponent : Component {
 	std::vector<int> textureColumns;
 	std::vector<int> textureSize;
 	std::vector<int> speed;
+    float idleScale;
+    float moveScale;
+    float attackScale;
 
 	std::shared_ptr<cugl::AnimationNode> sprite;
 	std::shared_ptr<cugl::ActionManager> _actions;

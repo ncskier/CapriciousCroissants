@@ -117,10 +117,11 @@ void EnemyController::update(float timestep) {
                 
                 
                 
-                int tiles = _board->lengthToCells(movement.length());
                 std::stringstream key;
                 key << "int_enemy_shoot_" << idle.name;
-                std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles) / 10.0f*idle.speed[0]);
+//                int tiles = _board->lengthToCells(movement.length());
+//                std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles)*ENEMY_WALK_TIME*0.25f);
+                std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ENEMY_WALK_TIME*0.5f);
                 idle._actions->activate(key.str(), moveAction, ranged.projectile);
                 idle._interruptingActions.insert(key.str());
                 ranged.projectile->setScale(Vec2(0.25, 0.25));

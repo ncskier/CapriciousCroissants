@@ -798,7 +798,7 @@ void PlayMode::updateEnemyAnimations() {
 					idle._actions->activate("attackAnimationEnemy" + idle.name, _board->enemyAttackLeftAction, idle.sprite);
 					break;
 				case LocationComponent::RIGHT:
-					idle._actions->activate("attackAnimationEnemy" + idle.name, _board->enemyMoveRightAction, idle.sprite);
+					idle._actions->activate("attackAnimationEnemy" + idle.name, _board->enemyAttackRightAction, idle.sprite);
 					break;
 				}
 			}

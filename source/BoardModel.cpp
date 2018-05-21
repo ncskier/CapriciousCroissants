@@ -308,7 +308,7 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
                 } else if (componentJson->get("textureKeys")->asString().compare("enemy3_strip") == 0) {
                     // Dragon
                     idle.idleScale = 1.0f;
-                    idle.moveScale = 1.05f;
+                    idle.moveScale = 1.02f;
                     idle.attackScale = 1.0f;
                 }
 				idle.sprite = AnimationNode::alloc(_assets->get<Texture>(idle.textureKey), idle.textureRows[0], idle.textureColumns[0], idle.textureSize[0]);
@@ -333,7 +333,10 @@ bool BoardModel::setupEnemiesFromJson(std::shared_ptr<cugl::JsonValue>& json, st
 				//std::vector<Vec2> vect{ Vec2(0,0), Vec2(32,32)};
 				//Poly2 bounds = Poly2(vect);
 
-				ranged.projectile = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow"));	
+				ranged.projectile = PolygonNode::allocWithTexture(_assets->get<Texture>("arrow"));
+                float projectileWidth = _cellSize.width * 0.4f;
+                float projectileHeight = ranged.projectile->getContentSize().height/ranged.projectile->getContentSize().width * projectileWidth;
+                ranged.projectile->setContentSize(projectileWidth, projectileHeight);
 				_entityManager->addComponent<RangeOrthoAttackComponent>(enemyId, ranged);
 
 			}

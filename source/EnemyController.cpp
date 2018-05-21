@@ -106,26 +106,40 @@ void EnemyController::update(float timestep) {
                     drawZ = _board->calculateDrawZ(ranged.target->getX(), ranged.target->getY(), true);
                 }
                 
+                CULog("addProjectile for enemy %s", idle.name.c_str());
+                
                 ranged.projectile->setPosition(_board->gridToScreenV(loc.x, loc.y));
                 _board->getNode()->addChild(ranged.projectile, drawZ);
                 _board->getNode()->sortZOrder();
                 
-                cugl::Rect oldBounds = _board->calculateDrawBounds(loc.x, loc.y);
+//                cugl::Rect oldBounds = _board->calculateDrawBounds(loc.x, loc.y);
                 cugl::Rect newBounds = _board->calculateDrawBounds(ranged.target->getX(), ranged.target->getY());
-                cugl::Vec2 movement = newBounds.origin - oldBounds.origin;
+//                cugl::Vec2 movement = newBounds.origin - oldBounds.origin;
+                Vec2 endPosition = Vec2(newBounds.getMidX(), newBounds.getMidY());
                 
-                
-                
+                // Set projectile position
+                Vec2 rangedOffset = Vec2(0.0f, idle.sprite->getContentSize().height * 0.52f);
+                ranged.projectile->setPosition(ranged.projectile->getPosition() + rangedOffset);
+                // Update end projectile position
+                endPosition += rangedOffset;
                 
                 std::stringstream key;
                 key << "int_enemy_shoot_" << idle.name;
 //                int tiles = _board->lengthToCells(movement.length());
 //                std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ((float)tiles)*ENEMY_WALK_TIME*0.25f);
-                std::shared_ptr<cugl::MoveBy> moveAction = cugl::MoveBy::alloc(movement, ENEMY_WALK_TIME*0.5f);
+                std::shared_ptr<cugl::MoveTo> moveAction = cugl::MoveTo::alloc(endPosition, ENEMY_ATTACK_TIME);
                 idle._actions->activate(key.str(), moveAction, ranged.projectile);
                 idle._interruptingActions.insert(key.str());
-                ranged.projectile->setScale(Vec2(0.25, 0.25));
-				
+                
+                // Add scale action
+                ranged.projectile->setScale(0.0f);
+                std::stringstream scaleKey;
+                scaleKey << "int_enemy_shoot_scale_" << idle.name;
+                std::shared_ptr<ScaleTo> scaleAction = ScaleTo::alloc(Vec2(1.0f, 1.0f), ENEMY_ATTACK_TIME*0.2f);
+                idle._actions->activate(scaleKey.str(), scaleAction, ranged.projectile);
+                idle._interruptingActions.insert(scaleKey.str());
+                
+				// Update Component
 				_entityManager->addComponent<IdleComponent>((*enemyIter), idle);
             }
         }
@@ -148,11 +162,28 @@ void EnemyController::update(float timestep) {
                 i++;
             }
         }
+        
+        // Fade enemy projectiles
+        std::set<size_t>::iterator enemyIter;
+        for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {
+            if (_entityManager->hasComponent<RangeOrthoAttackComponent>(*enemyIter)) {
+                RangeOrthoAttackComponent ranged = _entityManager->getComponent<RangeOrthoAttackComponent>((*enemyIter));
+                IdleComponent idle = _entityManager->getComponent<IdleComponent>((*enemyIter));
+                std::stringstream key;
+                key << "int_projectile_fade_out_" << idle.name;
+                if (!_actions->isActive(key.str())) {
+                    _actions->activate(key.str(), _board->allyFadeOutAction, ranged.projectile);
+                    _interruptingActions.insert(key.str());
+                }
+            }
+        }
+        
+        // Update state
         _state = State::CHECK;
-
     } else {
 		CULog("Enemy check");
         // CHECK
+        // Remove Enemy Projectiles
         std::set<size_t>::iterator enemyIter;
         for (enemyIter = _board->getAttackingEnemies().begin(); enemyIter != _board->getAttackingEnemies().end(); ++enemyIter) {
             if (_entityManager->hasComponent<RangeOrthoAttackComponent>(*enemyIter)) {

@@ -84,19 +84,19 @@ bool MovementDumbSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 				switch (loc.dir) {
 					case LocationComponent::UP:
 						loc.dir = LocationComponent::DOWN;
-						idle.sprite->setFrame(ENEMY_FRAME_DOWN);
+//                        idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 						break;
 					case LocationComponent::DOWN:
 						loc.dir = LocationComponent::UP;
-						idle.sprite->setFrame(ENEMY_FRAME_UP);
+//                        idle.sprite->setFrame(ENEMY_FRAME_UP);
 						break;
 					case LocationComponent::LEFT:
 						loc.dir = LocationComponent::RIGHT;
-						idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
+//                        idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 						break;
 					case LocationComponent::RIGHT:
 						loc.dir = LocationComponent::LEFT;
-						idle.sprite->setFrame(ENEMY_FRAME_LEFT);
+//                        idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 						break;
 				}
 				break;
@@ -432,19 +432,19 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 						loc.hasTemporaryDirection = true;
 						if(shootDirectionX > 0){
                             loc.dir = LocationComponent::RIGHT;
-                            idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
+//                            idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
                         }
                         if (shootDirectionX < 0) {
                             loc.dir = LocationComponent::LEFT;
-                            idle.sprite->setFrame(ENEMY_FRAME_LEFT);
+//                            idle.sprite->setFrame(ENEMY_FRAME_LEFT);
                         }
                         if (shootDirectionY > 0) {
                             loc.dir = LocationComponent::UP;
-                            idle.sprite->setFrame(ENEMY_FRAME_UP);
+//                            idle.sprite->setFrame(ENEMY_FRAME_UP);
                         }
                         if (shootDirectionY < 0) {
                             loc.dir = LocationComponent::DOWN;
-                            idle.sprite->setFrame(ENEMY_FRAME_DOWN);
+//                            idle.sprite->setFrame(ENEMY_FRAME_DOWN);
                         }
 					}
 
@@ -459,25 +459,25 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
 				case LocationComponent::UP:
 					if (loc.y == board->getHeight() - 1) {
 						loc.dir = LocationComponent::DOWN;
-						idle.sprite->setFrame(ENEMY_FRAME_DOWN);
+//                        idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 					}
 					break;
 				case LocationComponent::DOWN:
 					if (loc.y == 0) {
 						loc.dir = LocationComponent::UP;
-						idle.sprite->setFrame(ENEMY_FRAME_UP);
+//                        idle.sprite->setFrame(ENEMY_FRAME_UP);
 					}
 					break;
 				case LocationComponent::LEFT:
 					if (loc.x == 0) {
 						loc.dir = LocationComponent::RIGHT;
-						idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
+//                        idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 					}
 					break;
 				case LocationComponent::RIGHT:
 					if (loc.x == board->getWidth() - 1) {
 						loc.dir = LocationComponent::LEFT;
-						idle.sprite->setFrame(ENEMY_FRAME_LEFT);
+//                        idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 					}
 					break;
 				}
@@ -697,16 +697,16 @@ bool SmartMovementFacingSystem::updateEntity(EntityId entity, std::shared_ptr<Bo
 
 		switch (loc.dir) {
 		case LocationComponent::UP:
-			idle.sprite->setFrame(ENEMY_FRAME_UP);
+//            idle.sprite->setFrame(ENEMY_FRAME_UP);
 			break;
 		case LocationComponent::DOWN:
-			idle.sprite->setFrame(ENEMY_FRAME_DOWN);
+//            idle.sprite->setFrame(ENEMY_FRAME_DOWN);
 			break;
 		case LocationComponent::LEFT:
-			idle.sprite->setFrame(ENEMY_FRAME_LEFT);
+//            idle.sprite->setFrame(ENEMY_FRAME_LEFT);
 			break;
 		case LocationComponent::RIGHT:
-			idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
+//            idle.sprite->setFrame(ENEMY_FRAME_RIGHT);
 			break;
 		}
 		manager->addComponent<LocationComponent>(entity, loc);

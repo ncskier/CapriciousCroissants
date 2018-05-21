@@ -49,6 +49,20 @@
             "wrapS":    "clamp",
             "wrapT":    "clamp"
         },
+        "menu_top_cap": {
+            "file":     "textures/menu_top_cap.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
+        "menu_bottom_cap": {
+            "file":     "textures/menu_bottom_cap.png",
+            "minfilter":"nearest",
+            "magfilter":"linear",
+            "wrapS":    "clamp",
+            "wrapT":    "clamp"
+        },
         "background-ice": {
             "file":     "textures/background-ice.png",
             "minfilter":"nearest",

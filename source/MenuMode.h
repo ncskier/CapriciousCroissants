@@ -26,10 +26,16 @@
 #define MENU_STAR_KEY "winlose-high-star"
 #define MENU_STAR_EMPTY_KEY "winlose-high-star-outline"
 #define MENU_LABEL_NAME "menu-label"
+#define MENU_TOP_CAP_KEY "menu_top_cap"
+#define MENU_BOTTOM_CAP_KEY "menu_bottom_cap"
 
 #define MENU_TILE_ROWS 6
 #define MENU_TILE_COLS 1
 #define MENU_TILE_SIZE 6
+
+#define MENU_CAP_Z  10
+#define MENU_TILE_Z 1
+#define MIKA_Z      5
 
 
 class MenuMode : public cugl::Scene {
@@ -71,8 +77,10 @@ protected:
     bool _playSelected = false;
     bool _mikaAttack = false;
     // Cap
-    int _lowCapTiles = 6;
-    int _hiCapTiles = 8;
+//    int _lowCapTiles = 6;
+    int _lowCapTiles = 2;
+//    int _hiCapTiles = 8;
+    int _hiCapTiles = 6;
     
 public:
 #pragma mark -
@@ -120,6 +128,12 @@ public:
     /** Create level node */
     std::shared_ptr<cugl::Node> createLevelNode(int levelIdx, bool cap=false);
     
+    /** Create top cap */
+    std::shared_ptr<cugl::Node> createTopCap(int idx);
+    
+    /** Create bottom cap */
+    std::shared_ptr<cugl::Node> createBottomCap(int idx);
+    
     /** Create mika node */
     std::shared_ptr<cugl::Node> createMikaNode();
     
@@ -160,6 +174,9 @@ public:
 #pragma mark Menu Tiles
     /** Returns if menu tile at index [i] is on the screen (shouldn't or should hidden) */
     bool menuTileOnScreen(int i);
+    
+    /** Returns true if node is on the screen */
+    bool nodeOnScreen(std::shared_ptr<cugl::Node> node);
     
     
 #pragma mark -

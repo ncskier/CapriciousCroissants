@@ -76,7 +76,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     
     // Create Mika Node
     _mikaNode = createMikaNode();
-    _worldNode->addChild(_mikaNode);
+    _worldNode->addChild(_mikaNode, MIKA_Z);
     
     // Begin intro scroll
     _introScroll = true;
@@ -85,6 +85,9 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     _softOffset = _hardOffset;
     updateMikaNode();
     _softOffset = 0.0f;
+    
+    // Sort z order
+    _worldNode->sortZOrder();
     
     return true;
 }
@@ -133,25 +136,32 @@ void MenuMode::loadLevelsFromJson(const std::string& filePath) {
     _originY = _dimen.height*0.2f;
     _maxOffset = _menuTileSize.height * (_levelsJson->size() - 1);
     // Create low cap
-    for (int i = 0; i < _lowCapTiles; i++) {
-        int lvlIdx = -1 - i;
+    int j;
+    for (j = 0; j < _lowCapTiles; j++) {
+        int lvlIdx = -1 - j;
         std::shared_ptr<Node> menuTileCap = createLevelNode(lvlIdx, true);
-        _worldNode->addChild(menuTileCap);
+        _worldNode->addChild(menuTileCap, MENU_TILE_Z);
         _menuCapLowTiles.push_back(menuTileCap);
     }
+    std::shared_ptr<Node> bottomCap = createBottomCap(-1 - j);
+    _worldNode->addChild(bottomCap, MENU_CAP_Z);
+    _menuCapLowTiles.push_back(bottomCap);
     // Create levels
     for (auto i = 0; i < _levelsJson->size(); i++) {
         std::shared_ptr<Node> menuTile = createLevelNode(i);
-        _worldNode->addChild(menuTile);
+        _worldNode->addChild(menuTile, MENU_TILE_Z);
         _menuTiles.push_back(menuTile);
     }
     // Create hi cap
-    for (int i = 0; i < _hiCapTiles; i++) {
-        int lvlIdx = int(_levelsJson->size())+i;
+    for (j = 0; j < _hiCapTiles; j++) {
+        int lvlIdx = int(_levelsJson->size())+j;
         std::shared_ptr<Node> menuTileCap = createLevelNode(lvlIdx, true);
-        _worldNode->addChild(menuTileCap);
+        _worldNode->addChild(menuTileCap, MENU_TILE_Z);
         _menuCapHiTiles.push_back(menuTileCap);
     }
+    std::shared_ptr<Node> topCap = createTopCap(int(_levelsJson->size())+j);
+    _worldNode->addChild(topCap, MENU_CAP_Z);
+    _menuCapHiTiles.push_back(topCap);
 }
 
 /** Create level node */
@@ -194,11 +204,7 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx, bool cap) {
         levelDot->addChild(levelLabel);
         _menuDots.push_back(levelDot);
         
-        // TODO: Initialize Level Stars
         float starOffset = _starSize.width*-0.1;
-//        float starXLeft = levelDot->getContentSize().width*0.20f;
-//        float starXMid = levelDot->getContentSize().width*0.55f;
-//        float starXRight = levelDot->getContentSize().width*0.90f;
         float starXMid = levelDot->getContentSize().width*0.55f;
         float starXLeft = starXMid - _starSize.width - starOffset;
         float starXRight = starXMid + _starSize.width + starOffset;
@@ -234,6 +240,30 @@ std::shared_ptr<Node> MenuMode::createLevelNode(int levelIdx, bool cap) {
     }
     
     return menuTile;
+}
+
+/** Create top cap */
+std::shared_ptr<Node> MenuMode::createTopCap(int idx) {
+    std::shared_ptr<Node> topCap = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_TOP_CAP_KEY));
+    float width = _menuTileSize.width;
+    float height = topCap->getContentSize().height/topCap->getContentSize().width * width;
+    topCap->setContentSize(width, height);
+    topCap->setAnchor(Vec2::ANCHOR_TOP_LEFT);
+    topCap->setPosition(menuTilePosition(idx));
+    
+    return topCap;
+}
+
+/** Create bottom cap */
+std::shared_ptr<cugl::Node> MenuMode::createBottomCap(int idx) {
+    std::shared_ptr<Node> bottomCap = PolygonNode::allocWithTexture(_assets->get<Texture>(MENU_BOTTOM_CAP_KEY));
+    float width = _menuTileSize.width;
+    float height = bottomCap->getContentSize().height/bottomCap->getContentSize().width * width;
+    bottomCap->setContentSize(width, height);
+    bottomCap->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
+    bottomCap->setPosition(menuTilePosition(idx));
+    
+    return bottomCap;
 }
 
 /** Create mika node */
@@ -371,6 +401,14 @@ float MenuMode::levelFractionX(int levelIdx) {
 bool MenuMode::menuTileOnScreen(int i) {
     float minY = menuTilePosition(i).y;
     float maxY = minY + _menuTileSize.height;
+    return ((minY > 0.0f && minY < _dimen.height) || (maxY > 0.0f && maxY < _dimen.height));
+}
+
+/** Returns true if node is on the screen */
+bool MenuMode::nodeOnScreen(std::shared_ptr<cugl::Node> node) {
+    Rect nodeBounds = node->getBoundingBox();
+    float minY = nodeBounds.getMinY();
+    float maxY = nodeBounds.getMaxY();
     return ((minY > 0.0f && minY < _dimen.height) || (maxY > 0.0f && maxY < _dimen.height));
 }
 
@@ -632,14 +670,14 @@ void MenuMode::update(float timestep) {
         // Menu Tiles
         int lvlIdx = int(_levelsJson->size())+i;
         _menuCapHiTiles[i]->setPosition(menuTilePosition(lvlIdx));
-        _menuCapHiTiles[i]->setVisible(menuTileOnScreen(lvlIdx));
+        _menuCapHiTiles[i]->setVisible(nodeOnScreen(_menuCapHiTiles[i]));
     }
     // Move lower cap
     for (auto i = 0; i < _menuCapLowTiles.size(); i++) {
         // Menu Tiles
         int lvlIdx = -1 - i;
         _menuCapLowTiles[i]->setPosition(menuTilePosition(lvlIdx));
-        _menuCapLowTiles[i]->setVisible(menuTileOnScreen(lvlIdx));
+        _menuCapLowTiles[i]->setVisible(nodeOnScreen(_menuCapLowTiles[i]));
     }
     
     // Update Mika Animation

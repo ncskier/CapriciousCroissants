@@ -315,7 +315,7 @@ bool AttackMeleeSystem::updateEntity(EntityId entity, std::shared_ptr<BoardModel
                     ally->getEndSprite()->setFrame(ALLY_DEATH_IMG_START);
                     board->removeAlly(i);
                     std::stringstream key;
-                    key << "int_ally_remove_" << i;
+                    key << "int_ally_remove_" << ally->getX() << "," << ally->getY();
                     if (!idle._actions->isActive(key.str())) {
                         idle._actions->activate(key.str(), board->allyDeathAction, ally->getEndSprite());
                         idle._interruptingActions.insert(key.str());
@@ -418,7 +418,7 @@ bool AttackRangedSystem::updateEntity(EntityId entity, std::shared_ptr<BoardMode
                             ally->getEndSprite()->setFrame(ALLY_DEATH_IMG_START);
                             board->removeAlly(i);
                             std::stringstream key;
-                            key << "int_ally_remove_" << i;
+                            key << "int_ally_remove_" << ally->getX() << "," << ally->getY();
                             if (!idle._actions->isActive(key.str())) {
                                 idle._actions->activate(key.str(), board->allyDeathAction, ally->getEndSprite());
                                 idle._interruptingActions.insert(key.str());

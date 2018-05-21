@@ -139,6 +139,16 @@ void EnemyController::update(float timestep) {
                 idle._actions->activate(scaleKey.str(), scaleAction, ranged.projectile);
                 idle._interruptingActions.insert(scaleKey.str());
                 
+                // Add fade in action
+                Color4 noAlphaColor = ranged.projectile->getColor();
+                noAlphaColor.a = 0;
+                ranged.projectile->setColor(noAlphaColor);
+                std::stringstream fadeInKey;
+                fadeInKey << "int_enemy_shoot_fade_in_" << idle.name;
+                std::shared_ptr<FadeIn> fadeInAction = FadeIn::alloc(ENEMY_ATTACK_TIME*0.2f);
+                idle._actions->activate(fadeInKey.str(), fadeInAction, ranged.projectile);
+                idle._interruptingActions.insert(fadeInKey.str());
+                
 				// Update Component
 				_entityManager->addComponent<IdleComponent>((*enemyIter), idle);
             }

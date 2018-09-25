@@ -34,10 +34,11 @@ BoardController::BoardController() {
  *
  * @return true if the controller is initialized properly, false otherwise.
  */
-bool BoardController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<EntityManager>& manager) {
+bool BoardController::init(std::shared_ptr<ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<EntityManager>& manager, const std::shared_ptr<AssetManager>& assets) {
     _actions = actions;
     _board = board;
 	_entityManager = manager;
+	_assets = assets;
     
     _state = State::REMOVE;
     _debug = false;
@@ -84,6 +85,12 @@ void BoardController::update(float timestep) {
             setComplete(true);
         } else {
             _state = State::REMOVE;
+
+			//Play match sound
+			if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+				auto source = _assets->get<Sound>("match");
+				AudioEngine::get()->playEffect("match", source, false, source->getVolume(), true);
+			}
         }
     } else if (_state == State::REMOVE) {
         // Remove Tiles &
@@ -124,11 +131,14 @@ void BoardController::update(float timestep) {
                 _actions->activate(tileDeathKey.str(), _board->tileDeathAction, tile->getDeathSprite());
                 _interruptingActions.insert(tileDeathKey.str());
                 
+				CULog(tile->getDeathSound());
                 // Tile Death Animation Sound
-//                if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect(tileDeathKey.str())) {
-//                    // TODO: Need to decrease volume when multiple effects are played so it doesn't sound crunchy
-//                    AudioEngine::get()->playEffect(tileDeathKey.str(), tile->getDeathSound(), false, tile->getDeathSound()->getVolume());
-//                }
+                if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("desertDeath")) {
+                    // TODO: Need to decrease volume when multiple effects are played so it doesn't sound crunchy
+					auto source = _assets->get<Sound>("desertDeath");
+                    AudioEngine::get()->playEffect("desertDeath", source, false, source->getVolume());
+                }
+				
             }
             
             // Enemy Death Animation

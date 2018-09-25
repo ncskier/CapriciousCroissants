@@ -28,6 +28,9 @@ public:
         ADD    = 2,
     };
 protected:
+
+	// Assets, used to play sound
+	std::shared_ptr<cugl::AssetManager> _assets;
     // CONTROLLERS
     
     // MODEL
@@ -89,7 +92,7 @@ public:
      *
      * @return true if the controller is initialized properly, false otherwise.
      */
-    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<EntityManager>& manager);
+    bool init(std::shared_ptr<cugl::ActionManager>& actions, const std::shared_ptr<BoardModel>& board, std::shared_ptr<EntityManager>& manager, const std::shared_ptr<cugl::AssetManager>& assets);
     
     
 #pragma mark -

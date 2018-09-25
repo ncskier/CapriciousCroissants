@@ -31,7 +31,7 @@ bool TileModel::init(int color, cugl::Rect bounds, std::shared_ptr<cugl::AssetMa
 void TileModel::dispose() {
     _sprite = nullptr;
     _deathSprite = nullptr;
-    _deathSound = nullptr;
+    _deathSound = "";
 }
 
 #pragma mark -
@@ -48,50 +48,50 @@ void TileModel::setSprite(const Rect bounds, const std::shared_ptr<cugl::AssetMa
     } else if (_color == 0) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_0);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_0);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_0);
+        _deathSound = (TILE_SOUND_KEY_DEATH_0);
     } else if (_color == 1) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_1);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_1);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_1);
+        _deathSound = (TILE_SOUND_KEY_DEATH_1);
     } else if (_color == 2) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_2);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_2);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_2);
+        _deathSound = (TILE_SOUND_KEY_DEATH_2);
 //        color = Color4::RED;
     } else if (_color == 3) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_3);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_3);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_3);
+        _deathSound = (TILE_SOUND_KEY_DEATH_3);
 //        color = Color4::CYAN;
     } else if (_color == 4) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_4);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_4);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_4);
+        _deathSound = (TILE_SOUND_KEY_DEATH_4);
 //        color = Color4::GREEN;
     } else if (_color == 5) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_5);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_5);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_5);
+        _deathSound = (TILE_SOUND_KEY_DEATH_5);
 //        color = Color4::YELLOW;
     } else if (_color == 6) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_6);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_6);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_6);
+        _deathSound = (TILE_SOUND_KEY_DEATH_6);
         color = Color4::BLUE;
     } else if (_color == 7) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_7);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_7);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_7);
+        _deathSound = (TILE_SOUND_KEY_DEATH_7);
         color = Color4::MAGENTA;
     } else if (_color == 8) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_8);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_8);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_8);
+        _deathSound = (TILE_SOUND_KEY_DEATH_8);
         color = Color4::CORNFLOWER;
     } else if (_color == 9) {
         texture = assets->get<Texture>(TILE_TEXTURE_KEY_9);
         deathTexture = assets->get<Texture>(TILE_TEXTURE_KEY_DEATH_9);
-        _deathSound = assets->get<Sound>(TILE_SOUND_KEY_DEATH_9);
+        _deathSound = (TILE_SOUND_KEY_DEATH_9);
         color = Color4::ORANGE;
     }
     

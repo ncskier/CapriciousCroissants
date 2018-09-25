@@ -123,7 +123,7 @@ bool PlayMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
 
 	// Start up turn controllers
 	_playerController.init(_actions, _board, _input, _entityManager);
-	_boardController.init(_actions, _board, _entityManager);
+	_boardController.init(_actions, _board, _entityManager, _assets);
 	_enemyController.init(_actions, _board, _entityManager);
     
     // Add all sprites to scene graph
@@ -260,7 +260,7 @@ void PlayMode::reset() {
 	_entityManager->addSystem(std::make_shared<DumbMovementFacingSystem>(_entityManager), EntityManager::onPlayerMove);
     setupLevelFromJson(_dimen);
     _playerController.init(_actions, _board, _input, _entityManager);
-    _boardController.init(_actions, _board, _entityManager);
+    _boardController.init(_actions, _board, _entityManager, _assets);
     _enemyController.init(_actions, _board, _entityManager);
     setupLevelSceneGraph();
     resetMenu();
@@ -885,6 +885,13 @@ void PlayMode::updateBoardTurn(float dt) {
             if (!_actions->isActive(mikaWinActionKey)) {
                 _actions->activate(mikaWinActionKey, _board->mikaWinAction, mika->getEndSprite());
             }
+
+			// Play win voice line
+			if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("win")) {
+				auto source = _assets->get<Sound>("win");
+				AudioEngine::get()->playEffect("win", source, false, source->getVolume());
+			}
+
         }
         if (!_enemyController.isComplete()) {
              _state = State::ENEMY;
@@ -915,6 +922,12 @@ void PlayMode::updateEnemyTurn(float dt) {
 			std::string mikaLoseActionKey = "mika-lose-animation";
 			if (!_actions->isActive(mikaLoseActionKey)) {
 				_actions->activate(mikaLoseActionKey, _board->mikaLoseAction, mika->getEndSprite());
+			}
+
+			// Play lose voice line
+			if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("win")) {
+				auto source = _assets->get<Sound>("win");
+				AudioEngine::get()->playEffect("win", source, false, source->getVolume());
 			}
 
 			//            _text->setText("You lose");

@@ -508,6 +508,12 @@ void MenuMode::update(float timestep) {
                 Vec2 touchPosition = _input->getTouchPosition();
                 if (touchSelectedLevel(touchPosition)) {
                     _playSelected = true;
+
+					//Play select sound
+					if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+						auto source = _assets->get<Sound>("select");
+						AudioEngine::get()->playEffect("select", source, false, source->getVolume(), true);
+					}
                 }
                 _hardOffset = _softOffset;
                 _input->recordMove();

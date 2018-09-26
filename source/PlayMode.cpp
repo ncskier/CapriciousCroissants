@@ -174,6 +174,7 @@ void PlayMode::dispose() {
         _prevStars = 3;
         restart = false;
         done = false;
+		wasPress = false;
         doneCtr = 30;
         win = false;
         winTimer = 0.0f;
@@ -411,6 +412,11 @@ void PlayMode::initMenu() {
     _resetButton->setListener([=](const std::string& name, bool down) {
         if (!down) {
             CULog("Restart");
+			//Play select sound
+			if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+				auto source = _assets->get<Sound>("select");
+				AudioEngine::get()->playEffect("select", source, false, source->getVolume(), true);
+			}
             this->reset();
         }
     });
@@ -427,6 +433,11 @@ void PlayMode::initMenu() {
     _soundButton->setListener([=](const std::string& name, bool down) {
         if (!down) {
             CULog("Sound on");
+			//Play select sound
+			if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+				auto source = _assets->get<Sound>("select");
+				AudioEngine::get()->playEffect("select", source, false, source->getVolume(), true);
+			}
             this->toggleSound();
         }
     });
@@ -452,6 +463,11 @@ void PlayMode::initMenu() {
         if (!down) {
             CULog("Exit");
             CULog("Exit Button");
+			//Play select sound
+			if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+				auto source = _assets->get<Sound>("select");
+				AudioEngine::get()->playEffect("select", source, false, source->getVolume(), true);
+			}
             this->exit();
         }
     });
@@ -659,9 +675,26 @@ void PlayMode::updateTouchNode() {
         }
         _touchNode->setPosition(_input->getTouchPosition());
         _touchNode->setVisible(true);
+		/**if (!wasPress) {
+			// Play press sound
+			if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+				auto source = _assets->get<Sound>("select");
+				AudioEngine::get()->playEffect("select", source, false, source->getVolume(), true);
+			}
+		}
+		wasPress = true;**/
+
     } else {
         if (!_actions->isActive("touchAction")) {
             _touchNode->setVisible(false);
+			/**if (wasPress) {
+				// Play unpress sound
+				if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+					auto source = _assets->get<Sound>("unpress");
+					AudioEngine::get()->playEffect("unpress", source, false, source->getVolume(), true);
+				}
+			}
+			wasPress = false;**/
         }
     }
 }
@@ -887,10 +920,7 @@ void PlayMode::updateBoardTurn(float dt) {
             }
 
 			// Play win voice line
-			if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("win")) {
-				auto source = _assets->get<Sound>("win");
-				AudioEngine::get()->playEffect("win", source, false, source->getVolume());
-			}
+			winVoice();
 
         }
         if (!_enemyController.isComplete()) {
@@ -925,10 +955,7 @@ void PlayMode::updateEnemyTurn(float dt) {
 			}
 
 			// Play lose voice line
-			if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("win")) {
-				auto source = _assets->get<Sound>("win");
-				AudioEngine::get()->playEffect("win", source, false, source->getVolume());
-			}
+			loseVoice();
 
 			//            _text->setText("You lose");
 			//            _text->setVisible(true);
@@ -1267,6 +1294,11 @@ void PlayMode::initWinLose() {
 //        if (!down && this->_winloseRetryButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
         if (!down) {
             CULog("Retry Level");
+			//Play select sound
+			if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+				auto source = _assets->get<Sound>("select");
+				AudioEngine::get()->playEffect("select", source, false, source->getVolume(), true);
+			}
             this->retryLevel();
         }
     });
@@ -1287,6 +1319,11 @@ void PlayMode::initWinLose() {
 //        if (!down && this->_winloseLevelsButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
         if (!down) {
             CULog("Level Menu");
+			//Play select sound
+			if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+				auto source = _assets->get<Sound>("select");
+				AudioEngine::get()->playEffect("select", source, false, source->getVolume(), true);
+			}
             this->levelMenu();
         }
     });
@@ -1306,6 +1343,11 @@ void PlayMode::initWinLose() {
     //        if (!down && this->_winloseNextButton->getBoundingBox().contains(this->_input->getTouchPosition())) {
             if (!down) {
                 CULog("Next Level");
+				//Play select sound
+				if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+					auto source = _assets->get<Sound>("select");
+					AudioEngine::get()->playEffect("select", source, false, source->getVolume(), true);
+				}
                 this->nextLevel();
             }
         });
@@ -1498,5 +1540,90 @@ void PlayMode::retryLevel() {
     restart = true;
 //    reset();
     exit();
+}
+
+/** Play random win voice line */
+void PlayMode::winVoice() {
+	std::srand(std::time(nullptr));
+
+	int num = rand() % 7 + 1;
+
+	switch (num) {
+	case 1:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("winvoice1")) {
+			auto source = _assets->get<Sound>("winvoice1");
+			AudioEngine::get()->playEffect("winvoice1", source, false, source->getVolume());
+		}
+		break;
+	case 2:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("winvoice2")) {
+			auto source = _assets->get<Sound>("winvoice2");
+			AudioEngine::get()->playEffect("winvoice2", source, false, source->getVolume());
+		}
+		break;
+	case 3:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("winvoice3")) {
+			auto source = _assets->get<Sound>("winvoice3");
+			AudioEngine::get()->playEffect("winvoice3", source, false, source->getVolume());
+		}
+		break;
+	case 4:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("winvoice4")) {
+			auto source = _assets->get<Sound>("winvoice4");
+			AudioEngine::get()->playEffect("winvoice4", source, false, source->getVolume());
+		}
+		break;
+	case 5:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("winvoice5")) {
+			auto source = _assets->get<Sound>("winvoice5");
+			AudioEngine::get()->playEffect("winvoice5", source, false, source->getVolume());
+		}
+		break;
+	case 6:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("winvoice6")) {
+			auto source = _assets->get<Sound>("winvoice6");
+			AudioEngine::get()->playEffect("winvoice6", source, false, source->getVolume());
+		}
+		break;
+	case 7:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("winvoice7")) {
+			auto source = _assets->get<Sound>("winvoice7");
+			AudioEngine::get()->playEffect("winvoice7", source, false, source->getVolume());
+		}
+		break;
+	}
+}
+
+/** Play random lose voice line */
+void PlayMode::loseVoice() {
+	std::srand(std::time(nullptr));
+
+	int num = rand() % 4 + 1;
+
+	switch (num) {
+	case 1:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("losevoice1")) {
+			auto source = _assets->get<Sound>("losevoice1");
+			AudioEngine::get()->playEffect("losevoice1", source, false, source->getVolume());
+		}
+		break;
+	case 2:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("losevoice2")) {
+			auto source = _assets->get<Sound>("losevoice2");
+			AudioEngine::get()->playEffect("losevoice2", source, false, source->getVolume());
+		}
+		break;
+	case 3:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("losevoice3")) {
+			auto source = _assets->get<Sound>("losevoice3");
+			AudioEngine::get()->playEffect("losevoice3", source, false, source->getVolume());
+		}
+		break;
+	case 4:
+		if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("losevoice4")) {
+			auto source = _assets->get<Sound>("losevoice4");
+			AudioEngine::get()->playEffect("losevoice4", source, false, source->getVolume());
+		}
+	}
 }
 

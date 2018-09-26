@@ -57,6 +57,7 @@ void BoardController::dispose() {
     _actions = nullptr;
     _board = nullptr;
     _entityManager = nullptr;
+	_assets = nullptr;
     _state = State::REMOVE;
     _debug = false;
     _complete = false;
@@ -133,10 +134,10 @@ void BoardController::update(float timestep) {
                 
 				CULog(tile->getDeathSound());
                 // Tile Death Animation Sound
-                if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect("desertDeath")) {
+                if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect(tile->getDeathSound())) {
                     // TODO: Need to decrease volume when multiple effects are played so it doesn't sound crunchy
-					auto source = _assets->get<Sound>("desertDeath");
-                    AudioEngine::get()->playEffect("desertDeath", source, false, source->getVolume());
+					auto source = _assets->get<Sound>(tile->getDeathSound());
+                    AudioEngine::get()->playEffect(tile->getDeathSound(), source, false, source->getVolume());
                 }
 				
             }

@@ -74,6 +74,7 @@ public:
 
     
 protected:
+	bool wasPress = false;
 	bool done = false;
     int doneCtr = 30;
 	bool win = false;
@@ -267,7 +268,12 @@ public:
     
     /** Reset menu */
     void resetMenu();
+
+	/** Play random win voice line */
+	void winVoice();
     
+	/** Play random lose voice line */
+	void loseVoice();
     
 #pragma mark -
 #pragma mark Gameplay Handling

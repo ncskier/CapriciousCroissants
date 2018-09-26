@@ -1,529 +1,573 @@
 {
-	"textures": {
-        "ally_death": {
-            "file":     "textures/ally_death.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "ally_idle": {
-            "file":     "textures/ally_idle.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "touch": {
-            "file":     "textures/touch.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "menu_dot": {
-            "file":     "textures/menu_dot.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "menu_tile0_strip": {
-            "file":     "textures/menu_tile0_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "menu_tile1_strip": {
-            "file":     "textures/menu_tile1_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "menu_tile2_strip": {
-            "file":     "textures/menu_tile2_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "menu_top_cap": {
-            "file":     "textures/menu_top_cap.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "menu_bottom_cap": {
-            "file":     "textures/menu_bottom_cap.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "background-ice": {
-            "file":     "textures/background-ice.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "background-grass": {
-            "file":     "textures/background-grass.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "background-fire": {
-            "file":     "textures/background-fire.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile0_strip": {
-            "file":     "textures/tile0_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile1_strip": {
-            "file":     "textures/tile1_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile2_strip": {
-            "file":     "textures/tile2_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile3_strip": {
-            "file":     "textures/tile3_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile4_strip": {
-            "file":     "textures/tile4_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile5_strip": {
-            "file":     "textures/tile5_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tileNULL_strip": {
-            "file":     "textures/tileNULL_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile0_death_strip": {
-            "file":     "textures/tile0_death_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile1_death_strip": {
-            "file":     "textures/tile1_death_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile2_death_strip": {
-            "file":     "textures/tile2_death_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile3_death_strip": {
-            "file":     "textures/tile3_death_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile4_death_strip": {
-            "file":     "textures/tile4_death_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "tile5_death_strip": {
-            "file":     "textures/tile5_death_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "mika_spritesheet": {
-            "file":     "textures/mika_spritesheet.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "mika_levelend": {
-            "file":     "textures/mika_levelend.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "enemy0_strip": {
-            "file":     "textures/enemy0_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "enemy1_strip": {
-            "file":     "textures/enemy1_strip.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "enemy2_strip": {
-            "file": "textures/enemy2_strip.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "enemy3_strip": {
-            "file": "textures/dragon_ss_attack.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "arrow": {
-            "file":     "textures/arrow.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-		"claw": {
-			"file":     "textures/Claw.png",
-			"minfilter":"nearest",
-			"magfilter":"linear",
-			"wrapS":    "clamp",
-			"wrapT":    "clamp"
-		},
-        "rooting": {
-            "file":     "textures/rooting.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-		"close-normal": {
-			"file":     "textures/CloseNormal.png",
-			"minfilter":"nearest",
-			"magfilter":"linear",
-			"wrapS":    "clamp",
-			"wrapT":    "clamp"
-		},
-		"close-selected": {
-			"file":     "textures/CloseSelected.png",
-			"minfilter":"nearest",
-			"magfilter":"linear",
-			"wrapS":    "clamp",
-			"wrapT":    "clamp"
-		},
-        "reset-normal": {
-            "file": "textures/reset1.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "reset-selected": {
-            "file": "textures/reset2.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "play_menu_bg_0": {
-            "file": "textures/play_menu_bg_0.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "play_menu_bg_1": {
-            "file": "textures/play_menu_bg_1.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "play_menu_bg_2": {
-            "file": "textures/play_menu_bg_2.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "play_menu_restart": {
-            "file": "textures/play_menu_restart.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "play_menu_sound": {
-            "file": "textures/play_menu_sound.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "play_menu_exit": {
-            "file": "textures/play_menu_exit.png",
-            "minfilter": "nearest",
-            "magfilter": "linear",
-            "wrapS": "clamp",
-            "wrapT": "clamp"
-        },
-        "checkImage": {
-            "file":    "textures/check.png",
-            "minfilter":"nearest",
-			"magfilter":"linear",
-			"wrapS":    "clamp",
-			"wrapT":    "clamp"
-        },
-        "winlose-background-win": {
-            "file":    "textures/winlose-background-win.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-background-lose": {
-            "file":    "textures/winlose-background-lose.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-continue": {
-            "file":    "textures/winlose-continue.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-retry": {
-            "file":    "textures/winlose-retry.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-levels-win": {
-            "file":    "textures/winlose-levels-win.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-levels-lose": {
-            "file":    "textures/winlose-levels-lose.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-mika-win": {
-            "file":    "textures/winlose-mika-win.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-mika-lose": {
-            "file":    "textures/winlose-mika-lose.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-star": {
-            "file":    "textures/winlose-star.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-star-outline": {
-            "file":    "textures/winlose-star-outline.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-high-star": {
-            "file":    "textures/winlose-high-star.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        },
-        "winlose-high-star-outline": {
-            "file":    "textures/winlose-high-star-outline.png",
-            "minfilter":"nearest",
-            "magfilter":"linear",
-            "wrapS":    "clamp",
-            "wrapT":    "clamp"
-        }
-	},
-	"fonts": {
-		"charlemagne": {
-			"file":     "fonts/Charlemagne.ttf",
-			"size":     64
-		},
-        "script": {
-            "file": "fonts/SCRIPTBL.TTF",
-            "size": 64
-        },
-        "alwaysHereToo": {
-            "file": "fonts/AlwaysHereToo.ttf",
-            "size": 64
-        }
-	},
-    "soundfx": {
-        "music": {
-            "file": "sounds/music.wav",
-            "volume": 0.5
-        },
-        "desertDeath": {
-            "file": "sounds/desertDeath.wav",
-            "volume": 0.7
-        },
-        "fireDeath": {
-            "file": "sounds/fireDeath.wav",
-            "volume": 0.7
-        },
-        "iceDeath": {
-            "file": "sounds/iceDeath.wav",
-            "volume": 0.7
-        },
-        "lose": {
-            "file": "sounds/lose.wav",
-            "volume": 0.5
-        },
-        "match": {
-            "file": "sounds/match.wav",
-            "volume": 0.5
-        },
-        "press": {
-            "file": "sounds/press.wav",
-            "volume": 0.5
-        },
-        "select": {
-            "file": "sounds/select.wav",
-            "volume": 0.5
-        },
-        "sliding": {
-            "file": "sounds/sliding.wav",
-            "volume": 0.5
-        },
-        "unpress.wav": {
-            "file": "sounds/unpress.wav",
-            "volume": 0.5
-        },
-        "win": {
-            "file": "sounds/win.wav",
-            "volume": 0.5
-        }
+  "textures": {
+    "ally_death": {
+      "file": "textures/ally_death.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
     },
-    "scenes": {
-        "game": {
-            "comment": "The scene graph definition for the game",
-            "type": "Node",
-            "format": {
-                "type": "Anchored"
-            },
-            "children": {
-                "labelend": {
-                    "type": "Label",
-                    "data": {
-                        "font": "script",
-                        "text": "",
-                        "foreground": [
-                                       0,
-                                       0,
-                                       0,
-                                       255
-                                       ],
-                        "anchor": [
-                                   0.5,
-                                   0.5
-                                   ],
-                        "halign": "center",
-                        "valign": "middle"
-                    },
-                    "layout": {
-                        "x_anchor": "fill",
-                        "y_anchor": "fill"
-                    }
-                }
-            }
-        },
-        "menu": {
-            "comment": "The scene graph definition for the menu",
-            "type": "Node",
-            "format": {
-                "type": "Anchored"
-            },
-            "children": {
-                "labelend": {
-                    "type": "Label",
-                    "data": {
-                        "font": "script",
-                        "text": "",
-                        "foreground": [
-                                       0,
-                                       0,
-                                       0,
-                                       255
-                                       ],
-                        "anchor": [
-                                   0.5,
-                                   0.5
-                                   ],
-                        "halign": "center",
-                        "valign": "middle"
-                    },
-                    "layout": {
-                        "x_anchor": "fill",
-                        "y_anchor": "fill"
-                    }
-                }
-            }
-        }
+    "ally_idle": {
+      "file": "textures/ally_idle.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "touch": {
+      "file": "textures/touch.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "menu_dot": {
+      "file": "textures/menu_dot.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "menu_tile0_strip": {
+      "file": "textures/menu_tile0_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "menu_tile1_strip": {
+      "file": "textures/menu_tile1_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "menu_tile2_strip": {
+      "file": "textures/menu_tile2_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "menu_top_cap": {
+      "file": "textures/menu_top_cap.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "menu_bottom_cap": {
+      "file": "textures/menu_bottom_cap.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "background-ice": {
+      "file": "textures/background-ice.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "background-grass": {
+      "file": "textures/background-grass.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "background-fire": {
+      "file": "textures/background-fire.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile0_strip": {
+      "file": "textures/tile0_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile1_strip": {
+      "file": "textures/tile1_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile2_strip": {
+      "file": "textures/tile2_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile3_strip": {
+      "file": "textures/tile3_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile4_strip": {
+      "file": "textures/tile4_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile5_strip": {
+      "file": "textures/tile5_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tileNULL_strip": {
+      "file": "textures/tileNULL_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile0_death_strip": {
+      "file": "textures/tile0_death_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile1_death_strip": {
+      "file": "textures/tile1_death_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile2_death_strip": {
+      "file": "textures/tile2_death_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile3_death_strip": {
+      "file": "textures/tile3_death_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile4_death_strip": {
+      "file": "textures/tile4_death_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "tile5_death_strip": {
+      "file": "textures/tile5_death_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "mika_spritesheet": {
+      "file": "textures/mika_spritesheet.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "mika_levelend": {
+      "file": "textures/mika_levelend.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "enemy0_strip": {
+      "file": "textures/enemy0_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "enemy1_strip": {
+      "file": "textures/enemy1_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "enemy2_strip": {
+      "file": "textures/enemy2_strip.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "enemy3_strip": {
+      "file": "textures/dragon_ss_attack.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "arrow": {
+      "file": "textures/arrow.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "claw": {
+      "file": "textures/Claw.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "rooting": {
+      "file": "textures/rooting.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "close-normal": {
+      "file": "textures/CloseNormal.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "close-selected": {
+      "file": "textures/CloseSelected.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "reset-normal": {
+      "file": "textures/reset1.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "reset-selected": {
+      "file": "textures/reset2.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "play_menu_bg_0": {
+      "file": "textures/play_menu_bg_0.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "play_menu_bg_1": {
+      "file": "textures/play_menu_bg_1.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "play_menu_bg_2": {
+      "file": "textures/play_menu_bg_2.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "play_menu_restart": {
+      "file": "textures/play_menu_restart.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "play_menu_sound": {
+      "file": "textures/play_menu_sound.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "play_menu_exit": {
+      "file": "textures/play_menu_exit.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "checkImage": {
+      "file": "textures/check.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-background-win": {
+      "file": "textures/winlose-background-win.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-background-lose": {
+      "file": "textures/winlose-background-lose.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-continue": {
+      "file": "textures/winlose-continue.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-retry": {
+      "file": "textures/winlose-retry.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-levels-win": {
+      "file": "textures/winlose-levels-win.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-levels-lose": {
+      "file": "textures/winlose-levels-lose.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-mika-win": {
+      "file": "textures/winlose-mika-win.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-mika-lose": {
+      "file": "textures/winlose-mika-lose.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-star": {
+      "file": "textures/winlose-star.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-star-outline": {
+      "file": "textures/winlose-star-outline.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-high-star": {
+      "file": "textures/winlose-high-star.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
+    },
+    "winlose-high-star-outline": {
+      "file": "textures/winlose-high-star-outline.png",
+      "minfilter": "nearest",
+      "magfilter": "linear",
+      "wrapS": "clamp",
+      "wrapT": "clamp"
     }
+  },
+  "fonts": {
+    "charlemagne": {
+      "file": "fonts/Charlemagne.ttf",
+      "size": 64
+    },
+    "script": {
+      "file": "fonts/SCRIPTBL.TTF",
+      "size": 64
+    },
+    "alwaysHereToo": {
+      "file": "fonts/AlwaysHereToo.ttf",
+      "size": 64
+    }
+  },
+  "soundfx": {
+    "music": {
+      "file": "sounds/music.wav",
+      "volume": 0.5
+    },
+    "desertDeath": {
+      "file": "sounds/desertDeath.wav",
+      "volume": 0.7
+    },
+    "fireDeath": {
+      "file": "sounds/fireDeath.wav",
+      "volume": 0.7
+    },
+    "iceDeath": {
+      "file": "sounds/iceDeath.wav",
+      "volume": 0.7
+    },
+    "lose": {
+      "file": "sounds/lose.wav",
+      "volume": 0.5
+    },
+    "match": {
+      "file": "sounds/match.wav",
+      "volume": 0.5
+    },
+    "press": {
+      "file": "sounds/press.wav",
+      "volume": 0.2
+    },
+    "select": {
+      "file": "sounds/select.wav",
+      "volume": 0.5
+    },
+    "sliding": {
+      "file": "sounds/sliding.wav",
+      "volume": 0.5
+    },
+    "win": {
+      "file": "sounds/win.wav",
+      "volume": 0.5
+    },
+    "winvoice1": {
+      "file": "sounds/winvoice1.wav",
+      "volume": 0.5
+    },
+    "winvoice2": {
+      "file": "sounds/winvoice2.wav",
+      "volume": 0.5
+    },
+    "winvoice3": {
+      "file": "sounds/winvoice3.wav",
+      "volume": 0.5
+    },
+    "winvoice4": {
+      "file": "sounds/winvoice4.wav",
+      "volume": 0.5
+    },
+    "winvoice5": {
+      "file": "sounds/winvoice5.wav",
+      "volume": 0.5
+    },
+    "winvoice6": {
+      "file": "sounds/winvoice6.wav",
+      "volume": 0.5
+    },
+    "winvoice7": {
+      "file": "sounds/winvoice7.wav",
+      "volume": 0.5
+    },
+    "losevoice1": {
+      "file": "sounds/losevoice1.wav",
+      "volume": 0.5
+    },
+    "losevoice2": {
+      "file": "sounds/losevoice2.wav",
+      "volume": 0.5
+    },
+    "losevoice3": {
+      "file": "sounds/losevoice3.wav",
+      "volume": 0.5
+    },
+    "losevoice4": {
+      "file": "sounds/losevoice4.wav",
+      "volume": 0.5
+    },
+    "unpress": {
+      "file": "sounds/unpress.wav",
+      "volume": 0.2
+    }
+  },
+  "scenes": {
+    "game": {
+      "comment": "The scene graph definition for the game",
+      "type": "Node",
+      "format": {
+        "type": "Anchored"
+      },
+      "children": {
+        "labelend": {
+          "type": "Label",
+          "data": {
+            "font": "script",
+            "text": "",
+            "foreground": [
+              0,
+              0,
+              0,
+              255
+            ],
+            "anchor": [
+              0.5,
+              0.5
+            ],
+            "halign": "center",
+            "valign": "middle"
+          },
+          "layout": {
+            "x_anchor": "fill",
+            "y_anchor": "fill"
+          }
+        }
+      }
+    },
+    "menu": {
+      "comment": "The scene graph definition for the menu",
+      "type": "Node",
+      "format": {
+        "type": "Anchored"
+      },
+      "children": {
+        "labelend": {
+          "type": "Label",
+          "data": {
+            "font": "script",
+            "text": "",
+            "foreground": [
+              0,
+              0,
+              0,
+              255
+            ],
+            "anchor": [
+              0.5,
+              0.5
+            ],
+            "halign": "center",
+            "valign": "middle"
+          },
+          "layout": {
+            "x_anchor": "fill",
+            "y_anchor": "fill"
+          }
+        }
+      }
+    }
+  }
 }

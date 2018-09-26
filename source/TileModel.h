@@ -60,7 +60,7 @@
 /** Death sound */
 #define TILE_SOUND_KEY_DEATH_0 "desertDeath"
 #define TILE_SOUND_KEY_DEATH_1 "desertDeath"
-#define TILE_SOUND_KEY_DEATH_2 "iceDeath"
+#define TILE_SOUND_KEY_DEATH_2 "desertDeath"
 #define TILE_SOUND_KEY_DEATH_3 "fireDeath"
 #define TILE_SOUND_KEY_DEATH_4 "desertDeath"
 #define TILE_SOUND_KEY_DEATH_5 "desertDeath"

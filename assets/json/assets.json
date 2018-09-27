@@ -421,7 +421,7 @@
     },
     "desertDeath": {
       "file": "sounds/desertDeath.wav",
-      "volume": 0.7
+      "volume": 0.8
     },
     "fireDeath": {
       "file": "sounds/fireDeath.wav",
@@ -437,7 +437,7 @@
     },
     "match": {
       "file": "sounds/match.wav",
-      "volume": 0.5
+      "volume": 0.7
     },
     "press": {
       "file": "sounds/press.wav",

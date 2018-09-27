@@ -512,6 +512,11 @@ void BoardModel::removeAlly(int i) {
     _removedAllies.insert(_allies[i]);
     _allies.erase(_allies.begin() + i);
     _numAllies--;
+
+	if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+		auto source = _assets->get<Sound>("iceDeath");
+		AudioEngine::get()->playEffect("iceDeath", source, false, source->getVolume(), true);
+	}
 }
 
 // Remove enemy at index i
@@ -717,6 +722,11 @@ void BoardModel::offsetReset() {
 void BoardModel::deselectTile() {
     _selectedTile = -1;
     offsetReset();
+	//Play unpress sound
+	if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+		auto source = _assets->get<Sound>("unpress");
+		AudioEngine::get()->playEffect("unpress", source, false, source->getVolume(), true);
+	}
 }
 
 //Slide row [y] by [offset]
@@ -759,6 +769,11 @@ bool BoardModel::selectTileAtPosition(Vec2 position) {
         return false;
     }
     _selectedTile = indexOfCoordinate(x, y);
+	//Play press sound
+	if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+		auto source = _assets->get<Sound>("press");
+		AudioEngine::get()->playEffect("press", source, false, source->getVolume(), true);
+	}
     return true;
 }
 

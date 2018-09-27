@@ -60,7 +60,7 @@
 /** Death sound */
 #define TILE_SOUND_KEY_DEATH_0 "desertDeath"
 #define TILE_SOUND_KEY_DEATH_1 "desertDeath"
-#define TILE_SOUND_KEY_DEATH_2 "iceDeath"
+#define TILE_SOUND_KEY_DEATH_2 "desertDeath"
 #define TILE_SOUND_KEY_DEATH_3 "fireDeath"
 #define TILE_SOUND_KEY_DEATH_4 "desertDeath"
 #define TILE_SOUND_KEY_DEATH_5 "desertDeath"
@@ -89,7 +89,7 @@ protected:
     
     /** Reference to image in SceneGraph for death animation */
     std::shared_ptr<cugl::AnimationNode> _deathSprite;
-    std::shared_ptr<cugl::Sound> _deathSound;
+    const char* _deathSound;
     
     /** Sets the film strip with [bounds] */
     void setSprite(const cugl::Rect bounds, const std::shared_ptr<cugl::AssetManager>& assets);
@@ -166,7 +166,7 @@ public:
     std::shared_ptr<cugl::AnimationNode>& getDeathSprite() { return _deathSprite; }
     
     /** Returns a reference to the death sound */
-    std::shared_ptr<cugl::Sound>& getDeathSound() { return _deathSound; }
+    const char* getDeathSound() { return _deathSound; }
 };
 
 #endif /* __TILE_MODEL_H__ */

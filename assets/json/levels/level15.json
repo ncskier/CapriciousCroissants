@@ -3,18 +3,18 @@
 		"width":	5,
 		"height":	5
 	},
-	"tiles":	[[4, 1, 2, 1, 3], [2, 3, 2, 5, 4], [2, 3, 2, 1, 4], [1, 2, 4, 4, 5], [2, 0, 1, 2, 0]],
+	"tiles":	[[5, 0, 1, 3, 5], [2, 3, 5, 4, 2], [1, 0, 2, 5, 5], [4, 2, 0, 4, 5], [3, 4, 1, 3, 3]],
 	"enemies":	{
-		"ranged1":	{
+		"enemy1":	{
 			"components":	{
-				"RangedAttack":	{
-					"horizontal":	true,
-					"vertical":	true
-				},
 				"Location":	{
-					"direction":	1,
+					"direction":	0,
 					"x":	0,
-					"y":	4
+					"y":	0
+				},
+				"RangedAttack":	{
+					"horizontal":	true,
+					"vertical":	true
 				},
 				"DumbMovement":	{
 					"movementDistance":	1
@@ -24,12 +24,12 @@
 				}
 			}
 		},
-		"ranged2":	{
+		"enemy2":	{
 			"components":	{
 				"Location":	{
-					"direction":	1,
+					"direction":	0,
 					"x":	2,
-					"y":	4
+					"y":	0
 				},
 				"RangedAttack":	{
 					"horizontal":	true,
@@ -43,68 +43,36 @@
 				}
 			}
 		},
-		"ranged3":	{
+		"enemy3":	{
 			"components":	{
-				"RangedAttack":	{
-					"horizontal":	true,
-					"vertical":	true
-				},
 				"Location":	{
 					"direction":	1,
 					"x":	4,
-					"y":	4
-				},
-				"DumbMovement":	{
-					"movementDistance":	1
-				},
-				"Idle":	{
-					"textureKeys":	"enemy3_strip"
-				}
-			}
-		},
-		"ranged4":	{
-			"components":	{
-				"Location":	{
-					"direction":	0,
-					"x":	1,
 					"y":	0
 				},
-				"RangedAttack":	{
-					"horizontal":	true,
-					"vertical":	true
-				},
-				"DumbMovement":	{
+				"SmartMovement":	{
 					"movementDistance":	1
 				},
 				"Idle":	{
-					"textureKeys":	"enemy3_strip"
-				}
-			}
-		},
-		"ranged5":	{
-			"components":	{
-				"RangedAttack":	{
-					"horizontal":	true,
-					"vertical":	true
+					"textureKeys":	"enemy1_strip"
 				},
-				"Location":	{
-					"direction":	0,
-					"x":	3,
-					"y":	0
-				},
-				"DumbMovement":	{
-					"movementDistance":	1
-				},
-				"Idle":	{
-					"textureKeys":	"enemy3_strip"
+				"MeleeAttack":	{
 				}
 			}
 		}
 	},
 	"mika":	{
-		"x":	3,
-		"y":	2
+		"x":	4,
+		"y":	4
 	},
 	"allies":	{
+		"ally-1":	{
+			"x":	2,
+			"y":	4
+		},
+		"ally-2":	{
+			"x":	0,
+			"y":	4
+		}
 	}
 }

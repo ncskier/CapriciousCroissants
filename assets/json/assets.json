@@ -421,7 +421,7 @@
     },
     "desertDeath": {
       "file": "sounds/desertDeath.wav",
-      "volume": 0.8
+      "volume": 0.9
     },
     "fireDeath": {
       "file": "sounds/fireDeath.wav",

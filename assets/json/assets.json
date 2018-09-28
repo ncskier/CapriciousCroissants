@@ -433,6 +433,13 @@
         "wrapT":     "clamp",
         "minfilter": "linear",
         "magfilter": "linear"
+    },
+    "helpTexture": {
+        "file":      "textures/help.png",
+        "wrapS":     "clamp",
+        "wrapT":     "clamp",
+        "minfilter": "linear",
+        "magfilter": "linear"
     }
   },
   "fonts": {
@@ -600,7 +607,7 @@
                         "img" : {
                             "type" : "Image",
                             "data" : {
-                                "texture" : "tutorial1",
+                                "texture" : "helpTexture",
                                 "anchor"   : [0.5, 0.5]
                             },
                             "layout" : {
@@ -617,7 +624,9 @@
             },
             "layout" : {
                 "x_anchor" : "left",
-                "y_anchor" : "bottom"
+                "y_anchor" : "bottom",
+                "x_offset" : 0.14,
+                "y_offset" : 0.1
             }
         
         },

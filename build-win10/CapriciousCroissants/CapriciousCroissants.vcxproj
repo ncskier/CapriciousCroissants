@@ -206,6 +206,7 @@
     <ClInclude Include="..\..\source\PlayMode.h" />
     <ClInclude Include="..\..\source\System.h" />
     <ClInclude Include="..\..\source\TileModel.h" />
+    <ClInclude Include="..\..\source\TutorialScenes.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\source\AnimationController.cpp" />
@@ -226,6 +227,7 @@
     <ClCompile Include="..\..\source\PlayMode.cpp" />
     <ClCompile Include="..\..\source\System.cpp" />
     <ClCompile Include="..\..\source\TileModel.cpp" />
+    <ClCompile Include="..\..\source\TutorialScenes.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="CapriciousCroissants.rc" />

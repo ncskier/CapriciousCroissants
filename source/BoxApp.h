@@ -15,6 +15,7 @@
 #include "MenuMode.h"
 #include "InputController.h"
 #include "GameData.h"
+#include "TutorialScenes.h"
 
 /**
  * This class represents the application root for the game.
@@ -33,6 +34,8 @@ protected:
     LoadingMode _loading;
     /** The controller for the menu screen */
     MenuMode _menu;
+	/** The controller for the tutorial scenes */
+	TutorialScenes _tutorials;
     
     // Input Controller
     std::shared_ptr<InputController> _input;
@@ -40,6 +43,7 @@ protected:
     /** Whether or not we have finished loading all assets */
     bool _loadedMenu;
     bool _loadedGameplay;
+	bool _loadedTutorial;
     
 public:
 #pragma mark Constructors
@@ -52,7 +56,7 @@ public:
      * of initialization from the constructor allows main.cpp to perform
      * advanced configuration of the application before it starts.
      */
-    BoxApp() : cugl::Application(), _loadedMenu(false), _loadedGameplay(false) {}
+    BoxApp() : cugl::Application(), _loadedMenu(false), _loadedGameplay(false), _loadedTutorial(false) {}
     
     /**
      * Disposes of this application, releasing all resources.

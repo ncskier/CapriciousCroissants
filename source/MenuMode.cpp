@@ -15,6 +15,8 @@ using namespace cugl;
 #define SCENE_WIDTH 1024
 #define MENU_MIKA_NAME "mika"
 
+#define LISTENER_ID 150
+
 
 #pragma mark -
 #pragma mark Constructors
@@ -61,22 +63,44 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
     _input->init(getCamera());
     _input->clear();
     
+	
+
     // Initialize View
     _worldNode = Node::allocWithBounds(_dimen);
     _worldNode->setAnchor(Vec2::ANCHOR_BOTTOM_LEFT);
     _worldNode->setPosition(Vec2::ZERO);
     _worldNode->doLayout(); // This rearranges the children to fit the screen
     addChild(_worldNode);
+	
+	auto layer = assets->get<Node>("menu");
+	layer->setContentSize(dimen);
+	layer->doLayout();
+	addChild(layer);
+
+	_helpButton = std::dynamic_pointer_cast<Button>(assets->get<Node>("menu_help"));
+
+	_helpButton->setListener([=](const std::string& name, bool down) {
+		if (down) {
+			this->_showTutorialsNext = true;
+		}
+	});
+
+	CULog(std::to_string(_helpButton->getWidth()).c_str());
+
+	_helpButton->activate(LISTENER_ID);
     // Background color
     Application::get()->setClearColor(Color4(54,54,54,255));
     
+
     // Load levels
     setMenuTileSize();
     loadLevelsFromJson("json/levelList.json");
-    
+
     // Create Mika Node
     _mikaNode = createMikaNode();
     _worldNode->addChild(_mikaNode, MIKA_Z);
+
+
     
     // Begin intro scroll
     _introScroll = true;
@@ -103,6 +127,8 @@ void MenuMode::dispose() {
     _input = nullptr;
     _mikaNode = nullptr;
     _active = false;
+	_helpButton->deactivate();
+	_helpButton = false;
     _menuTiles.clear();
     _menuDots.clear();
     _menuCapHiTiles.clear();
@@ -698,4 +724,9 @@ void MenuMode::update(float timestep) {
     // Update Mika Animation
     updateMikaAnimation(timestep, animateMika);
     _actions->update(timestep);
+
+	if (_showTutorialsNext) {
+		_showTutorialsNext = false;
+		_showTutorials = true;
+	}
 }

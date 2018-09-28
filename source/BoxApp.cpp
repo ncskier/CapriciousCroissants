@@ -70,6 +70,7 @@ void BoxApp::onShutdown() {
     _loading.dispose();
     _menu.dispose();
     _gameplay.dispose();
+	_tutorials.dispose();
     _assets = nullptr;
     _batch = nullptr;
     _input = nullptr;
@@ -156,10 +157,21 @@ void BoxApp::update(float timestep) {
             AudioEngine::get()->resumeMusic();
             AudioEngine::get()->setMusicVolume(0.5f);
         }
-    } else if (!_loadedGameplay && _menu.isActive()) {
+	} else if (!_loadedGameplay && _menu.showTutorials()) {
+		_tutorials.update(timestep);
+		if (_tutorials.done) {
+			_menu._showTutorials = false;
+			_tutorials.dispose();
+			_loadedTutorial = false;
+		}
+	} else if (!_loadedGameplay && _menu.isActive()) {
         // Update Menu
-        _menu.update(timestep);
-    } else if (!_loadedGameplay) {
+		_menu.update(timestep);
+		if (_menu._showTutorials) {
+			_tutorials.init(_assets, _input);
+			_loadedTutorial = true;
+		}
+	} else if (!_loadedGameplay) {
         // Load Level
 //        std::string& levelJson = _menu.getSelectedLevelJson();
         int level = _menu.getSelectedLevel();
@@ -196,7 +208,9 @@ void BoxApp::update(float timestep) {
 void BoxApp::draw() {
     if (!_loadedMenu) {
         _loading.render(_batch);
-    } else if (!_loadedGameplay) {
+	} else if (_loadedTutorial) {
+		_tutorials.render(_batch);
+	} else if (!_loadedGameplay) {
         _menu.render(_batch);
 	} else {
         _gameplay.render(_batch);

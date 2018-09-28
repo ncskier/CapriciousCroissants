@@ -15,6 +15,7 @@
 #include "PlayerPawnModel.h"
 #include "TileModel.h"
 #include "GameData.h"
+#include "TutorialScenes.h"
 
 #define MENU_TILE_KEY_0 "menu_tile0_strip"
 #define MENU_TILE_KEY_1 "menu_tile1_strip"
@@ -60,6 +61,10 @@ protected:
     std::shared_ptr<cugl::Animate> _mikaIdleAction = cugl::Animate::alloc(PLAYER_IMG_IDLE_START, PLAYER_IMG_IDLE_END, PLAYER_IMG_IDLE_TIME);
     std::shared_ptr<cugl::Animate> _mikaTransitionAction = cugl::Animate::alloc(PLAYER_IMG_BEGIN_ATTACK_START, PLAYER_IMG_BEGIN_ATTACK_END, PLAYER_IMG_BEGIN_ATTACK_TIME);
     std::shared_ptr<cugl::Animate> _mikaAttackAction = cugl::Animate::alloc(PLAYER_IMG_ATTACKING_START, PLAYER_IMG_ATTACKING_END, PLAYER_IMG_ATTACKING_TIME);
+
+	std::shared_ptr<cugl::Button> _helpButton;
+
+	
     
     // TODO: MODEL
     std::shared_ptr<cugl::JsonValue> _levelsJson;
@@ -83,6 +88,10 @@ protected:
     int _hiCapTiles = 6;
     
 public:
+	// Temporary variable for testing purpose
+	bool _showTutorialsNext = false;
+	bool _showTutorials = false;
+
 #pragma mark -
 #pragma mark Constructors
     /**
@@ -201,6 +210,11 @@ public:
      * @param timestep  The amount of time (in seconds) since the last frame
      */
     void update(float timestep);
+
+	/** 
+	 * Function that indicates whether the tutorial images should be currently displayed or not
+	*/
+	bool showTutorials() { return _showTutorials; };
     
     
 #pragma mark -

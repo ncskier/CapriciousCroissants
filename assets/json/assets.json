@@ -398,6 +398,41 @@
       "magfilter": "linear",
       "wrapS": "clamp",
       "wrapT": "clamp"
+    },
+    "tutorial1": {
+            "file":      "textures/tutorial1.png",
+            "wrapS":     "clamp",
+            "wrapT":     "clamp",
+            "minfilter": "linear",
+            "magfilter": "linear"
+    },
+    "tutorial2": {
+        "file":      "textures/tutorial2.png",
+        "wrapS":     "clamp",
+        "wrapT":     "clamp",
+        "minfilter": "linear",
+        "magfilter": "linear"
+    },
+    "tutorial3": {
+        "file":      "textures/tutorial3.png",
+        "wrapS":     "clamp",
+        "wrapT":     "clamp",
+        "minfilter": "linear",
+        "magfilter": "linear"
+    },
+    "tutorial4": {
+        "file":      "textures/tutorial4.png",
+        "wrapS":     "clamp",
+        "wrapT":     "clamp",
+        "minfilter": "linear",
+        "magfilter": "linear"
+    },
+    "tutorial5": {
+        "file":      "textures/tutorial5.png",
+        "wrapS":     "clamp",
+        "wrapT":     "clamp",
+        "minfilter": "linear",
+        "magfilter": "linear"
     }
   },
   "fonts": {
@@ -543,7 +578,49 @@
       "format": {
         "type": "Anchored"
       },
-      "children": {
+      "children": { 
+        "help": {
+            "type" : "Button",
+            "format" : {
+                "type" : "Anchored"
+            },
+            "data" : {
+                "anchor"   : [0.5,0.5],
+                "up" : {
+                    "type" : "Node",
+                    "format" : {
+                        "type" : "Anchored"
+                    },
+                    "data" : {
+                        "comment"  : "Without this size, the up button fills the screen (because that is default)",
+                        "size"     : [200, 200]
+                    },
+                    "comment"  : "The children fit snug to the up button and do not need sizes",
+                    "children"  : {
+                        "img" : {
+                            "type" : "Image",
+                            "data" : {
+                                "texture" : "tutorial1",
+                                "anchor"   : [0.5, 0.5]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "fill",
+                        "y_anchor" : "fill"
+                    }
+                }
+            },
+            "layout" : {
+                "x_anchor" : "left",
+                "y_anchor" : "bottom"
+            }
+        
+        },
         "labelend": {
           "type": "Label",
           "data": {
@@ -566,6 +643,56 @@
             "x_anchor": "fill",
             "y_anchor": "fill"
           }
+        }
+      }
+    },
+    "tutorial" : {
+      "comment": "The scene graph definition for the tutorial images",
+      "type" : "Node",
+      "format": {
+        "type" : "Anchored"
+      },
+      "children" : {
+        "trigger": {
+            "type" : "Button",
+            "format" : {
+                "type" : "Anchored"
+            },
+            "data" : {
+                "anchor"   : [0.5,0.5],
+                "up" : {
+                    "type" : "Node",
+                    "format" : {
+                        "type" : "Anchored"
+                    },
+                    "data" : {
+                        "comment"  : "Without this size, the up button fills the screen (because that is default)"
+                    },
+                    "comment"  : "The children fit snug to the up button and do not need sizes",
+                    "children"  : {
+                        "img" : {
+                            "type" : "Image",
+                            "data" : {
+                                "texture" : "tutorial1",
+                                "anchor"   : [0.5, 0.5]
+                            },
+                            "layout" : {
+                                "x_anchor" : "fill",
+                                "y_anchor" : "fill"
+                            }
+                        }
+                    },
+                    "layout" : {
+                        "x_anchor" : "fill",
+                        "y_anchor" : "fill"
+                    }
+                }
+            },
+            "layout" : {
+                "x_anchor" : "fill",
+                "y_anchor" : "fill"
+            }
+        
         }
       }
     }

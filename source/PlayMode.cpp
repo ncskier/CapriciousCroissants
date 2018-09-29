@@ -174,7 +174,6 @@ void PlayMode::dispose() {
         _prevStars = 3;
         restart = false;
         done = false;
-		wasPress = false;
         doneCtr = 30;
         win = false;
         winTimer = 0.0f;
@@ -675,26 +674,10 @@ void PlayMode::updateTouchNode() {
         }
         _touchNode->setPosition(_input->getTouchPosition());
         _touchNode->setVisible(true);
-		/**if (!wasPress) {
-			// Play press sound
-			if (AudioEngine::get()->getMusicVolume() != 0.0f) {
-				auto source = _assets->get<Sound>("select");
-				AudioEngine::get()->playEffect("select", source, false, source->getVolume(), true);
-			}
-		}
-		wasPress = true;**/
 
     } else {
         if (!_actions->isActive("touchAction")) {
             _touchNode->setVisible(false);
-			/**if (wasPress) {
-				// Play unpress sound
-				if (AudioEngine::get()->getMusicVolume() != 0.0f) {
-					auto source = _assets->get<Sound>("unpress");
-					AudioEngine::get()->playEffect("unpress", source, false, source->getVolume(), true);
-				}
-			}
-			wasPress = false;**/
         }
     }
 }

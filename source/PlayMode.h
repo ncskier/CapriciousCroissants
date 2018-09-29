@@ -74,7 +74,6 @@ public:
 
     
 protected:
-	bool wasPress = false;
 	bool done = false;
     int doneCtr = 30;
 	bool win = false;

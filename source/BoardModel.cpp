@@ -512,6 +512,11 @@ void BoardModel::removeAlly(int i) {
     _removedAllies.insert(_allies[i]);
     _allies.erase(_allies.begin() + i);
     _numAllies--;
+
+	if (AudioEngine::get()->getMusicVolume() != 0.0f) {
+		auto source = _assets->get<Sound>("iceDeath");
+		AudioEngine::get()->playEffect("iceDeath", source, false, source->getVolume(), true);
+	}
 }
 
 // Remove enemy at index i

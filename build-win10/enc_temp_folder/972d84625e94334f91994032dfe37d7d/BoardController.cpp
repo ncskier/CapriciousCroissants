@@ -132,6 +132,7 @@ void BoardController::update(float timestep) {
                 _actions->activate(tileDeathKey.str(), _board->tileDeathAction, tile->getDeathSprite());
                 _interruptingActions.insert(tileDeathKey.str());
                 
+				CULog(tile->getDeathSound());
                 // Tile Death Animation Sound
                 if (AudioEngine::get()->getMusicVolume() != 0.0f && !AudioEngine::get()->isActiveEffect(tile->getDeathSound())) {
                     // TODO: Need to decrease volume when multiple effects are played so it doesn't sound crunchy

@@ -35,7 +35,7 @@ public:
 	/**
 	* Disposes of all (non-static) resources allocated to this mode.
 	*/
-	void dispose();
+	virtual void dispose();
 
 	static std::shared_ptr<TutorialScenes> alloc(const std::shared_ptr<cugl::AssetManager>& assets, std::shared_ptr<InputController>& input) {
 		std::shared_ptr<TutorialScenes> result = std::make_shared<TutorialScenes>();

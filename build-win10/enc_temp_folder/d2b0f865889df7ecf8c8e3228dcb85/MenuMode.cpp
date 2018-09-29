@@ -85,6 +85,7 @@ bool MenuMode::init(const std::shared_ptr<AssetManager>& assets, std::shared_ptr
 		}
 	});
 
+	CULog(std::to_string(_helpButton->getWidth()).c_str());
 
 	_helpButton->activate(LISTENER_ID);
     // Background color
@@ -127,7 +128,7 @@ void MenuMode::dispose() {
     _mikaNode = nullptr;
     _active = false;
 	_helpButton->deactivate();
-	_helpButton = nullptr;
+	_helpButton = false;
     _menuTiles.clear();
     _menuDots.clear();
     _menuCapHiTiles.clear();
